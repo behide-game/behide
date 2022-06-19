@@ -33,10 +33,10 @@ public class PlayerSetup : NetworkBehaviour
             playerMovements.playerCam = Camera.main;
             playerPropShoot.playerCam = Camera.main;
 
-            #if UNITY_EDITOR
-            #else
+#if UNITY_EDITOR
+#else
             Cursor.lockState = CursorLockMode.Confined;
-            #endif
+#endif
         }
     }
 

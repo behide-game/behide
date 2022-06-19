@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6a6e328f5564f4db6399e86173870a, type: 3}
+  m_Name: Thing
+  m_EditorClassIdentifier: 
+  propName: Thing
+  graphicsPrefab: {fileID: 4814731028663983798, guid: 72f8be0d86341ba4a9f720ad1951600e, type: 3}
+  collidersPrefab: {fileID: 4814731028663983798, guid: 19d186175ee820248844e919640089df, type: 3}
+  mass: 2

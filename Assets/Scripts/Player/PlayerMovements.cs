@@ -9,9 +9,6 @@ public class PlayerMovements : NetworkBehaviour
     private float mouseXSensitivity;
     [SerializeField]
     private float mouseYSensitivity;
-    [SerializeField]
-    private Vector3 defaultCameraPosition;
-
 
     [NonSerialized]
     public Camera playerCam;
