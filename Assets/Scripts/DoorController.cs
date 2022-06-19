@@ -12,7 +12,6 @@ public class DoorController : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
-        //animator.SetBool("Player Nearby", true);
     }
 
     private void OnTriggerEnter(Collider other)

@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Prop
   layers:
   - Default
   - TransparentFX
@@ -11,8 +12,8 @@ TagManager:
   - Batiment
   - Water
   - UI
-  - Prop
   - RemotePlayer
+  - 
   - 
   - 
   - 

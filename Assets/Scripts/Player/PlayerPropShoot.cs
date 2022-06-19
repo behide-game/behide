@@ -7,10 +7,15 @@ public class PlayerPropShoot : NetworkBehaviour
     [SerializeField]
     private float maxShootDistance;
     [SerializeField]
-    private string propLayer;
+    private string propTag;
+    [SerializeField]
+    private string playerTag;
 
     [NonSerialized]
     public Camera playerCam;
+
+    [NonSerialized]
+    public string currentPropName;
 
     private void Update()
     {
@@ -21,20 +26,18 @@ public class PlayerPropShoot : NetworkBehaviour
     {
         bool raycastHitProp = Physics.Raycast(playerCam.transform.position, playerCam.transform.forward, out RaycastHit hitData, maxShootDistance);
 
-        // Check if touched and layer
-        if (raycastHitProp && hitData.transform.gameObject.layer == LayerMask.NameToLayer(propLayer))
+        // Check if touched and tag
+        if (raycastHitProp && hitData.transform.gameObject.CompareTag(propTag))
         {
             // Check if prop is ready
-            if (hitData.transform.TryGetComponent(out Prop touchedProp) && touchedProp.IsReady())
+            if (hitData.transform.TryGetComponent(out Prop touchedProp))
             {
                 // Check if it's a different prop
-                string currentMeshName = transform.GetComponent<MeshFilter>().mesh.name;
-                string propMeshName = touchedProp.mesh.name;
-
-                if (currentMeshName != propMeshName)
+                if (currentPropName != touchedProp.prop.propName)
                 {
-                    CmdTransformInProp(hitData.transform.gameObject);
+                    currentPropName = touchedProp.prop.propName;
                     playerCam.transform.localPosition = Vector3.zero;
+                    CmdTransformInProp(hitData.transform.gameObject);
                 }
             }
         }
@@ -50,15 +53,17 @@ public class PlayerPropShoot : NetworkBehaviour
     [ClientRpc]
     private void RpcTransformInProp(GameObject targetPlayer, GameObject targetProp)
     {
-        Prop prop = targetProp.GetComponent<Prop>();
+        PropScriptableObject prop = targetProp.GetComponent<Prop>().prop;
+        targetPlayer.transform.Find("Default graphics").gameObject.SetActive(false);
+        Destroy(targetPlayer.transform.Find("Prop graphics"));
 
-        targetPlayer.GetComponent<MeshFilter>().mesh = prop.mesh;
-        targetPlayer.GetComponent<MeshFilter>().mesh.name = prop.mesh.name;
-        targetPlayer.GetComponent<MeshRenderer>().materials = prop.materials;
-        targetPlayer.GetComponent<MeshCollider>().sharedMesh = prop.mesh;
+        GameObject propGraphics = new("Prop graphics");
+        propGraphics.transform.SetParent(targetPlayer.transform, false);
+
+        Instantiate(prop.graphicsPrefab, propGraphics.transform.position, prop.graphicsPrefab.transform.rotation, propGraphics.transform);
+        Instantiate(prop.collidersPrefab, propGraphics.transform.position, prop.collidersPrefab.transform.rotation, propGraphics.transform).tag = playerTag;
         targetPlayer.GetComponent<Rigidbody>().mass = prop.mass;
-        targetPlayer.transform.localScale = prop.scale;
 
-        Debug.Log($"Rpc: Transform {targetPlayer.name} in {targetProp.name}", targetPlayer);
+        Debug.Log($"Rpc: Transformed {targetPlayer.name} in {targetProp.name}", targetPlayer);
     }
 }
