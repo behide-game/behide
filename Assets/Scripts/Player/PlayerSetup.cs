@@ -4,11 +4,20 @@ using Mirror;
 public class PlayerSetup : NetworkBehaviour
 {
     [SerializeField]
-    Behaviour[] componentsToDisable;
+    private Behaviour[] componentsToDisable;
     [SerializeField]
-    string remotePlayerLayer;
+    private string remotePlayerLayer;
+    [SerializeField]
+    private bool isHunter;
+    [SerializeField]
+    private GameObject cameraDiskPrefab;
+    [SerializeField]
+    private Vector3 defaultPropCamPos;
+    [SerializeField]
+    private Vector3 defaultHunterCamPos;
 
-    private Vector3 defaultCameraPosition;
+    private GameObject mainCam;
+    private GameObject currentCamDisk;
 
     void Start()
     {
@@ -22,16 +31,34 @@ public class PlayerSetup : NetworkBehaviour
         }
         else
         {
-
-            Camera.main.transform.SetParent(transform);
-            Camera.main.transform.localPosition = defaultCameraPosition;
-            Camera.main.transform.localEulerAngles = Vector3.zero;
-
             PlayerMovements playerMovements = transform.GetComponent<PlayerMovements>();
             PlayerPropShoot playerPropShoot = transform.GetComponent<PlayerPropShoot>();
             playerMovements.rb = GetComponent<Rigidbody>();
-            playerMovements.playerCam = Camera.main;
-            playerPropShoot.playerCam = Camera.main;
+
+            if (isHunter)
+            {
+                Camera.main.transform.SetParent(transform);
+                Camera.main.transform.localPosition = defaultHunterCamPos;
+                Camera.main.transform.localEulerAngles = Vector3.zero;
+
+                playerMovements.playerCam = Camera.main.gameObject;
+                playerPropShoot.enabled = false;
+            }
+            else
+            {
+                mainCam = Camera.main.gameObject;
+                Camera.main.gameObject.SetActive(false);
+
+                GameObject cameraDisk = Instantiate(cameraDiskPrefab, transform);
+                cameraDisk.name = cameraDiskPrefab.name;
+                cameraDisk.transform.localPosition = defaultPropCamPos;
+
+                playerMovements.thirdPersonView = true;
+                playerMovements.playerCam = cameraDisk;
+                playerPropShoot.playerCamDisk = cameraDisk;
+
+                currentCamDisk = cameraDisk;
+            }
 
 #if UNITY_EDITOR
 #else
@@ -44,11 +71,19 @@ public class PlayerSetup : NetworkBehaviour
     {
         base.OnStopLocalPlayer();
 
-        CameraConstants camConstants = Camera.main.GetComponent<CameraConstants>();
+        if (isHunter)
+        {
+            CameraConstants camConstants = Camera.main.GetComponent<CameraConstants>();
 
-        Camera.main.transform.SetParent(null);
-        Camera.main.transform.localPosition = camConstants.defaultPosition;
-        Camera.main.transform.localRotation = camConstants.defaultRotation;
+            Camera.main.transform.SetParent(null);
+            Camera.main.transform.localPosition = camConstants.defaultPosition;
+            Camera.main.transform.localRotation = camConstants.defaultRotation;
+        }
+        else if (currentCamDisk != null)
+        {
+            mainCam.SetActive(true);
+            Destroy(currentCamDisk);
+        }
 
         Cursor.lockState = CursorLockMode.None;
     }
