@@ -11,16 +11,16 @@ public class PlayerMovements : NetworkBehaviour
     private float mouseYSensitivity;
 
     [NonSerialized]
-    public Camera playerCam;
+    public bool thirdPersonView;
+
+    [NonSerialized]
+    public GameObject playerCam;
     [NonSerialized]
     public Rigidbody rb;
     private float cameraRotationY = 0f;
 
     private void FixedUpdate()
     {
-        if (rb == null) { Debug.Log("There isn't rigidbody."); return; }
-        if (playerCam == null) { Debug.Log("There isn't camera."); return; }
-
         float moveX = Input.GetAxis("Horizontal") * Time.fixedDeltaTime * 4f;
         float moveZ = Input.GetAxis("Vertical") * Time.fixedDeltaTime * 4f;
         float rotateX = Input.GetAxisRaw("Mouse X") * Time.fixedDeltaTime * mouseXSensitivity;
@@ -30,6 +30,7 @@ public class PlayerMovements : NetworkBehaviour
 
         transform.Translate(moveX, 0, moveZ);
         rb.MoveRotation(rb.rotation * Quaternion.Euler(0, rotateX, 0));
+
         playerCam.transform.localEulerAngles = new Vector3(cameraRotationY, 0, 0);
     }
 }

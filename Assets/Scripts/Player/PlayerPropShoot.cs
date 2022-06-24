@@ -12,7 +12,7 @@ public class PlayerPropShoot : NetworkBehaviour
     private string playerTag;
 
     [NonSerialized]
-    public Camera playerCam;
+    public GameObject playerCamDisk;
 
     [NonSerialized]
     public string currentPropName;
@@ -24,7 +24,7 @@ public class PlayerPropShoot : NetworkBehaviour
 
     private void Shoot()
     {
-        bool raycastHitProp = Physics.Raycast(playerCam.transform.position, playerCam.transform.forward, out RaycastHit hitData, maxShootDistance);
+        bool raycastHitProp = Physics.Raycast(playerCamDisk.transform.position, playerCamDisk.transform.forward, out RaycastHit hitData, maxShootDistance);
 
         // Check if touched and tag
         if (raycastHitProp && hitData.transform.gameObject.CompareTag(propTag))
@@ -36,7 +36,11 @@ public class PlayerPropShoot : NetworkBehaviour
                 if (currentPropName != touchedProp.prop.propName)
                 {
                     currentPropName = touchedProp.prop.propName;
-                    playerCam.transform.localPosition = Vector3.zero;
+
+                    Vector3 touchedPropSize = hitData.transform.GetComponentInChildren<MeshRenderer>().bounds.size;
+                    playerCamDisk.transform.localPosition = new Vector3(0, touchedPropSize.y * 1.5f, -touchedPropSize.z / 2);
+                    playerCamDisk.transform.GetComponentInChildren<Camera>().transform.localPosition = new Vector3(0, 0, -touchedPropSize.z);
+
                     CmdTransformInProp(hitData.transform.gameObject);
                 }
             }
@@ -47,7 +51,6 @@ public class PlayerPropShoot : NetworkBehaviour
     void CmdTransformInProp(GameObject propGameObject)
     {
         RpcTransformInProp(gameObject, propGameObject);
-        Debug.Log($"Command: Transform {transform.name} in {propGameObject.name}", transform);
     }
 
     [ClientRpc]
@@ -55,7 +58,11 @@ public class PlayerPropShoot : NetworkBehaviour
     {
         PropScriptableObject prop = targetProp.GetComponent<Prop>().prop;
         targetPlayer.transform.Find("Default graphics").gameObject.SetActive(false);
-        Destroy(targetPlayer.transform.Find("Prop graphics"));
+
+        if (targetPlayer.transform.Find("Prop graphics") != null)
+        {
+            Destroy(targetPlayer.transform.Find("Prop graphics").gameObject);
+        }
 
         GameObject propGraphics = new("Prop graphics");
         propGraphics.transform.SetParent(targetPlayer.transform, false);
@@ -63,7 +70,5 @@ public class PlayerPropShoot : NetworkBehaviour
         Instantiate(prop.graphicsPrefab, propGraphics.transform.position, prop.graphicsPrefab.transform.rotation, propGraphics.transform);
         Instantiate(prop.collidersPrefab, propGraphics.transform.position, prop.collidersPrefab.transform.rotation, propGraphics.transform).tag = playerTag;
         targetPlayer.GetComponent<Rigidbody>().mass = prop.mass;
-
-        Debug.Log($"Rpc: Transformed {targetPlayer.name} in {targetProp.name}", targetPlayer);
     }
 }
