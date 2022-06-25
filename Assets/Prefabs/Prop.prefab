@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1725339679701183869}
   - component: {fileID: 1359501298929268572}
   m_Layer: 0
-  m_Name: Default prop
+  m_Name: Prop
   m_TagString: Prop
   m_Icon: {fileID: 2800000, guid: cda14b9bffcaf9a41a425375d557dbee, type: 3}
   m_NavMeshLayer: 0
