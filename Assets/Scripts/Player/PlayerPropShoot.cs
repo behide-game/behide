@@ -11,10 +11,10 @@ public class PlayerPropShoot : NetworkBehaviour
     [SerializeField]
     private string playerTag;
 
-    [NonSerialized]
+    [HideInInspector]
     public GameObject playerCamDisk;
 
-    [NonSerialized]
+    [HideInInspector]
     public string currentPropName;
 
     private void Update()
