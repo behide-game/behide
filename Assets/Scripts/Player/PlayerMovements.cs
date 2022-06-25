@@ -10,17 +10,20 @@ public class PlayerMovements : NetworkBehaviour
     [SerializeField]
     private float mouseYSensitivity;
 
-    [NonSerialized]
+    [HideInInspector]
     public bool thirdPersonView;
 
-    [NonSerialized]
+    [HideInInspector]
     public GameObject playerCam;
-    [NonSerialized]
+    [HideInInspector]
     public Rigidbody rb;
     private float cameraRotationY = 0f;
 
     private void FixedUpdate()
     {
+        if (playerCam == null) { return; }
+        if (rb == null) { return; }
+
         float moveX = Input.GetAxis("Horizontal") * Time.fixedDeltaTime * 4f;
         float moveZ = Input.GetAxis("Vertical") * Time.fixedDeltaTime * 4f;
         float rotateX = Input.GetAxisRaw("Mouse X") * Time.fixedDeltaTime * mouseXSensitivity;

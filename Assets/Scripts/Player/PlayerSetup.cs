@@ -60,10 +60,7 @@ public class PlayerSetup : NetworkBehaviour
                 currentCamDisk = cameraDisk;
             }
 
-#if UNITY_EDITOR
-#else
             Cursor.lockState = CursorLockMode.Confined;
-#endif
         }
     }
 
