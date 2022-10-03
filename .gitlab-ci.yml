@@ -12,22 +12,26 @@ variables:
 
 image: $IMAGE:$UNITY_VERSION-base-$IMAGE_VERSION
 
-get-unity-version:
+get-version:
   image: alpine
   stage: prepare
   variables:
     GIT_DEPTH: 1
   script:
     - echo UNITY_VERSION=$(cat $CI_PROJECT_DIR/ProjectSettings/ProjectVersion.txt | grep "m_EditorVersion:.*" | awk '{ print $2}') | tee prepare.env
+    - echo BEHIDE_VERSION=$(echo $CI_COMMIT_TAG | grep -o '[0-9]\.[0-9]\.[0-9]') | tee -a prepare.env
+    - "sed -i \"s/bundleVersion: 0.0.1/bundleVersion: $BEHIDE_VSERION/g\" $CI_PROJECT_DIR/ProjectSettings/ProjectSettings.asset"
   artifacts:
     reports:
       dotenv: prepare.env
+  rules:
+    - if: $CI_COMMIT_TAG != null
 
 .unity_before_script: &unity_before_script
   before_script:
     - chmod +x ./ci/before_script.sh && ./ci/before_script.sh
   needs:
-    - job: get-unity-version
+    - job: get-version
       artifacts: true
 
 .cache: &cache
