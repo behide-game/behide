@@ -16,7 +16,7 @@ GameObject:
   m_Layer: 0
   m_Name: Prop
   m_TagString: Prop
-  m_Icon: {fileID: 2800000, guid: cda14b9bffcaf9a41a425375d557dbee, type: 3}
+  m_Icon: {fileID: 2800000, guid: df76d6e76c7d4d04294a2c04ed086a6b, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
