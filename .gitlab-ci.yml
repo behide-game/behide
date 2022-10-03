@@ -1,0 +1,164 @@
+stages:
+  - prepare
+  - build
+  - prepare builds
+  - release
+
+
+variables:
+  UNITY_ACTIVATION_FILE: ./unity3d.alf
+  IMAGE: unityci/editor # https://hub.docker.com/r/unityci/editor
+  IMAGE_VERSION: 1 # This will automatically use latest v1.x.x, see https://github.com/game-ci/docker/releases
+
+image: $IMAGE:$UNITY_VERSION-base-$IMAGE_VERSION
+
+get-unity-version:
+  image: alpine
+  stage: prepare
+  variables:
+    GIT_DEPTH: 1
+  script:
+    - echo UNITY_VERSION=$(cat $CI_PROJECT_DIR/ProjectSettings/ProjectVersion.txt | grep "m_EditorVersion:.*" | awk '{ print $2}') | tee prepare.env
+  artifacts:
+    reports:
+      dotenv: prepare.env
+
+.unity_before_script: &unity_before_script
+  before_script:
+    - chmod +x ./ci/before_script.sh && ./ci/before_script.sh
+  needs:
+    - job: get-unity-version
+      artifacts: true
+
+.cache: &cache
+  cache:
+    key: "$CI_PROJECT_NAMESPACE-$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG-$TEST_PLATFORM"
+    paths:
+      - $CI_PROJECT_DIR/Library/
+
+.license: &license
+  rules:
+    - if: '$UNITY_LICENSE != null'
+      when: always
+
+.unity_defaults: &unity_defaults
+  <<:
+    - *unity_before_script
+    - *cache
+    - *license
+
+.build: &build
+  <<: *unity_defaults
+  stage: build
+  artifacts:
+    paths:
+      - ./build
+  tags:
+    - gitlab-org
+  rules:
+    - if: $CI_COMMIT_TAG != null
+
+.zip-and-publish-build: &zip-and-publish-build
+  stage: prepare builds
+  image: javieraviles/zip
+  tags:
+    - behide
+  rules:
+    - if: $CI_COMMIT_TAG != null
+
+
+build:linux:
+  <<: *build
+  script:
+    - /opt/unity/Editor/Unity -batchmode -quit -nographics -projectPath "$(pwd)" -logFile /dev/stdout -buildLinux64Player ./build/linux/Behide.x86_64
+
+build:osx:
+  <<: *build
+  image: $IMAGE:$UNITY_VERSION-mac-mono-$IMAGE_VERSION
+  script:
+    - /opt/unity/Editor/Unity -batchmode -quit -nographics -projectPath "$(pwd)" -logFile /dev/stdout -buildOSXUniversalPlayer ./build/osx/Behide.app
+
+build:windows:
+  <<: *build
+  image: $IMAGE:$UNITY_VERSION-windows-mono-$IMAGE_VERSION
+  script:
+    - /opt/unity/Editor/Unity -batchmode -quit -nographics -projectPath "$(pwd)" -logFile /dev/stdout -buildWindowsPlayer ./build/windows/Behide.exe
+
+build:windows64:
+  <<: *build
+  image: $IMAGE:$UNITY_VERSION-windows-mono-$IMAGE_VERSION
+  script:
+    - /opt/unity/Editor/Unity -batchmode -quit -nographics -projectPath "$(pwd)" -logFile /dev/stdout -buildWindows64Player ./build/windows-64/Behide.exe
+
+
+zip-and-publish:linux:
+  <<: *zip-and-publish-build
+  needs:
+    - job: build:linux
+      artifacts: true
+  script:
+    - cd ./build/linux
+    - zip -r linux.zip ./
+    - mkdir -p /behide-website/$CI_COMMIT_TAG
+    - cp linux.zip /behide-website/$CI_COMMIT_TAG/linux.zip
+
+zip-and-publish:osx:
+  <<: *zip-and-publish-build
+  needs:
+    - job: build:osx
+      artifacts: true
+  script:
+    - cd ./build/osx
+    - zip -r osx.zip ./
+    - mkdir -p /behide-website/$CI_COMMIT_TAG
+    - cp osx.zip /behide-website/$CI_COMMIT_TAG/osx.zip
+
+zip-and-publish:windows:
+  <<: *zip-and-publish-build
+  needs:
+    - job: build:windows
+      artifacts: true
+  script:
+    - cd ./build/windows
+    - zip -r Behide-windows-32.zip ./
+    - mkdir -p /behide-website/$CI_COMMIT_TAG
+    - cp Behide-windows-32.zip /behide-website/$CI_COMMIT_TAG/windows-32.zip
+
+zip-and-publish:windows64:
+  <<: *zip-and-publish-build
+  needs:
+    - job: build:windows64
+      artifacts: true
+  script:
+    - cd ./build/windows-64
+    - zip -r Behide-windows-64.zip ./
+    - mkdir -p /behide-website/$CI_COMMIT_TAG
+    - cp Behide-windows-64.zip /behide-website/$CI_COMMIT_TAG/windows-64.zip
+
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  needs:
+    - job: zip-and-publish:linux
+    - job: zip-and-publish:osx
+    - job: zip-and-publish:windows
+    - job: zip-and-publish:windows64
+  script:
+    - echo "Releasing 🚀"
+  release:
+    name: $CI_COMMIT_TAG
+    description: $CI_COMMIT_TAG release
+    tag_name: $CI_COMMIT_TAG
+    assets:
+      links:
+        - name: Linux
+          url: https://behide.titaye.dev/$CI_COMMIT_TAG/linux.zip
+        - name: Mac
+          url: https://behide.titaye.dev/$CI_COMMIT_TAG/osx.zip
+        - name: Windows 32 bit
+          url: https://behide.titaye.dev/$CI_COMMIT_TAG/windows-32.zip
+        - name: Windows 64 bit
+          url: https://behide.titaye.dev/$CI_COMMIT_TAG/windows-64.zip
+  only:
+    - tags
