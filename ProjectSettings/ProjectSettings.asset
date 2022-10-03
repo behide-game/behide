@@ -42,12 +42,12 @@ PlayerSettings:
   m_SplashScreenLogos:
   - logo: {fileID: 10404, guid: 0000000000000000e000000000000000, type: 0}
     duration: 2
-  - logo: {fileID: 21300000, guid: ab07946918a44f74ca0460ea4360e149, type: 3}
+  - logo: {fileID: 21300000, guid: 7a5b92b7456401a46b50bb2696ad7d87, type: 3}
     duration: 2.5
   m_VirtualRealitySplashScreen: {fileID: 2800000, guid: 9ff0402bba3d1c14ea666ad6437aa7fc, type: 3}
   m_HolographicTrackingLossScreen: {fileID: 0}
-  defaultScreenWidth: 1920
-  defaultScreenHeight: 1080
+  defaultScreenWidth: 711
+  defaultScreenHeight: 400
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
   m_StereoRenderingPath: 0
@@ -280,7 +280,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 9ff0402bba3d1c14ea666ad6437aa7fc, type: 3}
+      m_Icon: {fileID: 2800000, guid: df76d6e76c7d4d04294a2c04ed086a6b, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
@@ -746,6 +746,7 @@ PlayerSettings:
   allowUnsafeCode: 0
   useDeterministicCompilation: 1
   enableRoslynAnalyzers: 1
+  selectedPlatform: 0
   additionalIl2CppArgs: 
   scriptingRuntimeVersion: 1
   gcIncremental: 1
