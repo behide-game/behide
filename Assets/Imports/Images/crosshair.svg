@@ -7,7 +7,7 @@
    viewBox="0 0 155.18401 155.18401"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
    sodipodi:docname="crosshair.svg"
    inkscape:export-filename="D:\gael_code\perso\Unity\Behide\Behide-game\Assets\Imports\Images\crosshair.png"
    inkscape:export-xdpi="50"
@@ -27,14 +27,16 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.73406285"
-     inkscape:cx="405.27865"
-     inkscape:cy="367.13478"
+     inkscape:cx="318.09265"
+     inkscape:cy="367.81592"
      inkscape:window-width="1920"
-     inkscape:window-height="1009"
-     inkscape:window-x="-8"
-     inkscape:window-y="627"
+     inkscape:window-height="1057"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer1"
+     inkscape:showpageshadow="0"
+     inkscape:deskcolor="#505050" />
   <defs
      id="defs2" />
   <g
@@ -43,7 +45,7 @@
      id="layer1">
     <g
        id="g1022"
-       transform="translate(-30.618465,-14.308665)">
+       transform="rotate(180,92.901327,84.746335)">
       <rect
          style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:5.26083;stroke-linejoin:round"
          id="rect846"
