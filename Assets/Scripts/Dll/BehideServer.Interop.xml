@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+<assembly><name>BehideServer.Interop</name></assembly>
+<members>
+<member name="M:BehideServer.Interop.Tcp.MsgContentParser.CreateRoom(System.Byte[])">
+ <summary></summary>
+ <returns>The username of the room's creator</returns>
+</member>
+<member name="F:BehideServer.Interop.Tcp.MsgHeader.CreateRoom">
+ <summary>
+ <para>Create room</para>
+ <para>Content: The username of the game creator (UTF8)</para>
+ </summary>
+</member>
+<member name="F:BehideServer.Interop.Tcp.MsgHeader.Ping">
+<summary>
+ No content
+</summary>
+</member>
+<member name="F:BehideServer.Interop.Udp.MsgHeader.Ping">
+<summary>
+ No content
+</summary>
+</member>
+</members>
+</doc>
