@@ -1,9 +1,8 @@
 using System;
 using UnityEngine;
-using Mirror;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerMovements : NetworkBehaviour
+public class PlayerMovements : MonoBehaviour
 {
     [SerializeField]
     private float mouseXSensitivity;

@@ -1,8 +1,7 @@
 using System;
 using UnityEngine;
-using Mirror;
 
-public class PlayerPropShoot : NetworkBehaviour
+public class PlayerPropShoot : MonoBehaviour
 {
     [SerializeField]
     private float maxShootDistance;
@@ -41,34 +40,34 @@ public class PlayerPropShoot : NetworkBehaviour
                     playerCamDisk.transform.localPosition = new Vector3(0, touchedPropSize.y * 1.5f, -touchedPropSize.z / 2);
                     playerCamDisk.transform.GetComponentInChildren<Camera>().transform.localPosition = new Vector3(0, 0, -touchedPropSize.z);
 
-                    CmdTransformInProp(hitData.transform.gameObject);
+                    //CmdTransformInProp(hitData.transform.gameObject);
                 }
             }
         }
     }
 
-    [Command]
-    void CmdTransformInProp(GameObject propGameObject)
-    {
-        RpcTransformInProp(gameObject, propGameObject);
-    }
+    //[Command]
+    //void CmdTransformInProp(GameObject propGameObject)
+    //{
+    //    RpcTransformInProp(gameObject, propGameObject);
+    //}
 
-    [ClientRpc]
-    private void RpcTransformInProp(GameObject targetPlayer, GameObject targetProp)
-    {
-        PropScriptableObject prop = targetProp.GetComponent<Prop>().prop;
-        targetPlayer.transform.Find("Default graphics").gameObject.SetActive(false);
+    //[ClientRpc]
+    //private void RpcTransformInProp(GameObject targetPlayer, GameObject targetProp)
+    //{
+    //    PropScriptableObject prop = targetProp.GetComponent<Prop>().prop;
+    //    targetPlayer.transform.Find("Default graphics").gameObject.SetActive(false);
 
-        if (targetPlayer.transform.Find("Prop graphics") != null)
-        {
-            Destroy(targetPlayer.transform.Find("Prop graphics").gameObject);
-        }
+    //    if (targetPlayer.transform.Find("Prop graphics") != null)
+    //    {
+    //        Destroy(targetPlayer.transform.Find("Prop graphics").gameObject);
+    //    }
 
-        GameObject propGraphics = new("Prop graphics");
-        propGraphics.transform.SetParent(targetPlayer.transform, false);
+    //    GameObject propGraphics = new("Prop graphics");
+    //    propGraphics.transform.SetParent(targetPlayer.transform, false);
 
-        Instantiate(prop.graphicsPrefab, propGraphics.transform.position, prop.graphicsPrefab.transform.rotation, propGraphics.transform);
-        Instantiate(prop.collidersPrefab, propGraphics.transform.position, prop.collidersPrefab.transform.rotation, propGraphics.transform).tag = playerTag;
-        targetPlayer.GetComponent<Rigidbody>().mass = prop.mass;
-    }
+    //    Instantiate(prop.graphicsPrefab, propGraphics.transform.position, prop.graphicsPrefab.transform.rotation, propGraphics.transform);
+    //    Instantiate(prop.collidersPrefab, propGraphics.transform.position, prop.collidersPrefab.transform.rotation, propGraphics.transform).tag = playerTag;
+    //    targetPlayer.GetComponent<Rigidbody>().mass = prop.mass;
+    //}
 }

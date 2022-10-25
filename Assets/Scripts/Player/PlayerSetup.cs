@@ -1,7 +1,6 @@
 using UnityEngine;
-using Mirror;
 
-public class PlayerSetup : NetworkBehaviour
+public class PlayerSetup : MonoBehaviour
 {
     [SerializeField]
     private Behaviour[] componentsToDisable;
@@ -24,66 +23,66 @@ public class PlayerSetup : NetworkBehaviour
         if (Application.platform == RuntimePlatform.LinuxServer) { return; }
 
 
-        if (!isLocalPlayer)
-        {
-            AssignRemoteLayer();
-            DisableComponents();
-        }
-        else
-        {
-            PlayerMovements playerMovements = transform.GetComponent<PlayerMovements>();
-            PlayerPropShoot playerPropShoot = transform.GetComponent<PlayerPropShoot>();
-            playerMovements.rb = GetComponent<Rigidbody>();
-
-            if (isHunter)
-            {
-                Camera.main.transform.SetParent(transform);
-                Camera.main.transform.localPosition = defaultHunterCamPos;
-                Camera.main.transform.localEulerAngles = Vector3.zero;
-
-                playerMovements.playerCam = Camera.main.gameObject;
-                playerPropShoot.enabled = false;
-            }
-            else
-            {
-                mainCam = Camera.main.gameObject;
-                Camera.main.gameObject.SetActive(false);
-
-                GameObject cameraDisk = Instantiate(cameraDiskPrefab, transform);
-                cameraDisk.name = cameraDiskPrefab.name;
-                cameraDisk.transform.localPosition = defaultPropCamPos;
-
-                playerMovements.thirdPersonView = true;
-                playerMovements.playerCam = cameraDisk;
-                playerPropShoot.playerCamDisk = cameraDisk;
-
-                currentCamDisk = cameraDisk;
-            }
-
-            Cursor.lockState = CursorLockMode.Confined;
-        }
-    }
-
-    public override void OnStopLocalPlayer()
-    {
-        base.OnStopLocalPlayer();
+        ////if (!isLocalPlayer)
+        //{
+        //    AssignRemoteLayer();
+        //    DisableComponents();
+        //}
+        //else
+        //{
+        PlayerMovements playerMovements = transform.GetComponent<PlayerMovements>();
+        PlayerPropShoot playerPropShoot = transform.GetComponent<PlayerPropShoot>();
+        playerMovements.rb = GetComponent<Rigidbody>();
 
         if (isHunter)
         {
-            CameraConstants camConstants = Camera.main.GetComponent<CameraConstants>();
+            Camera.main.transform.SetParent(transform);
+            Camera.main.transform.localPosition = defaultHunterCamPos;
+            Camera.main.transform.localEulerAngles = Vector3.zero;
 
-            Camera.main.transform.SetParent(null);
-            Camera.main.transform.localPosition = camConstants.defaultPosition;
-            Camera.main.transform.localRotation = camConstants.defaultRotation;
+            playerMovements.playerCam = Camera.main.gameObject;
+            playerPropShoot.enabled = false;
         }
-        else if (currentCamDisk != null)
+        else
         {
-            mainCam.SetActive(true);
-            Destroy(currentCamDisk);
+            mainCam = Camera.main.gameObject;
+            Camera.main.gameObject.SetActive(false);
+
+            GameObject cameraDisk = Instantiate(cameraDiskPrefab, transform);
+            cameraDisk.name = cameraDiskPrefab.name;
+            cameraDisk.transform.localPosition = defaultPropCamPos;
+
+            playerMovements.thirdPersonView = true;
+            playerMovements.playerCam = cameraDisk;
+            playerPropShoot.playerCamDisk = cameraDisk;
+
+            currentCamDisk = cameraDisk;
         }
 
-        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.Confined;
+        //}
     }
+
+    //public override void OnStopLocalPlayer()
+    //{
+    //    base.OnStopLocalPlayer();
+
+    //    if (isHunter)
+    //    {
+    //        CameraConstants camConstants = Camera.main.GetComponent<CameraConstants>();
+
+    //        Camera.main.transform.SetParent(null);
+    //        Camera.main.transform.localPosition = camConstants.defaultPosition;
+    //        Camera.main.transform.localRotation = camConstants.defaultRotation;
+    //    }
+    //    else if (currentCamDisk != null)
+    //    {
+    //        mainCam.SetActive(true);
+    //        Destroy(currentCamDisk);
+    //    }
+
+    //    Cursor.lockState = CursorLockMode.None;
+    //}
 
     void AssignRemoteLayer()
     {
