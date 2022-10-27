@@ -78,7 +78,7 @@ jobs:
           retention-days: 2
 
   compress-builds:
-    name: compress builds
+    name: Compress builds
     needs: build
     runs-on: ubuntu-latest
     strategy:
@@ -119,4 +119,5 @@ jobs:
         with:
           prerelease: ${{ startsWith( github.ref_name, 'pre' ) }}
           title: ${{ steps.build.outputs.buildVersion }}
-          files: "*.zip"
+          files: |
+            *.zip
