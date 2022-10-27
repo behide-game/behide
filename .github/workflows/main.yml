@@ -158,7 +158,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           prerelease: ${{ startsWith( github.ref_name, 'pre' ) }}
-          name: ${{ $PROJECT_VERSION }}
+          name: ${{ env.PROJECT_VERSION }}
           files: |
             behide-linux.zip
             behide-osx.zip
