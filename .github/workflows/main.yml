@@ -97,7 +97,7 @@ jobs:
       - name: Compress builds
         uses: vimtor/action-zip@v1
         with:
-          files: ./*
+          files: "*"
           dest: Behide-${{ matrix.targetPlatform }}.zip
 
       - uses: actions/upload-artifact@v3
