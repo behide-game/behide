@@ -118,7 +118,7 @@ jobs:
       - uses: marvinpinto/action-automatic-releases@v1
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: ${{ startsWith( github.ref_name, "pre" ) }}
+          prerelease: ${{ startsWith( github.ref_name, 'pre' ) }}
           title: ${{ steps.build.outputs.buildVersion }}
           files: |
             *.zip
