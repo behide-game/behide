@@ -1,4 +1,4 @@
-name: Actions 😎
+name: ⚡ Build and Publish
 
 on:
   push:
@@ -35,7 +35,8 @@ jobs:
       - name: Saving version
         run: echo ${{ steps.regex-match.outputs.group1 }} > version.txt
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload version
+        uses: actions/upload-artifact@v3
         with:
           name: Version
           path: version.txt
