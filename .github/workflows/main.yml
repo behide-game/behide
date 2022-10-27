@@ -120,4 +120,7 @@ jobs:
           prerelease: ${{ startsWith( github.ref_name, 'pre' ) }}
           title: ${{ steps.build.outputs.buildVersion }}
           files: |
-            *.zip
+            Behide-StandaloneLinux64.zip
+            Behide-StandaloneWindows.zip
+            Behide-StandaloneWindows64.zip
+            Behide-StandaloneOSX.zip
