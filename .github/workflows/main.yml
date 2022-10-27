@@ -3,8 +3,8 @@ name: Actions 😎
 on:
   push:
     tags:
-      - "v*.*"
-      - "pre-v*.*"
+      - "v*.*.*"
+      - "pre-v*.*.*"
 
 jobs:
   tests:
@@ -51,6 +51,12 @@ jobs:
         with:
           lfs: true
 
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
+        with:
+          text: ${{ github.ref_name }}
+          regex: '^(?:pre-)?v(\d.\d.\d)$'
+
       # Cache
       - uses: actions/cache@v3
         with:
@@ -68,14 +74,15 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           buildName: Behide
-          versioning: Semantic
+          versioning: Custom
+          version: steps.regex-match.outputs.group1
           targetPlatform: ${{ matrix.targetPlatform }}
           allowDirtyBuild: true
 
       # Save version
       - name: Saving version
         if: ${{ matrix.targetPlatform == 'StandaloneLinux64' }}
-        run: echo ${{ steps.build.outputs.buildVersion }} > version.txt
+        run: echo ${{ steps.regex-match.outputs.group1 }} > version.txt
 
       # Output
       - uses: actions/upload-artifact@v3
