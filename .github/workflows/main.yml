@@ -111,15 +111,29 @@ jobs:
     needs: compress-builds
     runs-on: ubuntu-latest
     steps:
-      - name: Download builds
+      - name: "Download build: Linux"
         uses: actions/download-artifact@v3
+        with:
+          name: Compressed-build-StandaloneLinux64
+      - name: "Download build: MacOS"
+        uses: actions/download-artifact@v3
+        with:
+          name: Compressed-build-StandaloneOSX
+      - name: "Download build: Windows 32 bit"
+        uses: actions/download-artifact@v3
+        with:
+          name: Compressed-build-StandaloneWindows
+      - name: "Download build: Windows 64 bit"
+        uses: actions/download-artifact@v3
+        with:
+          name: Compressed-build-StandaloneWindows64
 
       - name: Rename files
         run: |
-          mv Compressed-build-StandaloneLinux64/Behide-StandaloneLinux64.zip behide-linux.zip
-          mv Compressed-build-StandaloneOSX/Behide-StandaloneOSX.zip behide-osx.zip
-          mv Compressed-build-StandaloneWindows/Behide-StandaloneWindows.zip behide-windows32.zip
-          mv Compressed-build-StandaloneWindows64/Behide-StandaloneWindows64.zip behide-windows64.zip
+          mv Behide-StandaloneLinux64.zip behide-linux.zip
+          mv Behide-StandaloneOSX.zip behide-osx.zip
+          mv Behide-StandaloneWindows.zip behide-windows-32.zip
+          mv Behide-StandaloneWindows64.zip behide-windows-64.zip
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -127,7 +141,7 @@ jobs:
           prerelease: ${{ startsWith( github.ref_name, 'pre' ) }}
           title: ${{ steps.build.outputs.buildVersion }}
           files: |
-            Compressed-build-StandaloneLinux64/Behide-StandaloneLinux64.zip
-            Compressed-build-StandaloneOSX/Behide-StandaloneOSX.zip
-            Compressed-build-StandaloneWindows/Behide-StandaloneWindows.zip
-            Compressed-build-StandaloneWindows64/Behide-StandaloneWindows64.zip
+            behide-linux.zip
+            behide-osx.zip
+            behide-windows-32.zip
+            behide-windows-64.zip
