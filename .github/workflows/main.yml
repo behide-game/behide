@@ -94,10 +94,12 @@ jobs:
         with:
           name: Build-${{ matrix.targetPlatform }}
 
+      - run: ls -al
+
       - name: Compress builds
         uses: vimtor/action-zip@v1
         with:
-          files: build/${{ matrix.targetPlatform }}
+          files: ${{ matrix.targetPlatform }}
           dest: Behide-${{ matrix.targetPlatform }}.zip
 
       - uses: actions/upload-artifact@v3
@@ -114,13 +116,11 @@ jobs:
       - name: Download builds
         uses: actions/download-artifact@v3
 
+      - run: ls -al
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           prerelease: ${{ startsWith( github.ref_name, 'pre' ) }}
           title: ${{ steps.build.outputs.buildVersion }}
-          files: |
-            Behide-StandaloneLinux64.zip
-            Behide-StandaloneWindows.zip
-            Behide-StandaloneWindows64.zip
-            Behide-StandaloneOSX.zip
+          files: "*.zip"
