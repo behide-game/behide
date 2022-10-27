@@ -1,6 +1,9 @@
 name: Actions 😎
 
-on: [push, pull_request]
+on:
+  push:
+    tags:
+      - "v*.*"
 
 jobs:
   tests:
@@ -31,6 +34,7 @@ jobs:
 
   build:
     name: Build
+    needs: tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -71,14 +75,50 @@ jobs:
         with:
           name: Build-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
+          retention-days: 2
 
   compress-builds:
     name: compress builds
     needs: build
     runs-on: self-hosted
+    strategy:
+      matrix:
+        targetPlatform:
+          - StandaloneLinux64
+          - StandaloneWindows
+          - StandaloneWindows64
+          - StandaloneOSX
     steps:
       - name: Download builds
         uses: actions/download-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}
 
       - name: Compress builds
-        run: ls -al
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r Behide-${{ matrix.targetPlatform }}.zip build/${{ matrix.targetPlatform }}
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Compressed-build-${{ matrix.targetPlatform }}
+          path: Behide-${{ matrix.targetPlatform }}.zip
+          retention-days: 2
+
+  release:
+    name: Release
+    needs: compress-builds
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download builds
+        uses: actions/download-artifact@v3
+        with:
+          name: Compressed-build-${{ matrix.targetPlatform }}
+
+      - uses: marvinpinto/action-automatic-releases@v1
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: ${{ startsWith( github.ref_name, "pre" ) }}
+          title: ${{ steps.build.outputs.buildVersion }}
+          files: |
+            *.zip
