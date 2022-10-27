@@ -97,7 +97,7 @@ jobs:
       - name: Compress builds
         uses: vimtor/action-zip@v1
         with:
-          files: "*"
+          files: "."
           dest: Behide-${{ matrix.targetPlatform }}.zip
 
       - uses: actions/upload-artifact@v3
@@ -113,6 +113,13 @@ jobs:
     steps:
       - name: Download builds
         uses: actions/download-artifact@v3
+
+      - name: Rename files
+        run: |
+          mv Compressed-build-StandaloneLinux64/Behide-StandaloneLinux64.zip behide-linux.zip
+          mv Compressed-build-StandaloneOSX/Behide-StandaloneOSX.zip behide-osx.zip
+          mv Compressed-build-StandaloneWindows/Behide-StandaloneWindows.zip behide-windows32.zip
+          mv Compressed-build-StandaloneWindows64/Behide-StandaloneWindows64.zip behide-windows64.zip
 
       - name: Release
         uses: softprops/action-gh-release@v1
