@@ -80,7 +80,7 @@ jobs:
   compress-builds:
     name: compress builds
     needs: build
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         targetPlatform:
@@ -113,8 +113,6 @@ jobs:
     steps:
       - name: Download builds
         uses: actions/download-artifact@v3
-        with:
-          name: Compressed-build-${{ matrix.targetPlatform }}
 
       - uses: marvinpinto/action-automatic-releases@latest
         with:
