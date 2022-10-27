@@ -9,4 +9,4 @@ jobs:
       - run: pwd
       - run: ls -al /
       - run: ls -al /behide-storage/
-      - run: echo "Hello" >> /behide-storage/hello.txt
+      - run: echo "Hello" >> ../behide-storage/hello.txt
