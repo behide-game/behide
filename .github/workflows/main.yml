@@ -1,0 +1,188 @@
+name: ⚡ Build and Publish
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+      - "pre-v*.*.*"
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      # Cache
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+
+      # Save version
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
+        with:
+          text: ${{ github.ref_name }}
+          regex: '^(?:pre-)?v(\d.\d.\d)$'
+
+      - name: Saving version
+        run: echo ${{ steps.regex-match.outputs.group1 }} > version.txt
+
+      - name: Upload version
+        uses: actions/upload-artifact@v3
+        with:
+          name: Version
+          path: version.txt
+          retention-days: 2
+
+      # Test
+      - name: Run tests
+        uses: game-ci/unity-test-runner@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    name: Build
+    needs: tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        targetPlatform:
+          - StandaloneLinux64 # Build a Linux 64-bit standalone.
+          - StandaloneWindows # Build a Windows standalone.
+          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+          - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      # Retrieve version
+      - name: Retrieve version
+        uses: actions/download-artifact@v3
+        with:
+          name: Version
+
+      - name: Set version environment variable
+        run: |
+          echo "Project version is: $(cat version.txt)"
+          echo "PROJECT_VERSION=$(cat version.txt)" >> $GITHUB_ENV
+
+
+      # Cache
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+
+      # Build
+      - name: Build project
+        id: build
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          buildName: Behide
+          versioning: Custom
+          version: ${{ env.PROJECT_VERSION }}
+          targetPlatform: ${{ matrix.targetPlatform }}
+          allowDirtyBuild: true
+
+      # Output
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
+          retention-days: 2
+
+  compress-builds:
+    name: Compress builds
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        targetPlatform:
+          - StandaloneLinux64
+          - StandaloneWindows
+          - StandaloneWindows64
+          - StandaloneOSX
+    steps:
+      - name: Download builds
+        uses: actions/download-artifact@v3
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+
+      - name: Compress builds
+        uses: vimtor/action-zip@v1
+        with:
+          files: "."
+          dest: Behide-${{ matrix.targetPlatform }}.zip
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Compressed-build-${{ matrix.targetPlatform }}
+          path: Behide-${{ matrix.targetPlatform }}.zip
+          retention-days: 2
+
+  release:
+    name: Release
+    needs: compress-builds
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Download version.txt"
+        uses: actions/download-artifact@v3
+        with:
+          name: Version
+      - name: "Download build: Linux"
+        uses: actions/download-artifact@v3
+        with:
+          name: Compressed-build-StandaloneLinux64
+      - name: "Download build: MacOS"
+        uses: actions/download-artifact@v3
+        with:
+          name: Compressed-build-StandaloneOSX
+      - name: "Download build: Windows 32 bit"
+        uses: actions/download-artifact@v3
+        with:
+          name: Compressed-build-StandaloneWindows
+      - name: "Download build: Windows 64 bit"
+        uses: actions/download-artifact@v3
+        with:
+          name: Compressed-build-StandaloneWindows64
+
+      - name: Set version environment variable
+        run: |
+          echo "Project version is: $(cat version.txt)"
+          echo "PROJECT_VERSION=$(cat version.txt)" >> $GITHUB_ENV
+
+      - name: Rename files
+        run: |
+          mv Behide-StandaloneLinux64.zip behide-linux.zip
+          mv Behide-StandaloneOSX.zip behide-osx.zip
+          mv Behide-StandaloneWindows.zip behide-windows-32.zip
+          mv Behide-StandaloneWindows64.zip behide-windows-64.zip
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: ${{ startsWith( github.ref_name, 'pre' ) }}
+          name: ${{ env.PROJECT_VERSION }}
+          files: |
+            behide-linux.zip
+            behide-osx.zip
+            behide-windows-32.zip
+            behide-windows-64.zip
