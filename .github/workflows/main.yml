@@ -25,6 +25,23 @@ jobs:
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
 
+      # Save version
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: regex-match
+        with:
+          text: ${{ github.ref_name }}
+          regex: '^(?:pre-)?v(\d.\d.\d)$'
+
+      - name: Saving version
+        if: ${{ matrix.targetPlatform == 'StandaloneLinux64' }}
+        run: echo ${{ steps.regex-match.outputs.group1 }} > version.txt
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Version
+          path: version.txt
+          retention-days: 2
+
       # Test
       - name: Run tests
         uses: game-ci/unity-test-runner@v2
@@ -51,11 +68,12 @@ jobs:
         with:
           lfs: true
 
-      - uses: actions-ecosystem/action-regex-match@v2
-        id: regex-match
+      # Retrieve version
+      - name: "Retrieve version"
+        uses: actions/download-artifact@v3
         with:
-          text: ${{ github.ref_name }}
-          regex: '^(?:pre-)?v(\d.\d.\d)$'
+          name: Version
+
 
       # Cache
       - uses: actions/cache@v3
@@ -75,22 +93,11 @@ jobs:
         with:
           buildName: Behide
           versioning: Custom
-          version: steps.regex-match.outputs.group1
+          version: ${{ env.PROJECT_VERSION }}
           targetPlatform: ${{ matrix.targetPlatform }}
           allowDirtyBuild: true
 
-      # Save version
-      - name: Saving version
-        if: ${{ matrix.targetPlatform == 'StandaloneLinux64' }}
-        run: echo ${{ steps.regex-match.outputs.group1 }} > version.txt
-
       # Output
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Version
-          path: version.txt
-          retention-days: 2
-
       - uses: actions/upload-artifact@v3
         with:
           name: Build-${{ matrix.targetPlatform }}
