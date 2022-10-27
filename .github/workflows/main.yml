@@ -114,10 +114,9 @@ jobs:
       - name: Download builds
         uses: actions/download-artifact@v3
 
-      - uses: marvinpinto/action-automatic-releases@latest
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: ${{ startsWith( github.ref_name, 'pre' ) }}
           title: ${{ steps.build.outputs.buildVersion }}
-          files: |
-            *.zip
+          files: "*.zip"
