@@ -68,10 +68,15 @@ jobs:
           lfs: true
 
       # Retrieve version
-      - name: "Retrieve version"
+      - name: Retrieve version
         uses: actions/download-artifact@v3
         with:
           name: Version
+
+      - name: Set version environment variable
+        run: |
+          echo "Project version is: $(cat version.txt)"
+          echo "PROJECT_VERSION=$(cat version.txt)" >> $GITHUB_ENV
 
 
       # Cache
@@ -159,7 +164,9 @@ jobs:
           name: Compressed-build-StandaloneWindows64
 
       - name: Set version environment variable
-        run: echo "PROJECT_VERSION=$(cat version.txt)" >> $GITHUB_ENV
+        run: |
+          echo "Project version is: $(cat version.txt)"
+          echo "PROJECT_VERSION=$(cat version.txt)" >> $GITHUB_ENV
 
       - name: Rename files
         run: |
