@@ -7,7 +7,8 @@ jobs:
     runs-on: self-hosted
     steps:
       - run: pwd
-      - run: ls -al /
       - run: ls -al ../
       - run: ls -al ../../
+      - run: ls -al ../../../
+      - run: ls -al ../../../../
       - run: echo "Hello" >> ../behide-storage/hello.txt
