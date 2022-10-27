@@ -8,4 +8,5 @@ jobs:
     steps:
       - run: pwd
       - run: ls -al ../../../
+      - run: touch ../../../behide-storage/hello.txt
       - run: echo "Hello" >> ../../../behide-storage/hello.txt
