@@ -1,0 +1,10 @@
+name: Tests ⚡
+
+on: push
+
+jobs:
+  test:
+    runs-on: self-hosted
+    steps:
+      - run: ls -al
+      - run: pwd
