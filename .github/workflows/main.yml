@@ -74,7 +74,7 @@ jobs:
 
       # Save version
       - name: Saving version
-        run: ${{ steps.build.outputs.buildVersion }} > version.txt
+        run: echo ${{ steps.build.outputs.buildVersion }} > version.txt
 
       # Output
       - uses: actions/upload-artifact@v3
