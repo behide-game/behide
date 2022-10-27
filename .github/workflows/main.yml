@@ -33,7 +33,6 @@ jobs:
           regex: '^(?:pre-)?v(\d.\d.\d)$'
 
       - name: Saving version
-        if: ${{ matrix.targetPlatform == 'StandaloneLinux64' }}
         run: echo ${{ steps.regex-match.outputs.group1 }} > version.txt
 
       - uses: actions/upload-artifact@v3
