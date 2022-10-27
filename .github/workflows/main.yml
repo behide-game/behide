@@ -74,6 +74,7 @@ jobs:
 
       # Save version
       - name: Saving version
+        if: ${{ matrix.targetPlatform == 'StandaloneLinux64' }}
         run: echo ${{ steps.build.outputs.buildVersion }} > version.txt
 
       # Output
