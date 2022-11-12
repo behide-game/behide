@@ -1,12 +1,22 @@
 name: ⚡ Build and Publish
 
-on:
-  push:
-    tags:
-      - "v*.*.*"
-      - "pre-v*.*.*"
+on: [push]
+  #push:
+  #  tags:
+  #    - "v*.*.*"
+  #    - "pre-v*.*.*"
 
 jobs:
+  temp-test:
+    name: Temp test
+    runs-on: ubuntu-latest
+    steps:
+      # Retreive .env file
+      - name: Retreive .env file
+        run: |
+            ${{ secrets.DOTENV }} >> .env
+            ls -al
+            cat .env
   tests:
     name: Tests
     runs-on: ubuntu-latest
@@ -86,6 +96,10 @@ jobs:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
+
+      # Retreive .env file
+      - name: Retreive .env file
+        run: ${{ secrets.DOTENV }} >> .env
 
       # Build
       - name: Build project
