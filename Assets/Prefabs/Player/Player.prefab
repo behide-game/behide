@@ -98,6 +98,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
+  moveSpeed: 4
   mouseXSensitivity: 200
   mouseYSensitivity: 200
   thirdPersonView: 0

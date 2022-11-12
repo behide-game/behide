@@ -21,9 +21,6 @@ public class PlayerSetup : NetworkBehaviour
 
     void Start()
     {
-        if (Application.platform == RuntimePlatform.LinuxServer) { return; }
-
-
         if (!isLocalPlayer)
         {
             AssignRemoteLayer();
@@ -60,7 +57,10 @@ public class PlayerSetup : NetworkBehaviour
                 currentCamDisk = cameraDisk;
             }
 
-            Cursor.lockState = CursorLockMode.Confined;
+            if (!Application.isEditor)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
     }
 
