@@ -1,22 +1,12 @@
 name: ⚡ Build and Publish
 
-on: [push]
-  #push:
-  #  tags:
-  #    - "v*.*.*"
-  #    - "pre-v*.*.*"
+on:
+  push:
+    tags:
+      - "v*.*.*"
+      - "pre-v*.*.*"
 
 jobs:
-  temp-test:
-    name: Temp test
-    runs-on: ubuntu-latest
-    steps:
-      # Retreive .env file
-      - name: Retreive .env file
-        run: |
-            ${{ secrets.DOTENV }} >> .env
-            ls -al
-            cat .env
   tests:
     name: Tests
     runs-on: ubuntu-latest
