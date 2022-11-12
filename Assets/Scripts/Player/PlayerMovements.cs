@@ -1,14 +1,12 @@
-using System;
 using UnityEngine;
 using Mirror;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovements : NetworkBehaviour
 {
-    [SerializeField]
-    private float mouseXSensitivity;
-    [SerializeField]
-    private float mouseYSensitivity;
+    [SerializeField] float moveSpeed;
+    [SerializeField] float mouseXSensitivity;
+    [SerializeField] float mouseYSensitivity;
 
     [HideInInspector]
     public bool thirdPersonView;
@@ -17,23 +15,26 @@ public class PlayerMovements : NetworkBehaviour
     public GameObject playerCam;
     [HideInInspector]
     public Rigidbody rb;
-    private float cameraRotationY = 0f;
+    private float rotateY = 0f;
 
     private void FixedUpdate()
     {
-        if (playerCam == null) { return; }
-        if (rb == null) { return; }
+        if (playerCam == null || rb == null || !isLocalPlayer) return;
 
-        float moveX = Input.GetAxis("Horizontal") * Time.fixedDeltaTime * 4f;
-        float moveZ = Input.GetAxis("Vertical") * Time.fixedDeltaTime * 4f;
+        // Movement
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+        Vector3 movement = new Vector3(moveX, 0, moveZ).normalized * (Time.fixedDeltaTime * moveSpeed);
+        transform.Translate(movement);
+
+        // Rotation
         float rotateX = Input.GetAxisRaw("Mouse X") * Time.fixedDeltaTime * mouseXSensitivity;
-        float rotateY = -Input.GetAxisRaw("Mouse Y") * Time.fixedDeltaTime * mouseYSensitivity;
-        cameraRotationY += rotateY;
-        cameraRotationY = Mathf.Clamp(cameraRotationY, -90, 90);
+        rotateY -= Input.GetAxisRaw("Mouse Y") * Time.fixedDeltaTime * mouseYSensitivity;
+        rotateY = Mathf.Clamp(rotateY, -90, 90);
 
-        transform.Translate(moveX, 0, moveZ);
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(0, rotateX, 0));
-
-        playerCam.transform.localEulerAngles = new Vector3(cameraRotationY, 0, 0);
+        // Rotate (left/right) the body
+        transform.Rotate(new Vector3(0, rotateX, 0));
+        // Rotate (top/bottom) the camera
+        playerCam.transform.localEulerAngles = new Vector3(rotateY, 0, 0);
     }
 }
