@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 
 using UnityEngine;
 
+using CandyCoded.env;
+
 /// <summary>
 /// Manages the Epic Online Services SDK
 /// Do not destroy this component!
@@ -19,9 +21,6 @@ namespace EpicTransport {
     public class EOSSDKComponent : MonoBehaviour {
 
         // Unity Inspector shown variables
-
-        [SerializeField]
-        private EosApiKey apiKeys;
 
         [Header("User Login")]
         public bool authInterfaceLogin = false;
@@ -57,6 +56,14 @@ namespace EpicTransport {
         public uint tickBudgetInMilliseconds = 0;
 
         // End Unity Inspector shown variables
+
+        private string epicProductName;
+        private string epicProductVersion;
+        private string epicProductId;
+        private string epicSandboxId;
+        private string epicDeploymentId;
+        private string epicClientId;
+        private string epicClientSecret;
 
         private ulong authExpirationHandle;
 
@@ -189,6 +196,15 @@ namespace EpicTransport {
 #endif
 
         private void Awake() {
+            // Setup api keys
+            env.TryParseEnvironmentVariable("EPIC_PRODUCT_NAME", out epicProductName);
+            env.TryParseEnvironmentVariable("EPIC_PRODUCT_VERSION", out epicProductVersion);
+            env.TryParseEnvironmentVariable("EPIC_PRODUCT_ID", out epicProductId);
+            env.TryParseEnvironmentVariable("EPIC_SANDBOX_ID", out epicSandboxId);
+            env.TryParseEnvironmentVariable("EPIC_DEPLOYMENT_ID", out epicDeploymentId);
+            env.TryParseEnvironmentVariable("EPIC_CLIENT_ID", out epicClientId);
+            env.TryParseEnvironmentVariable("EPIC_CLIENT_SECRET", out epicClientSecret);
+
             // Initialize Java version of the SDK with a reference to the VM with JNI
             // See https://eoshelp.epicgames.com/s/question/0D54z00006ufJBNCA2/cant-get-createdeviceid-to-work-in-unity-android-c-sdk?language=en_US
             if (Application.platform == RuntimePlatform.Android)
@@ -227,8 +243,8 @@ namespace EpicTransport {
             isConnecting = true;
 
             var initializeOptions = new InitializeOptions() {
-                ProductName = apiKeys.epicProductName,
-                ProductVersion = apiKeys.epicProductVersion
+                ProductName = epicProductName,
+                ProductVersion = epicProductVersion
             };
 
             var initializeResult = PlatformInterface.Initialize(initializeOptions);
@@ -245,12 +261,12 @@ namespace EpicTransport {
             LoggingInterface.SetCallback(message => Logger.EpicDebugLog(message));
 
             var options = new Options() {
-                ProductId = apiKeys.epicProductId,
-                SandboxId = apiKeys.epicSandboxId,
-                DeploymentId = apiKeys.epicDeploymentId,
+                ProductId = epicProductId,
+                SandboxId = epicSandboxId,
+                DeploymentId = epicDeploymentId,
                 ClientCredentials = new ClientCredentials() {
-                    ClientId = apiKeys.epicClientId,
-                    ClientSecret = apiKeys.epicClientSecret
+                    ClientId = epicClientId,
+                    ClientSecret = epicClientSecret
                 },
                 TickBudgetInMilliseconds = tickBudgetInMilliseconds
             };
