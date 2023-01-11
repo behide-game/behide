@@ -321,14 +321,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09c2b9adb023e6547aa45a0e8bf5fcfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  authInterfaceLogin: 0
+  authInterfaceLogin: 1
   authInterfaceCredentialType: 6
   devAuthToolPort: 7878
   devAuthToolCredentialName: 
-  connectInterfaceCredentialType: 10
+  connectInterfaceCredentialType: 0
   deviceModel: PC Windows 64bit
   displayName: User
-  epicLoggerLevel: 200
+  epicLoggerLevel: 0
   collectPlayerMetrics: 0
   checkForEpicLauncherAndRestart: 0
   delayedInitialization: 0
@@ -2670,6 +2670,54 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 409034, guid: a4c18952442944083b1fddc06ba477c2, type: 3}
   m_PrefabInstance: {fileID: 1880769137}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1466725624
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1466725626}
+  - component: {fileID: 1466725625}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1466725625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466725624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e053345417a63324b957fc566d329864, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  username: carne8
+  ip: 192.168.123.134
+  port: 28000
+--- !u!4 &1466725626
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466725624}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.0648832, y: -2.0508304, z: 6.9187527}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8516886}
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1483752577 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8755675618795102317, guid: ed9cae9824e1fc746b48dfb8e2256916, type: 3}

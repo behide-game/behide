@@ -6,6 +6,7 @@ using System;
 using System.Runtime.InteropServices;
 
 using UnityEngine;
+using UnityEngine.Events;
 
 using CandyCoded.env;
 using UnityEngine.Events;
@@ -396,6 +397,9 @@ namespace EpicTransport {
 
                     localUserProductIdString = productIdString;
                     localUserProductId = loginCallbackInfo.LocalUserId;
+
+                    Guid.TryParse(productIdString, out Guid guid);
+                    OnConnected.Invoke(guid);
                 }
 
                 initialized = true;

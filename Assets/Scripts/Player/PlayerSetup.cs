@@ -59,7 +59,7 @@ public class PlayerSetup : NetworkBehaviour
 
             if (!Application.isEditor)
             {
-                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.lockState = CursorLockMode.Confined;
             }
         }
     }
