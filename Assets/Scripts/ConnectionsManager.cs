@@ -67,9 +67,10 @@ using Mirror;
 using Unity.VisualScripting;
 using EpicTransport;
 
-public class GameManager : MonoBehaviour
+public class ConnectionsManager : MonoBehaviour
 {
-    private enum State { Initializing, Connecting, RegisteringPlayer, CreatingRoom, Finished }
+    private const string EPIC_SCHEME = "epic";
+    private enum State { ConnectingEpic, ConnectingBehideServer, RegisteringPlayer, Ready }
 
     public string username;
 
@@ -87,15 +88,21 @@ public class GameManager : MonoBehaviour
 
     private NetworkManager networkManager;
 
+    private string GUItextInput;
+
     void Awake()
     {
         DontDestroyOnLoad(this);
-        state = State.Initializing;
+        state = State.ConnectingEpic;
+        networkManager = GetComponentInChildren<NetworkManager>();
 
         EOSSDKComponent eosSdk = GetComponentInChildren<EOSSDKComponent>();
         eosSdk.OnConnected.AddListener(_ => StartServerConnection());
 
-        networkManager = GetComponentInChildren<NetworkManager>();
+        // Create connection with BehideServer
+        IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+        server = new ServerConnection(ipEndPoint);
+        server.Start();
     }
 
     void OnDestroy()
@@ -103,27 +110,24 @@ public class GameManager : MonoBehaviour
         server?.Dispose();
     }
 
-    private string textInput;
     private void OnGUI()
     {
-        var rect = new Rect(10, 240, 200, Screen.height);
+        var rect = new Rect(10, 250, 200, Screen.height);
 
         GUILayout.BeginArea(rect);
 
-        GUILayout.Label(state.ToString());
+        GUILayout.Label("<b>State:</b> " + state.ToString());
         GUILayout.Label("<b>Current roomId:</b> " + currentRoomId?.ToString());
-        textInput = GUILayout.TextField(textInput);
+        GUItextInput = GUILayout.TextField(GUItextInput);
 
-        if (GUILayout.Button("Connect to to room") && state == State.Finished && RoomId.TryParse(textInput, out RoomId roomId))
-        {
-            ConnectToRoom(roomId);
-        }
+        if (state == State.Finished && GUILayout.Button("Create a room")) CreateRoom();
+        if (state == State.Finished && GUILayout.Button("Join room") && RoomId.TryParse(textInput, out RoomId roomId)) JoinRoom(roomId);
 
         GUILayout.EndArea();
     }
 
 
-    async void StartServerConnection()
+    void StartServerConnection()
     {
         if (!Guid.TryParse(EOSSDKComponent.LocalUserProductIdString, out Guid epicId))
         {
@@ -132,30 +136,17 @@ public class GameManager : MonoBehaviour
         };
         currentEpicId = epicId;
 
-        IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
-        server = new ServerConnection(ipEndPoint);
-
-        state = State.Connecting;
+        state = State.ConnectingBehideServer;
         server.Start();
 
         state = State.RegisteringPlayer;
-        await RegisterPlayer();
-        state = State.CreatingRoom;
-        await CreateRoom();
+        RegisterPlayer();
 
-        state = State.Finished;
-    }
-
-    async void ConnectToRoom(RoomId roomId)
-    {
-        await GetRoom(roomId);
-
-        Uri uri = new UriBuilder("epic", targetEpicId.ToString("N")).Uri;
-        networkManager.StartClient(uri);
+        state = State.Ready;
     }
 
 
-    async Task RegisterPlayer()
+    async void RegisterPlayer()
     {
         Msg msg = Msg.NewRegisterPlayer(server.serverVersion, username);
         Response response = await server.SendMessage(msg, ResponseHeader.PlayerRegistered);
@@ -163,12 +154,13 @@ public class GameManager : MonoBehaviour
         if (!PlayerId.TryParseBytes(response.Content, out PlayerId playerId))
         {
             Debug.LogError("Failed to parse PlayerId");
+            return;
         }
 
         currentPlayerId = playerId;
     }
 
-    async Task CreateRoom()
+    async void CreateRoom()
     {
         Msg msg = Msg.NewCreateRoom(currentPlayerId, currentEpicId);
         Response response = await server.SendMessage(msg, ResponseHeader.RoomCreated);
@@ -176,16 +168,25 @@ public class GameManager : MonoBehaviour
         if (!RoomId.TryParseBytes(response.Content, out RoomId roomId))
         {
             Debug.LogError("Failed to parse RoomId");
+            return;
         }
 
         currentRoomId = roomId;
     }
 
-    async Task GetRoom(RoomId roomId)
+    async void JoinRoom(RoomId roomId)
     {
-        Msg msg = Msg.NewGetRoom(roomId);
-        Response response = await server.SendMessage(msg, ResponseHeader.RoomFound);
+        Response response = await server.SendMessage(Msg.NewGetRoom(roomId), ResponseHeader.RoomFound);
 
-        targetEpicId = new Guid(response.Content);
+        if (!Guid.TryParseBytes(response.Content, out Guid epicId)) {
+            Debug.LogError("Failed to parse Guid.");
+            return;
+        }
+
+        currentRoomId = roomId;
+        targetEpicId = epicId;
+
+        Uri uri = new UriBuilder(EPIC_SCHEME, targetEpicId.ToString("N")).Uri;
+        networkManager.StartClient(uri);
     }
 }
