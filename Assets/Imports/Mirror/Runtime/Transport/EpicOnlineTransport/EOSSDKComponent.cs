@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 
 using CandyCoded.env;
+using UnityEngine.Events;
 
 /// <summary>
 /// Manages the Epic Online Services SDK
@@ -54,6 +55,8 @@ namespace EpicTransport {
         public float platformTickIntervalInSeconds = 0.0f;
         private float platformTickTimer = 0f;
         public uint tickBudgetInMilliseconds = 0;
+
+        public UnityEvent OnConnected;
 
         // End Unity Inspector shown variables
 
@@ -389,6 +392,7 @@ namespace EpicTransport {
                 Result result = loginCallbackInfo.LocalUserId.ToString(out productIdString);
                 if (Result.Success == result) {
                     Debug.Log("EOS User Product ID:" + productIdString);
+                    OnConnected.Invoke();
 
                     localUserProductIdString = productIdString;
                     localUserProductId = loginCallbackInfo.LocalUserId;

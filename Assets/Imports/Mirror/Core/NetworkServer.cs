@@ -33,10 +33,11 @@ namespace Mirror
         static double lastSendTime;
 
         /// <summary>Connection to host mode client (if any)</summary>
-        public static NetworkConnectionToClient localConnection { get; private set; }
+        public static LocalConnectionToClient localConnection { get; private set; }
 
         /// <summary>True is a local client is currently active on the server</summary>
-        public static bool localClientActive => localConnection != null;
+        [Obsolete("NetworkServer.localClientActive was renamed to .activeHost to be more obvious")] // DEPRECATED 2022-12-12
+        public static bool localClientActive => activeHost;
 
         /// <summary>Dictionary of all server connections, with connectionId as key</summary>
         public static Dictionary<int, NetworkConnectionToClient> connections =
@@ -55,8 +56,12 @@ namespace Mirror
         // see also: https://github.com/vis2k/Mirror/pull/2595
         public static bool dontListen;
 
-        /// <summary>active checks if the server has been started</summary>
+        /// <summary>active checks if the server has been started either has standalone or as host server.</summary>
         public static bool active { get; internal set; }
+
+        /// <summary>active checks if the server has been started in host mode.</summary>
+        // naming consistent with NetworkClient.activeHost.
+        public static bool activeHost => localConnection != null;
 
         // scene loading
         public static bool isLoadingScene;
@@ -140,17 +145,8 @@ namespace Mirror
 
         // calls OnStartClient for all SERVER objects in host mode once.
         // client doesn't get spawn messages for those, so need to call manually.
-        public static void ActivateHostScene()
-        {
-            foreach (NetworkIdentity identity in spawned.Values)
-            {
-                if (!identity.isClient)
-                {
-                    // Debug.Log($"ActivateHostScene {identity.netId} {identity}");
-                    identity.OnStartClient();
-                }
-            }
-        }
+        [Obsolete("NetworkServer.ActivateHostScene was moved to HostMode.ActivateHostScene")] // DEPRECATED 2022-12-12
+        public static void ActivateHostScene() => HostMode.ActivateHostScene();
 
         internal static void RegisterMessageHandlers()
         {
@@ -380,7 +376,7 @@ namespace Mirror
             where T : struct, NetworkMessage
         {
             // Debug.Log($"Server.SendToObservers {typeof(T)}");
-            if (identity == null || identity.observers == null || identity.observers.Count == 0)
+            if (identity == null || identity.observers.Count == 0)
                 return;
 
             using (NetworkWriterPooled writer = NetworkWriterPool.Get())
@@ -399,12 +395,12 @@ namespace Mirror
         }
 
         /// <summary>Send a message to only clients which are ready with option to include the owner of the object identity</summary>
-        // TODO put rpcs into NetworkServer.Update WorldState packet, then finally remove SendToReady!
+        // TODO obsolete this later. it's not used anymore
         public static void SendToReadyObservers<T>(NetworkIdentity identity, T message, bool includeOwner = true, int channelId = Channels.Reliable)
             where T : struct, NetworkMessage
         {
             // Debug.Log($"Server.SendToReady {typeof(T)}");
-            if (identity == null || identity.observers == null || identity.observers.Count == 0)
+            if (identity == null || identity.observers.Count == 0)
                 return;
 
             using (NetworkWriterPooled writer = NetworkWriterPool.Get())
@@ -414,7 +410,7 @@ namespace Mirror
                 ArraySegment<byte> segment = writer.ToArraySegment();
 
                 int count = 0;
-                foreach (NetworkConnection conn in identity.observers.Values)
+                foreach (NetworkConnectionToClient conn in identity.observers.Values)
                 {
                     bool isOwner = conn == identity.connectionToClient;
                     if ((!isOwner || includeOwner) && conn.isReady)
@@ -429,7 +425,7 @@ namespace Mirror
         }
 
         /// <summary>Send a message to only clients which are ready including the owner of the NetworkIdentity</summary>
-        // TODO put rpcs into NetworkServer.Update WorldState packet, then finally remove SendToReady!
+        // TODO obsolete this later. it's not used anymore
         public static void SendToReadyObservers<T>(NetworkIdentity identity, T message, int channelId)
             where T : struct, NetworkMessage
         {
@@ -702,8 +698,7 @@ namespace Mirror
 
         internal static bool GetNetworkIdentity(GameObject go, out NetworkIdentity identity)
         {
-            identity = go.GetComponent<NetworkIdentity>();
-            if (identity == null)
+            if (!go.TryGetComponent<NetworkIdentity>(out identity))
             {
                 Debug.LogError($"GameObject {go.name} doesn't have NetworkIdentity.");
                 return false;
@@ -760,8 +755,7 @@ namespace Mirror
         // on this playerControllerId for this connection, this will fail.
         public static bool AddPlayerForConnection(NetworkConnectionToClient conn, GameObject player)
         {
-            NetworkIdentity identity = player.GetComponent<NetworkIdentity>();
-            if (identity == null)
+            if (!player.TryGetComponent<NetworkIdentity>(out NetworkIdentity identity))
             {
                 Debug.LogWarning($"AddPlayer: playerGameObject has no NetworkIdentity. Please add a NetworkIdentity to {player}");
                 return false;
@@ -818,8 +812,7 @@ namespace Mirror
         // safely be used while changing scenes.
         public static bool ReplacePlayerForConnection(NetworkConnectionToClient conn, GameObject player, bool keepAuthority = false)
         {
-            NetworkIdentity identity = player.GetComponent<NetworkIdentity>();
-            if (identity == null)
+            if (!player.TryGetComponent<NetworkIdentity>(out NetworkIdentity identity))
             {
                 Debug.LogError($"ReplacePlayer: playerGameObject has no NetworkIdentity. Please add a NetworkIdentity to {player}");
                 return false;
@@ -1144,20 +1137,19 @@ namespace Mirror
             // verify if we can spawn this
             if (Utils.IsPrefab(obj))
             {
-                Debug.LogError($"GameObject {obj.name} is a prefab, it can't be spawned. Instantiate it first.");
+                Debug.LogError($"GameObject {obj.name} is a prefab, it can't be spawned. Instantiate it first.", obj);
                 return;
             }
 
             if (!active)
             {
-                Debug.LogError($"SpawnObject for {obj}, NetworkServer is not active. Cannot spawn objects without an active server.");
+                Debug.LogError($"SpawnObject for {obj}, NetworkServer is not active. Cannot spawn objects without an active server.", obj);
                 return;
             }
 
-            NetworkIdentity identity = obj.GetComponent<NetworkIdentity>();
-            if (identity == null)
+            if (!obj.TryGetComponent<NetworkIdentity>(out NetworkIdentity identity))
             {
-                Debug.LogError($"SpawnObject {obj} has no NetworkIdentity. Please add a NetworkIdentity to {obj}");
+                Debug.LogError($"SpawnObject {obj} has no NetworkIdentity. Please add a NetworkIdentity to {obj}", obj);
                 return;
             }
 
@@ -1168,10 +1160,12 @@ namespace Mirror
                 return;
             }
 
-            // Spawn should only be called once per netId
+            // Spawn should only be called once per netId.
+            // calling it twice would lead to undefined behaviour.
+            // https://github.com/MirrorNetworking/Mirror/pull/3205
             if (spawned.ContainsKey(identity.netId))
             {
-                Debug.LogWarning($"{identity} with netId={identity.netId} was already spawned.");
+                Debug.LogWarning($"{identity} with netId={identity.netId} was already spawned.", identity.gameObject);
                 return;
             }
 
@@ -1182,7 +1176,22 @@ namespace Mirror
             if (ownerConnection is LocalConnectionToClient)
                 identity.isOwned = true;
 
-            identity.OnStartServer();
+            // only call OnStartServer if not spawned yet.
+            // check used to be in NetworkIdentity. may not be necessary anymore.
+            if (!identity.isServer && identity.netId == 0)
+            {
+                // configure NetworkIdentity
+                identity.isLocalPlayer = NetworkClient.localPlayer == identity;
+                identity.isClient = NetworkClient.active;
+                identity.isServer = true;
+                identity.netId = NetworkIdentity.GetNextNetworkId();
+
+                // add to spawned (after assigning netId)
+                spawned[identity.netId] = identity;
+
+                // callback after all fields were set
+                identity.OnStartServer();
+            }
 
             // Debug.Log($"SpawnObject instance ID {identity.netId} asset ID {identity.assetId}");
 
@@ -1215,8 +1224,7 @@ namespace Mirror
         // This is the same as calling NetworkIdentity.AssignClientAuthority on the spawned object.
         public static void Spawn(GameObject obj, GameObject ownerPlayer)
         {
-            NetworkIdentity identity = ownerPlayer.GetComponent<NetworkIdentity>();
-            if (identity == null)
+            if (!ownerPlayer.TryGetComponent<NetworkIdentity>(out NetworkIdentity identity))
             {
                 Debug.LogError("Player object has no NetworkIdentity");
                 return;
@@ -1257,7 +1265,10 @@ namespace Mirror
             // first pass: activate all scene objects
             foreach (NetworkIdentity identity in identities)
             {
-                if (Utils.IsSceneObject(identity))
+                // only spawn scene objects which haven't been spawned yet.
+                // SpawnObjects may be called multiple times for additive scenes.
+                // https://github.com/MirrorNetworking/Mirror/issues/3318
+                if (Utils.IsSceneObject(identity) &&identity.netId == 0)
                 {
                     // Debug.Log($"SpawnObjects sceneId:{identity.sceneId:X} name:{identity.gameObject.name}");
                     identity.gameObject.SetActive(true);
@@ -1277,10 +1288,15 @@ namespace Mirror
             // second pass: spawn all scene objects
             foreach (NetworkIdentity identity in identities)
             {
-                if (Utils.IsSceneObject(identity))
+                // only spawn scene objects which haven't been spawned yet.
+                // SpawnObjects may be called multiple times for additive scenes.
+                // https://github.com/MirrorNetworking/Mirror/issues/3318
+                if (Utils.IsSceneObject(identity) && identity.netId == 0)
+                {
                     // pass connection so that authority is not lost when server loads a scene
                     // https://github.com/vis2k/Mirror/pull/2987
                     Spawn(identity.gameObject, identity.connectionToClient);
+                }
             }
 
             return true;
@@ -1433,7 +1449,7 @@ namespace Mirror
             identity.ClearObservers();
 
             // in host mode, call OnStopClient/OnStopLocalPlayer manually
-            if (NetworkClient.active && localClientActive)
+            if (NetworkClient.active && activeHost)
             {
                 if (identity.isLocalPlayer)
                     identity.OnStopLocalPlayer();
@@ -1651,10 +1667,6 @@ namespace Mirror
         // both worlds without any worrying now!
         public static void RebuildObservers(NetworkIdentity identity, bool initialize)
         {
-            // observers are null until OnStartServer creates them
-            if (identity.observers == null)
-                return;
-
             // if there is no interest management system,
             // or if 'force shown' then add all connections
             if (aoi == null || identity.visible == Visibility.ForceShown)
@@ -1670,7 +1682,7 @@ namespace Mirror
 
         // broadcasting ////////////////////////////////////////////////////////
         // helper function to get the right serialization for a connection
-        static NetworkWriter GetEntitySerializationForConnection(NetworkIdentity identity, NetworkConnectionToClient connection)
+        static NetworkWriter SerializeForConnection(NetworkIdentity identity, NetworkConnectionToClient connection)
         {
             // get serialization for this entity (cached)
             // IMPORTANT: int tick avoids floating point inaccuracy over days/weeks
@@ -1713,7 +1725,7 @@ namespace Mirror
                 {
                     // get serialization for this entity viewed by this connection
                     // (if anything was serialized this time)
-                    NetworkWriter serialization = GetEntitySerializationForConnection(identity, connection);
+                    NetworkWriter serialization = SerializeForConnection(identity, connection);
                     if (serialization != null)
                     {
                         EntityStateMessage message = new EntityStateMessage
@@ -1868,13 +1880,15 @@ namespace Mirror
             if (active)
             {
                 ++actualTickRateCounter;
-                if (Time.timeAsDouble >= actualTickRateStart + 1)
+
+                // NetworkTime.localTime has defines for 2019 / 2020 compatibility
+                if (NetworkTime.localTime >= actualTickRateStart + 1)
                 {
                     // calculate avg by exact elapsed time.
                     // assuming 1s wouldn't be accurate, usually a few more ms passed.
-                    float elapsed         = (float)(Time.timeAsDouble - actualTickRateStart);
-                    actualTickRate        = Mathf.RoundToInt(actualTickRateCounter / elapsed);
-                    actualTickRateStart   = Time.timeAsDouble;
+                    float elapsed = (float)(NetworkTime.localTime - actualTickRateStart);
+                    actualTickRate = Mathf.RoundToInt(actualTickRateCounter / elapsed);
+                    actualTickRateStart = NetworkTime.localTime;
                     actualTickRateCounter = 0;
                 }
 
