@@ -1,71 +1,9 @@
-using UnityEngine;
-using Mirror;
-using EpicTransport;
-using LightReflectiveMirror;
-using System.Threading;
-using System.Threading.Tasks;
-
-public class GameManager : MonoBehaviour
-{
-    [SerializeField] private int epicConnectionTimeout = 5000;
-
-    private EosTransport epicTransport;
-    private LightReflectiveMirrorTransport LRMTransport;
-    private NetworkManager networkManager;
-    private NetworkManagerHUD networkManagerHud;
-    private EOSSDKComponent epicSdk;
-
-    private Task<bool> epicConnected;
-    private bool UsingEpicTransport() => networkManager.transport is EosTransport;
-
-    async void Awake()
-    {
-        DontDestroyOnLoad(this);
-
-        epicTransport = GetComponentInChildren<EosTransport>();
-        LRMTransport = GetComponentInChildren<LightReflectiveMirrorTransport>();
-        networkManager = GetComponentInChildren<NetworkManager>();
-        networkManagerHud = GetComponentInChildren<NetworkManagerHUD>();
-        epicSdk = GetComponentInChildren<EOSSDKComponent>();
-
-        networkManagerHud.enabled = false;
-
-
-        var epicConnectedTcs = new TaskCompletionSource<bool>();
-        var epicConnectedCts = new CancellationTokenSource(epicConnectionTimeout);
-        epicConnected = epicConnectedTcs.Task;
-
-        epicConnectedCts.Token.Register(() => epicConnectedTcs.SetResult(false));
-        epicSdk.OnConnected.AddListener(() => epicConnectedTcs.SetResult(true));
-
-        if (await epicConnected)
-        {
-            networkManager.transport = epicTransport;
-        }
-        else
-        {
-            networkManager.transport = LRMTransport;
-            epicSdk.enabled = false;
-        }
-        networkManagerHud.enabled = true;
-        Transport.active = networkManager.transport;
-    }
-
-    void OnGUI()
-    {
-        if (networkManager.transport == null || UsingEpicTransport()) return;
-        GUI.Label(new Rect(10, 240, 220, 400), LRMTransport.serverId);
-    }
-}
-
 using System;
 using System.Net;
-using System.Threading.Tasks;
 using UnityEngine;
-using BehideServer.Types;
 using Mirror;
-using Unity.VisualScripting;
-using EpicTransport;
+using BehideServer.Types;
+
 
 public class ConnectionsManager : MonoBehaviour
 {
@@ -78,7 +16,6 @@ public class ConnectionsManager : MonoBehaviour
     public string ip;
     public int port;
 
-    private Guid currentEpicId;
     private Guid targetEpicId;
     private PlayerId currentPlayerId;
     private RoomId currentRoomId;
@@ -93,11 +30,9 @@ public class ConnectionsManager : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(this);
+
         state = State.ConnectingEpic;
         networkManager = GetComponentInChildren<NetworkManager>();
-
-        EOSSDKComponent eosSdk = GetComponentInChildren<EOSSDKComponent>();
-        eosSdk.OnConnected.AddListener(_ => StartServerConnection());
 
         // Create connection with BehideServer
         IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
@@ -112,41 +47,22 @@ public class ConnectionsManager : MonoBehaviour
 
     private void OnGUI()
     {
-        var rect = new Rect(10, 250, 200, Screen.height);
+        if (state != State.Ready) return;
 
-        GUILayout.BeginArea(rect);
+        GUILayout.BeginArea(new Rect(10, 250, 220, 400));
 
         GUILayout.Label("<b>State:</b> " + state.ToString());
         GUILayout.Label("<b>Current roomId:</b> " + currentRoomId?.ToString());
         GUItextInput = GUILayout.TextField(GUItextInput);
 
-        if (state == State.Finished && GUILayout.Button("Create a room")) CreateRoom();
-        if (state == State.Finished && GUILayout.Button("Join room") && RoomId.TryParse(textInput, out RoomId roomId)) JoinRoom(roomId);
+        if (GUILayout.Button("Create a room")) CreateRoom();
+        if (GUILayout.Button("Join room") && RoomId.TryParse(GUItextInput, out RoomId roomId)) JoinRoom(roomId);
 
         GUILayout.EndArea();
     }
 
 
-    void StartServerConnection()
-    {
-        if (!Guid.TryParse(EOSSDKComponent.LocalUserProductIdString, out Guid epicId))
-        {
-            Debug.LogError("Failed to parse epicId.");
-            return;
-        };
-        currentEpicId = epicId;
-
-        state = State.ConnectingBehideServer;
-        server.Start();
-
-        state = State.RegisteringPlayer;
-        RegisterPlayer();
-
-        state = State.Ready;
-    }
-
-
-    async void RegisterPlayer()
+    public async void RegisterPlayer()
     {
         Msg msg = Msg.NewRegisterPlayer(server.serverVersion, username);
         Response response = await server.SendMessage(msg, ResponseHeader.PlayerRegistered);
@@ -160,7 +76,7 @@ public class ConnectionsManager : MonoBehaviour
         currentPlayerId = playerId;
     }
 
-    async void CreateRoom()
+    public async void CreateRoom()
     {
         Msg msg = Msg.NewCreateRoom(currentPlayerId, currentEpicId);
         Response response = await server.SendMessage(msg, ResponseHeader.RoomCreated);
@@ -174,11 +90,12 @@ public class ConnectionsManager : MonoBehaviour
         currentRoomId = roomId;
     }
 
-    async void JoinRoom(RoomId roomId)
+    public async void JoinRoom(RoomId roomId)
     {
         Response response = await server.SendMessage(Msg.NewGetRoom(roomId), ResponseHeader.RoomFound);
 
-        if (!Guid.TryParseBytes(response.Content, out Guid epicId)) {
+        if (!GuidHelper.TryParseBytes(response.Content, out Guid epicId))
+        {
             Debug.LogError("Failed to parse Guid.");
             return;
         }
