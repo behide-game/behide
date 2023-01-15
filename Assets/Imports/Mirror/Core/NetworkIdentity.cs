@@ -98,9 +98,8 @@ namespace Mirror
         public bool hasAuthority => isOwned;
 
         /// <summary>The set of network connections (players) that can see this object.</summary>
-        // note: null until OnStartServer was called. this is necessary for
-        //       SendTo* to work properly in server-only mode.
-        public Dictionary<int, NetworkConnectionToClient> observers;
+        public readonly Dictionary<int, NetworkConnectionToClient> observers =
+            new Dictionary<int, NetworkConnectionToClient>();
 
         /// <summary>The unique network Id of this object (unique at runtime).</summary>
         public uint netId { get; internal set; }
@@ -314,7 +313,6 @@ namespace Mirror
             NetworkBehaviours = GetComponents<NetworkBehaviour>();
             ValidateComponents();
 
-            // ensure max components
             // initialize each one
             for (int i = 0; i < NetworkBehaviours.Length; ++i)
             {
@@ -631,55 +629,25 @@ namespace Mirror
                 if (NetworkClient.localPlayer == this)
                     NetworkClient.localPlayer = null;
             }
+
+            if (isClient)
+            {
+                // ServerChangeScene doesn't send destroy messages.
+                // some identities may persist in DDOL.
+                // some are destroyed by scene change.
+                // if an identity is still in .owned remove it.
+                // fixes: https://github.com/MirrorNetworking/Mirror/issues/3308
+                if (NetworkClient.connection != null)
+                    NetworkClient.connection.owned.Remove(this);
+
+                // if an identity is still in .spawned, remove it too.
+                // fixes: https://github.com/MirrorNetworking/Mirror/issues/3324
+                NetworkClient.spawned.Remove(netId);
+            }
         }
 
         internal void OnStartServer()
         {
-            // do nothing if already spawned
-            if (isServer)
-                return;
-
-            // set isServer flag
-            isServer = true;
-
-            // set isLocalPlayer earlier, in case OnStartLocalplayer is called
-            // AFTER OnStartClient, in which case it would still be falsse here.
-            // many projects will check isLocalPlayer in OnStartClient though.
-            // TODO ideally set isLocalPlayer when NetworkClient.localPlayer is set?
-            if (NetworkClient.localPlayer == this)
-            {
-                isLocalPlayer = true;
-            }
-
-            // If the instance/net ID is invalid here then this is an object instantiated from a prefab and the server should assign a valid ID
-            // NOTE: this might not be necessary because the above m_IsServer
-            //       check already checks netId. BUT this case here checks only
-            //       netId, so it would still check cases where isServer=false
-            //       but netId!=0.
-            if (netId != 0)
-            {
-                // This object has already been spawned, this method might be called again
-                // if we try to respawn all objects.  This can happen when we add a scene
-                // in that case there is nothing else to do.
-                return;
-            }
-
-            netId = GetNextNetworkId();
-            observers = new Dictionary<int, NetworkConnectionToClient>();
-
-            //Debug.Log($"OnStartServer {this} NetId:{netId} SceneId:{sceneId:X}");
-
-            // add to spawned (note: the original EnableIsServer isn't needed
-            // because we already set m_isServer=true above)
-            NetworkServer.spawned[netId] = this;
-
-            // in host mode we set isClient true before calling OnStartServer,
-            // otherwise isClient is false in OnStartServer.
-            if (NetworkClient.active)
-            {
-                isClient = true;
-            }
-
             foreach (NetworkBehaviour comp in NetworkBehaviours)
             {
                 // an exception in OnStartServer should be caught, so that one
@@ -721,20 +689,9 @@ namespace Mirror
         bool clientStarted;
         internal void OnStartClient()
         {
-            if (clientStarted)
-                return;
+            if (clientStarted) return;
+
             clientStarted = true;
-
-            isClient = true;
-
-            // set isLocalPlayer earlier, in case OnStartLocalplayer is called
-            // AFTER OnStartClient, in which case it would still be falsse here.
-            // many projects will check isLocalPlayer in OnStartClient though.
-            // TODO ideally set isLocalPlayer when NetworkClient.localPlayer is set?
-            if (NetworkClient.localPlayer == this)
-            {
-                isLocalPlayer = true;
-            }
 
             // Debug.Log($"OnStartClient {gameObject} netId:{netId}");
             foreach (NetworkBehaviour comp in NetworkBehaviours)
@@ -758,6 +715,10 @@ namespace Mirror
 
         internal void OnStopClient()
         {
+            // In case this object was destroyed already don't call
+            // OnStopClient if OnStartClient hasn't been called.
+            if (!clientStarted) return;
+
             foreach (NetworkBehaviour comp in NetworkBehaviours)
             {
                 // an exception in OnStopClient should be caught, so that
@@ -776,25 +737,32 @@ namespace Mirror
             }
         }
 
-        // TODO any way to make this not static?
-        // introduced in https://github.com/vis2k/Mirror/commit/c7530894788bb843b0f424e8f25029efce72d8ca#diff-dc8b7a5a67840f75ccc884c91b9eb76ab7311c9ca4360885a7e41d980865bdc2
-        // for PR https://github.com/vis2k/Mirror/pull/1263
-        //
-        // explanation:
-        // we send the spawn message multiple times. Whenever an object changes
-        // authority, we send the spawn message again for the object. This is
-        // necessary because we need to reinitialize all variables when
-        // ownership change due to sync to owner feature.
-        // Without this static, the second time we get the spawn message we
-        // would call OnStartLocalPlayer again on the same object
         internal static NetworkIdentity previousLocalPlayer = null;
         internal void OnStartLocalPlayer()
         {
+            // ensure OnStartLocalPlayer is only called once.
+            // Room demo would call it multiple times:
+            // - once from ApplySpawnPayload
+            // - once from OnObjectSpawnFinished
+            //
+            // to reproduce:
+            // - open room demo, add the 3 scenes to build settings
+            // - add OnStartLocalPlayer log to RoomPlayer prefab
+            // - build, run server-only
+            // - in editor, connect, press ready
+            // - in server, start game
+            // - notice multiple OnStartLocalPlayer logs in editor client
+            //
+            // explanation:
+            // we send the spawn message multiple times. Whenever an object changes
+            // authority, we send the spawn message again for the object. This is
+            // necessary because we need to reinitialize all variables when
+            // ownership change due to sync to owner feature.
+            // Without this static, the second time we get the spawn message we
+            // would call OnStartLocalPlayer again on the same object
             if (previousLocalPlayer == this)
                 return;
             previousLocalPlayer = this;
-
-            isLocalPlayer = true;
 
             foreach (NetworkBehaviour comp in NetworkBehaviours)
             {
@@ -1098,6 +1066,15 @@ namespace Mirror
                         // server always knows the initial state (initial=false)
                         // disconnect if failed, to prevent exploits etc.
                         if (!comp.Deserialize(reader, false)) return false;
+
+                        // server received state from the owner client.
+                        // set dirty so it's broadcast to other clients too.
+                        //
+                        // note that we set the _whole_ component as dirty.
+                        // everything will be broadcast to others.
+                        // SetSyncVarDirtyBits() would be nicer, but not all
+                        // components use [SyncVar]s.
+                        comp.SetDirty();
                     }
                 }
             }
@@ -1211,12 +1188,6 @@ namespace Mirror
 
         internal void AddObserver(NetworkConnectionToClient conn)
         {
-            if (observers == null)
-            {
-                Debug.LogError($"AddObserver for {gameObject} observer list is null");
-                return;
-            }
-
             if (observers.ContainsKey(conn.connectionId))
             {
                 // if we try to add a connectionId that was already added, then
@@ -1257,20 +1228,17 @@ namespace Mirror
         // this is used when a connection is destroyed, since the "observers" property is read-only
         internal void RemoveObserver(NetworkConnection conn)
         {
-            observers?.Remove(conn.connectionId);
+            observers.Remove(conn.connectionId);
         }
 
         // Called when NetworkIdentity is destroyed
         internal void ClearObservers()
         {
-            if (observers != null)
+            foreach (NetworkConnectionToClient conn in observers.Values)
             {
-                foreach (NetworkConnectionToClient conn in observers.Values)
-                {
-                    conn.RemoveFromObserving(this, true);
-                }
-                observers.Clear();
+                conn.RemoveFromObserving(this, true);
             }
+            observers.Clear();
         }
 
         /// <summary>Assign control of an object to a client via the client's NetworkConnection.</summary>

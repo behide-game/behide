@@ -63,10 +63,14 @@ namespace Mirror
         // empty if the client has not connected yet.
         public static string serverIp => connection.address;
 
-        /// <summary>active is true while a client is connecting/connected</summary>
+        /// <summary>active is true while a client is connecting/connected either as standalone or as host client.</summary>
         // (= while the network is active)
         public static bool active => connectState == ConnectState.Connecting ||
                                      connectState == ConnectState.Connected;
+
+        /// <summary>active is true while the client is connected in host mode.</summary>
+        // naming consistent with NetworkServer.activeHost.
+        public static bool activeHost => connection is LocalConnectionToServer;
 
         /// <summary>Check if client is connecting (before connected).</summary>
         public static bool isConnecting => connectState == ConnectState.Connecting;
@@ -75,7 +79,8 @@ namespace Mirror
         public static bool isConnected => connectState == ConnectState.Connected;
 
         /// <summary>True if client is running in host mode.</summary>
-        public static bool isHostClient => connection is LocalConnectionToServer;
+        [Obsolete("NetworkClient.isHostClient was renamed to .activeHost to be more obvious")] // DEPRECATED 2022-12-12
+        public static bool isHostClient => activeHost;
 
         // OnConnected / OnDisconnected used to be NetworkMessages that were
         // invoked. this introduced a bug where external clients could send
@@ -118,6 +123,12 @@ namespace Mirror
         // initialization //////////////////////////////////////////////////////
         static void AddTransportHandlers()
         {
+            // community Transports may forget to call OnDisconnected.
+            // which could cause handlers to be added twice with +=.
+            // ensure we always clear the old ones first.
+            // fixes: https://github.com/vis2k/Mirror/issues/3152
+            RemoveTransportHandlers();
+
             // += so that other systems can also hook into it (i.e. statistics)
             Transport.active.OnClientConnected    += OnTransportConnected;
             Transport.active.OnClientDataReceived += OnTransportData;
@@ -134,7 +145,7 @@ namespace Mirror
             Transport.active.OnClientError        -= OnTransportError;
         }
 
-        internal static void RegisterSystemHandlers(bool hostMode)
+        internal static void RegisterMessageHandlers(bool hostMode)
         {
             // host mode client / remote client react to some messages differently.
             // but we still need to add handlers for all of them to avoid
@@ -166,7 +177,7 @@ namespace Mirror
             // These handlers are the same for host and remote clients
             RegisterHandler<TimeSnapshotMessage>(OnTimeSnapshotMessage);
             RegisterHandler<ChangeOwnerMessage>(OnChangeOwner);
-            RegisterHandler<RpcMessage>(OnRPCMessage);
+            RegisterHandler<RpcBufferMessage>(OnRPCBufferMessage);
         }
 
         // connect /////////////////////////////////////////////////////////////
@@ -180,7 +191,7 @@ namespace Mirror
             // ensures last sessions' state is cleared before starting again.
             InitTimeInterpolation();
 
-            RegisterSystemHandlers(hostMode);
+            RegisterMessageHandlers(hostMode);
             Transport.active.enabled = true;
         }
 
@@ -211,39 +222,12 @@ namespace Mirror
         public static void ConnectHost()
         {
             Initialize(true);
-
             connectState = ConnectState.Connected;
-
-            // create local connection objects and connect them
-            LocalConnectionToServer connectionToServer = new LocalConnectionToServer();
-            LocalConnectionToClient connectionToClient = new LocalConnectionToClient();
-            connectionToServer.connectionToClient = connectionToClient;
-            connectionToClient.connectionToServer = connectionToServer;
-
-            connection = connectionToServer;
-
-            // create server connection to local client
-            NetworkServer.SetLocalConnection(connectionToClient);
+            HostMode.SetupConnections();
         }
 
-        /// <summary>Connect host mode</summary>
-        // called from NetworkManager.StartHostClient
-        // TODO why are there two connect host methods?
-        public static void ConnectLocalServer()
-        {
-            // call server OnConnected with server's connection to client
-            NetworkServer.OnConnected(NetworkServer.localConnection);
-
-            // call client OnConnected with client's connection to server
-            // => previously we used to send a ConnectMessage to
-            //    NetworkServer.localConnection. this would queue the message
-            //    until NetworkClient.Update processes it.
-            // => invoking the client's OnConnected event directly here makes
-            //    tests fail. so let's do it exactly the same order as before by
-            //    queueing the event for next Update!
-            //OnConnectedEvent?.Invoke(connection);
-            ((LocalConnectionToServer)connection).QueueConnectedEvent();
-        }
+        [Obsolete("NetworkClient.ConnectLocalServer was moved to HostMode.InvokeOnConnected")] // DEPRECATED 2022-12-12
+        public static void ConnectLocalServer() => HostMode.InvokeOnConnected();
 
         // disconnect //////////////////////////////////////////////////////////
         /// <summary>Disconnect from server.</summary>
@@ -587,8 +571,7 @@ namespace Mirror
                 return;
             }
 
-            NetworkIdentity identity = prefab.GetComponent<NetworkIdentity>();
-            if (identity == null)
+            if (!prefab.TryGetComponent<NetworkIdentity>(out NetworkIdentity identity))
             {
                 Debug.LogError($"Could not register '{prefab.name}' since it contains no NetworkIdentity component");
                 return;
@@ -614,8 +597,7 @@ namespace Mirror
                 return;
             }
 
-            NetworkIdentity identity = prefab.GetComponent<NetworkIdentity>();
-            if (identity == null)
+            if (!prefab.TryGetComponent<NetworkIdentity>(out NetworkIdentity identity))
             {
                 Debug.LogError($"Could not register '{prefab.name}' since it contains no NetworkIdentity component");
                 return;
@@ -651,8 +633,7 @@ namespace Mirror
                 return;
             }
 
-            NetworkIdentity identity = prefab.GetComponent<NetworkIdentity>();
-            if (identity == null)
+            if (!prefab.TryGetComponent<NetworkIdentity>(out NetworkIdentity identity))
             {
                 Debug.LogError($"Could not register handler for '{prefab.name}' since it contains no NetworkIdentity component");
                 return;
@@ -699,8 +680,7 @@ namespace Mirror
                 return;
             }
 
-            NetworkIdentity identity = prefab.GetComponent<NetworkIdentity>();
-            if (identity == null)
+            if (!prefab.TryGetComponent<NetworkIdentity>(out NetworkIdentity identity))
             {
                 Debug.LogError($"Could not register handler for '{prefab.name}' since it contains no NetworkIdentity component");
                 return;
@@ -766,8 +746,7 @@ namespace Mirror
                 return;
             }
 
-            NetworkIdentity identity = prefab.GetComponent<NetworkIdentity>();
-            if (identity == null)
+            if (!prefab.TryGetComponent<NetworkIdentity>(out NetworkIdentity identity))
             {
                 Debug.LogError($"Could not register handler for '{prefab.name}' since it contains no NetworkIdentity component");
                 return;
@@ -831,8 +810,7 @@ namespace Mirror
                 return;
             }
 
-            NetworkIdentity identity = prefab.GetComponent<NetworkIdentity>();
-            if (identity == null)
+            if (!prefab.TryGetComponent<NetworkIdentity>(out NetworkIdentity identity))
             {
                 Debug.LogError($"Could not unregister '{prefab.name}' since it contains no NetworkIdentity component");
                 return;
@@ -985,7 +963,7 @@ namespace Mirror
             {
                 connection.identity = identity;
             }
-            else Debug.LogWarning("No ready connection found for setting player controller during InternalAddPlayer");
+            else Debug.LogWarning("NetworkClient can't AddPlayer before being ready. Please call NetworkClient.Ready() first. Clients are considered ready after joining the game world.");
         }
 
         /// <summary>Sends AddPlayer message to the server, indicating that we want to join the world.</summary>
@@ -1060,7 +1038,7 @@ namespace Mirror
             if (isSpawnFinished)
             {
                 identity.NotifyAuthority();
-                identity.OnStartClient();
+                CheckForStartClient(identity);
                 CheckForLocalPlayer(identity);
             }
         }
@@ -1117,12 +1095,13 @@ namespace Mirror
                     Debug.LogError($"Spawn Handler returned null, Handler assetId '{message.assetId}'");
                     return null;
                 }
-                NetworkIdentity identity = obj.GetComponent<NetworkIdentity>();
-                if (identity == null)
+
+                if (!obj.TryGetComponent<NetworkIdentity>(out NetworkIdentity identity))
                 {
                     Debug.LogError($"Object Spawned by handler did not have a NetworkIdentity, Handler assetId '{message.assetId}'");
                     return null;
                 }
+
                 return identity;
             }
 
@@ -1204,43 +1183,22 @@ namespace Mirror
 
         internal static void OnObjectSpawnFinished(ObjectSpawnFinishedMessage _)
         {
-            //Debug.Log("SpawnFinished");
-            ClearNullFromSpawned();
-
             // paul: Initialize the objects in the same order as they were
             // initialized in the server. This is important if spawned objects
             // use data from scene objects
             foreach (NetworkIdentity identity in spawned.Values.OrderBy(uv => uv.netId))
             {
-                identity.NotifyAuthority();
-                identity.OnStartClient();
-                CheckForLocalPlayer(identity);
+                // NetworkIdentities should always be removed from .spawned when
+                // they are destroyed. for safety, let's double check here.
+                if (identity != null)
+                {
+                    identity.NotifyAuthority();
+                    CheckForStartClient(identity);
+                    CheckForLocalPlayer(identity);
+                }
+                else Debug.LogWarning("Found null entry in NetworkClient.spawned. This is unexpected. Was the NetworkIdentity not destroyed properly?");
             }
             isSpawnFinished = true;
-        }
-
-        static readonly List<uint> removeFromSpawned = new List<uint>();
-        static void ClearNullFromSpawned()
-        {
-            // spawned has null objects after changing scenes on client using
-            // NetworkManager.ServerChangeScene remove them here so that 2nd
-            // loop below does not get NullReferenceException
-            // see https://github.com/vis2k/Mirror/pull/2240
-            // TODO fix scene logic so that client scene doesn't have null objects
-            foreach (KeyValuePair<uint, NetworkIdentity> kvp in spawned)
-            {
-                if (kvp.Value == null)
-                {
-                    removeFromSpawned.Add(kvp.Key);
-                }
-            }
-
-            // can't modify NetworkIdentity.spawned inside foreach so need 2nd loop to remove
-            foreach (uint id in removeFromSpawned)
-            {
-                spawned.Remove(id);
-            }
-            removeFromSpawned.Clear();
         }
 
         // host mode callbacks /////////////////////////////////////////////////
@@ -1281,7 +1239,7 @@ namespace Mirror
 
                 identity.isOwned = message.isOwner;
                 identity.NotifyAuthority();
-                identity.OnStartClient();
+                CheckForStartClient(identity);
 
                 if (aoi != null)
                     aoi.SetHostVisibility(identity, true);
@@ -1311,6 +1269,21 @@ namespace Mirror
                     identity.HandleRemoteCall(message.componentIndex, message.functionHash, RemoteCallType.ClientRpc, reader);
             }
             // Rpcs often can't be applied if interest management unspawned them
+        }
+
+        static void OnRPCBufferMessage(RpcBufferMessage message)
+        {
+            // Debug.Log($"NetworkClient.OnRPCBufferMessage of {message.payload.Count} bytes");
+            // parse all rpc messages from the buffer
+            using (NetworkReaderPooled reader = NetworkReaderPool.Get(message.payload))
+            {
+                while (reader.Remaining > 0)
+                {
+                    // read message without header
+                    RpcMessage rpcMessage = reader.Read<RpcMessage>();
+                    OnRPCMessage(rpcMessage);
+                }
+            }
         }
 
         static void OnObjectHide(ObjectHideMessage message) => DestroyObject(message.netId);
@@ -1370,6 +1343,17 @@ namespace Mirror
             CheckForLocalPlayer(identity);
         }
 
+        // OnStartClient used to initialize isClient / isLocalPlayer.
+        // it's cleaner to do this from NetworkClient.
+        internal static void CheckForStartClient(NetworkIdentity identity)
+        {
+            // OnStartLocalPlayer is called after OnStartClient.
+            // but we want the flag to be set in OnStartClient already.
+            identity.isLocalPlayer = localPlayer == identity;
+            identity.isClient = true;
+            identity.OnStartClient();
+        }
+
         internal static void CheckForLocalPlayer(NetworkIdentity identity)
         {
             if (identity == localPlayer)
@@ -1377,6 +1361,10 @@ namespace Mirror
                 // Set isLocalPlayer to true on this NetworkIdentity and trigger
                 // OnStartLocalPlayer in all scripts on the same GO
                 identity.connectionToServer = connection;
+
+                // isLocalPlayer is already set by CheckForStartPlayer.
+                // however, let's simply move it out of OnStartLocalPlayer for now.
+                identity.isLocalPlayer = true;
                 identity.OnStartLocalPlayer();
                 // Debug.Log($"NetworkClient.OnOwnerMessage player:{identity.name}");
             }
@@ -1471,9 +1459,8 @@ namespace Mirror
                 }
                 // spawned list should have no null entries because we
                 // always call Remove in OnObjectDestroy everywhere.
-                // if it does have null then someone used
-                // GameObject.Destroy instead of NetworkServer.Destroy.
-                else Debug.LogWarning($"Found 'null' entry in observing list for connectionId={connection.connectionId}. Please call NetworkServer.Destroy to destroy networked objects. Don't use GameObject.Destroy.");
+                // if it does have null then we missed something.
+                else Debug.LogWarning($"Found 'null' entry in owned list for client. This is unexpected behaviour.");
             }
         }
 

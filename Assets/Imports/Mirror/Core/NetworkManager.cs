@@ -150,7 +150,7 @@ namespace Mirror
             // always >= 0
             maxConnections = Mathf.Max(maxConnections, 0);
 
-            if (playerPrefab != null && playerPrefab.GetComponent<NetworkIdentity>() == null)
+            if (playerPrefab != null && !playerPrefab.TryGetComponent<NetworkIdentity>(out _))
             {
                 Debug.LogError("NetworkManager - Player Prefab must have a NetworkIdentity.");
                 playerPrefab = null;
@@ -190,8 +190,6 @@ namespace Mirror
         {
             // Don't allow collision-destroyed second instance to continue.
             if (!InitializeSingleton()) return;
-
-            Debug.Log("Mirror | mirror-networking.com | discord.gg/N9QVxbM");
 
             // Apply configuration in Awake once already
             ApplyConfiguration();
@@ -237,18 +235,15 @@ namespace Mirror
             UpdateScene();
         }
 
-        // keep the online scene change check in a separate function
-        bool IsServerOnlineSceneChangeNeeded()
-        {
-            // Only change scene if the requested online scene is not blank, and is not already loaded
-            return !string.IsNullOrWhiteSpace(onlineScene) && !IsSceneActive(onlineScene) && onlineScene != offlineScene;
-        }
+        // keep the online scene change check in a separate function.
+        // only change scene if the requested online scene is not blank, and is not already loaded.
+        bool IsServerOnlineSceneChangeNeeded() =>
+            !string.IsNullOrWhiteSpace(onlineScene) &&
+            !Utils.IsSceneActive(onlineScene) &&
+            onlineScene != offlineScene;
 
-        public static bool IsSceneActive(string scene)
-        {
-            Scene activeScene = SceneManager.GetActiveScene();
-            return activeScene.path == scene || activeScene.name == scene;
-        }
+        [Obsolete("NetworkManager.IsSceneActive moved to Utils.IsSceneActive")] // DEPRECATED 2022-12-12
+        public static bool IsSceneActive(string scene) => Utils.IsSceneActive(scene);
 
         // NetworkManager exposes some NetworkServer/Client configuration.
         // we apply it every Update() in order to avoid two sources of truth.
@@ -280,18 +275,11 @@ namespace Mirror
             // start listening to network connections
             NetworkServer.Listen(maxConnections);
 
-            // call OnStartServer AFTER Listen, so that NetworkServer.active is
-            // true and we can call NetworkServer.Spawn in OnStartServer
-            // overrides.
-            // (useful for loading & spawning stuff from database etc.)
-            //
-            // note: there is no risk of someone connecting after Listen() and
-            //       before OnStartServer() because this all runs in one thread
-            //       and we don't start processing connects until Update.
-            OnStartServer();
-
             // this must be after Listen(), since that registers the default message handlers
             RegisterServerMessages();
+
+            // do not call OnStartServer here yet.
+            // this is up to the caller. different for server-only vs. host mode.
         }
 
         /// <summary>Starts the server, listening for incoming connections.</summary>
@@ -322,6 +310,16 @@ namespace Mirror
             // have the onlineScene feature, it will be asynchronous!
 
             SetupServer();
+
+            // call OnStartServer AFTER Listen, so that NetworkServer.active is
+            // true and we can call NetworkServer.Spawn in OnStartServer
+            // overrides.
+            // (useful for loading & spawning stuff from database etc.)
+            //
+            // note: there is no risk of someone connecting after Listen() and
+            //       before OnStartServer() because this all runs in one thread
+            //       and we don't start processing connects until Update.
+            OnStartServer();
 
             // scene change needed? then change scene and spawn afterwards.
             if (IsServerOnlineSceneChangeNeeded())
@@ -439,11 +437,6 @@ namespace Mirror
             // setup server first
             SetupServer();
 
-            // call OnStartHost AFTER SetupServer. this way we can use
-            // NetworkServer.Spawn etc. in there too. just like OnStartServer
-            // is called after the server is actually properly started.
-            OnStartHost();
-
             // scene change needed? then change scene and spawn afterwards.
             // => BEFORE host client connects. if client auth succeeds then the
             //    server tells it to load 'onlineScene'. we can't do that if
@@ -500,6 +493,21 @@ namespace Mirror
             // TODO call this after spawnobjects and worry about the syncvar hook fix later?
             NetworkClient.ConnectHost();
 
+            // invoke user callbacks AFTER ConnectHost has set .activeHost.
+            // this way initialization can properly handle host mode.
+            //
+            // fixes: https://github.com/MirrorNetworking/Mirror/issues/3302
+            // where [SyncVar] hooks wouldn't be called for objects spawned in
+            // NetworkManager.OnStartServer, because .activeHost was still false.
+            //
+            // TODO is there a risk of someone connecting between Listen() and FinishStartHost()?
+            OnStartServer();
+
+            // call OnStartHost AFTER SetupServer. this way we can use
+            // NetworkServer.Spawn etc. in there too. just like OnStartServer
+            // is called after the server is actually properly started.
+            OnStartHost();
+
             // server scene was loaded. now spawn all the objects
             NetworkServer.SpawnObjects();
 
@@ -508,22 +516,15 @@ namespace Mirror
             // DO NOT do this earlier. it would cause race conditions where a
             // client will do things before the server is even fully started.
             //Debug.Log("StartHostClient called");
-            StartHostClient();
-        }
-
-        void StartHostClient()
-        {
-            //Debug.Log("NetworkManager ConnectLocalClient");
-
             SetupClient();
 
             networkAddress = "localhost";
-            NetworkServer.ActivateHostScene();
+            HostMode.ActivateHostScene();
             RegisterClientMessages();
 
-            // ConnectLocalServer needs to be called AFTER RegisterClientMessages
+            // call OnConencted needs to be called AFTER RegisterClientMessages
             // (https://github.com/vis2k/Mirror/pull/1249/)
-            NetworkClient.ConnectLocalServer();
+            HostMode.InvokeOnConnected();
 
             OnStartClient();
         }
@@ -592,45 +593,22 @@ namespace Mirror
             if (mode == NetworkManagerMode.Offline)
                 return;
 
-            if (authenticator != null)
-            {
-                authenticator.OnClientAuthenticated.RemoveListener(OnClientAuthenticated);
-                authenticator.OnStopClient();
-            }
-
-            // Get Network Manager out of DDOL before going to offline scene
-            // to avoid collision and let a fresh Network Manager be created.
-            // IMPORTANT: .gameObject can be null if StopClient is called from
-            //            OnApplicationQuit or from tests!
-            if (gameObject != null
-                && gameObject.scene.name == "DontDestroyOnLoad"
-                && !string.IsNullOrWhiteSpace(offlineScene)
-                && SceneManager.GetActiveScene().path != offlineScene)
-                SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
-
-            OnStopClient();
-
-            //Debug.Log("NetworkManager StopClient");
-
-            // set offline mode BEFORE changing scene so that FinishStartScene
-            // doesn't think we need initialize anything.
-            // set offline mode BEFORE NetworkClient.Disconnect so StopClient
-            // only runs once.
-            mode = NetworkManagerMode.Offline;
-
-            // shutdown client
+            // ask client -> transport to disconnect.
+            // handle voluntary and involuntary disconnects in OnClientDisconnect.
+            //
+            //   StopClient
+            //     NetworkClient.Disconnect
+            //       Transport.Disconnect
+            //         ...
+            //       Transport.OnClientDisconnect
+            //     NetworkClient.OnTransportDisconnect
+            //   NetworkManager.OnClientDisconnect
             NetworkClient.Disconnect();
-            NetworkClient.Shutdown();
 
-            // If this is the host player, StopServer will already be changing scenes.
-            // Check loadingSceneAsync to ensure we don't double-invoke the scene change.
-            // Check if NetworkServer.active because we can get here via Disconnect before server has started to change scenes.
-            if (!string.IsNullOrWhiteSpace(offlineScene) && !IsSceneActive(offlineScene) && loadingSceneAsync == null && !NetworkServer.active)
-            {
-                ClientChangeScene(offlineScene, SceneOperation.Normal);
-            }
-
-            networkSceneName = "";
+            // UNET invoked OnDisconnected cleanup immediately.
+            // let's keep it for now, in case any projects depend on it.
+            // TODO simply remove this in the future.
+            OnClientDisconnectInternal();
         }
 
         // called when quitting the application by closing the window / pressing
@@ -1152,7 +1130,7 @@ namespace Mirror
                 return;
             }
 
-            if (autoCreatePlayer && playerPrefab.GetComponent<NetworkIdentity>() == null)
+            if (autoCreatePlayer && !playerPrefab.TryGetComponent<NetworkIdentity>(out _))
             {
                 Debug.LogError("The PlayerPrefab does not have a NetworkIdentity. Please add a NetworkIdentity to the player prefab.");
                 return;
@@ -1192,7 +1170,7 @@ namespace Mirror
             NetworkClient.connection.isAuthenticated = true;
 
             // proceed with the login handshake by calling OnClientConnect
-            if (string.IsNullOrWhiteSpace(onlineScene) || onlineScene == offlineScene || IsSceneActive(onlineScene))
+            if (string.IsNullOrWhiteSpace(onlineScene) || onlineScene == offlineScene || Utils.IsSceneActive(onlineScene))
             {
                 clientLoadedScene = false;
                 OnClientConnect();
@@ -1205,10 +1183,57 @@ namespace Mirror
             }
         }
 
+        // Transport callback, invoked after client fully disconnected.
+        // the call order should always be:
+        //   Disconnect() -> ask Transport -> Transport.OnDisconnected -> Cleanup
         void OnClientDisconnectInternal()
         {
             //Debug.Log("NetworkManager.OnClientDisconnectInternal");
+            if (mode == NetworkManagerMode.Offline)
+                return;
+
+            // user callback
             OnClientDisconnect();
+
+            if (authenticator != null)
+            {
+                authenticator.OnClientAuthenticated.RemoveListener(OnClientAuthenticated);
+                authenticator.OnStopClient();
+            }
+
+            // Get Network Manager out of DDOL before going to offline scene
+            // to avoid collision and let a fresh Network Manager be created.
+            // IMPORTANT: .gameObject can be null if StopClient is called from
+            //            OnApplicationQuit or from tests!
+            if (gameObject != null
+                && gameObject.scene.name == "DontDestroyOnLoad"
+                && !string.IsNullOrWhiteSpace(offlineScene)
+                && SceneManager.GetActiveScene().path != offlineScene)
+                SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
+
+            // set offline mode BEFORE changing scene so that FinishStartScene
+            // doesn't think we need initialize anything.
+            // set offline mode BEFORE NetworkClient.Disconnect so StopClient
+            // only runs once.
+            // set offline mode BEFORE OnStopClient so StopClient
+            // only runs once.
+            mode = NetworkManagerMode.Offline;
+
+            //Debug.Log("NetworkManager StopClient");
+            OnStopClient();
+
+            // shutdown client
+            NetworkClient.Shutdown();
+
+            // If this is the host player, StopServer will already be changing scenes.
+            // Check loadingSceneAsync to ensure we don't double-invoke the scene change.
+            // Check if NetworkServer.active because we can get here via Disconnect before server has started to change scenes.
+            if (!string.IsNullOrWhiteSpace(offlineScene) && !Utils.IsSceneActive(offlineScene) && loadingSceneAsync == null && !NetworkServer.active)
+            {
+                ClientChangeScene(offlineScene, SceneOperation.Normal);
+            }
+
+            networkSceneName = "";
         }
 
         void OnClientNotReadyMessageInternal(NotReadyMessage msg)
@@ -1307,13 +1332,7 @@ namespace Mirror
         }
 
         /// <summary>Called on clients when disconnected from a server.</summary>
-        public virtual void OnClientDisconnect()
-        {
-            if (mode == NetworkManagerMode.Offline)
-                return;
-
-            StopClient();
-        }
+        public virtual void OnClientDisconnect() {}
 
         // DEPRECATED 2022-05-12
         [Obsolete("OnClientError(Exception) was changed to OnClientError(TransportError, string)")]
@@ -1340,10 +1359,10 @@ namespace Mirror
         public virtual void OnClientSceneChanged()
         {
             // always become ready.
-            if (!NetworkClient.ready) NetworkClient.Ready();
+            if (NetworkClient.connection.isAuthenticated && !NetworkClient.ready) NetworkClient.Ready();
 
             // Only call AddPlayer for normal scene changes, not additive load/unload
-            if (clientSceneOperation == SceneOperation.Normal && autoCreatePlayer && NetworkClient.localPlayer == null)
+            if (NetworkClient.connection.isAuthenticated && clientSceneOperation == SceneOperation.Normal && autoCreatePlayer && NetworkClient.localPlayer == null)
             {
                 // add player if existing one is null
                 NetworkClient.AddPlayer();
