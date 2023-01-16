@@ -1,10 +1,11 @@
 name: ⚡ Build and Publish
 
-on:
-  push:
-    tags:
-      - "v*.*.*"
-      - "pre-v*.*.*"
+# on:
+#   push:
+#     tags:
+#       - "v*.*.*"
+#       - "pre-v*.*.*"
+on: [push]
 
 jobs:
   tests:
@@ -27,7 +28,7 @@ jobs:
       - uses: actions-ecosystem/action-regex-match@v2
         id: regex-match
         with:
-          text: ${{ github.ref_name }}
+          text: "v0.0.1" # TODO ${{ github.ref_name }}
           regex: '^(?:pre-)?v(\d+.\d+.\d+)$'
 
       - name: Saving version
@@ -85,8 +86,8 @@ jobs:
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
 
-      # Retreive .env file
-      - name: Retreive .env file
+      # Retrieve .env file
+      - name: Retrieve .env file
         run: ${{ secrets.DOTENV }} >> .env
 
       # Build
@@ -102,7 +103,7 @@ jobs:
           versioning: Custom
           version: ${{ env.PROJECT_VERSION }}
           targetPlatform: ${{ matrix.targetPlatform }}
-          allowDirtyBuild: true
+          # allowDirtyBuild: true
 
       # Output
       - uses: actions/upload-artifact@v3
