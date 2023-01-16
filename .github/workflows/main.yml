@@ -28,10 +28,12 @@ jobs:
         id: regex-match
         with:
           text: ${{ github.ref_name }}
-          regex: '^(?:pre-)?v(\d.\d.\d)$'
+          regex: '^(?:pre-)?v(\d+.\d+.\d+)$'
 
       - name: Saving version
-        run: echo ${{ steps.regex-match.outputs.group1 }} > version.txt
+        run: |
+          echo ${{ steps.regex-match.outputs.group1 }}
+          echo ${{ steps.regex-match.outputs.group1 }} > version.txt
 
       - name: Upload version
         uses: actions/upload-artifact@v3
@@ -83,8 +85,8 @@ jobs:
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
 
-      # Retreive .env file
-      - name: Retreive .env file
+      # Retrieve .env file
+      - name: Retrieve .env file
         run: ${{ secrets.DOTENV }} >> .env
 
       # Build
@@ -100,7 +102,6 @@ jobs:
           versioning: Custom
           version: ${{ env.PROJECT_VERSION }}
           targetPlatform: ${{ matrix.targetPlatform }}
-          allowDirtyBuild: true
 
       # Output
       - uses: actions/upload-artifact@v3
