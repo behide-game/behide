@@ -15,8 +15,6 @@ jobs:
       # Checkout
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          lfs: true
 
       # Cache
       - uses: actions/cache@v3
@@ -65,8 +63,6 @@ jobs:
       # Checkout
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          lfs: true
 
       # Retrieve version
       - name: Retrieve version
