@@ -31,7 +31,9 @@ jobs:
           regex: '^(?:pre-)?v(\d.\d.\d)$'
 
       - name: Saving version
-        run: echo ${{ steps.regex-match.outputs.group1 }} > version.txt
+        run: |
+          echo ${{ steps.regex-match.outputs.group1 }}
+          echo ${{ steps.regex-match.outputs.group1 }} > version.txt
 
       - name: Upload version
         uses: actions/upload-artifact@v3
