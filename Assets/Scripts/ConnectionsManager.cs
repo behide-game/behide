@@ -1,43 +1,62 @@
 using System;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using Mirror;
 using BehideServer.Types;
-
+using EpicTransport;
+using UnityEngine.Events;
 
 public class ConnectionsManager : MonoBehaviour
 {
     private const string EPIC_SCHEME = "epic";
-    private enum State { ConnectingEpic, ConnectingBehideServer, RegisteringPlayer, Ready }
 
-    public string username;
+    public UnityEvent OnConnected;
 
     [Header("Behide server")]
     public string ip;
     public int port;
 
-    private Guid targetEpicId;
-    private PlayerId currentPlayerId;
-    private RoomId currentRoomId;
+    [Header("Epic")]
+    [SerializeField] private int epicConnectionTimeout = 5000;
+    private Task<bool> epicConnected;
+    private Guid epicId;
 
     private ServerConnection server;
-    private State state;
-
     private NetworkManager networkManager;
 
     private string GUItextInput;
 
-    void Awake()
+    async void Awake()
     {
         DontDestroyOnLoad(this);
 
-        state = State.ConnectingEpic;
         networkManager = GetComponentInChildren<NetworkManager>();
+        var epicSdk = GetComponentInChildren<EOSSDKComponent>();
 
-        // Create connection with BehideServer
-        IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
-        server = new ServerConnection(ipEndPoint);
-        server.Start();
+        var epicConnectedTcs = new TaskCompletionSource<bool>();
+        var epicConnectedCts = new CancellationTokenSource(epicConnectionTimeout);
+        epicConnected = epicConnectedTcs.Task;
+
+        epicConnectedCts.Token.Register(() => epicConnectedTcs.SetResult(false));
+        epicSdk.OnConnected.AddListener(() => epicConnectedTcs.SetResult(true));
+
+        if (await epicConnected)
+        {
+            if (!Guid.TryParse(EOSSDKComponent.LocalUserProductIdString, out epicId)) Debug.LogError("Failed to parse epicId");
+
+            // Create connection with BehideServer
+            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+            server = new ServerConnection(ipEndPoint);
+            server.OnConnected += (_, _) => OnConnected.Invoke();
+            server.Start();
+        }
+        else
+        {
+            Debug.LogError("Failed to start EpicTransport");
+            epicSdk.enabled = false;
+        }
     }
 
     void OnDestroy()
@@ -45,65 +64,32 @@ public class ConnectionsManager : MonoBehaviour
         server?.Dispose();
     }
 
-    private void OnGUI()
-    {
-        if (state != State.Ready) return;
 
-        GUILayout.BeginArea(new Rect(10, 250, 220, 400));
-
-        GUILayout.Label("<b>State:</b> " + state.ToString());
-        GUILayout.Label("<b>Current roomId:</b> " + currentRoomId?.ToString());
-        GUItextInput = GUILayout.TextField(GUItextInput);
-
-        if (GUILayout.Button("Create a room")) CreateRoom();
-        if (GUILayout.Button("Join room") && RoomId.TryParse(GUItextInput, out RoomId roomId)) JoinRoom(roomId);
-
-        GUILayout.EndArea();
-    }
-
-
-    public async void RegisterPlayer()
+    public async Task<PlayerId> RegisterPlayer(string username)
     {
         Msg msg = Msg.NewRegisterPlayer(server.serverVersion, username);
         Response response = await server.SendMessage(msg, ResponseHeader.PlayerRegistered);
+        if (!PlayerId.TryParseBytes(response.Content, out PlayerId playerId)) throw new Exception("Failed to parse PlayerId");
 
-        if (!PlayerId.TryParseBytes(response.Content, out PlayerId playerId))
-        {
-            Debug.LogError("Failed to parse PlayerId");
-            return;
-        }
-
-        currentPlayerId = playerId;
+        return playerId;
     }
 
-    public async void CreateRoom()
+    public async Task<RoomId> CreateRoom(PlayerId playerId)
     {
-        Msg msg = Msg.NewCreateRoom(currentPlayerId, currentEpicId);
+        Msg msg = Msg.NewCreateRoom(playerId, epicId);
         Response response = await server.SendMessage(msg, ResponseHeader.RoomCreated);
+        if (!RoomId.TryParseBytes(response.Content, out RoomId roomId)) throw new Exception("Failed to parse RoomId");
 
-        if (!RoomId.TryParseBytes(response.Content, out RoomId roomId))
-        {
-            Debug.LogError("Failed to parse RoomId");
-            return;
-        }
-
-        currentRoomId = roomId;
+        networkManager.StartHost();
+        return roomId;
     }
 
-    public async void JoinRoom(RoomId roomId)
+    public async Task JoinRoom(RoomId roomId)
     {
-        Response response = await server.SendMessage(Msg.NewGetRoom(roomId), ResponseHeader.RoomFound);
+        Response response = await server.SendMessage(Msg.NewJoinRoom(roomId), ResponseHeader.RoomJoined);
+        if (!Room.TryParse(response.Content, out Room joinedRoom)) throw new Exception("Failed to parse the joined room.");
 
-        if (!GuidHelper.TryParseBytes(response.Content, out Guid epicId))
-        {
-            Debug.LogError("Failed to parse Guid.");
-            return;
-        }
-
-        currentRoomId = roomId;
-        targetEpicId = epicId;
-
-        Uri uri = new UriBuilder(EPIC_SCHEME, targetEpicId.ToString("N")).Uri;
+        Uri uri = new UriBuilder(EPIC_SCHEME, joinedRoom.EpicId.ToString("N")).Uri;
         networkManager.StartClient(uri);
     }
 }

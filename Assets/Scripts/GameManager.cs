@@ -1,60 +1,72 @@
 using UnityEngine;
 using Mirror;
-using EpicTransport;
-using LightReflectiveMirror;
-using System.Threading;
-using System.Threading.Tasks;
+using BehideServer.Types;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private int epicConnectionTimeout = 5000;
-    [SerializeField] private ConnectionsManager connectionManager;
-
-    private EosTransport epicTransport;
-    private LightReflectiveMirrorTransport LRMTransport;
-    private NetworkManager networkManager;
+    [SerializeField]
+    private ConnectionsManager connectionManager;
     private NetworkManagerHUD networkManagerHud;
-    private EOSSDKComponent epicSdk;
 
-    private Task<bool> epicConnected;
-    private bool UsingEpicTransport() => networkManager.transport is EosTransport;
+    private PlayerId playerId;
+    private RoomId roomId;
 
-    async void Awake()
+    // GUI
+    private string GUIusername;
+    private string GUIroomId;
+
+    void Awake()
     {
         DontDestroyOnLoad(this);
-
-        epicTransport = GetComponentInChildren<EosTransport>();
-        LRMTransport = GetComponentInChildren<LightReflectiveMirrorTransport>();
-        networkManager = GetComponentInChildren<NetworkManager>();
         networkManagerHud = GetComponentInChildren<NetworkManagerHUD>();
-        epicSdk = GetComponentInChildren<EOSSDKComponent>();
-
         networkManagerHud.enabled = false;
 
+        connectionManager.OnConnected.AddListener(() => networkManagerHud.enabled = true);
+    }
 
-        var epicConnectedTcs = new TaskCompletionSource<bool>();
-        var epicConnectedCts = new CancellationTokenSource(epicConnectionTimeout);
-        epicConnected = epicConnectedTcs.Task;
+    void OnGUI() {
+        if (!networkManagerHud.enabled) return;
 
-        epicConnectedCts.Token.Register(() => epicConnectedTcs.SetResult(false));
-        epicSdk.OnConnected.AddListener(() => epicConnectedTcs.SetResult(true));
+        GUILayout.BeginArea(new Rect(10, 250, 220, 400));
 
-        if (await epicConnected)
-        {
-            networkManager.transport = epicTransport;
+        if (playerId == null) {
+            GUILayout.BeginHorizontal();
+            GUIusername = GUILayout.TextField(GUIusername);
+            if (GUILayout.Button("Register")) RegisterPlayer(GUIusername);
+            GUILayout.EndHorizontal();
         }
         else
         {
-            networkManager.transport = LRMTransport;
-            epicSdk.enabled = false;
+            GUILayout.BeginHorizontal();
+            GUIroomId = GUILayout.TextField(GUIroomId);
+            if (GUILayout.Button("Join room")) JoinRoom(GUIroomId);
+            GUILayout.EndHorizontal();
+
+            if (GUILayout.Button("Create a room")) CreateRoom();
         }
-        networkManagerHud.enabled = true;
-        Transport.active = networkManager.transport;
+
+
+        // GUILayout.Label("<b>Current roomId:</b> " + roomId?.ToString());
+        // username = GUILayout.TextField(GUItextInput);
+
+        // if (GUILayout.Button("Create a room")) CreateRoom();
+        // if (GUILayout.Button("Join room") && RoomId.TryParse(GUItextInput, out RoomId roomId)) JoinRoom(roomId);
+
+        GUILayout.EndArea();
     }
 
-    void OnGUI()
-    {
-        if (networkManager.transport == null || UsingEpicTransport()) return;
-        GUI.Label(new Rect(10, 240, 220, 400), LRMTransport.serverId);
+    async void RegisterPlayer(string username) {
+        playerId = await connectionManager.RegisterPlayer(username);
+    }
+
+    async void JoinRoom(string rawRoomId) {
+        Debug.Log("Join room");
+        if (!RoomId.TryParse(rawRoomId, out RoomId roomId)) return;
+        await connectionManager.JoinRoom(roomId);
+    }
+
+    async void CreateRoom() {
+        Debug.Log("Create room");
+        roomId = await connectionManager.CreateRoom(playerId);
     }
 }

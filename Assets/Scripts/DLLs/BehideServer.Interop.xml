@@ -2,7 +2,7 @@
 <doc>
 <assembly><name>BehideServer.Interop</name></assembly>
 <members>
-<member name="T:BehideServer.Types.Msg.GetRoom">
+<member name="T:BehideServer.Types.Msg.JoinRoom">
 <summary>
  Send the RoomId
 </summary>
@@ -22,9 +22,9 @@
  Send the server version (string) and the player&apos;s username (string)
 </summary>
 </member>
-<member name="F:BehideServer.Types.ResponseHeader.RoomFound">
+<member name="F:BehideServer.Types.ResponseHeader.RoomJoined">
 <summary>
- Contain EpicId
+ Contain Room
 </summary>
 </member>
 <member name="F:BehideServer.Types.ResponseHeader.RoomCreated">
