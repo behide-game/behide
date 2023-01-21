@@ -45,6 +45,9 @@ public class GameManager : MonoBehaviour
             if (GUILayout.Button("Create a room")) CreateRoom();
         }
 
+        if (roomId != null) {
+            GUILayout.Label("<b>Room ID</b>: " + roomId.ToString());
+        }
 
         // GUILayout.Label("<b>Current roomId:</b> " + roomId?.ToString());
         // username = GUILayout.TextField(GUItextInput);
