@@ -1,11 +1,10 @@
 name: ⚡ Build and Publish
 
-# on:
-#   push:
-#     tags:
-#       - "v*.*.*"
-#       - "pre-v*.*.*"
-on: [push]
+on:
+  push:
+    tags:
+      - "v*.*.*"
+      - "pre-v*.*.*"
 
 jobs:
   tests:
