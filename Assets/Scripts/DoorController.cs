@@ -16,7 +16,7 @@ public class DoorController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") != true) { return; }
+        if (!other.CompareTag("Player")) return;
 
         playersNearby += 1;
         animator.SetBool("Player Nearby", true);
@@ -24,7 +24,7 @@ public class DoorController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") != true) { return; }
+        if (!other.CompareTag("Player")) return;
 
         playersNearby -= 1;
         if (playersNearby == 0) { animator.SetBool("Player Nearby", false); }
