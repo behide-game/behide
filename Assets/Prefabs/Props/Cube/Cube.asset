@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac6a6e328f5564f4db6399e86173870a, type: 3}
   m_Name: Cube
   m_EditorClassIdentifier: 
-  propName: 
-  graphicsPrefab: {fileID: 3725724481828624246, guid: 14bfb4054fb5dc64ea6221a9249e7866, type: 3}
-  collidersPrefab: {fileID: 3725724481828624246, guid: 734690a50c9b3f24d9557a69f4fab2a1, type: 3}
+  propName: Cube
+  prefab: {fileID: 3725724481828624246, guid: 14bfb4054fb5dc64ea6221a9249e7866, type: 3}
   mass: 1

@@ -10,9 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac6a6e328f5564f4db6399e86173870a, type: 3}
-  m_Name: Runik's cube
+  m_Name: Rubik's cube
   m_EditorClassIdentifier: 
   propName: rubik's cube
-  graphicsPrefab: {fileID: 7228672415802478623, guid: f493f632c5a8b7642a2447d98a0bc7bc, type: 3}
-  collidersPrefab: {fileID: 8981209430958201888, guid: e8e7848b4b3fab4439af6c96a98b104d, type: 3}
+  prefab: {fileID: 7228672415802478623, guid: f493f632c5a8b7642a2447d98a0bc7bc, type: 3}
   mass: 5
