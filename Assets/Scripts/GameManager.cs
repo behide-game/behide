@@ -26,34 +26,30 @@ public class GameManager : MonoBehaviour
 
     void OnGUI() {
         if (!networkManagerHud.enabled) return;
+        bool registered = playerId != null;
+        bool inRoom = roomId != null;
 
         GUILayout.BeginArea(new Rect(10, 250, 220, 400));
 
-        if (playerId == null) {
+        if (!inRoom) {
             GUILayout.BeginHorizontal();
-            GUIusername = GUILayout.TextField(GUIusername);
-            if (GUILayout.Button("Register")) RegisterPlayer(GUIusername);
+            if (!registered) {
+                GUIusername = GUILayout.TextField(GUIusername);
+                if (GUILayout.Button("Register")) RegisterPlayer(GUIusername);
+            }
+            else
+            {
+                GUIroomId = GUILayout.TextField(GUIroomId);
+                if (GUILayout.Button("Join room")) JoinRoom(GUIroomId);
+            }
             GUILayout.EndHorizontal();
+
+            if (registered && GUILayout.Button("Create a room")) CreateRoom();
         }
         else
         {
-            GUILayout.BeginHorizontal();
-            GUIroomId = GUILayout.TextField(GUIroomId);
-            if (GUILayout.Button("Join room")) JoinRoom(GUIroomId);
-            GUILayout.EndHorizontal();
-
-            if (GUILayout.Button("Create a room")) CreateRoom();
-        }
-
-        if (roomId != null) {
             GUILayout.Label("<b>Room ID</b>: " + roomId.ToString());
         }
-
-        // GUILayout.Label("<b>Current roomId:</b> " + roomId?.ToString());
-        // username = GUILayout.TextField(GUItextInput);
-
-        // if (GUILayout.Button("Create a room")) CreateRoom();
-        // if (GUILayout.Button("Join room") && RoomId.TryParse(GUItextInput, out RoomId roomId)) JoinRoom(roomId);
 
         GUILayout.EndArea();
     }

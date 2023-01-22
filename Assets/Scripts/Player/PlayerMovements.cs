@@ -33,7 +33,7 @@ public class PlayerMovements : NetworkBehaviour
         currentVerticalRotation = Mathf.Clamp(currentVerticalRotation, -90, 90);
 
         // Rotate (left/right) the body
-        transform.Rotate(new Vector3(0, rotateX, 0));
+        transform.Rotate(0, rotateX, 0);
         // Rotate (top/bottom) the camera
         playerCam.transform.localEulerAngles = new Vector3(currentVerticalRotation, 0, 0);
     }

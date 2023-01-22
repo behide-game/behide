@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: Thing
   m_EditorClassIdentifier: 
   propName: Thing
-  graphicsPrefab: {fileID: 4814731028663983798, guid: 72f8be0d86341ba4a9f720ad1951600e, type: 3}
-  collidersPrefab: {fileID: 4814731028663983798, guid: 19d186175ee820248844e919640089df, type: 3}
+  prefab: {fileID: 4814731028663983798, guid: 72f8be0d86341ba4a9f720ad1951600e, type: 3}
   mass: 2

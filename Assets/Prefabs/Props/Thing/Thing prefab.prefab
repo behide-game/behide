@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 5303706477731578892}
   - component: {fileID: 9094271116803705769}
   - component: {fileID: 6472130251861196643}
+  - component: {fileID: 6585492024543218800}
   m_Layer: 0
-  m_Name: Thing graphics
+  m_Name: Thing prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!33 &9094271116803705769
 MeshFilter:
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &6585492024543218800
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4814731028663983798}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.010930127, y: 0.011349306, z: 0.009266669}
+  m_Center: {x: -0.00091923913, y: 0, z: 0.0013000005}

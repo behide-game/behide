@@ -6,19 +6,15 @@ public class Prop : MonoBehaviour
 
     private void Start()
     {
-        GameObject graphics = Instantiate(prop.graphicsPrefab, transform.position, transform.rotation, transform);
-        GameObject colliders = Instantiate(prop.collidersPrefab, transform.position, transform.rotation, transform);
+        GameObject prefab = Instantiate(prop.prefab, transform.position, transform.rotation, transform);
+        prefab.name = "Prefab";
+        gameObject.name = prop.name;
 
-        graphics.name = prop.graphicsPrefab.name;
-        colliders.name = prop.collidersPrefab.name;
-
-        if (transform.TryGetComponent(out Rigidbody rb))
-        {
-            rb.mass = prop.mass;
-        }
-        else
+        if (!transform.TryGetComponent(out Rigidbody rb))
         {
             Debug.LogWarning("Cannot find rigidbody component.", gameObject);
+            return;
         }
+        rb.mass = prop.mass;
     }
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 public class PropScriptableObject : ScriptableObject
 {
     public string propName;
-    public GameObject graphicsPrefab;
-    public GameObject collidersPrefab;
+    public GameObject prefab;
     public float mass;
 }
