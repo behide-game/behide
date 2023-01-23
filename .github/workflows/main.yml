@@ -85,10 +85,6 @@ jobs:
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
 
-      # Retrieve .env file
-      - name: Retrieve .env file
-        run: ${{ secrets.DOTENV }} >> .env
-
       # Build
       - name: Build project
         id: build
