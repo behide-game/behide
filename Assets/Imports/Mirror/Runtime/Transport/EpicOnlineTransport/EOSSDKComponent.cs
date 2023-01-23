@@ -3,12 +3,14 @@ using Epic.OnlineServices.Logging;
 using Epic.OnlineServices.Platform;
 
 using System;
+using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 using UnityEngine;
 using UnityEngine.Events;
-
-using CandyCoded.env;
+using Unity.Services.RemoteConfig;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
 
 /// <summary>
 /// Manages the Epic Online Services SDK
@@ -20,7 +22,6 @@ using CandyCoded.env;
 namespace EpicTransport {
     [DefaultExecutionOrder(-32000)]
     public class EOSSDKComponent : MonoBehaviour {
-
         // Unity Inspector shown variables
 
         [Header("User Login")]
@@ -154,7 +155,7 @@ namespace EpicTransport {
 
         public static void Tick() {
             instance.platformTickTimer -= Time.deltaTime;
-            instance.EOS.Tick();
+            instance.EOS?.Tick();
         }
 
         // If we're in editor, we should dynamically load and unload the SDK between play sessions.
@@ -197,17 +198,37 @@ namespace EpicTransport {
         }
         private IntPtr libraryPointer;
 #endif
+        public struct userAttributes { }
+        public struct appAttributes { }
 
-        private void Awake() {
-            // Setup api keys
-            env.TryParseEnvironmentVariable("EPIC_PRODUCT_NAME", out epicProductName);
-            env.TryParseEnvironmentVariable("EPIC_PRODUCT_VERSION", out epicProductVersion);
-            env.TryParseEnvironmentVariable("EPIC_PRODUCT_ID", out epicProductId);
-            env.TryParseEnvironmentVariable("EPIC_SANDBOX_ID", out epicSandboxId);
-            env.TryParseEnvironmentVariable("EPIC_DEPLOYMENT_ID", out epicDeploymentId);
-            env.TryParseEnvironmentVariable("EPIC_CLIENT_ID", out epicClientId);
-            env.TryParseEnvironmentVariable("EPIC_CLIENT_SECRET", out epicClientSecret);
+        private async Task SetupApiKeys()
+        {
+            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+            Task<bool> task = tcs.Task;
 
+            await UnityServices.InitializeAsync();
+            if (!AuthenticationService.Instance.IsSignedIn)
+            {
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            }
+
+            RemoteConfigService.Instance.FetchCompleted += _ =>
+            {
+                epicProductName = (string)RemoteConfigService.Instance.appConfig.config["EPIC_PRODUCT_NAME"];
+                epicProductVersion = (string)RemoteConfigService.Instance.appConfig.config["EPIC_PRODUCT_VERSION"];
+                epicProductId = (string)RemoteConfigService.Instance.appConfig.config["EPIC_PRODUCT_ID"];
+                epicSandboxId = (string)RemoteConfigService.Instance.appConfig.config["EPIC_SANDBOX_ID"];
+                epicDeploymentId = (string)RemoteConfigService.Instance.appConfig.config["EPIC_DEPLOYMENT_ID"];
+                epicClientId = (string)RemoteConfigService.Instance.appConfig.config["EPIC_CLIENT_ID"];
+                epicClientSecret = (string)RemoteConfigService.Instance.appConfig.config["EPIC_CLIENT_SECRET"];
+                tcs.SetResult(true);
+            };
+            RemoteConfigService.Instance.FetchConfigs(new userAttributes(), new appAttributes());
+
+            await task;
+        }
+
+        private async void Awake() {
             // Initialize Java version of the SDK with a reference to the VM with JNI
             // See https://eoshelp.epicgames.com/s/question/0D54z00006ufJBNCA2/cant-get-createdeviceid-to-work-in-unity-android-c-sdk?language=en_US
             if (Application.platform == RuntimePlatform.Android)
@@ -238,6 +259,7 @@ namespace EpicTransport {
 #endif
 
             if (!delayedInitialization) {
+                await SetupApiKeys();
                 Initialize();
             }
         }
