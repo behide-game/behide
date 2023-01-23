@@ -59,9 +59,7 @@ MonoBehaviour:
   - {fileID: -3599233603849660295}
   - {fileID: -760315246925853781}
   - {fileID: 6530666148574085058}
-  remotePlayerLayer:
-    serializedVersion: 2
-    m_Bits: 0
+  remotePlayerLayer: RemotePlayer
   cameraDisk: {fileID: 8178477648791991268}
 --- !u!114 &-760315246925853781
 MonoBehaviour:

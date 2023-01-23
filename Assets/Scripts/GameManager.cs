@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private ConnectionsManager connectionManager;
-    private NetworkManagerHUD networkManagerHud;
+    private bool connected;
 
     private PlayerId playerId;
     private RoomId roomId;
@@ -18,18 +18,16 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(this);
-        networkManagerHud = GetComponentInChildren<NetworkManagerHUD>();
-        networkManagerHud.enabled = false;
-
-        connectionManager.OnConnected.AddListener(() => networkManagerHud.enabled = true);
+        connected = false;
+        connectionManager.OnConnected.AddListener(() => connected = true);
     }
 
     void OnGUI() {
-        if (!networkManagerHud.enabled) return;
+        if (!connected) return;
         bool registered = playerId != null;
         bool inRoom = roomId != null;
 
-        GUILayout.BeginArea(new Rect(10, 250, 220, 400));
+        GUILayout.BeginArea(new Rect(10, 120, 220, 400));
 
         if (!inRoom) {
             GUILayout.BeginHorizontal();
@@ -48,7 +46,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            GUILayout.Label("<b>Room ID</b>: " + roomId.ToString());
+            GUILayout.Label($"<b>Room ID</b>: {roomId.ToString()}\n<b>Ping</b>: {System.Math.Round(NetworkTime.rtt * 1000)}ms");
         }
 
         GUILayout.EndArea();
@@ -60,8 +58,9 @@ public class GameManager : MonoBehaviour
 
     async void JoinRoom(string rawRoomId) {
         Debug.Log("Join room");
-        if (!RoomId.TryParse(rawRoomId, out RoomId roomId)) return;
-        await connectionManager.JoinRoom(roomId);
+        if (!RoomId.TryParse(rawRoomId, out RoomId targetRoomId)) return;
+        await connectionManager.JoinRoom(targetRoomId);
+        roomId = targetRoomId;
     }
 
     async void CreateRoom() {

@@ -4,7 +4,7 @@ using Mirror;
 public class PlayerSetup : NetworkBehaviour
 {
     [SerializeField] private Behaviour[] componentsToDisable;
-    [SerializeField] private LayerMask remotePlayerLayer;
+    [SerializeField] private string remotePlayerLayer;
     [SerializeField] private GameObject cameraDisk;
     private Camera mainCamera;
 
@@ -14,6 +14,7 @@ public class PlayerSetup : NetworkBehaviour
         {
             AssignRemoteLayer();
             DisableComponents();
+            Destroy(cameraDisk);
             return;
         }
 
@@ -73,7 +74,7 @@ public class PlayerSetup : NetworkBehaviour
 
     void AssignRemoteLayer()
     {
-        gameObject.layer = remotePlayerLayer;
+        gameObject.layer = LayerMask.NameToLayer(remotePlayerLayer);
     }
 
     void DisableComponents()

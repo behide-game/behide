@@ -12,6 +12,7 @@ public class ConnectionsManager : MonoBehaviour
 {
     private const string EPIC_SCHEME = "epic";
 
+    [HideInInspector]
     public UnityEvent OnConnected;
 
     [Header("Behide server")]
