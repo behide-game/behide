@@ -39,23 +39,23 @@ public class PlayerPropShoot : NetworkBehaviour
     }
 
     [Command]
-    private void CmdTransformInProp(GameObject propGameObject) { RpcTransformInProp(gameObject, propGameObject); }
+    private void CmdTransformInProp(GameObject propGameObject) => RpcTransformInProp(propGameObject);
 
     [ClientRpc]
-    private void RpcTransformInProp(GameObject targetPlayer, GameObject targetProp)
+    private void RpcTransformInProp(GameObject targetProp)
     {
         PropScriptableObject prop = targetProp.GetComponent<Prop>().prop;
 
         // Remove old
-        targetPlayer.transform.Find("Default graphics").gameObject.SetActive(false);
+        this.transform.Find("Default graphics").gameObject.SetActive(false);
 
-        Transform oldPropGraphics = targetPlayer.transform.Find("Prop renderer");
+        Transform oldPropGraphics = this.transform.Find("Prop renderer");
         if (oldPropGraphics != null) Destroy(oldPropGraphics.gameObject);
 
         // Add new
-        GameObject propRenderer = Instantiate(prop.prefab, targetPlayer.transform);
+        GameObject propRenderer = Instantiate(prop.prefab, this.transform);
         propRenderer.name = "Prop renderer";
-        propRenderer.tag = targetPlayer.tag;
-        targetPlayer.GetComponent<Rigidbody>().mass = prop.mass;
+        propRenderer.tag = this.tag;
+        this.GetComponent<Rigidbody>().mass = prop.mass;
     }
 }
