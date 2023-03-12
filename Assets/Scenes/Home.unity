@@ -264,6 +264,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 1667443938}
   uiDocument: {fileID: 231162956}
+  inputAction: {fileID: -3820247885290209702, guid: ba1fd7d9b0300cc44858721755d9dd9e, type: 3}
 --- !u!1 &712064898
 GameObject:
   m_ObjectHideFlags: 0

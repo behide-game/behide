@@ -36,6 +36,7 @@ public class HomeScreen : MonoBehaviour
 {
     [SerializeField] private GameManager gameManager;
     [SerializeField] private UIDocument uiDocument;
+    [SerializeField] private InputActionReference inputAction;
 
     private bool usernameModalOpened = false;
 
@@ -47,7 +48,7 @@ public class HomeScreen : MonoBehaviour
         VisualElement home = uiDocument.rootVisualElement.Query<VisualElement>("Home");
         Label homeText = home.Query<Label>("Text");
 
-        if (gameManager.connected) homeText.text = "Press any key to start";
+        if (gameManager.connected) homeText.text = $"Press {inputAction.action.GetBindingDisplayString().ToLowerInvariant()} to start";
         else homeText.text = "Connecting...";
     }
 
