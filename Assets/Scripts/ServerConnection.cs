@@ -51,12 +51,9 @@ public class ServerConnection : IDisposable
 
 
 
-    async public Task SendMessage(Msg message)
-    {
-        await tcp.SendAsync(message.ToBytes());
-    }
+    async public Task SendMessage(Msg message) { Debug.Log("Sending message: " + message); await tcp.SendAsync(message.ToBytes()); }
 
-    async public Task<Response> SendMessage(Msg message, ResponseHeader expectedResponseHeader)
+async public Task<Response> SendMessage(Msg message, ResponseHeader expectedResponseHeader)
     {
         _ = SendMessage(message);
         Response response = await ResponseQueue.Dequeue();
@@ -73,7 +70,7 @@ public class ServerConnection : IDisposable
 
 
     /// <summary>
-    /// Start the internal TCP server and activate event handler.
+    /// Start the internal TCP server and activate event handlers.
     /// </summary>
     public void Start()
     {
@@ -87,17 +84,8 @@ public class ServerConnection : IDisposable
     }
 
 
-    void TcpOnConnected(object sender, ConnectionEventArgs e)
-    {
-        //Debug.Log("[TCP] Connected: " + e.IpPort);
-        OnConnected?.Invoke(sender, e);
-    }
-
-    void TcpOnDisconnected(object sender, ConnectionEventArgs e)
-    {
-        //Debug.Log("[TCP] Disconnected: " + e.Reason);
-        OnDisconnected.Invoke(sender, e);
-    }
+    void TcpOnConnected(object sender, ConnectionEventArgs e) => OnConnected?.Invoke(sender, e);
+    void TcpOnDisconnected(object sender, ConnectionEventArgs e) => OnDisconnected.Invoke(sender, e);
 
     void OnData(object sender, DataReceivedEventArgs e)
     {

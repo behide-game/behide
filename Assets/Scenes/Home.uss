@@ -1,0 +1,46 @@
+.hide {
+    display: none;
+}
+
+.unity-base-field__input {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0px;
+    margin: 0px;
+    padding: 0px;
+    --unity-cursor-color: white;
+}
+
+.unity-text-field__placeholder > .unity-base-text-field__input {
+    color: #A6B2C4
+}
+
+.text-input {
+    background-color: #002255;
+    border-color: #003380;
+}
+.text-input:hover {
+    background-color: #001D49;
+    border-color: #002D72;
+}
+.text-input:focus {
+    background-color: #002C6F;
+    border-color: #0041A2;
+}
+
+
+.primary-button {
+    background-image: url("project://database/Assets/Images/Gradients/Button gradient.png");
+    font-size: 23px;
+    width: 100%;
+    height: 50px;
+    margin: 10px 0px 0px 0px;
+}
+.primary-button:hover, .primary-button:focus {
+    background-image: url("project://database/Assets/Images/Gradients/Button pressed gradient.png");
+}
+.primary-button:active {
+    font-size: 22px;
+    width: 96%;
+    height: 48px;
+    margin: 12px 2% 2px 2%;
+}

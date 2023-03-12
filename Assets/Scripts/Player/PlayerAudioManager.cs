@@ -20,8 +20,6 @@ public class PlayerAudioManager : NetworkBehaviour
     [ClientRpc]
     private void PlayRpc(int audioIndex)
     {
-        Debug.Log("From: " + this.name);
-
         AudioClip audio = audios[audioIndex];
         audioSource.PlayOneShot(audio);
         playing = true;
