@@ -2,11 +2,11 @@ using System.IO;
 using UnityEngine;
 
 class FakeUsername : MonoBehaviour {
-    [SerializeField] private string filePath;
+    [SerializeField] private TextAsset file;
     static private string[] usernames;
 
     void Awake() {
-        usernames = File.ReadAllLines(filePath);
+        usernames = file.text.Split("\n");
     }
 
     static public string getRandom() {

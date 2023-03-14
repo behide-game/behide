@@ -53,7 +53,7 @@ public class ServerConnection : IDisposable
 
     async public Task SendMessage(Msg message) { Debug.Log("Sending message: " + message); await tcp.SendAsync(message.ToBytes()); }
 
-async public Task<Response> SendMessage(Msg message, ResponseHeader expectedResponseHeader)
+    async public Task<Response> SendMessage(Msg message, ResponseHeader expectedResponseHeader)
     {
         _ = SendMessage(message);
         Response response = await ResponseQueue.Dequeue();
@@ -72,7 +72,7 @@ async public Task<Response> SendMessage(Msg message, ResponseHeader expectedResp
     /// <summary>
     /// Start the internal TCP server and activate event handlers.
     /// </summary>
-    public void Start()
+    async public Task Start()
     {
         tcp = new SimpleTcpClient(endPoint);
 
@@ -80,7 +80,7 @@ async public Task<Response> SendMessage(Msg message, ResponseHeader expectedResp
         tcp.Events.Connected += TcpOnConnected;
         tcp.Events.Disconnected += TcpOnDisconnected;
 
-        tcp.Connect();
+        await Task.Run(() => tcp.Connect());
     }
 
 

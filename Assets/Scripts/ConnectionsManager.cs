@@ -12,8 +12,8 @@ public class ConnectionsManager : MonoBehaviour
 {
     private const string EPIC_SCHEME = "epic";
 
-    [HideInInspector]
-    public UnityEvent OnConnected;
+    [HideInInspector] public UnityEvent OnConnected;
+    [HideInInspector] public UnityEvent<string> OnConnectError;
 
     [Header("Behide server")]
     public string ip;
@@ -45,17 +45,24 @@ public class ConnectionsManager : MonoBehaviour
 
         if (await epicConnected)
         {
-            if (!Guid.TryParse(EOSSDKComponent.LocalUserProductIdString, out epicId)) Debug.LogError("Failed to parse epicId");
+            try {
+                if (!Guid.TryParse(EOSSDKComponent.LocalUserProductIdString, out epicId)) Debug.LogError("Failed to parse epicId");
 
-            // Create connection with BehideServer
-            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
-            server = new ServerConnection(ipEndPoint);
-            server.OnConnected += (_, _) => OnConnected.Invoke();
-            server.Start();
+                // Create connection with BehideServer
+                IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+                server = new ServerConnection(ipEndPoint);
+                server.OnConnected += (_, _) => OnConnected.Invoke();
+                await server.Start();
+            }
+            catch (Exception error)
+            {
+                OnConnectError.Invoke(error.Message);
+            }
         }
         else
         {
             Debug.LogError("Failed to start EpicTransport");
+            OnConnectError.Invoke("Failed to start EpicTransport");
             epicSdk.enabled = false;
         }
     }

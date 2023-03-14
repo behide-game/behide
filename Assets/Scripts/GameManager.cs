@@ -1,17 +1,17 @@
 using UnityEngine;
-using Mirror;
 using BehideServer.Types;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private ConnectionsManager connectionManager;
-    public bool connected;
 
-    public bool playerRegistered;
-    public bool inRoom;
+    [HideInInspector] public bool connected;
+    [HideInInspector] public string connectError;
+    [HideInInspector] public bool playerRegistered;
+    [HideInInspector] public bool inRoom;
     private PlayerId playerId;
-    public RoomId roomId;
+    private RoomId roomId;
 
     // GUI
     private string GUIusername;
@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
         connected = false;
 
         connectionManager.OnConnected.AddListener(() => connected = true);
+        connectionManager.OnConnectError.AddListener(error => connectError = error);
     }
 
     void OnGUI() {

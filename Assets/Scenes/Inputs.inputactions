@@ -2,7 +2,7 @@
     "name": "Inputs",
     "maps": [
         {
-            "name": "Home screen",
+            "name": "UI",
             "id": "23adfa25-8ce5-4fdf-bdfb-aadf4f103274",
             "actions": [
                 {

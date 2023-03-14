@@ -32,7 +32,7 @@ class CustomTextField
     }
 }
 
-public class HomeScreen : MonoBehaviour
+public class StartScreen : MonoBehaviour
 {
     [SerializeField] private GameManager gameManager;
     [SerializeField] private UIDocument uiDocument;
@@ -49,6 +49,7 @@ public class HomeScreen : MonoBehaviour
         Label homeText = home.Query<Label>("Text");
 
         if (gameManager.connected) homeText.text = $"Press {inputAction.action.GetBindingDisplayString().ToLowerInvariant()} to start";
+        else if (gameManager.connectError != null && gameManager.connectError != "") homeText.text = $"Failed to connect\n{gameManager.connectError}";
         else homeText.text = "Connecting...";
     }
 
