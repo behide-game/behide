@@ -1,0 +1,50 @@
+.line {
+    background-image: url('project://database/Assets/UI/Components/ValidateArrow/Line.svg?fileID=7388822144124034973&guid=cf646e53db24e484e9cdbad10897a762&type=3#Line');
+    width: 35%;
+    height: 35%;
+    -unity-background-scale-mode: scale-to-fit;
+    margin-left: 32.5%;
+    margin-right: 32.5%;
+    margin-top: 32.5%;
+    margin-bottom: 32.5%;
+    position: absolute;
+    scale: 0 1;
+    transition-duration: 150ms;
+    transition-timing-function: ease-out-circ;
+}
+
+.arrow {
+    background-image: url('project://database/Assets/UI/Components/ValidateArrow/Arrow.svg?fileID=7388822144124034973&guid=190494b8a3a47b04aaaeda7895d8d9d4&type=3#Arrow');
+    width: 35%;
+    height: 35%;
+    -unity-background-scale-mode: scale-to-fit;
+    margin-left: 32.5%;
+    margin-right: 32.5%;
+    margin-top: 32.5%;
+    margin-bottom: 32.5%;
+    position: absolute;
+    translate: -6px 0;
+    transition-duration: 150ms;
+    transition-timing-function: ease-out-circ;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.container:hover .line {
+    scale: 1 1;
+}
+
+.container:hover .arrow {
+    translate: 8px 0;
+}

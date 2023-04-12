@@ -4,7 +4,7 @@ using BehideServer.Types;
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
-    private ConnectionsManager connectionManager;
+    private ConnectionsManager connectionsManager;
 
     [HideInInspector] public bool connected;
     [HideInInspector] public string connectError;
@@ -25,55 +25,28 @@ public class GameManager : MonoBehaviour
         inRoom = roomId != null;
         connected = false;
 
-        connectionManager.OnConnected.AddListener(() => connected = true);
-        connectionManager.OnConnectError.AddListener(error => connectError = error);
-    }
-
-    void OnGUI() {
-        // if (!connected) return;
-
-        // GUILayout.BeginArea(new Rect(10, 120, 220, 400));
-
-        // if (!inRoom) {
-        //     GUILayout.BeginHorizontal();
-        //     if (!registered) {
-        //         GUIusername = GUILayout.TextField(GUIusername);
-        //         if (GUILayout.Button("Register")) RegisterPlayer(GUIusername);
-        //     }
-        //     else
-        //     {
-        //         GUIroomId = GUILayout.TextField(GUIroomId);
-        //         if (GUILayout.Button("Join room")) JoinRoom(GUIroomId);
-        //     }
-        //     GUILayout.EndHorizontal();
-
-        //     if (registered && GUILayout.Button("Create a room")) CreateRoom();
-        // }
-        // else
-        // {
-        //     GUILayout.Label($"<b>Room ID</b>: {roomId.ToString()}\n<b>Ping</b>: {System.Math.Round(NetworkTime.rtt * 1000)}ms");
-        // }
-
-        // GUILayout.EndArea();
+        connectionsManager.OnConnected.AddListener(() => connected = true);
+        connectionsManager.OnConnectError.AddListener(error => connectError = error);
     }
 
 
     public async void RegisterPlayer(string username) {
-        playerId = await connectionManager.RegisterPlayer(username);
+        playerId = await connectionsManager.RegisterPlayer(username);
         playerRegistered = true;
     }
 
     public async void JoinRoom(string rawRoomId) {
         Debug.Log("Join room");
         if (!RoomId.TryParse(rawRoomId, out RoomId targetRoomId)) return;
-        await connectionManager.JoinRoom(targetRoomId);
+
+        await connectionsManager.JoinRoom(targetRoomId);
         roomId = targetRoomId;
         inRoom = true;
     }
 
     public async void CreateRoom() {
         Debug.Log("Create room");
-        roomId = await connectionManager.CreateRoom(playerId);
+        roomId = await connectionsManager.CreateRoom(playerId);
         inRoom = true;
     }
 }
