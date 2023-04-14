@@ -62,7 +62,7 @@ public class UINavigation : MonoBehaviour
             focusableElements = children.Select((element, index) => new VisualElementNavInfo(element, children.Where((_, i) => i != index).ToArray())).ToArray();
 
             // Focus first element
-            VisualElementUtils.Focus(focusableElements.First().visualElement);
+            focusableElements.First().visualElement.Focus();
             focusedElementIndex = 0;
 
             // Await navigation events

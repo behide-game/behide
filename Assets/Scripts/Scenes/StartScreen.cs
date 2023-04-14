@@ -21,6 +21,18 @@ public class StartScreen : MonoBehaviour
         home = () => uiDocument.rootVisualElement.Query<VisualElement>("Home");
         usernameModal = () => uiDocument.rootVisualElement.Query<VisualElement>("UsernameModal");
         inputAction.ToInputAction().performed += OnAnyKeyPressed;
+
+        // Setup username modal
+        if (PlayerPrefs.HasKey("username")) return;
+
+        // Set placeholder
+        var textField = usernameModal().Q<TextField>("UsernameTextField");
+        var fakeUsername = FakeUsername.getRandom();
+        TextFieldUtils.SetPlaceholderText(textField, fakeUsername + "...");
+
+        // Handle validate
+        var validateButton = usernameModal().Q<VisualElement>("ValidateArrow").ElementAt(0) as Button;
+        validateButton.clickable.clicked += () => SubmitUsername(textField.text);
     }
 
     void Update()
@@ -28,10 +40,8 @@ public class StartScreen : MonoBehaviour
         Label homeText = home().Query<Label>("Subtitle");
         string anyKey = inputAction.action.GetBindingDisplayString().ToLowerInvariant();
 
-        if (gameManager.connected) {
-            homeText.text = $"Press {anyKey} to start";
-        }
-        else if (gameManager.connectError != null && gameManager.connectError != "")
+        if (gameManager.connected) homeText.text = $"Press {anyKey} to start";
+        else if ((gameManager.connectError ?? "") != "")
         {
             homeText.text = $"Failed to connect:\n{gameManager.connectError}";
         }
@@ -51,32 +61,27 @@ public class StartScreen : MonoBehaviour
             string username = PlayerPrefs.GetString("username");
             gameManager.RegisterPlayer(username);
             SwitchScene();
+            return;
         }
-        else
-        {
-            // Show modal
-            home().AddToClassList("hide");
-            usernameModal().RemoveFromClassList("hide");
-            usernameModalOpened = true;
 
-            // Set placeholder
-            TextField textField = usernameModal().Q<TextField>("UsernameTextField");
-            string fakeUsername = FakeUsername.getRandom();
-            TextFieldUtils.SetPlaceholderText(textField, fakeUsername + "...");
-
-            // Handle validate
-            VisualElement validateButton = usernameModal().Q<VisualElement>("ValidateArrow");
-            validateButton.RegisterCallback<ClickEvent>(_ => { SaveUsername(textField.text); SwitchScene(); });
-        }
+        // Show username modal
+        home().AddToClassList("hide");
+        usernameModal().RemoveFromClassList("hide");
+        usernameModalOpened = true;
     }
 
-    private void SaveUsername(string username)
+    private void SubmitUsername(string username)
     {
+        // Save username
         PlayerPrefs.SetString("username", username);
         PlayerPrefs.Save();
+
+        gameManager.RegisterPlayer(username);
+        SwitchScene();
     }
 
-    private void SwitchScene() {
+    private void SwitchScene()
+    {
         SceneManager.LoadSceneAsync(homeSceneName);
     }
 }

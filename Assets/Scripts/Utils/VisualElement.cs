@@ -13,17 +13,4 @@ class VisualElementUtils
 
         return currentFocusableElements.Concat(otherFocusableElements).ToArray();
     }
-
-    private static bool IsValidateArrow(VisualElement e) => e.name == "ValidateArrow" || e.ElementAt(0)?.name == "ValidateArrowContainer";
-
-    public static void Focus(VisualElement element)
-    {
-        if (element is TextField || IsValidateArrow(element)) {
-            element.ElementAt(0).Focus();
-        }
-        else
-        {
-            element.Focus();
-        }
-    }
 }

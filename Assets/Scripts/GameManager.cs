@@ -6,16 +6,14 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private ConnectionsManager connectionsManager;
 
+    #nullable enable
     [HideInInspector] public bool connected;
-    [HideInInspector] public string connectError;
+    [HideInInspector] public string? connectError;
     [HideInInspector] public bool playerRegistered;
     [HideInInspector] public bool inRoom;
-    private PlayerId playerId;
-    private RoomId roomId;
+    private PlayerId? playerId;
+    private RoomId? roomId;
 
-    // GUI
-    private string GUIusername;
-    private string GUIroomId;
 
     void Awake()
     {
