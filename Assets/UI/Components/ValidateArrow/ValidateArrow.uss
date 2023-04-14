@@ -41,10 +41,10 @@
     padding-bottom: 0;
 }
 
-.container:hover .line {
+.container:hover .line, .container:focus .line {
     scale: 1 1;
 }
 
-.container:hover .arrow {
+.container:hover .arrow, .container:focus .arrow {
     translate: 8px 0;
 }

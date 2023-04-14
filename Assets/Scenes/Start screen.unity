@@ -212,6 +212,7 @@ GameObject:
   - component: {fileID: 231162957}
   - component: {fileID: 231162956}
   - component: {fileID: 231162958}
+  - component: {fileID: 231162959}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -266,6 +267,18 @@ MonoBehaviour:
   uiDocument: {fileID: 231162956}
   inputAction: {fileID: -3820247885290209702, guid: ba1fd7d9b0300cc44858721755d9dd9e, type: 3}
   homeSceneName: Home
+--- !u!114 &231162959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231162955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9618965136d31042a333420f1b202d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &712064898
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,8 +509,8 @@ GameObject:
   m_Component:
   - component: {fileID: 989985511}
   - component: {fileID: 989985510}
-  - component: {fileID: 989985513}
   - component: {fileID: 989985512}
+  - component: {fileID: 989985513}
   m_Layer: 0
   m_Name: InputManager
   m_TagString: Untagged
@@ -519,7 +532,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: ba1fd7d9b0300cc44858721755d9dd9e, type: 3}
   m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
+  m_UIInputModule: {fileID: 989985512}
   m_DeviceLostEvent:
     m_PersistentCalls:
       m_Calls: []

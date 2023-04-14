@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Components/ValidateArrow/ValidateArrow.uss?fileID=7433441132597879392&amp;guid=ed582d7ace4e48f46954dd7ad3776d2f&amp;type=3#ValidateArrow" />
-    <ui:GroupBox name="Container" class="container">
+    <ui:GroupBox name="ValidateArrowContainer" focusable="true" class="container">
         <ui:VisualElement name="Arrow" class="arrow" />
         <ui:VisualElement name="Line" class="line" />
     </ui:GroupBox>

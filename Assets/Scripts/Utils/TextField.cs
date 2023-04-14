@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-class TextFieldUtils : TextField
+class TextFieldUtils
 {
     public static void SetPlaceholderText(TextField textField, string placeholder)
     {
