@@ -1,50 +1,33 @@
+#nullable enable
 using UnityEngine;
 using BehideServer.Types;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField]
-    private ConnectionsManager connectionsManager;
+    public ConnectionsManager connections = null!;
 
-    #nullable enable
-    [HideInInspector] public bool connected;
-    [HideInInspector] public string? connectError;
-    [HideInInspector] public bool playerRegistered;
-    [HideInInspector] public bool inRoom;
-    private PlayerId? playerId;
-    private RoomId? roomId;
+    public PlayerId? playerId { get; private set; }
+    public RoomId? roomId { get; private set; }
 
 
-    void Awake()
+    void Awake() => DontDestroyOnLoad(this);
+
+
+    public async void RegisterPlayer(string username) => playerId = await connections.RegisterPlayer(username);
+
+    public async void JoinRoom(string rawRoomId)
     {
-        DontDestroyOnLoad(this);
-
-        playerRegistered = playerId != null;
-        inRoom = roomId != null;
-        connected = false;
-
-        connectionsManager.OnConnected.AddListener(() => connected = true);
-        connectionsManager.OnConnectError.AddListener(error => connectError = error);
-    }
-
-
-    public async void RegisterPlayer(string username) {
-        playerId = await connectionsManager.RegisterPlayer(username);
-        playerRegistered = true;
-    }
-
-    public async void JoinRoom(string rawRoomId) {
         Debug.Log("Join room");
         if (!RoomId.TryParse(rawRoomId, out RoomId targetRoomId)) return;
 
-        await connectionsManager.JoinRoom(targetRoomId);
+        await connections.JoinRoom(targetRoomId);
         roomId = targetRoomId;
-        inRoom = true;
     }
 
-    public async void CreateRoom() {
+    public async void CreateRoom()
+    {
+        if (playerId == null) { Debug.LogError("Player not registered"); return; }
         Debug.Log("Create room");
-        roomId = await connectionsManager.CreateRoom(playerId);
-        inRoom = true;
+        roomId = await connections.CreateRoom(playerId);
     }
 }

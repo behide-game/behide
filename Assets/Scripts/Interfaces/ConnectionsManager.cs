@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Net;
 using System.Threading;
@@ -6,70 +7,72 @@ using UnityEngine;
 using Mirror;
 using BehideServer.Types;
 using EpicTransport;
-using UnityEngine.Events;
 
 public class ConnectionsManager : MonoBehaviour
 {
     private const string EPIC_SCHEME = "epic";
 
-    [HideInInspector] public UnityEvent OnConnected;
-    [HideInInspector] public UnityEvent<string> OnConnectError;
+    [SerializeField] private NetworkManager networkManager = null!;
 
     [Header("Behide server")]
-    public string ip;
-    public int port;
-    private Task<bool> behideServerConnected;
-    private BehideConnection behideConnection;
+    [SerializeField] private string ip = "82.64.42.87";
+    [SerializeField] private int port = 6567;
+    private BehideServerConnection behideConnection = null!;
 
     [Header("Epic")]
     [SerializeField] private int epicConnectionTimeout = 5000;
-    private Task<bool> epicConnected;
-    private Guid epicId;
+    private Guid? epicId;
 
-    private NetworkManager networkManager;
+    [HideInInspector] public (bool behide, bool eos) connected = (false, false);
+    [HideInInspector] public string? connectError = null;
+
 
     async void Awake()
     {
         DontDestroyOnLoad(this);
 
-        networkManager = GetComponentInChildren<NetworkManager>();
-        var epicSdk = GetComponentInChildren<EOSSDKComponent>();
-
-        var epicConnectedTcs = new TaskCompletionSource<bool>();
-        var epicConnectedCts = new CancellationTokenSource(epicConnectionTimeout);
-        epicConnected = epicConnectedTcs.Task;
-
-        epicConnectedCts.Token.Register(() => epicConnectedTcs.SetResult(false));
-        epicSdk.OnConnected.AddListener(() => epicConnectedTcs.SetResult(true));
-
-        if (await epicConnected)
+        // Connect to Behide's server
+        _ = Task.Run(async () =>
         {
-            try {
-                if (!Guid.TryParse(EOSSDKComponent.LocalUserProductIdString, out epicId)) Debug.LogError("Failed to parse epicId");
-
-                // Connect with Behide's server
+            try
+            {
                 IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
-                behideConnection = new BehideConnection(ipEndPoint);
-                behideConnection.OnConnected += (_, _) => OnConnected.Invoke();
+                behideConnection = new BehideServerConnection(ipEndPoint);
+                behideConnection.OnConnected += (_, _) => connected = (true, connected.eos);
                 await behideConnection.Start();
             }
             catch (Exception error)
             {
-                OnConnectError.Invoke(error.Message);
+                connectError = error.Message;
+                Debug.LogError($"Failed to connect Behide's server: {error.Message}");
             }
-        }
-        else
+        });
+
+
+        // Connect to EOS
+        var epicSdk = GetComponentInChildren<EOSSDKComponent>();
+
+        var epicConnectedCts = new CancellationTokenSource(epicConnectionTimeout);
+        var epicConnectedTcs = new TaskCompletionSource<bool>();
+        var epicConnected = epicConnectedTcs.Task;
+
+        epicConnectedCts.Token.Register(() => epicConnectedTcs.SetResult(false));
+        epicSdk.OnConnected.AddListener(() => epicConnectedTcs.SetResult(true));
+
+        if (!await epicConnected) // When failed to connect
         {
-            Debug.LogError("Failed to start EpicTransport");
-            OnConnectError.Invoke("Failed to start EpicTransport");
+            connectError = "Failed to start EpicTransport";
+            Debug.LogError(connectError);
             epicSdk.enabled = false;
+            return;
         }
+
+        if (!Guid.TryParse(EOSSDKComponent.LocalUserProductIdString, out Guid newEpicId)) Debug.LogError("Failed to parse epicId");
+        epicId = newEpicId;
+        connected = (connected.behide, true);
     }
 
-    void OnDestroy()
-    {
-        behideConnection?.Dispose();
-    }
+    void OnDestroy() => behideConnection?.Dispose();
 
 
     public async Task<PlayerId> RegisterPlayer(string username)
@@ -83,7 +86,9 @@ public class ConnectionsManager : MonoBehaviour
 
     public async Task<RoomId> CreateRoom(PlayerId playerId)
     {
-        Msg msg = Msg.NewCreateRoom(playerId, epicId);
+        if (epicId == null) throw new Exception("epicId is null. Is it connected ?");
+
+        Msg msg = Msg.NewCreateRoom(playerId, (Guid)epicId);
         Response response = await behideConnection.SendMessage(msg, ResponseHeader.RoomCreated);
         if (!RoomId.TryParseBytes(response.Content, out RoomId roomId)) throw new Exception("Failed to parse RoomId");
 

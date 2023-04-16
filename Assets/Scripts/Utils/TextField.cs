@@ -28,4 +28,10 @@ class TextFieldUtils
             }
         }
     }
+
+    public static bool PlaceholderVisible(TextField textField)
+    {
+        string placeholderClass = TextField.ussClassName + "__placeholder";
+        return textField.ClassListContains(placeholderClass);
+    }
 }

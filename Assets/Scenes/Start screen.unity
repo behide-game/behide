@@ -789,15 +789,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0f70232b7995844ebf697748c21e9ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkManager: {fileID: 712064904}
+  ip: 192.168.123.134
+  port: 28000
+  epicConnectionTimeout: 5000
+  connected: 0
+  connectError: 
   OnConnected:
     m_PersistentCalls:
       m_Calls: []
   OnConnectError:
     m_PersistentCalls:
       m_Calls: []
-  ip: 192.168.123.134
-  port: 28000
-  epicConnectionTimeout: 5000
 --- !u!114 &1667443938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -810,11 +813,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2d73feaabfe9c54ba1d9da691e2b391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectionsManager: {fileID: 1667443937}
-  connected: 0
-  connectError: 
-  playerRegistered: 0
-  inRoom: 0
+  connections: {fileID: 1667443937}
 --- !u!4 &1667443939
 Transform:
   m_ObjectHideFlags: 0

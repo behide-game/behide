@@ -6,7 +6,7 @@ using UnityEngine;
 using SuperSimpleTcp;
 using BehideServer.Types;
 
-public class BehideConnection : IDisposable
+public class BehideServerConnection : IDisposable
 {
     private bool disposed;
 
@@ -19,20 +19,17 @@ public class BehideConnection : IDisposable
     public event EventHandler<Response> ResponseReceived;
 
     public BlockingQueue<Response> ResponseQueue;
-    public Task<Response> GetLastResponse()
-    {
-        return ResponseQueue.Dequeue(1000);
-    }
+    public Task<Response> GetLastResponse() => ResponseQueue.Dequeue(1000);
 
 
-    public BehideConnection(IPEndPoint newEndPoint)
+    public BehideServerConnection(IPEndPoint newEndPoint)
     {
         serverVersion = BehideServer.Version.GetVersion();
         endPoint = newEndPoint;
         ResponseQueue = new BlockingQueue<Response>();
     }
 
-    ~BehideConnection() => Dispose();
+    ~BehideServerConnection() => Dispose();
 
     public void Dispose()
     {
@@ -80,8 +77,6 @@ public class BehideConnection : IDisposable
         tcp.Events.Connected += TcpOnConnected;
         tcp.Events.Disconnected += TcpOnDisconnected;
 
-        // await Task.Run(() => { });
-        // OnConnected?.Invoke(new object(), EventArgs.Empty);
         await Task.Run(() => tcp.Connect());
     }
 
