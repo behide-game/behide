@@ -1,16 +1,16 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Home/Style.uss?fileID=7433441132597879392&amp;guid=aa4477378371665469d47e57a191d371&amp;type=3#Style" />
     <ui:VisualElement name="Background" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-image: url(&apos;project://database/Assets/Images/Gradients/Background%20gradient.png?fileID=2800000&amp;guid=a40d18c102556ed44935245769708e4b&amp;type=3#Background gradient&apos;);" />
-    <ui:VisualElement name="Container" class="container" style="padding-left: 90px; padding-right: 90px; padding-top: 130px; padding-bottom: 70px;">
-        <ui:VisualElement name="Logo" style="background-image: url(&apos;project://database/Assets/Images/UI/Banner.png?fileID=2800000&amp;guid=605db19b6c6af7e4090668c5ed4c85ae&amp;type=3#Banner&apos;); width: 299px; position: absolute; left: 30px; top: 29px; -unity-background-scale-mode: scale-to-fit; height: 74px;" />
+    <ui:VisualElement name="Container" class="container">
+        <ui:VisualElement name="Logo" style="background-image: url(&apos;project://database/Assets/Images/UI/Banner.png?fileID=2800000&amp;guid=605db19b6c6af7e4090668c5ed4c85ae&amp;type=3#Banner&apos;); width: 299px; position: absolute; left: 30px; top: 30px; -unity-background-scale-mode: scale-to-fit; height: 74px;" />
         <ui:Button display-tooltip-when-elided="true" class="button" style="background-color: rgb(29, 206, 89);">
             <ui:Label text="CREATE" display-tooltip-when-elided="true" name="Title" class="button-title" />
-            <ui:Label text="Create a party and invite your friends" display-tooltip-when-elided="true" name="Subtitle" class="subtitle" />
+            <ui:Label text="Create a party and invite your friends" display-tooltip-when-elided="true" name="Subtitle" class="button-subtitle" />
         </ui:Button>
         <ui:VisualElement name="Margin" class="margin" />
         <ui:Button display-tooltip-when-elided="true" class="button" style="background-color: rgb(221, 64, 64);">
             <ui:Label text="JOIN" display-tooltip-when-elided="true" name="Title" class="button-title" />
-            <ui:Label text="Join a party created by your friend with a code" display-tooltip-when-elided="true" name="Subtitle" class="subtitle" />
+            <ui:Label text="Join a party created by your friend with a code" display-tooltip-when-elided="true" name="Subtitle" class="subtitle button-subtitle" />
         </ui:Button>
     </ui:VisualElement>
 </ui:UXML>
