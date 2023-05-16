@@ -36,12 +36,17 @@
     flex-shrink: 1;
     justify-content: center;
     flex-basis: 0;
-    transition-duration: 150s;
+    transition-duration: 150ms;
     transition-property: scale;
+    transition-timing-function: ease-out-cubic;
 }
 
 .button:hover {
-    scale: 1.02;
+    scale: 1.02 1.02;
+}
+
+.button:active {
+    scale: 0.98 0.98;
 }
 
 .button-title {
@@ -49,6 +54,14 @@
     -unity-font: url('project://database/Assets/Imports/Fonts/Mona%20Sans/Mona-Sans-BlackWide.ttf?fileID=12800000&guid=6ba587beefe44c64f92a4234b47fc0c6&type=3#Mona-Sans-BlackWide');
     font-size: 45px;
     color: rgb(221, 243, 255);
+    margin-bottom: 10px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
 }
 
 .button-subtitle {
