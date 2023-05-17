@@ -1,5 +1,5 @@
 .line {
-    background-image: url('project://database/Assets/UI/Components/ValidateArrow/Line.svg?fileID=7388822144124034973&guid=cf646e53db24e484e9cdbad10897a762&type=3#Line');
+    background-image: url('project://database/Assets/Scenes/UI/Components/ValidateArrow/Line.svg?fileID=7388822144124034973&guid=cf646e53db24e484e9cdbad10897a762&type=3#Line');
     width: 35%;
     height: 35%;
     -unity-background-scale-mode: scale-to-fit;
@@ -14,7 +14,7 @@
 }
 
 .arrow {
-    background-image: url('project://database/Assets/UI/Components/ValidateArrow/Arrow.svg?fileID=7388822144124034973&guid=190494b8a3a47b04aaaeda7895d8d9d4&type=3#Arrow');
+    background-image: url('project://database/Assets/Scenes/UI/Components/ValidateArrow/Arrow.svg?fileID=7388822144124034973&guid=190494b8a3a47b04aaaeda7895d8d9d4&type=3#Arrow');
     width: 35%;
     height: 35%;
     -unity-background-scale-mode: scale-to-fit;
