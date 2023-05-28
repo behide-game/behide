@@ -2,12 +2,12 @@
 <doc>
 <assembly><name>BehideServer.Interop</name></assembly>
 <members>
-<member name="T:BehideServer.Types.Msg.GetRoom">
+<member name="T:BehideServer.Types.Msg.DeleteRoom">
 <summary>
  Send the RoomId
 </summary>
 </member>
-<member name="T:BehideServer.Types.Msg.DeleteRoom">
+<member name="T:BehideServer.Types.Msg.GetRoom">
 <summary>
  Send the RoomId
 </summary>
@@ -15,6 +15,11 @@
 <member name="T:BehideServer.Types.Msg.CreateRoom">
 <summary>
  Send the EpicId
+</summary>
+</member>
+<member name="T:BehideServer.Types.Msg.CheckServerVersion">
+<summary>
+ Send the server version (string)
 </summary>
 </member>
 <member name="F:BehideServer.Types.ResponseHeader.RoomCreated">

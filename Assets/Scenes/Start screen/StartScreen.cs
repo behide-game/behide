@@ -44,7 +44,7 @@ public class StartScreen : MonoBehaviour
         Label homeText = home().Query<Label>("Subtitle");
         string key = inputAction.action.GetBindingDisplayString().ToLowerInvariant();
 
-        if (gameManager.connections.connected.behide) homeText.text = $"Press {key} to start";
+        if (gameManager.connections.connected.behide && gameManager.connections.connected.eos) homeText.text = $"Press {key} to start";
         else if ((gameManager.connections.connectError ?? "") != "")
         {
             homeText.text = $"Failed to connect";
@@ -59,6 +59,7 @@ public class StartScreen : MonoBehaviour
     {
         if (usernameModalOpened
             || !gameManager.connections.connected.behide
+            || !gameManager.connections.connected.eos
             || context.phase != InputActionPhase.Performed) return;
 
         if (PlayerPrefs.HasKey("username"))
