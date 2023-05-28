@@ -75,20 +75,14 @@ public class ConnectionsManager : MonoBehaviour
     void OnDestroy() => behideConnection?.Dispose();
 
 
-    public async Task<PlayerId> RegisterPlayer(string username)
-    {
-        Msg msg = Msg.NewRegisterPlayer(behideConnection.serverVersion, username);
-        Response response = await behideConnection.SendMessage(msg, ResponseHeader.PlayerRegistered);
-        if (!PlayerId.TryParseBytes(response.Content, out PlayerId playerId)) throw new Exception("Failed to parse PlayerId");
-
-        return playerId;
-    }
-
-    public async Task<RoomId> CreateRoom(PlayerId playerId)
+    /// <summary>
+    /// Create a room on behide's server and start the peer to peer host
+    /// </summary>
+    public async Task<RoomId> CreateRoom()
     {
         if (epicId == null) throw new Exception("epicId is null. Is it connected ?");
 
-        Msg msg = Msg.NewCreateRoom(playerId, (Guid)epicId);
+        Msg msg = Msg.NewCreateRoom((Guid)epicId);
         Response response = await behideConnection.SendMessage(msg, ResponseHeader.RoomCreated);
         if (!RoomId.TryParseBytes(response.Content, out RoomId roomId)) throw new Exception("Failed to parse RoomId");
 
@@ -96,12 +90,15 @@ public class ConnectionsManager : MonoBehaviour
         return roomId;
     }
 
+    /// <summary>
+    /// Join a room on behide's server from it's id and connect to the host in peer to peer
+    /// </summary>
     public async Task JoinRoom(RoomId roomId)
     {
-        Response response = await behideConnection.SendMessage(Msg.NewJoinRoom(roomId), ResponseHeader.RoomJoined);
-        if (!Room.TryParse(response.Content, out Room joinedRoom)) throw new Exception("Failed to parse the joined room.");
+        Response response = await behideConnection.SendMessage(Msg.NewGetRoom(roomId), ResponseHeader.RoomGet);
+        if (!GuidHelper.TryParseBytes(response.Content, out Guid roomEpicId)) throw new Exception("Failed to parse the joined room.");
 
-        Uri uri = new UriBuilder(EPIC_SCHEME, joinedRoom.EpicId.ToString("N")).Uri;
+        Uri uri = new UriBuilder(EPIC_SCHEME, roomEpicId.ToString("N")).Uri;
         networkManager.StartClient(uri);
     }
 }

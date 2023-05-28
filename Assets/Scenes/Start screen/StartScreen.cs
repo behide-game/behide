@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class StartScreen : MonoBehaviour
 {
-    [SerializeField] private GameManager gameManager = null!;
+    private GameManager gameManager = null!;
     [SerializeField] private UIDocument uiDocument = null!;
     [SerializeField] private InputActionReference inputAction = null!;
     [SerializeField] private string homeSceneName = "";
@@ -17,6 +17,8 @@ public class StartScreen : MonoBehaviour
 
     private Func<VisualElement> home = null!;
     private Func<VisualElement> usernameModal = null!;
+
+    void Awake() => gameManager = GameManager.instance;
 
     void Start()
     {
@@ -57,7 +59,6 @@ public class StartScreen : MonoBehaviour
     {
         if (usernameModalOpened
             || !gameManager.connections.connected.behide
-            || gameManager.playerId != null // When player is registered
             || context.phase != InputActionPhase.Performed) return;
 
         if (PlayerPrefs.HasKey("username"))
@@ -90,7 +91,7 @@ public class StartScreen : MonoBehaviour
     private void SwitchScene()
     {
         string username = PlayerPrefs.GetString("username");
-        _ = gameManager.connections.RegisterPlayer(username);
+        gameManager.SetUsername(username);
         SceneManager.LoadSceneAsync(homeSceneName);
     }
 }
