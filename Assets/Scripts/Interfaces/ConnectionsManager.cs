@@ -38,7 +38,7 @@ public class ConnectionsManager : MonoBehaviour
             {
                 IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
                 behideConnection = new BehideServerConnection(ipEndPoint);
-                behideConnection.OnConnected += (_, _) => connected = (true, connected.eos);
+                behideConnection.OnConnected += (_, _) => CheckBehideServerVersion();
                 await behideConnection.Start();
             }
             catch (Exception error)
@@ -73,6 +73,22 @@ public class ConnectionsManager : MonoBehaviour
     }
 
     void OnDestroy() => behideConnection?.Dispose();
+
+    private async void CheckBehideServerVersion()
+    {
+        Msg msg = Msg.NewCheckServerVersion(BehideServer.Version.GetVersion());
+
+        try
+        {
+            Response response = await behideConnection.SendMessage(msg, ResponseHeader.CorrectServerVersion);
+        }
+        catch (Exception error)
+        {
+            connectError = error.Message;
+        }
+
+        connected = (true, connected.eos);
+    }
 
 
     /// <summary>

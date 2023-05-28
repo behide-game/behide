@@ -714,8 +714,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkManager: {fileID: 712064904}
-  ip: 192.168.123.134
-  port: 28000
+  ip: 82.64.42.87
+  port: 6567
   epicConnectionTimeout: 5000
   connectError: 
 --- !u!114 &1667443938
