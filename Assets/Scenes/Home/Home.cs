@@ -58,6 +58,9 @@ public class Home : MonoBehaviour
                 GUILayout.EndHorizontal();
             }
 
+            if (GUILayout.Button("Start game")) gameManager.StartGame();
+            if (GUILayout.Button("Close room")) gameManager.CloseRoom();
+
             GUILayout.EndVertical();
             GUILayout.EndArea();
         }
@@ -83,5 +86,14 @@ public class Home : MonoBehaviour
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
         }
+    }
+
+    public void ResetUI()
+    {
+        showCreateGameUI = false;
+        showJoinGameUI = false;
+
+        VisualElement container = uiDoc.rootVisualElement.Query("Container");
+        container.style.display = DisplayStyle.Flex;
     }
 }

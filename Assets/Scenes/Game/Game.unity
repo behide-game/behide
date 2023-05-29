@@ -307,7 +307,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &94224859
 Transform:
   m_ObjectHideFlags: 0
@@ -337,7 +337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0f70232b7995844ebf697748c21e9ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkManager: {fileID: 8516889}
+  networkManager: {fileID: 0}
   ip: 82.64.42.87
   port: 6567
   epicConnectionTimeout: 5000
@@ -354,7 +354,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2d73feaabfe9c54ba1d9da691e2b391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connections: {fileID: 94224860}
+  gameSceneName: 
+  connectionManager: {fileID: 0}
 --- !u!1 &126426180
 GameObject:
   m_ObjectHideFlags: 0

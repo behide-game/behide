@@ -44,12 +44,12 @@ public class StartScreen : MonoBehaviour
         Label homeText = home().Query<Label>("Subtitle");
         string key = inputAction.action.GetBindingDisplayString().ToLowerInvariant();
 
-        if (gameManager.connections.connected.behide && gameManager.connections.connected.eos) homeText.text = $"Press {key} to start";
-        else if ((gameManager.connections.connectError ?? "") != "")
+        if (gameManager.connectionManager.connected.behide && gameManager.connectionManager.connected.eos) homeText.text = $"Press {key} to start";
+        else if ((gameManager.connectionManager.connectError ?? "") != "")
         {
             homeText.text = $"Failed to connect";
             Label errorText = home().Query<Label>("ErrorMessage");
-            errorText.text = gameManager.connections.connectError;
+            errorText.text = gameManager.connectionManager.connectError;
         }
         else homeText.text = "Connecting...";
     }
@@ -58,8 +58,8 @@ public class StartScreen : MonoBehaviour
     public void OnAnyKeyPressed(InputAction.CallbackContext context)
     {
         if (usernameModalOpened
-            || !gameManager.connections.connected.behide
-            || !gameManager.connections.connected.eos
+            || !gameManager.connectionManager.connected.behide
+            || !gameManager.connectionManager.connected.eos
             || context.phase != InputActionPhase.Performed) return;
 
         if (PlayerPrefs.HasKey("username"))

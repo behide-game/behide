@@ -287,7 +287,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 712064899}
-  - component: {fileID: 712064904}
+  - component: {fileID: 712064900}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -310,7 +310,7 @@ Transform:
   m_Father: {fileID: 1667443939}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &712064904
+--- !u!114 &712064900
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -319,7 +319,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 712064898}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aab4c8111b7c411b9b92cf3dbc5bd4e, type: 3}
+  m_Script: {fileID: 11500000, guid: 41ad4fe62e445134ab7d417db0c11864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
@@ -334,7 +334,7 @@ MonoBehaviour:
   maxConnections: 10
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 1798604895689648986, guid: 10d5f5c7572008849a6b4ee9e3639231, type: 3}
-  autoCreatePlayer: 1
+  autoCreatePlayer: 0
   playerSpawnMethod: 1
   spawnPrefabs: []
   timeInterpolationGui: 0
@@ -713,7 +713,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0f70232b7995844ebf697748c21e9ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkManager: {fileID: 712064904}
+  networkManager: {fileID: 712064900}
   ip: 82.64.42.87
   port: 6567
   epicConnectionTimeout: 5000
@@ -730,7 +730,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2d73feaabfe9c54ba1d9da691e2b391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connections: {fileID: 1667443937}
+  gameSceneName: Game
+  homeSceneName: Home
+  connectionManager: {fileID: 1667443937}
 --- !u!4 &1667443939
 Transform:
   m_ObjectHideFlags: 0

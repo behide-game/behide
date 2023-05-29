@@ -12,7 +12,7 @@ public class ConnectionsManager : MonoBehaviour
 {
     private const string EPIC_SCHEME = "epic";
 
-    [SerializeField] private NetworkManager networkManager = null!;
+    public NetworkManager networkManager = null!;
 
     [Header("Behide server")]
     [SerializeField] private string ip = "82.64.42.87";
