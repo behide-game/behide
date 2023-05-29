@@ -81,7 +81,10 @@ public class BehideServerConnection : IDisposable
     }
 
 
-    void TcpOnConnected(object sender, ConnectionEventArgs e) => OnConnected?.Invoke(sender, e);
+    void TcpOnConnected(object sender, ConnectionEventArgs e) {
+        Debug.Log("Connected to Behide server");
+        OnConnected.Invoke(sender, e);
+    }
     void TcpOnDisconnected(object sender, ConnectionEventArgs e) => OnDisconnected.Invoke(sender, e);
 
     void OnData(object sender, DataReceivedEventArgs e)
