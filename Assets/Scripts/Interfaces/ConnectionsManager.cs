@@ -56,8 +56,8 @@ public class ConnectionsManager : MonoBehaviour
         var epicConnectedTcs = new TaskCompletionSource<bool>();
         var epicConnected = epicConnectedTcs.Task;
 
-        epicConnectedCts.Token.Register(() => epicConnectedTcs.SetResult(false));
-        epicSdk.OnConnected.AddListener(() => epicConnectedTcs.SetResult(true));
+        epicConnectedCts.Token.Register(() => epicConnectedTcs.TrySetResult(false));
+        epicSdk.OnConnected.AddListener(() => epicConnectedTcs.TrySetResult(true));
 
         if (!await epicConnected) // When failed to connect
         {

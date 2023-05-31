@@ -96,6 +96,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "SubmitModal",
+                    "type": "Button",
+                    "id": "8ddf8fec-853c-4c5e-a2c7-937a012fd568",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Navigate",
                     "type": "PassThrough",
                     "id": "acbdc741-73f4-4560-bfa0-afb0703ed382",
@@ -120,7 +129,7 @@
                 {
                     "name": "",
                     "id": "37a2c82f-5eb1-455b-87b1-c17eb667f0e9",
-                    "path": "<Gamepad>/start",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -510,6 +519,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b270d57b-2492-423b-8d53-04afb5db7d2f",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "SubmitModal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a3472fd2-dbe9-47c3-8885-7397352547db",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard Mouse",
+                    "action": "SubmitModal",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
