@@ -41,7 +41,7 @@
     transition-timing-function: ease-out-cubic;
 }
 
-.button:hover {
+.button:hover, .button:focus {
     scale: 1.02 1.02;
 }
 

@@ -10,7 +10,8 @@ public class StartScreen : MonoBehaviour
 {
     private GameManager gameManager = null!;
     [SerializeField] private UIDocument uiDocument = null!;
-    [SerializeField] private InputActionReference inputAction = null!;
+    [SerializeField] private InputActionReference startInputAction = null!;
+    [SerializeField] private InputActionReference validateInputAction = null!;
     [SerializeField] private string homeSceneName = "";
 
     private bool usernameModalOpened = false;
@@ -24,7 +25,7 @@ public class StartScreen : MonoBehaviour
     {
         home = () => uiDocument.rootVisualElement.Query<VisualElement>("Home");
         usernameModal = () => uiDocument.rootVisualElement.Query<VisualElement>("UsernameModal");
-        inputAction.ToInputAction().performed += OnAnyKeyPressed;
+        startInputAction.ToInputAction().performed += OnStartPressed;
 
         // Setup username modal
         if (PlayerPrefs.HasKey("username")) return;
@@ -35,16 +36,23 @@ public class StartScreen : MonoBehaviour
         TextFieldUtils.SetPlaceholderText(textField, fakeUsername + "...");
 
         // Handle validate
-        var validateButton = (Button)usernameModal().Q("ValidateArrow").ElementAt(0);
-        validateButton.clickable.clicked += () => SubmitUsername(textField.text);
+        validateInputAction.ToInputAction().performed += _ =>
+        {
+            if (startInputAction.ToInputAction().triggered) return;
+            SubmitUsername(textField.text);
+        };
     }
 
     void Update()
     {
         Label homeText = home().Query<Label>("Subtitle");
-        string key = inputAction.action.GetBindingDisplayString().ToLowerInvariant();
+        VisualElement readyHomeText = home().Query("ReadySubtitle");
 
-        if (gameManager.connectionManager.connected.behide && gameManager.connectionManager.connected.eos) homeText.text = $"Press {key} to start";
+        if (gameManager.connectionManager.connected.behide && gameManager.connectionManager.connected.eos)
+        {
+            homeText.style.display = DisplayStyle.None;
+            readyHomeText.style.display = DisplayStyle.Flex;
+        }
         else if ((gameManager.connectionManager.connectError ?? "") != "")
         {
             homeText.text = $"Failed to connect";
@@ -55,12 +63,13 @@ public class StartScreen : MonoBehaviour
     }
 
 
-    public void OnAnyKeyPressed(InputAction.CallbackContext context)
+    public void OnStartPressed(InputAction.CallbackContext context)
     {
         if (usernameModalOpened
             || !gameManager.connectionManager.connected.behide
-            || !gameManager.connectionManager.connected.eos
-            || context.phase != InputActionPhase.Performed) return;
+            || !gameManager.connectionManager.connected.eos) return;
+
+        startInputAction.ToInputAction().Disable();
 
         if (PlayerPrefs.HasKey("username"))
         {
@@ -70,17 +79,22 @@ public class StartScreen : MonoBehaviour
 
         // Show username modal
         home().AddToClassList("hide");
+        usernameModal().style.display = DisplayStyle.Flex;
         usernameModal().RemoveFromClassList("hide");
         usernameModalOpened = true;
     }
 
     private void SubmitUsername(string _username)
     {
+        if (!usernameModalOpened) return;
+
         var textField = usernameModal().Q<TextField>("UsernameTextField");
         var username =
             TextFieldUtils.PlaceholderVisible(textField)
             ? _username.Substring(0, _username.Length - 3)
             : _username;
+
+        if (username == String.Empty) return;
 
         // Save username
         PlayerPrefs.SetString("username", username);

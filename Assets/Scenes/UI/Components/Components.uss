@@ -1,103 +1,85 @@
 :root {
-  -unity-font: url("project://database/Assets/Imports/Fonts/Mona%20Sans/Mona-Sans-Regular.ttf");
+    -unity-font: url('project://database/Assets/Imports/Fonts/Mona%20Sans/Mona-Sans-Regular.ttf?fileID=12800000&guid=5d4f0968aa541ca4b8f3e162b61d5764&type=3#Mona-Sans-Regular');
 }
 
 * {
-  margin: 0px;
-  padding: 0px;
+    margin: 0;
+    padding: 0;
 }
 
-
-/* Modal head */
 .head {
-  margin: 0px;
-  padding: 0px;
-  color: white;
-  align-self: flex-start;
+    margin: 0;
+    padding: 0;
+    color: white;
+    align-self: flex-start;
 }
 
 .head .title {
-  -unity-font: url("project://database/Assets/Imports/Fonts/Mona%20Sans/Mona-Sans-BlackWideItalic.ttf");
-  font-size: 36px;
+    -unity-font: url('project://database/Assets/Imports/Fonts/Mona%20Sans/Mona-Sans-BlackWideItalic.ttf?fileID=12800000&guid=c5eb769a3d00b794ba0dd6ceba09507b&type=3#Mona-Sans-BlackWideItalic');
+    font-size: 28px;
 }
 
 .head .subtitle {
-  -unity-font: url("project://database/Assets/Imports/Fonts/Mona%20Sans/Mona-Sans-Regular.ttf");
-  font-size: 19px;
-  margin-left: 3px;
+    -unity-font: url('project://database/Assets/Imports/Fonts/Mona%20Sans/Mona-Sans-Regular.ttf?fileID=12800000&guid=5d4f0968aa541ca4b8f3e162b61d5764&type=3#Mona-Sans-Regular');
+    font-size: 16px;
+    margin-left: 3px;
 }
 
-.validate-arrow {
-  width: 60px;
-  height: 60px;
-  align-self: flex-end;
+.validate-arrow, .validate-button {
+    width: 60px;
+    height: 60px;
+    align-self: flex-end;
 }
 
-
-/* Modal */
 .modal {
-  width: 430px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0px;
-  padding: 60px 50px 30px;
-
-  background-color: #01132E;
-  border-radius: 3px;
+    width: 430px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: 60px 50px 30px;
+    background-color: rgb(1, 19, 46);
+    border-radius: 3px;
 }
 
 .modal > * {
-  margin: 60px 0px 0px 0px;
-  padding: 0px;
+    margin: 60px 0 0 0;
+    padding: 0;
 }
 
 .modal > .head {
-  margin: 0px;
+    margin: 0;
 }
 
 .modal > .validate-arrow {
-  margin: 40px 0px 0px 0px;
+    margin: 40px 0 0 0;
 }
 
+.modal > .validate-button {
+    margin: 40px 0 0 0;
+}
 
-/* Text input */
 .unity-base-field__input {
-  background-color: rgba(0, 0, 0, 0);
-  border-width: 0;
-  margin: 0;
-  padding: 0;
-  --unity-cursor-color: white;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    margin: 0;
+    padding: 0;
+    --unity-cursor-color: white;
 }
 
 .unity-text-field__placeholder > .unity-base-text-field__input {
-  color: rgb(166, 178, 196);
+    color: rgb(166, 178, 196);
 }
 
 .text-input {
-  background-color: rgb(0, 34, 85);
-  border-color: rgb(0, 51, 128);
-
-  width: 100%;
-  height: 50px;
-  padding: 10px 14px;
-
-  border-width: 1px;
-  border-radius: 5px;
-
-  color: white;
-  font-size: 20px;
+    background-color: rgb(0, 34, 85);
+    border-color: rgb(0, 51, 128);
+    width: 100%;
+    height: 50px;
+    padding: 10px 14px;
+    border-width: 1px;
+    border-radius: 5px;
+    color: white;
+    font-size: 20px;
 }
-
-/*
-.text-input:hover {
-  background-color: rgb(0, 29, 73);
-  border-color: rgb(0, 45, 114);
-}
-
-.text-input:focus {
-  background-color: rgb(0, 44, 111);
-  border-color: rgb(0, 65, 162);
-} */

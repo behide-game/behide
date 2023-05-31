@@ -264,7 +264,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiDocument: {fileID: 231162956}
-  inputAction: {fileID: -3820247885290209702, guid: ba1fd7d9b0300cc44858721755d9dd9e, type: 3}
+  startInputAction: {fileID: -3820247885290209702, guid: ba1fd7d9b0300cc44858721755d9dd9e, type: 3}
+  validateInputAction: {fileID: 3673721042818335266, guid: ba1fd7d9b0300cc44858721755d9dd9e, type: 3}
   homeSceneName: Home
 --- !u!114 &231162959
 MonoBehaviour:
@@ -434,6 +435,7 @@ GameObject:
   - component: {fileID: 989985510}
   - component: {fileID: 989985512}
   - component: {fileID: 989985513}
+  - component: {fileID: 989985514}
   m_Layer: 0
   m_Name: InputManager
   m_TagString: Untagged
@@ -454,7 +456,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: ba1fd7d9b0300cc44858721755d9dd9e, type: 3}
-  m_NotificationBehavior: 2
+  m_NotificationBehavior: 3
   m_UIInputModule: {fileID: 989985512}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -587,6 +589,33 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+--- !u!114 &989985514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989985509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eafe0fc42ee7384d84d5dcf32ecd1e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiAsset: {fileID: 231162956}
+  playerInput: {fileID: 989985510}
+  keyImages:
+  - bindingPath: <Keyboard>/enter
+    groups: Keyboard Mouse
+    image: {fileID: 21300000, guid: 135c5d8eddb38454686a22820e6238bd, type: 3}
+  - bindingPath: '*/{Submit}'
+    groups: Gamepad
+    image: {fileID: 21300000, guid: 3595f02d529e099429ba749c295d3105, type: 3}
+  - bindingPath: <Gamepad>/start
+    groups: Gamepad
+    image: {fileID: 21300000, guid: d0028da6d8ba9344aa4fed37292c48f1, type: 3}
+  - bindingPath: <Gamepad>/buttonSouth
+    groups: Gamepad
+    image: {fileID: 21300000, guid: 3595f02d529e099429ba749c295d3105, type: 3}
 --- !u!1 &1410712915
 GameObject:
   m_ObjectHideFlags: 0
