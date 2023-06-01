@@ -63,10 +63,10 @@ public class PhysicalButtonManager : MonoBehaviour
         if (lastDeviceId == device.deviceId) return;
         lastDeviceId = device.deviceId;
 
-        SetUIImages(device is Gamepad);
+        SetUIImages();
     }
 
-    private void SetUIImages(bool gamepad)
+    private void SetUIImages()
     {
         for (int i = 0; i < elements.Count; i++)
         {
