@@ -6,7 +6,7 @@
     right: 0;
     flex-direction: row;
     padding-left: 70px;
-    padding-top: 140px;
+    padding-top: 110px;
     padding-bottom: 70px;
     padding-right: 70px;
 }
@@ -41,7 +41,11 @@
     transition-timing-function: ease-out-cubic;
 }
 
-.button:hover, .button:focus {
+.button:hover {
+    scale: 1.02 1.02;
+}
+
+.button:focus {
     scale: 1.02 1.02;
 }
 
@@ -52,9 +56,9 @@
 .button-title {
     -unity-font-definition: initial;
     -unity-font: url('project://database/Assets/Imports/Fonts/Mona%20Sans/Mona-Sans-BlackWide.ttf?fileID=12800000&guid=6ba587beefe44c64f92a4234b47fc0c6&type=3#Mona-Sans-BlackWide');
-    font-size: 45px;
+    font-size: 35px;
     color: rgb(221, 243, 255);
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
@@ -75,7 +79,7 @@
     padding-bottom: 0;
     -unity-font-definition: initial;
     -unity-font: url('project://database/Assets/Imports/Fonts/Mona%20Sans/Mona-Sans-Regular.ttf?fileID=12800000&guid=5d4f0968aa541ca4b8f3e162b61d5764&type=3#Mona-Sans-Regular');
-    font-size: 18px;
+    font-size: 14px;
     color: rgb(255, 255, 255);
     white-space: normal;
 }
