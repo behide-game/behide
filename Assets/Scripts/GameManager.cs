@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
         NetworkServer.SendToAll(new BehideNetworkManager.GameEndedMessage());
     }
 
-    public void CloseRoom()
+    public async void CloseRoom()
     {
         if (room?.isHost != true) return;
         Debug.Log("Closing room");
@@ -99,20 +99,12 @@ public class GameManager : MonoBehaviour
             connection.Send(new BehideNetworkManager.RoomClosedMessage());
         }
 
-        // Sending to local client
-        System.Threading.Tasks.Task.Run(() => {
-            while (true)
-            {
-                if (NetworkServer.connections.Count > 1) continue;
-
-                Debug.Log("Closed room an all external clients. Closing local one.");
-
-                if (NetworkServer.connections.TryGetValue(localConnectionId, out NetworkConnectionToClient localConnection) && localConnection != null)
-                    localConnection.Send(new BehideNetworkManager.RoomClosedMessage());
-
-                return;
-            }
+        // Shutting down to local client
+        await System.Threading.Tasks.Task.Run(() => {
+            while (NetworkServer.connections.Count > 1) { }
         });
+        Debug.Log("Closed room an all external clients. Closing local one.");
+        RoomClosed();
     }
 
     public void RoomClosed()
