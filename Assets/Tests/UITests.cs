@@ -51,13 +51,13 @@ public class UITests : InputTestFixture
 
         // Set gamepad as active device
         Press(gamepad.leftTrigger);
-        yield return null;
+        InputSystem.Update();
 
         Assert.IsTrue(physicalButtonImage.style.backgroundImage.value.sprite.name == homePhysicalButtonGamepadSpriteName);
 
         // Set keyboard as active device
         Press(keyboard.aKey);
-        yield return null;
+        InputSystem.Update();
 
         Assert.IsTrue(physicalButtonImage.style.backgroundImage.value.sprite.name == homePhysicalButtonKeyboardSpriteName);
     }
