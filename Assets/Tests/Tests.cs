@@ -1,6 +1,5 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -11,22 +10,23 @@ public class Tests
     GameManager gameManager;
     string startScreenSceneName = "start screen";
 
-    [SetUp]
-    public async void SetupScene()
+    [OneTimeSetUp]
+    public void LoadScene()
     {
-        TaskCompletionSource<bool> tcs = new ();
-        SceneManager.LoadSceneAsync(startScreenSceneName).completed += _ => tcs.SetResult(true);
-        await tcs.Task;
-
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        SceneManager.LoadScene(startScreenSceneName);
     }
 
     [UnityTest]
     public IEnumerator CheckingConnection()
     {
-        yield return new WaitForSeconds(5f);
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        yield return Common.waitUntilOrTimeout(20_000, () =>
+            gameManager.connectionManager.connected.behide
+            && gameManager.connectionManager.connected.eos
+        );
 
         Assert.IsTrue(gameManager.connectionManager.connected.behide, "Should be connected to behide's server");
-        Assert.IsTrue(gameManager.connectionManager.connected.eos,    "Should be connected to EOS");
+        Assert.IsTrue(gameManager.connectionManager.connected.eos, "Should be connected to EOS");
     }
 }
