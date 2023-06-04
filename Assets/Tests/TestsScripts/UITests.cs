@@ -11,7 +11,6 @@ public class UITests : InputTestFixture
 {
     Keyboard keyboard;
     string keyboardSpriteName = "Mouse_Left_Key_Dark";
-    string gamepadSpriteName = "XboxSeriesX_RT";
 
     public override void Setup()
     {

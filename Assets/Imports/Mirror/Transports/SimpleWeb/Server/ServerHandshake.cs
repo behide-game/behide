@@ -19,6 +19,10 @@ namespace Mirror.SimpleWeb
         // this isn't an official max, just a reasonable size for a websocket handshake
         readonly int maxHttpHeaderSize = 3000;
 
+        // SHA-1 is the websocket standard:
+        // https://www.rfc-editor.org/rfc/rfc6455
+        // we should follow the standard, even though SHA1 is considered weak:
+        // https://stackoverflow.com/questions/38038841/why-is-sha-1-considered-insecure
         readonly SHA1 sha1 = SHA1.Create();
         readonly BufferPool bufferPool;
 
@@ -124,7 +128,6 @@ namespace Mirror.SimpleWeb
         byte[] CreateHash(byte[] keyBuffer)
         {
             Log.Verbose($"[SimpleWebTransport] Handshake Hashing {Encoding.ASCII.GetString(keyBuffer, 0, MergedKeyLength)}", false);
-
             return sha1.ComputeHash(keyBuffer, 0, MergedKeyLength);
         }
 

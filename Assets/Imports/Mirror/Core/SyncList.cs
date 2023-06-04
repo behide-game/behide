@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Mirror
 {
@@ -94,7 +93,6 @@ namespace Mirror
 
         public override void OnSerializeAll(NetworkWriter writer)
         {
-            Debug.Log($"SyncList OnSerializeAll with {objects.Count} items");
             // if init,  write the full list content
             writer.WriteUInt((uint)objects.Count);
 
@@ -245,18 +243,14 @@ namespace Mirror
                             // ClientToServer needs to set dirty in server OnDeserialize.
                             // no access check: server OnDeserialize can always
                             // write, even for ClientToServer (for broadcasting).
-                            AddOperation(Operation.OP_SET, i, oldItem, newItem, false);
+                            AddOperation(Operation.OP_SET, index, oldItem, newItem, false);
                         }
                         break;
                 }
 
-                if (apply)
+                if (!apply)
                 {
-                    Callback?.Invoke(operation, index, oldItem, newItem);
-                }
-                // we just skipped this change
-                else
-                {
+                    // we just skipped this change
                     changesAhead--;
                 }
             }

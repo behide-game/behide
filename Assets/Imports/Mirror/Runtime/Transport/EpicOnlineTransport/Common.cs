@@ -263,8 +263,8 @@ namespace EpicTransport {
 
                             OnReceiveData(data, keyValuePair.Key.productUserId, keyValuePair.Key.channel);
 
-                            if(transport.ServerActive() || transport.ClientActive())
-                                emptyPacketLists.Add(keyValuePair.Value[packetList]);
+                            //keyValuePair.Value[packetList].Clear();
+                            emptyPacketLists.Add(keyValuePair.Value[packetList]);
                         }
                     }
 

@@ -1,4 +1,4 @@
-﻿using Epic.OnlineServices;
+using Epic.OnlineServices;
 using Epic.OnlineServices.Logging;
 using Epic.OnlineServices.Platform;
 
@@ -160,7 +160,7 @@ namespace EpicTransport {
 
         // If we're in editor, we should dynamically load and unload the SDK between play sessions.
         // This allows us to initialize the SDK each time the game is run in editor.
-#if UNITY_EDITOR_WIN
+#if UNITY_EDITOR
         [DllImport("Kernel32.dll")]
         private static extern IntPtr LoadLibrary(string lpLibFileName);
 
@@ -173,31 +173,6 @@ namespace EpicTransport {
         private IntPtr libraryPointer;
 #endif
 
-#if UNITY_EDITOR_LINUX
-        [DllImport("libdl.so", EntryPoint = "dlopen")]
-        private static extern IntPtr LoadLibrary(String lpFileName, int flags = 2);
-
-        [DllImport("libdl.so", EntryPoint = "dlclose")]
-        private static extern int FreeLibrary(IntPtr hLibModule);
-
-        [DllImport("libdl.so")]
-        private static extern IntPtr dlsym(IntPtr handle, String symbol);
-
-        [DllImport("libdl.so")]
-        private static extern IntPtr dlerror();
-
-        private static IntPtr GetProcAddress(IntPtr hModule, string lpProcName) {
-            // clear previous errors if any
-            dlerror();
-            var res = dlsym(hModule, lpProcName);
-            var errPtr = dlerror();
-            if (errPtr != IntPtr.Zero) {
-                throw new Exception("dlsym: " + Marshal.PtrToStringAnsi(errPtr));
-            }
-            return res;
-        }
-        private IntPtr libraryPointer;
-#endif
         public struct userAttributes { }
         public struct appAttributes { }
 
@@ -229,17 +204,6 @@ namespace EpicTransport {
         }
 
         private async void Awake() {
-            // Initialize Java version of the SDK with a reference to the VM with JNI
-            // See https://eoshelp.epicgames.com/s/question/0D54z00006ufJBNCA2/cant-get-createdeviceid-to-work-in-unity-android-c-sdk?language=en_US
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-                AndroidJavaObject activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-                AndroidJavaObject context = activity.Call<AndroidJavaObject>("getApplicationContext");
-                AndroidJavaClass EOS_SDK_JAVA = new AndroidJavaClass("com.epicgames.mobile.eossdk.EOSSDK");
-                EOS_SDK_JAVA.CallStatic("init", context);
-            }
-
             // Prevent multiple instances
             if (instance != null) {
                 Destroy(gameObject);
@@ -418,7 +382,6 @@ namespace EpicTransport {
                     localUserProductIdString = productIdString;
                     localUserProductId = loginCallbackInfo.LocalUserId;
 
-                    Guid.TryParse(productIdString, out Guid guid);
                     OnConnected.Invoke();
                 }
 

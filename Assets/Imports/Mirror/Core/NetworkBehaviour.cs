@@ -36,9 +36,14 @@ namespace Mirror
         /// <summary>sync interval for OnSerialize (in seconds)</summary>
         // hidden because NetworkBehaviourInspector shows it only if has OnSerialize.
         // [0,2] should be enough. anything >2s is too laggy anyway.
+        //
+        // NetworkServer & NetworkClient broadcast() are behind a sendInterval timer now.
+        // it makes sense to keep every component's syncInterval setting at '0' by default.
+        // otherwise, the overlapping timers could introduce unexpected latency.
+        // careful: default of '0.1' may
         [Tooltip("Time in seconds until next change is synchronized to the client. '0' means send immediately if changed. '0.5' means only send changes every 500ms.\n(This is for state synchronization like SyncVars, SyncLists, OnSerialize. Not for Cmds, Rpcs, etc.)")]
         [Range(0, 2)]
-        [HideInInspector] public float syncInterval = 0.1f;
+        [HideInInspector] public float syncInterval = 0;
         internal double lastSyncTime;
 
         /// <summary>True if this object is on the server and has been spawned.</summary>
@@ -62,8 +67,8 @@ namespace Mirror
         // for example: main player & pets are owned. monsters & npcs aren't.
         public bool isOwned => netIdentity.isOwned;
 
-        /// <summary>True on client if that component has been assigned to the client. E.g. player, pets, henchmen.</summary>
-        [Obsolete(".hasAuthority was renamed to .isOwned. This is easier to understand and prepares for SyncDirection, where there is a difference betwen isOwned and authority.")] // 2022-10-13
+        // Deprecated 2022-10-13
+        [Obsolete(".hasAuthority was renamed to .isOwned. This is easier to understand and prepares for SyncDirection, where there is a difference betwen isOwned and authority.")]
         public bool hasAuthority => isOwned;
 
         /// <summary>authority is true if we are allowed to modify this component's state. On server, it's true if SyncDirection is ServerToClient. On client, it's true if SyncDirection is ClientToServer and(!) if this object is owned by the client.</summary>
@@ -185,7 +190,7 @@ namespace Mirror
             // only check time if bits were dirty. this is more expensive.
             NetworkTime.localTime - lastSyncTime >= syncInterval;
 
-        /// <summary>Clears all the dirty bits that were set by SetDirtyBits()</summary>
+        /// <summary>Clears all the dirty bits that were set by SetSyncVarDirtyBit() (formally SetDirtyBits)</summary>
         // automatically invoked when an update is sent for this object, but can
         // be called manually as well.
         public void ClearAllDirtyBits()
@@ -229,12 +234,35 @@ namespace Mirror
             // InitSyncObject yet, which is called from the constructor.
             syncObject.IsWritable = () =>
             {
-                // check isServer first.
-                // if we check isClient first, it wouldn't work in host mode.
-                if (isServer) return syncDirection == SyncDirection.ServerToClient;
-                if (isClient) return isOwned;
+                // carefully check each mode separately to ensure correct results.
+                // fixes: https://github.com/MirrorNetworking/Mirror/issues/3342
+
+                // normally we would check isServer / isClient here.
+                // users may add to SyncLists before the object was spawned.
+                // isServer / isClient would still be false.
+                // so we need to check NetworkServer/Client.active here instead.
+
+                // host mode: any ServerToClient and any local client owned
+                if (NetworkServer.active && NetworkClient.active)
+                    return syncDirection == SyncDirection.ServerToClient || isOwned;
+
+                // server only: any ServerToClient
+                if (NetworkServer.active)
+                    return syncDirection == SyncDirection.ServerToClient;
+
+                // client only: only ClientToServer and owned
+                if (NetworkClient.active)
+                {
+                    // spawned: only ClientToServer and owned
+                    if (netId != 0) return syncDirection == SyncDirection.ClientToServer && isOwned;
+
+                    // not spawned (character selection previews, etc.): always allow
+                    // fixes https://github.com/MirrorNetworking/Mirror/issues/3343
+                    return true;
+                }
+
                 // undefined behaviour should throw to make it very obvious
-                throw new Exception("InitSyncObject: neither isServer nor isClient are true.");
+                throw new Exception("InitSyncObject: IsWritable: neither NetworkServer nor NetworkClient are active.");
             };
 
             // when do we record changes:
@@ -246,17 +274,27 @@ namespace Mirror
             //      because OnSerialize isn't called without observers.
             syncObject.IsRecording = () =>
             {
-                // check isServer first.
-                // if we check isClient first, it wouldn't work in host mode.
+                // carefully check each mode separately to ensure correct results.
+                // fixes: https://github.com/MirrorNetworking/Mirror/issues/3342
+
+                // host mode: only if observed
+                if (isServer && isClient) return netIdentity.observers.Count > 0;
+
+                // server only: only if observed
                 if (isServer) return netIdentity.observers.Count > 0;
-                if (isClient) return isOwned;
-                // undefined behaviour should throw to make it very obvious
-                throw new Exception("InitSyncObject: neither isServer nor isClient are true.");
+
+                // client only: only ClientToServer and owned
+                if (isClient) return syncDirection == SyncDirection.ClientToServer && isOwned;
+
+                // users may add to SyncLists before the object was spawned.
+                // isServer / isClient would still be false.
+                // in that case, allow modifying but don't record changes yet.
+                return false;
             };
         }
 
         // pass full function name to avoid ClassA.Func <-> ClassB.Func collisions
-        protected void SendCommandInternal(string functionFullName, NetworkWriter writer, int channelId, bool requiresAuthority = true)
+        protected void SendCommandInternal(string functionFullName, int functionHashCode, NetworkWriter writer, int channelId, bool requiresAuthority = true)
         {
             // this was in Weaver before
             // NOTE: we could remove this later to allow calling Cmds on Server
@@ -303,7 +341,7 @@ namespace Mirror
                 netId = netId,
                 componentIndex = ComponentIndex,
                 // type+func so Inventory.RpcUse != Equipment.RpcUse
-                functionHash = (ushort)functionFullName.GetStableHashCode(),
+                functionHash = (ushort)functionHashCode,
                 // segment to avoid reader allocations
                 payload = writer.ToArraySegment()
             };
@@ -319,7 +357,7 @@ namespace Mirror
         }
 
         // pass full function name to avoid ClassA.Func <-> ClassB.Func collisions
-        protected void SendRPCInternal(string functionFullName, NetworkWriter writer, int channelId, bool includeOwner)
+        protected void SendRPCInternal(string functionFullName, int functionHashCode, NetworkWriter writer, int channelId, bool includeOwner)
         {
             // this was in Weaver before
             if (!NetworkServer.active)
@@ -341,7 +379,7 @@ namespace Mirror
                 netId = netId,
                 componentIndex = ComponentIndex,
                 // type+func so Inventory.RpcUse != Equipment.RpcUse
-                functionHash = (ushort)functionFullName.GetStableHashCode(),
+                functionHash = (ushort)functionHashCode,
                 // segment to avoid reader allocations
                 payload = writer.ToArraySegment()
             };
@@ -351,28 +389,28 @@ namespace Mirror
             // NetworkServer.SendToReadyObservers(netIdentity, message, includeOwner, channelId);
 
             // safety check used to be in SendToReadyObservers. keep it for now.
-            if (netIdentity.observers != null && netIdentity.observers.Count > 0)
-            {
-                // serialize the message only once
-                using (NetworkWriterPooled serialized = NetworkWriterPool.Get())
-                {
-                    serialized.Write(message);
+            if (netIdentity.observers == null || netIdentity.observers.Count == 0)
+                return;
 
-                    // add to every observer's connection's rpc buffer
-                    foreach (NetworkConnectionToClient conn in netIdentity.observers.Values)
+            // serialize the message only once
+            using (NetworkWriterPooled serialized = NetworkWriterPool.Get())
+            {
+                serialized.Write(message);
+
+                // add to every observer's connection's rpc buffer
+                foreach (NetworkConnectionToClient conn in netIdentity.observers.Values)
+                {
+                    bool isOwner = conn == netIdentity.connectionToClient;
+                    if ((!isOwner || includeOwner) && conn.isReady)
                     {
-                        bool isOwner = conn == netIdentity.connectionToClient;
-                        if ((!isOwner || includeOwner) && conn.isReady)
-                        {
-                            conn.BufferRpc(message, channelId);
-                        }
+                        conn.BufferRpc(message, channelId);
                     }
                 }
             }
         }
 
         // pass full function name to avoid ClassA.Func <-> ClassB.Func collisions
-        protected void SendTargetRPCInternal(NetworkConnection conn, string functionFullName, NetworkWriter writer, int channelId)
+        protected void SendTargetRPCInternal(NetworkConnection conn, string functionFullName, int functionHashCode, NetworkWriter writer, int channelId)
         {
             if (!NetworkServer.active)
             {
@@ -412,7 +450,7 @@ namespace Mirror
                 netId = netId,
                 componentIndex = ComponentIndex,
                 // type+func so Inventory.RpcUse != Equipment.RpcUse
-                functionHash = (ushort)functionFullName.GetStableHashCode(),
+                functionHash = (ushort)functionHashCode,
                 // segment to avoid reader allocations
                 payload = writer.ToArraySegment()
             };
@@ -565,7 +603,7 @@ namespace Mirror
             uint newNetId = 0;
             if (newGameObject != null)
             {
-                if (newGameObject.TryGetComponent<NetworkIdentity>(out NetworkIdentity identity))
+                if (newGameObject.TryGetComponent(out NetworkIdentity identity))
                 {
                     newNetId = identity.netId;
                     if (newNetId == 0)
@@ -588,7 +626,7 @@ namespace Mirror
             uint newNetId = 0;
             if (newGameObject != null)
             {
-                if (newGameObject.TryGetComponent<NetworkIdentity>(out NetworkIdentity identity))
+                if (newGameObject.TryGetComponent(out NetworkIdentity identity))
                 {
                     newNetId = identity.netId;
                     if (newNetId == 0)
