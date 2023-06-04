@@ -119,10 +119,12 @@ namespace Mirror
                 switch (change.operation)
                 {
                     case Operation.OP_ADD:
-                    case Operation.OP_REMOVE:
                     case Operation.OP_SET:
                         writer.Write(change.key);
                         writer.Write(change.item);
+                        break;
+                    case Operation.OP_REMOVE:
+                        writer.Write(change.key);
                         break;
                     case Operation.OP_CLEAR:
                         break;
@@ -204,28 +206,24 @@ namespace Mirror
 
                     case Operation.OP_REMOVE:
                         key = reader.Read<TKey>();
-                        item = reader.Read<TValue>();
                         if (apply)
                         {
-                            if (objects.Remove(key))
+                            if (objects.TryGetValue(key, out item))
                             {
                                 // add dirty + changes.
                                 // ClientToServer needs to set dirty in server OnDeserialize.
                                 // no access check: server OnDeserialize can always
                                 // write, even for ClientToServer (for broadcasting).
+                                objects.Remove(key);
                                 AddOperation(Operation.OP_REMOVE, key, item, false);
                             }
                         }
                         break;
                 }
 
-                if (apply)
+                if (!apply)
                 {
-                    Callback?.Invoke(operation, key, item);
-                }
-                // we just skipped this change
-                else
-                {
+                    // we just skipped this change
                     changesAhead--;
                 }
             }

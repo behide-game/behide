@@ -23,7 +23,7 @@ namespace EpicTransport {
 
         [SerializeField]
         public PacketReliability[] Channels = new PacketReliability[2] { PacketReliability.ReliableOrdered, PacketReliability.UnreliableUnordered };
-        
+
         [Tooltip("Timeout for connecting in seconds.")]
         public int timeout = 25;
 
@@ -40,7 +40,7 @@ namespace EpicTransport {
         public ProductUserId productUserId;
 
         private int packetId = 0;
-                
+
         private void Awake() {
             Debug.Assert(Channels != null && Channels.Length > 0, "No channel configured for EOS Transport.");
             Debug.Assert(Channels.Length < byte.MaxValue, "Too many channels configured for EOS Transport");
@@ -205,7 +205,7 @@ namespace EpicTransport {
         }
 
         public override Uri ServerUri() {
-            UriBuilder epicBuilder = new UriBuilder { 
+            UriBuilder epicBuilder = new UriBuilder {
                 Scheme = EPIC_SCHEME,
                 Host = EOSSDKComponent.LocalUserProductIdString
             };
@@ -279,9 +279,9 @@ namespace EpicTransport {
             Debug.Log("Transport shut down.");
         }
 
-        public int GetMaxSinglePacketSize(int channelId) => P2PInterface.MaxPacketSize - 10; // 1159 bytes, we need to remove 10 bytes for the packet header (id (4 bytes) + fragment (4 bytes) + more fragments (1 byte)) 
+        public int GetMaxSinglePacketSize(int channelId) => P2PInterface.MaxPacketSize - 10; // 1159 bytes, we need to remove 10 bytes for the packet header (id (4 bytes) + fragment (4 bytes) + more fragments (1 byte))
 
-        public override int GetMaxPacketSize(int channelId) => P2PInterface.MaxPacketSize * maxFragments; 
+        public override int GetMaxPacketSize(int channelId) => P2PInterface.MaxPacketSize * maxFragments;
 
         public override int GetBatchThreshold(int channelId) => P2PInterface.MaxPacketSize; // Use P2PInterface.MaxPacketSize as everything above will get fragmentated and will be counter effective to batching
 
