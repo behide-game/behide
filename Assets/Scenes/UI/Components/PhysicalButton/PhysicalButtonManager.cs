@@ -52,8 +52,8 @@ public class PhysicalButtonManager : MonoBehaviour
             elements.Add((uiElement, action, elementKeyImages));
         }
 
-        OnControlsChanged(playerInput);
         playerInput.onControlsChanged += OnControlsChanged;
+        SetUIImages();
     }
 
     private void OnControlsChanged(PlayerInput playerInput)
