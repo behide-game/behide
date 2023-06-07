@@ -1,37 +1,44 @@
-using UnityEngine;
+using System;
 using Mirror;
 
-public class BehideNetworkManager : NetworkManager
+namespace BehideNetwork
 {
-    private GameManager gameManager = null!;
+    public interface IBehideNetworkMsg { }
 
-    public struct PlayerJoinedRoomMessage : NetworkMessage
+    public struct PlayerJoined : IBehideNetworkMsg, NetworkMessage
     {
         public string username;
     }
 
-    public struct GameEndedMessage : NetworkMessage { } // Unused
-    public struct RoomClosedMessage : NetworkMessage { }
+    public struct GameStarted : IBehideNetworkMsg, NetworkMessage { }
+    public struct GameEnded : IBehideNetworkMsg, NetworkMessage { }
+    public struct RoomClosed : IBehideNetworkMsg, NetworkMessage { }
+}
 
-
-    public override void Awake() { base.Awake(); gameManager = GameManager.instance; }
+public class BehideNetworkManager : NetworkManager
+{
+    public event Action OnClientConnected;
+    public event Action<NetworkConnectionToClient, BehideNetwork.IBehideNetworkMsg> OnServerNetworkMessage;
+    public event Action<BehideNetwork.IBehideNetworkMsg> OnClientNetworkMessage;
 
     public override void OnStartServer()
     {
         base.OnStartServer();
-        NetworkServer.RegisterHandler<PlayerJoinedRoomMessage>((conn, msg) => gameManager.PlayerJoined(conn, msg.username));
+        NetworkServer.RegisterHandler<BehideNetwork.PlayerJoined>((conn, msg) => OnServerNetworkMessage?.Invoke(conn, msg));
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        NetworkClient.RegisterHandler<BehideNetwork.PlayerJoined>(msg => OnClientNetworkMessage?.Invoke(msg));
+        NetworkClient.RegisterHandler<BehideNetwork.GameStarted>(msg => OnClientNetworkMessage?.Invoke(msg));
+        NetworkClient.RegisterHandler<BehideNetwork.GameEnded>(msg => OnClientNetworkMessage?.Invoke(msg));
+        NetworkClient.RegisterHandler<BehideNetwork.RoomClosed>(msg => OnClientNetworkMessage?.Invoke(msg));
     }
 
     public override void OnClientConnect()
     {
         base.OnClientConnect();
-        if (gameManager.username == null) return;
-
-        NetworkClient.RegisterHandler<GameEndedMessage>((msg) => {}); // Unused
-        NetworkClient.RegisterHandler<RoomClosedMessage>((msg) => gameManager.RoomClosed());
-        Debug.Log("Room closed message registered");
-
-        var joinMessage = new PlayerJoinedRoomMessage() { username = gameManager.username };
-        NetworkClient.Send(joinMessage);
+        OnClientConnected?.Invoke();
     }
 }

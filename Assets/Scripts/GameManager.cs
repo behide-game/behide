@@ -11,11 +11,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private string homeSceneName = "";
 
     static public GameManager instance { get; private set; } = null!;
-    public ConnectionsManager connectionManager = null!;
+    public ConnectionsManager connectionsManager = null!;
 
     // Game state
     public string? username { get; private set; }
-    public (RoomId id, bool isHost, (int connectionId, string username)[] connectedPlayers)? room { get; private set; }
+    public Room? room { get; private set; }
 
     void Awake()
     {
@@ -23,25 +23,59 @@ public class GameManager : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(this);
-    }
 
+        connectionsManager.networkManager.OnServerNetworkMessage += HandleServerNetworkMessage;
+        connectionsManager.networkManager.OnClientNetworkMessage += HandleClientNetworkMessage;
+    }
 
     public void SetUsername(string newUsername) => username = newUsername;
 
-    public void PlayerJoined(NetworkConnectionToClient connection, string username)
+
+    private void HandleServerNetworkMessage(NetworkConnection connection, BehideNetwork.IBehideNetworkMsg rawMsg)
     {
         if (room == null || room?.isHost != true) return;
-
-        var newPlayerArray = room.Value.connectedPlayers.Append((connection.connectionId, username)).ToArray();
-        room = (room.Value.id, room.Value.isHost, newPlayerArray);
+        switch (rawMsg) {
+            case BehideNetwork.PlayerJoined:
+                var msg = (BehideNetwork.PlayerJoined)rawMsg;
+                room.AddPlayer(connection.connectionId, msg.username);
+                break;
+            default: break;
+        }
     }
+    private void HandleClientNetworkMessage(BehideNetwork.IBehideNetworkMsg msg)
+    {
+        switch (msg) {
+            case BehideNetwork.RoomClosed:
+                Debug.Log("Room closed");
+
+                if (room?.isHost == true)
+                    connectionsManager.networkManager.StopHost();
+                else connectionsManager.networkManager.StopClient();
+
+                room = null;
+
+                if (SceneManager.GetActiveScene().name != homeSceneName)
+                    SceneManager.LoadScene(homeSceneName);
+                else
+                    GameObject.Find("UI").GetComponent<Home>().ResetUI();
+
+                break;
+
+            default: break;
+        }
+    }
+
 
     public async void CreateRoom()
     {
         Debug.Log("Creating room");
 
-        var roomId = await connectionManager.CreateRoom();
-        room = (roomId, true, new (int, string)[] { });
+        RoomId roomId = await connectionsManager.CreateRoom();
+        room = new Room(roomId, true);
+
+        // Add current player to room's connectedPlayers
+        var joinMessage = new BehideNetwork.PlayerJoined { username = username };
+        NetworkClient.Send(joinMessage);
     }
     public async void JoinRoom(string rawRoomId)
     {
@@ -49,24 +83,51 @@ public class GameManager : MonoBehaviour
         if (!RoomId.TryParse(rawRoomId, out RoomId targetRoomId)) return;
         Debug.Log("Joining room");
 
-        await connectionManager.JoinRoom(targetRoomId);
-        room = (targetRoomId, false, new (int, string)[] { });
+        await connectionsManager.JoinRoom(targetRoomId);
+        room = new Room(targetRoomId, false);
+
+        // Send info to room's host
+        var joinMessage = new BehideNetwork.PlayerJoined { username = username };
+        NetworkClient.Send(joinMessage);
+    }
+    public async void CloseRoom()
+    {
+        if (room?.isHost != true) return;
+        Debug.Log("Closing room");
+
+        int localConnectionId = NetworkClient.connection.connectionId;
+
+        foreach (var player in room.connectedPlayers)
+        {
+            // Excluding local client
+            if (player.Key == localConnectionId) continue;
+
+            if (!NetworkServer.connections.TryGetValue(player.Key, out NetworkConnectionToClient connection)) return;
+            connection.Send(new BehideNetwork.RoomClosed());
+        }
+
+        // Shutting down to local client
+        await System.Threading.Tasks.Task.Run(() => { // Awaiting all other clients to disconnect
+            while (NetworkServer.connections.Count > 1) { }
+        });
+        Debug.Log("Closed room an all external clients. Closing local one.");
+        HandleClientNetworkMessage(new BehideNetwork.RoomClosed());
     }
 
     public void StartGame()
     {
         if (room?.isHost != true) return;
 
-        connectionManager.networkManager.ServerChangeScene(gameSceneName);
+        connectionsManager.networkManager.ServerChangeScene(gameSceneName);
 
         NetworkManager.loadingSceneAsync.completed += _ =>
         {
-            foreach (var player in room.Value.connectedPlayers)
+            foreach (var player in room.connectedPlayers)
             {
-                if (!NetworkServer.connections.TryGetValue(player.connectionId, out NetworkConnectionToClient connection)) return;
+                if (!NetworkServer.connections.TryGetValue(player.Key, out NetworkConnectionToClient connection)) return;
 
-                GameObject gameObject = Instantiate(connectionManager.networkManager.playerPrefab);
-                gameObject.name = $"Player {player.connectionId}";
+                GameObject gameObject = Instantiate(connectionsManager.networkManager.playerPrefab);
+                gameObject.name = $"Player {player.Key}";
 
                 if (!NetworkClient.ready) NetworkClient.Ready();
                 NetworkServer.AddPlayerForConnection(connection, gameObject);
@@ -79,48 +140,7 @@ public class GameManager : MonoBehaviour
         if (room?.isHost != true) return;
         Debug.Log("Ending game");
 
-        connectionManager.networkManager.ServerChangeScene(homeSceneName);
-        NetworkServer.SendToAll(new BehideNetworkManager.GameEndedMessage());
-    }
-
-    public async void CloseRoom()
-    {
-        if (room?.isHost != true) return;
-        Debug.Log("Closing room");
-
-        int localConnectionId = NetworkClient.connection.connectionId;
-
-        foreach (var player in room.Value.connectedPlayers)
-        {
-            // Excluding local client
-            if (player.connectionId == localConnectionId) continue;
-
-            if (!NetworkServer.connections.TryGetValue(player.connectionId, out NetworkConnectionToClient connection)) return;
-            connection.Send(new BehideNetworkManager.RoomClosedMessage());
-        }
-
-        // Shutting down to local client
-        await System.Threading.Tasks.Task.Run(() => {
-            while (NetworkServer.connections.Count > 1) { }
-        });
-        Debug.Log("Closed room an all external clients. Closing local one.");
-        RoomClosed();
-    }
-
-    public void RoomClosed()
-    {
-        Debug.Log("Room closed");
-
-        if (room?.isHost == true)
-            connectionManager.networkManager.StopHost();
-        else
-            connectionManager.networkManager.StopClient();
-
-        room = null;
-
-        if (SceneManager.GetActiveScene().name != homeSceneName)
-            SceneManager.LoadScene(homeSceneName);
-        else
-            GameObject.Find("UI").GetComponent<Home>().ResetUI();
+        connectionsManager.networkManager.ServerChangeScene(homeSceneName);
+        NetworkServer.SendToAll(new BehideNetwork.GameEnded());
     }
 }

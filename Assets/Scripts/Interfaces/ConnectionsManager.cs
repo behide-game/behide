@@ -12,7 +12,7 @@ public class ConnectionsManager : MonoBehaviour
 {
     private const string EPIC_SCHEME = "epic";
 
-    public NetworkManager networkManager = null!;
+    public BehideNetworkManager networkManager = null!;
 
     [Header("Behide server")]
     [SerializeField] private string ip = "82.64.42.87";
@@ -74,6 +74,7 @@ public class ConnectionsManager : MonoBehaviour
 
     void OnDestroy() => behideConnection?.Dispose();
 
+
     private async void CheckBehideServerVersion()
     {
         Msg msg = Msg.NewCheckServerVersion(BehideServer.Version.GetVersion());
@@ -115,6 +116,20 @@ public class ConnectionsManager : MonoBehaviour
         if (!GuidHelper.TryParseBytes(response.Content, out Guid roomEpicId)) throw new Exception("Failed to parse the joined room.");
 
         Uri uri = new UriBuilder(EPIC_SCHEME, roomEpicId.ToString("N")).Uri;
+
+
+        TaskCompletionSource<bool> tcs = new();
+        CancellationTokenSource cts = new(15_000);
+
+        void setTcsResult() {
+            tcs.TrySetResult(true);
+            networkManager.OnClientConnected -= setTcsResult;
+        };
+
+        networkManager.OnClientConnected += setTcsResult;
+        cts.Token.Register(() => { tcs.TrySetResult(false); cts.Dispose(); });
+
         networkManager.StartClient(uri);
+        await tcs.Task;
     }
 }
