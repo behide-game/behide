@@ -47,15 +47,12 @@ public class Home : MonoBehaviour
             GUILayout.BeginArea(new Rect(50, 50, 200, 200));
             GUILayout.BeginVertical();
 
-            GUILayout.Label("<b>Room ID</b>: " + (gameManager.room?.id.ToString() ?? "No room"));
+            GUILayout.Label("<b>Room ID</b>: " + (gameManager.room.id.ToString() ?? "No room"));
 
-            GUILayout.Label($"Connected players ({gameManager.room?.connectedPlayers.Length.ToString() ?? "No room"})");
-            foreach (var player in gameManager.room?.connectedPlayers)
+            GUILayout.Label($"Connected players ({gameManager.room.connectedPlayers.Count.ToString() ?? "No room"})");
+            foreach (var player in gameManager.room.connectedPlayers)
             {
-                GUILayout.BeginHorizontal();
-                GUILayout.Label($"<b>{player.username}</b>");
-                GUILayout.Label(player.connectionId.ToString());
-                GUILayout.EndHorizontal();
+                GUILayout.Label($"<b>{player.Key}</b>: {player.Value}");
             }
 
             if (GUILayout.Button("Start game")) gameManager.StartGame();

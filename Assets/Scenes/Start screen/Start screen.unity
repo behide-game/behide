@@ -779,7 +779,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameSceneName: Game
   homeSceneName: Home
-  connectionManager: {fileID: 1667443937}
+  connectionsManager: {fileID: 1667443937}
 --- !u!4 &1667443939
 Transform:
   m_ObjectHideFlags: 0

@@ -48,16 +48,16 @@ public class StartScreen : MonoBehaviour
         Label homeText = home().Query<Label>("Subtitle");
         VisualElement readyHomeText = home().Query("ReadySubtitle");
 
-        if (gameManager.connectionManager.connected.behide && gameManager.connectionManager.connected.eos)
+        if (gameManager.connectionsManager.connected.behide && gameManager.connectionsManager.connected.eos)
         {
             homeText.style.display = DisplayStyle.None;
             readyHomeText.style.display = DisplayStyle.Flex;
         }
-        else if ((gameManager.connectionManager.connectError ?? "") != "")
+        else if ((gameManager.connectionsManager.connectError ?? "") != "")
         {
             homeText.text = $"Failed to connect";
             Label errorText = home().Query<Label>("ErrorMessage");
-            errorText.text = gameManager.connectionManager.connectError;
+            errorText.text = gameManager.connectionsManager.connectError;
         }
         else homeText.text = "Connecting...";
     }
@@ -66,8 +66,8 @@ public class StartScreen : MonoBehaviour
     public void OnStartPressed(InputAction.CallbackContext context)
     {
         if (usernameModalOpened
-            || !gameManager.connectionManager.connected.behide
-            || !gameManager.connectionManager.connected.eos) return;
+            || !gameManager.connectionsManager.connected.behide
+            || !gameManager.connectionsManager.connected.eos) return;
 
         startInputAction.ToInputAction().Disable();
 
