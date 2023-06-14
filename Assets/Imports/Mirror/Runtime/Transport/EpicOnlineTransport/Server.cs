@@ -50,10 +50,11 @@ namespace EpicTransport {
 
             EOSSDKComponent.GetP2PInterface().AcceptConnection(
                 new AcceptConnectionOptions() {
-                LocalUserId = EOSSDKComponent.LocalUserProductId,
-                RemoteUserId = result.RemoteUserId,
-                SocketId = result.SocketId
-                });
+                    LocalUserId = EOSSDKComponent.LocalUserProductId,
+                    RemoteUserId = result.RemoteUserId,
+                    SocketId = result.SocketId
+                }
+            );
         }
 
         protected override void OnReceiveInternalData(InternalMessages type, ProductUserId clientUserId, SocketId socketId) {
@@ -177,7 +178,7 @@ namespace EpicTransport {
             int connectionId = epicToMirrorIds.TryGetValue(remoteId, out int connId) ? connId : nextConnectionID++;
             OnDisconnected.Invoke(connectionId);
 
-            Debug.LogError("Connection Failed, removing user");
+            Debug.Log("Connection Failed, removing user");
             epicToMirrorIds.Remove(remoteId);
             epicToSocketIds.Remove(remoteId);
         }
