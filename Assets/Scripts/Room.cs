@@ -20,4 +20,10 @@ public class Room
         if (!connectedPlayers.TryAdd(connectionId, username))
             Debug.LogError($"Failed to add player named \"{username}\" (connectionId: {connectionId}) to connectedPlayers dictionary.");
     }
+
+    public void RemovePlayer(int connectionId)
+    {
+        if (!connectedPlayers.Remove(connectionId))
+            Debug.LogError($"Failed to remove player with connectionId \"{connectionId}\" of connectedPlayers dictionary.");
+    }
 }

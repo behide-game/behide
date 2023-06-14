@@ -86,13 +86,15 @@ namespace EpicTransport {
 
             switch (result.Reason) {
                 case ConnectionClosedReason.ClosedByLocalUser:
-                    throw new Exception("Connection cLosed: The Connection was gracecfully closed by the local user.");
+                    throw new Exception("Connection closed: The Connection was gracefully closed by the local user.");
                 case ConnectionClosedReason.ClosedByPeer:
                     throw new Exception("Connection closed: The connection was gracefully closed by remote user.");
                 case ConnectionClosedReason.ConnectionClosed:
-                    throw new Exception("Connection closed: The connection was unexpectedly closed.");
+                    // throw new Exception("Connection closed: The connection was unexpectedly closed.");
+                    Debug.Log("Connection closed: The connection was unexpectedly closed.");
+                    break;
                 case ConnectionClosedReason.ConnectionFailed:
-                    throw new Exception("Connection failed: Failled to establish connection.");
+                    throw new Exception("Connection failed: Failed to establish connection.");
                 case ConnectionClosedReason.InvalidData:
                     throw new Exception("Connection failed: The remote user sent us invalid data..");
                 case ConnectionClosedReason.InvalidMessage:
@@ -215,7 +217,7 @@ namespace EpicTransport {
                                 break;
                             }
                         }
-                        
+
                         if (packetListIndex == incomingPackets[incomingPacketKey].Count) {
                             incomingPackets[incomingPacketKey].Add(new List<Packet>());
                         }

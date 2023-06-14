@@ -1,5 +1,4 @@
 #nullable enable
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Mirror;
@@ -26,6 +25,7 @@ public class GameManager : MonoBehaviour
 
         connectionsManager.networkManager.OnServerNetworkMessage += HandleServerNetworkMessage;
         connectionsManager.networkManager.OnClientNetworkMessage += HandleClientNetworkMessage;
+        connectionsManager.networkManager.OnServerDisconnected += HandlePlayerDisconnection;
     }
 
     public void SetUsername(string newUsername) => username = newUsername;
@@ -45,6 +45,10 @@ public class GameManager : MonoBehaviour
     private void HandleClientNetworkMessage(BehideNetwork.IBehideNetworkMsg msg)
     {
         switch (msg) {
+            case BehideNetwork.GameEnded:
+                SceneManager.LoadSceneAsync(homeSceneName);
+                break;
+
             case BehideNetwork.RoomClosed:
                 Debug.Log("Room closed");
 
@@ -63,6 +67,13 @@ public class GameManager : MonoBehaviour
 
             default: break;
         }
+    }
+
+    private void HandlePlayerDisconnection(NetworkConnectionToClient conn)
+    {
+        if (room?.isHost != true) return;
+        connectionsManager.networkManager.transport.ServerDisconnect(conn.connectionId);
+        room.RemovePlayer(conn.connectionId);
     }
 
 
@@ -119,7 +130,6 @@ public class GameManager : MonoBehaviour
         if (room?.isHost != true) return;
 
         connectionsManager.networkManager.ServerChangeScene(gameSceneName);
-
         NetworkManager.loadingSceneAsync.completed += _ =>
         {
             foreach (var player in room.connectedPlayers)
@@ -139,8 +149,6 @@ public class GameManager : MonoBehaviour
     {
         if (room?.isHost != true) return;
         Debug.Log("Ending game");
-
-        connectionsManager.networkManager.ServerChangeScene(homeSceneName);
         NetworkServer.SendToAll(new BehideNetwork.GameEnded());
     }
 }
