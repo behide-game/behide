@@ -21,11 +21,11 @@ public class Tests
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         yield return Common.waitUntilOrTimeout(20_000, () =>
-            gameManager.connectionsManager.connected.behide
-            && gameManager.connectionsManager.connected.eos
+            gameManager.network.behideConnected()
+            && gameManager.network.eosConnected()
         );
 
-        Assert.IsTrue(gameManager.connectionsManager.connected.behide, "Should be connected to behide's server");
-        Assert.IsTrue(gameManager.connectionsManager.connected.eos, "Should be connected to EOS");
+        Assert.IsTrue(gameManager.network.behideConnected(), "Should be connected to behide's server");
+        Assert.IsTrue(gameManager.network.eosConnected(), "Should be connected to EOS");
     }
 }

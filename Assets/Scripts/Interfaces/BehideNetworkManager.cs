@@ -14,7 +14,7 @@ namespace BehideNetwork
     public struct RoomClosed : IBehideNetworkMsg, NetworkMessage { }
 }
 
-public class BehideNetworkManager : NetworkManager
+public class BehideNetworkManager : Mirror.NetworkManager
 {
     public event Action OnClientConnected;
     public event Action<NetworkConnectionToClient> OnServerDisconnected;

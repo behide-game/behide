@@ -57,7 +57,7 @@ namespace EpicTransport {
         private float platformTickTimer = 0f;
         public uint tickBudgetInMilliseconds = 0;
 
-        public UnityEvent OnConnected;
+        public UnityEvent<Result> OnConnected;
 
         // End Unity Inspector shown variables
 
@@ -381,9 +381,9 @@ namespace EpicTransport {
 
                     localUserProductIdString = productIdString;
                     localUserProductId = loginCallbackInfo.LocalUserId;
-
-                    OnConnected.Invoke();
                 }
+
+                OnConnected.Invoke(result);
 
                 initialized = true;
                 isConnecting = false;
@@ -391,6 +391,8 @@ namespace EpicTransport {
                 var authExpirationOptions = new Epic.OnlineServices.Connect.AddNotifyAuthExpirationOptions();
                 authExpirationHandle = EOS.GetConnectInterface().AddNotifyAuthExpiration(authExpirationOptions, null, OnAuthExpiration);
             } else if (Epic.OnlineServices.Common.IsOperationComplete(loginCallbackInfo.ResultCode)) {
+                OnConnected.Invoke(loginCallbackInfo.ResultCode);
+
                 Debug.Log("Login returned " + loginCallbackInfo.ResultCode + "\nRetrying...");
                 EOS.GetConnectInterface().CreateUser(new Epic.OnlineServices.Connect.CreateUserOptions() { ContinuanceToken = loginCallbackInfo.ContinuanceToken }, null, (Epic.OnlineServices.Connect.CreateUserCallbackInfo cb) => {
                     if (cb.ResultCode != Result.Success) { Debug.Log(cb.ResultCode); return; }
