@@ -134,90 +134,51 @@ public class NetworkManager : MonoBehaviour
     // public Task SetHomeScene() => SetScene(GameManager.instance.scenes.homeSceneName);
 
 
-    // /// <summary>
-    // /// Create a room on behide's server and start the Mirror host
-    // /// </summary>
-    // public async Task<Result<RoomId>> CreateRoom()
-    // {
-    //     if (epicId == null || epicId.IsFailure) return Result.Fail<RoomId>("Cannot create room: invalid epicId.");
-
-    //     Msg msg = Msg.NewCreateRoom(epicId.Value);
-    //     Response response = await behideConnection.SendMessage(msg, ResponseHeader.RoomCreated);
-
-    //     if (!RoomId.TryParseBytes(response.Content, out RoomId roomId))
-    //         return Result.Fail<RoomId>("Cannot create room: failed to parse RoomId.");
-
-    //     mirrorNetwork.StartHost();
-    //     return Result.Ok(roomId);
-    // }
-
-    // /// <summary>
-    // /// Join a room on behide's server from it's id and connect to the Mirror host
-    // /// </summary>
-    // public async Task<Result> JoinRoom(RoomId roomId)
-    // {
-    //     Response response = await behideConnection.SendMessage(Msg.NewGetRoom(roomId), ResponseHeader.RoomGet);
-    //     if (!GuidHelper.TryParseBytes(response.Content, out Guid roomEpicId)) return Result.Fail("Failed to join room: invalid roomId returned by behide's server.");
-
-    //     Uri uri = new UriBuilder(EPIC_SCHEME, roomEpicId.ToString("N")).Uri;
-
-    //     var tcs = new TaskCompletionSource<Result>();
-    //     var cts = new CancellationTokenSource(25_000);
-    //     cts.Token.Register(() =>
-    //     {
-    //         tcs.TrySetResult(Result.Fail("Failed to join room: timed out"));
-    //         mirrorNetwork.StopClient();
-    //     });
-
-    //     Action? handler = null;
-    //     mirrorNetwork.OnClientConnected += handler = () =>
-    //     {
-    //         tcs.TrySetResult(Result.Ok());
-    //         mirrorNetwork.OnClientConnected -= handler;
-    //     };
-
-    //     mirrorNetwork.StartClient(uri);
-    //     return await tcs.Task;
-    // }
-
     /// <summary>
-    /// Create a room on behide's server and start the peer to peer host
+    /// Create a room on behide's server and start the Mirror host
     /// </summary>
-    public async Task<RoomId> CreateRoom()
+    public async Task<Result<RoomId>> CreateRoom()
     {
-        if (epicId == null || epicId.IsFailure) throw new Exception("epicId is null. Is it connected ?");
+        if (epicId == null || epicId.IsFailure) return Result.Fail<RoomId>("Cannot create room: invalid epicId");
 
         Msg msg = Msg.NewCreateRoom(epicId.Value);
         Response response = await behideConnection.SendMessage(msg, ResponseHeader.RoomCreated);
-        if (!RoomId.TryParseBytes(response.Content, out RoomId roomId)) throw new Exception("Failed to parse RoomId");
+
+        if (!RoomId.TryParseBytes(response.Content, out RoomId roomId))
+            return Result.Fail<RoomId>("Failed to create room: failed to parse RoomId");
 
         mirrorNetwork.StartHost();
-        return roomId;
+        return Result.Ok(roomId);
     }
 
     /// <summary>
-    /// Join a room on behide's server from it's id and connect to the host in peer to peer
+    /// Join a room on behide's server from it's id and connect to the Mirror host
     /// </summary>
-    public async Task JoinRoom(RoomId roomId)
+    public async Task<Result> JoinRoom(RoomId roomId)
     {
         Response response = await behideConnection.SendMessage(Msg.NewGetRoom(roomId), ResponseHeader.RoomGet);
-        if (!GuidHelper.TryParseBytes(response.Content, out Guid roomEpicId)) throw new Exception("Failed to parse the joined room.");
+        if (!GuidHelper.TryParseBytes(response.Content, out Guid roomEpicId)) return Result.Fail("Failed to join room: roomId returned by server not parsable");
 
         Uri uri = new UriBuilder(EPIC_SCHEME, roomEpicId.ToString("N")).Uri;
 
 
         TaskCompletionSource<bool> tcs = new();
-        CancellationTokenSource cts = new(15_000);
 
-        void setTcsResult() {
+        Action? handler = null;
+        mirrorNetwork.OnClientConnected += handler = () => {
+            Debug.Log("Completed !");
             tcs.TrySetResult(true);
-            mirrorNetwork.OnClientConnected -= setTcsResult;
+            mirrorNetwork.OnClientConnected -= handler;
         };
 
-        mirrorNetwork.OnClientConnected += setTcsResult;
-        cts.Token.Register(() => { tcs.TrySetResult(false); cts.Dispose(); });
+        Action? handler1 = null;
+        Mirror.Transport.active.OnClientDisconnected += handler1 = () => {
+            tcs.TrySetResult(false);
+            Mirror.Transport.active.OnClientDisconnected -= handler1;
+        };
 
         mirrorNetwork.StartClient(uri);
-        await tcs.Task;
+
+        return await tcs.Task ? Result.Ok() : Result.Fail("Failed to join room: probably timed out");
     }
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 using Mirror;
 using BehideServer.Types;
 using UnityEngine.SceneManagement;
+using System.Threading.Tasks;
 
 public class PartyManager : MonoBehaviour
 {
@@ -24,7 +25,8 @@ public class PartyManager : MonoBehaviour
     private void HandleServerNetworkMessage(NetworkConnection connection, BehideNetwork.IBehideNetworkMsg rawMsg)
     {
         if (session.room == null || session.room?.isHost != true) return;
-        switch (rawMsg) {
+        switch (rawMsg)
+        {
             case BehideNetwork.PlayerJoined:
                 var msg = (BehideNetwork.PlayerJoined)rawMsg;
                 session.room.AddPlayer(connection.connectionId, msg.username);
@@ -34,7 +36,8 @@ public class PartyManager : MonoBehaviour
     }
     private void HandleClientNetworkMessage(BehideNetwork.IBehideNetworkMsg msg)
     {
-        switch (msg) {
+        switch (msg)
+        {
             case BehideNetwork.GameEnded:
                 SceneManager.LoadSceneAsync(homeSceneName);
                 break;
@@ -67,29 +70,44 @@ public class PartyManager : MonoBehaviour
     }
 
 
-    public async void CreateRoom()
+    public async Task<Result> CreateRoom()
     {
         Debug.Log("Creating session.room");
 
-        RoomId roomId = await network.CreateRoom();
-        session.SetRoom(new Room(roomId, true));
+        var resRoomId = await network.CreateRoom();
+        if (resRoomId.IsFailure)
+        {
+            Debug.Log(resRoomId.Error);
+            return resRoomId;
+        }
+
+        session.SetRoom(new Room(resRoomId.Value, true));
 
         // Add current player to session.room's connectedPlayers
         var joinMessage = new BehideNetwork.PlayerJoined { username = session.username };
         NetworkClient.Send(joinMessage);
+
+        return Result.Ok();
     }
-    public async void JoinRoom(string rawRoomId)
+    public async Task<Result> JoinRoom(string rawRoomId)
     {
-        if (session.username == null) return;
-        if (!RoomId.TryParse(rawRoomId, out RoomId targetRoomId)) return;
+        if (session.username == null) return Result.Fail("Cannot join room: invalid username");
+        if (!RoomId.TryParse(rawRoomId, out RoomId targetRoomId)) return Result.Fail("Cannot join room: invalid roomId");
         Debug.Log("Joining session.room");
 
-        await network.JoinRoom(targetRoomId);
+        var res = await network.JoinRoom(targetRoomId);
+        if (res.IsFailure)
+        {
+            Debug.Log(res.Error);
+            return res;
+        }
         session.SetRoom(new Room(targetRoomId, false));
 
         // Send info to session.room's host
         var joinMessage = new BehideNetwork.PlayerJoined { username = session.username };
         NetworkClient.Send(joinMessage);
+
+        return Result.Ok();
     }
     public async void CloseRoom()
     {
@@ -108,7 +126,8 @@ public class PartyManager : MonoBehaviour
         }
 
         // Shutting down to local client
-        await System.Threading.Tasks.Task.Run(() => { // Awaiting all other clients to disconnect
+        await System.Threading.Tasks.Task.Run(() =>
+        { // Awaiting all other clients to disconnect
             while (NetworkServer.connections.Count > 1) { }
         });
         Debug.Log("Closed session.room an all external clients. Closing local one.");

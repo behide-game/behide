@@ -22,9 +22,10 @@ public class Home : MonoBehaviour
     {
         // Create room button
         createGameButton = uiDoc.rootVisualElement.Query<Button>("CreateButton");
-        createGameButton.clickable.clicked += () =>
+        createGameButton.clickable.clicked += async () =>
         {
-            gameManager.party.CreateRoom();
+            var res = await gameManager.party.CreateRoom();
+            if (res.IsFailure) return;
 
             showCreateGameUI = true;
             VisualElement container = uiDoc.rootVisualElement.Query("Container");
@@ -68,7 +69,7 @@ public class Home : MonoBehaviour
             GUILayout.BeginHorizontal();
 
             GUIjoinRoomId = GUILayout.TextField(GUIjoinRoomId, 4);
-            if (GUILayout.Button("Join")) gameManager.party.JoinRoom(GUIjoinRoomId);
+            if (GUILayout.Button("Join")) _ = gameManager.party.JoinRoom(GUIjoinRoomId);
 
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
