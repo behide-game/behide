@@ -72,7 +72,7 @@ namespace Epic.OnlineServices.KWS
 
 		/// <summary>
 		/// This interface is not available for general access at this time.
-		/// 
+		///
 		/// Register to receive notifications about KWS permissions changes for any logged in local users
 		/// @note must call <see cref="RemoveNotifyPermissionsUpdateReceived" /> to remove the notification
 		/// </summary>
@@ -103,7 +103,7 @@ namespace Epic.OnlineServices.KWS
 
 		/// <summary>
 		/// This interface is not available for general access at this time.
-		/// 
+		///
 		/// Fetch a permission for a given by index for a given local user
 		/// <seealso cref="CreateUser" />
 		/// <seealso cref="QueryPermissions" />
@@ -137,7 +137,7 @@ namespace Epic.OnlineServices.KWS
 
 		/// <summary>
 		/// This interface is not available for general access at this time.
-		/// 
+		///
 		/// Create an account with Kids Web Services and associate it with the local Product User ID
 		/// </summary>
 		/// <param name="options">options required for creating an account such as the local users Product User ID, their data of birth, and parental contact information</param>
@@ -165,7 +165,7 @@ namespace Epic.OnlineServices.KWS
 
 		/// <summary>
 		/// This interface is not available for general access at this time.
-		/// 
+		///
 		/// Fetch the state of a given permission that are cached for a given local user.
 		/// <seealso cref="CreateUser" />
 		/// <seealso cref="QueryPermissions" />
@@ -193,7 +193,7 @@ namespace Epic.OnlineServices.KWS
 
 		/// <summary>
 		/// This interface is not available for general access at this time.
-		/// 
+		///
 		/// Fetch the number of permissions found for a given local user
 		/// </summary>
 		/// <param name="options">Structure containing the input parameters</param>
@@ -214,7 +214,7 @@ namespace Epic.OnlineServices.KWS
 
 		/// <summary>
 		/// This interface is not available for general access at this time.
-		/// 
+		///
 		/// Query the client's country and age permissions for client side reasoning about the possible need enforce age based restrictions
 		/// </summary>
 		/// <param name="options">options required for interacting with the age gate system</param>
@@ -242,7 +242,7 @@ namespace Epic.OnlineServices.KWS
 
 		/// <summary>
 		/// This interface is not available for general access at this time.
-		/// 
+		///
 		/// Query the current state of permissions for a given local Product User ID
 		/// </summary>
 		/// <param name="options">options required for querying permissions such as the local users Product User ID</param>
@@ -270,7 +270,7 @@ namespace Epic.OnlineServices.KWS
 
 		/// <summary>
 		/// This interface is not available for general access at this time.
-		/// 
+		///
 		/// Unregister from receiving notifications about KWS permissions related to logged in users
 		/// </summary>
 		/// <param name="inId">Handle representing the registered callback</param>
@@ -283,7 +283,7 @@ namespace Epic.OnlineServices.KWS
 
 		/// <summary>
 		/// This interface is not available for general access at this time.
-		/// 
+		///
 		/// Request new permissions for a given local Product User ID
 		/// </summary>
 		/// <param name="options">options required for updating permissions such as the new list of permissions</param>
@@ -313,7 +313,7 @@ namespace Epic.OnlineServices.KWS
 
 		/// <summary>
 		/// This interface is not available for general access at this time.
-		/// 
+		///
 		/// Update the parent contact information for a given local Product User ID
 		/// </summary>
 		/// <param name="options">options required for updating the contact information such as the new email address</param>

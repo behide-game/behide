@@ -115,9 +115,9 @@ namespace Epic.OnlineServices.RTCAudio
 
 		/// <summary>
 		/// Register to receive notifications with remote audio buffers before they are rendered.
-		/// 
+		///
 		/// This gives you access to the audio data received, allowing for example the implementation of custom filters/effects.
-		/// 
+		///
 		/// If the returned NotificationId is valid, you must call <see cref="RemoveNotifyAudioBeforeRender" /> when you no longer wish to
 		/// have your CompletionDelegate called.
 		/// <seealso cref="Common.InvalidNotificationid" />
@@ -149,9 +149,9 @@ namespace Epic.OnlineServices.RTCAudio
 
 		/// <summary>
 		/// Register to receive notifications when local audio buffers are about to be encoded and sent.
-		/// 
+		///
 		/// This gives you access to the audio data about to be sent, allowing for example the implementation of custom filters/effects.
-		/// 
+		///
 		/// If the returned NotificationId is valid, you must call <see cref="RemoveNotifyAudioBeforeSend" /> when you no longer wish to
 		/// have your CompletionDelegate called.
 		/// <seealso cref="Common.InvalidNotificationid" />
@@ -183,7 +183,7 @@ namespace Epic.OnlineServices.RTCAudio
 
 		/// <summary>
 		/// Register to receive notifications when an audio device is added or removed to the system.
-		/// 
+		///
 		/// If the returned NotificationId is valid, you must call <see cref="RemoveNotifyAudioDevicesChanged" /> when you no longer wish
 		/// to have your CompletionDelegate called.
 		/// <seealso cref="Common.InvalidNotificationid" />
@@ -215,7 +215,7 @@ namespace Epic.OnlineServices.RTCAudio
 
 		/// <summary>
 		/// Register to receive notifications when audio input state changed.
-		/// 
+		///
 		/// If the returned NotificationId is valid, you must call <see cref="RemoveNotifyAudioInputState" /> when you no longer wish to
 		/// have your CompletionDelegate called.
 		/// <seealso cref="Common.InvalidNotificationid" />
@@ -247,7 +247,7 @@ namespace Epic.OnlineServices.RTCAudio
 
 		/// <summary>
 		/// Register to receive notifications when audio output state changed.
-		/// 
+		///
 		/// If the returned NotificationId is valid, you must call <see cref="RemoveNotifyAudioOutputState" /> when you no longer wish to
 		/// have your CompletionDelegate called.
 		/// <seealso cref="Common.InvalidNotificationid" />
@@ -279,7 +279,7 @@ namespace Epic.OnlineServices.RTCAudio
 
 		/// <summary>
 		/// Register to receive notifications when a room participant audio status is updated (f.e when speaking flag changes).
-		/// 
+		///
 		/// If the returned NotificationId is valid, you must call <see cref="RemoveNotifyParticipantUpdated" /> when you no longer wish
 		/// to have your CompletionDelegate called.
 		/// <seealso cref="Common.InvalidNotificationid" />
@@ -335,7 +335,7 @@ namespace Epic.OnlineServices.RTCAudio
 
 		/// <summary>
 		/// Returns the number of audio input devices available in the system.
-		/// 
+		///
 		/// The returned value should not be cached and should instead be used immediately with the <see cref="GetAudioInputDeviceByIndex" />
 		/// function.
 		/// <seealso cref="GetAudioInputDeviceByIndex" />
@@ -359,7 +359,7 @@ namespace Epic.OnlineServices.RTCAudio
 
 		/// <summary>
 		/// Fetches an audio output device's info from then given index.
-		/// 
+		///
 		/// The returned value should not be cached and important information should be copied off of the result object immediately.
 		/// <seealso cref="GetAudioOutputDevicesCount" />
 		/// <seealso cref="AddNotifyAudioDevicesChanged" />
@@ -384,7 +384,7 @@ namespace Epic.OnlineServices.RTCAudio
 
 		/// <summary>
 		/// Returns the number of audio output devices available in the system.
-		/// 
+		///
 		/// The returned value should not be cached and should instead be used immediately with the <see cref="GetAudioOutputDeviceByIndex" />
 		/// function.
 		/// <seealso cref="GetAudioOutputDeviceByIndex" />
@@ -408,7 +408,7 @@ namespace Epic.OnlineServices.RTCAudio
 
 		/// <summary>
 		/// Use this function to inform the audio system of a user.
-		/// 
+		///
 		/// This function is only necessary for some platforms.
 		/// </summary>
 		/// <param name="options">structure containing the parameters for the operation.</param>
@@ -495,7 +495,7 @@ namespace Epic.OnlineServices.RTCAudio
 
 		/// <summary>
 		/// Use this function to push a new audio buffer to be sent to the participants of a room.
-		/// 
+		///
 		/// This should only be used if Manual Audio Input was enabled locally for the specified room.
 		/// <seealso cref="RTC.JoinRoomOptions" />
 		/// <seealso cref="Lobby.LocalRTCOptions" />
@@ -580,7 +580,7 @@ namespace Epic.OnlineServices.RTCAudio
 
 		/// <summary>
 		/// Use this function to tweak incoming audio options per room.
-		/// 
+		///
 		/// @note Due to internal implementation details, this function requires that you first register to any notification for room
 		/// </summary>
 		/// <param name="options">structure containing the parameters for the operation.</param>
@@ -608,7 +608,7 @@ namespace Epic.OnlineServices.RTCAudio
 
 		/// <summary>
 		/// Use this function to tweak outgoing audio options per room.
-		/// 
+		///
 		/// @note Due to internal implementation details, this function requires that you first register to any notification for room
 		/// </summary>
 		/// <param name="options">structure containing the parameters for the operation.</param>

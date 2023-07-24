@@ -370,17 +370,17 @@ namespace Epic.OnlineServices.Lobby
 
 		/// <summary>
 		/// Register to receive notifications of when the RTC Room for a particular lobby has a connection status change.
-		/// 
+		///
 		/// The RTC Room connection status is independent of the lobby connection status, however the lobby system will attempt to keep
 		/// them consistent, automatically connecting to the RTC room after joining a lobby which has an associated RTC room and disconnecting
 		/// from the RTC room when a lobby is left or disconnected.
-		/// 
+		///
 		/// This notification is entirely informational and requires no action in response by the application. If the connected status is offline
 		/// (bIsConnected is false), the connection will automatically attempt to reconnect. The purpose of this notification is to allow
 		/// applications to show the current connection status of the RTC room when the connection is not established.
-		/// 
+		///
 		/// Unlike <see cref="RTC.RTCInterface.AddNotifyDisconnected" />, <see cref="RTC.RTCInterface.LeaveRoom" /> should not be called when the RTC room is disconnected.
-		/// 
+		///
 		/// This function will only succeed when called on a lobby the local user is currently a member of.
 		/// <seealso cref="RemoveNotifyRTCRoomConnectionChanged" />
 		/// </summary>
@@ -499,7 +499,7 @@ namespace Epic.OnlineServices.Lobby
 
 		/// <summary>
 		/// Creates a lobby and adds the user to the lobby membership. There is no data associated with the lobby at the start and can be added vis <see cref="UpdateLobbyModification" />
-		/// 
+		///
 		/// If the lobby is successfully created with an RTC Room enabled, the lobby system will automatically join and maintain the connection to the RTC room as long as the
 		/// local user remains in the lobby. Applications can use the <see cref="GetRTCRoomName" /> to get the name of the RTC Room associated with a lobby, which may be used with
 		/// suite of functions. This can be useful to: register for notifications for talking status; to mute or unmute the local user's audio output;
@@ -635,11 +635,11 @@ namespace Epic.OnlineServices.Lobby
 
 		/// <summary>
 		/// Get the name of the RTC room associated with a specific lobby a local user belongs to.
-		/// 
+		///
 		/// suite of functions. RTC Room Names must not be used with
 		/// <see cref="RTC.RTCInterface.JoinRoom" />, <see cref="RTC.RTCInterface.LeaveRoom" />, or <see cref="RTC.RTCInterface.AddNotifyDisconnected" />. Doing so will return <see cref="Result.AccessDenied" /> or
 		/// <see cref="Common.InvalidNotificationid" /> if used with those functions.
-		/// 
+		///
 		/// This function will only succeed when called on a lobby the local user is currently a member of.
 		/// </summary>
 		/// <param name="options">Structure containing information about the RTC room name to retrieve</param>
@@ -673,11 +673,11 @@ namespace Epic.OnlineServices.Lobby
 
 		/// <summary>
 		/// Get the current connection status of the RTC Room for a lobby.
-		/// 
+		///
 		/// The RTC Room connection status is independent of the lobby connection status, however the lobby system will attempt to keep
 		/// them consistent, automatically connecting to the RTC room after joining a lobby which has an associated RTC room and disconnecting
 		/// from the RTC room when a lobby is left or disconnected.
-		/// 
+		///
 		/// This function will only succeed when called on a lobby the local user is currently a member of.
 		/// <seealso cref="AddNotifyRTCRoomConnectionChanged" />
 		/// </summary>
@@ -707,7 +707,7 @@ namespace Epic.OnlineServices.Lobby
 
 		/// <summary>
 		/// Join a lobby, creating a local instance under a given lobby ID. Backend will validate various conditions to make sure it is possible to join the lobby.
-		/// 
+		///
 		/// If the lobby is successfully join has an RTC Room enabled, the lobby system will automatically join and maintain the connection to the RTC room as long as the
 		/// local user remains in the lobby. Applications can use the <see cref="GetRTCRoomName" /> to get the name of the RTC Room associated with a lobby, which may be used with
 		/// suite of functions. This can be useful to: register for notifications for talking status; to mute or unmute the local user's audio output;
@@ -764,7 +764,7 @@ namespace Epic.OnlineServices.Lobby
 
 		/// <summary>
 		/// Leave a lobby given a lobby ID
-		/// 
+		///
 		/// If the lobby you are leaving had an RTC Room enabled, leaving the lobby will also automatically leave the RTC room.
 		/// </summary>
 		/// <param name="options">Structure containing information about the lobby to be left</param>
@@ -933,7 +933,7 @@ namespace Epic.OnlineServices.Lobby
 
 		/// <summary>
 		/// Unregister from receiving notifications when an RTC Room's connection status changes.
-		/// 
+		///
 		/// This should be called when the local user is leaving a lobby.
 		/// <seealso cref="AddNotifyRTCRoomConnectionChanged" />
 		/// </summary>

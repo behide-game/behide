@@ -25,7 +25,7 @@ namespace Epic.OnlineServices.Auth
 
 		/// <summary>
 		/// Optional data returned when ResultCode is <see cref="Result.AuthPinGrantCode" />.
-		/// 
+		///
 		/// Once the user has logged in with their Epic Online Services account, the account will be linked with the external account supplied when <see cref="AuthInterface.Login" /> was called.
 		/// <see cref="OnLinkAccountCallback" /> will be fired again with ResultCode in <see cref="LinkAccountCallbackInfo" /> set to <see cref="Result.Success" />.
 		/// </summary>
