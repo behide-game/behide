@@ -56,8 +56,8 @@ public class Home : MonoBehaviour
                 GUILayout.Label($"<b>{player.Key}</b>: {player.Value}");
             }
 
-            if (GUILayout.Button("Start game")) gameManager.party.StartGame();
-            if (GUILayout.Button("Close room")) gameManager.party.CloseRoom();
+            if (GUILayout.Button("Start game")) _ = gameManager.party.StartGame();
+            if (GUILayout.Button("Close room")) _ = gameManager.party.CloseRoom();
 
             GUILayout.EndVertical();
             GUILayout.EndArea();

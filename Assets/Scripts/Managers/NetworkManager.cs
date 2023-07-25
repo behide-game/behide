@@ -28,7 +28,7 @@ public class NetworkManager : MonoBehaviour
     [SerializeField] private int eosConnectTimeout;
     private const string EPIC_SCHEME = "epic";
 
-    public BehideNetworkManager mirrorNetwork = null!; // TODO: put in private
+    private BehideNetworkManager mirrorNetwork = null!;
 
     void Awake()
     {
@@ -71,10 +71,10 @@ public class NetworkManager : MonoBehaviour
             connected.behide = Result.Fail(error.Message);
         }
 
-        // var ui = GameManager.instance.ui;
+        var ui = GameManager.instance.ui;
 
-        if (connected.behide.Success) Debug.Log("Behide server connected."); // ui.LogInfo("Behide server connected.");
-        else Debug.Log(connected.behide.Error); // ui.LogError(connected.behide.Error);
+        if (connected.behide.Success) ui.LogInfo("Behide server connected.");
+        else ui.LogError(connected.behide.Error);
     }
 
     private async void ConnectEos()
@@ -111,27 +111,27 @@ public class NetworkManager : MonoBehaviour
             connected.eos = Result.Fail("EOS connection failed: " + result.ToString());
         }
 
-        // var ui = GameManager.instance.ui;
+        var ui = GameManager.instance.ui;
 
-        if (connected.eos.Success) Debug.Log("EOS connected."); // ui.LogInfo("EOS connected.");
-        else Debug.Log(connected.eos.Error); // ui.LogError(connected.eos.Error);
+        if (connected.eos.Success) ui.LogInfo("EOS connected.");
+        else ui.LogError(connected.eos.Error);
     }
 
 
-    // public void StopClient() => mirrorNetwork.StopClient();
-    // public void StopServer() => mirrorNetwork.StopServer();
-    // public GameObject GetPlayerPrefab() => mirrorNetwork.playerPrefab;
+    public void StopClient() => mirrorNetwork.StopClient();
+    public void StopServer() => mirrorNetwork.StopServer();
+    public GameObject GetPlayerPrefab() => mirrorNetwork.playerPrefab;
 
-    // private async Task SetScene(string sceneName)
-    // {
-    //     var tcs = new TaskCompletionSource<bool>();
-    //     mirrorNetwork.ServerChangeScene(sceneName);
-    //     Mirror.NetworkManager.loadingSceneAsync.completed += (_) => tcs.TrySetResult(true);
+    private async Task SetScene(string sceneName)
+    {
+        var tcs = new TaskCompletionSource<bool>();
+        mirrorNetwork.ServerChangeScene(sceneName);
+        Mirror.NetworkManager.loadingSceneAsync.completed += (_) => tcs.TrySetResult(true);
 
-    //     await tcs.Task;
-    // }
-    // public Task SetGameScene() => SetScene(GameManager.instance.scenes.gameSceneName);
-    // public Task SetHomeScene() => SetScene(GameManager.instance.scenes.homeSceneName);
+        await tcs.Task;
+    }
+    public Task SetGameScene() => SetScene(GameManager.instance.scenes.gameSceneName);
+    public Task SetHomeScene() => SetScene(GameManager.instance.scenes.homeSceneName);
 
 
     /// <summary>
@@ -139,13 +139,13 @@ public class NetworkManager : MonoBehaviour
     /// </summary>
     public async Task<Result<RoomId>> CreateRoom()
     {
-        if (epicId == null || epicId.IsFailure) return Result.Fail<RoomId>("Cannot create room: invalid epicId");
+        if (epicId == null || epicId.IsFailure) return Result.Fail<RoomId>("invalid epicId");
 
         Msg msg = Msg.NewCreateRoom(epicId.Value);
         Response response = await behideConnection.SendMessage(msg, ResponseHeader.RoomCreated);
 
         if (!RoomId.TryParseBytes(response.Content, out RoomId roomId))
-            return Result.Fail<RoomId>("Failed to create room: failed to parse RoomId");
+            return Result.Fail<RoomId>("failed to parse RoomId");
 
         mirrorNetwork.StartHost();
         return Result.Ok(roomId);
@@ -157,7 +157,7 @@ public class NetworkManager : MonoBehaviour
     public async Task<Result> JoinRoom(RoomId roomId)
     {
         Response response = await behideConnection.SendMessage(Msg.NewGetRoom(roomId), ResponseHeader.RoomGet);
-        if (!GuidHelper.TryParseBytes(response.Content, out Guid roomEpicId)) return Result.Fail("Failed to join room: roomId returned by server not parsable");
+        if (!GuidHelper.TryParseBytes(response.Content, out Guid roomEpicId)) return Result.Fail("roomId returned by server not parsable");
 
         Uri uri = new UriBuilder(EPIC_SCHEME, roomEpicId.ToString("N")).Uri;
 
@@ -166,7 +166,6 @@ public class NetworkManager : MonoBehaviour
 
         Action? handler = null;
         mirrorNetwork.OnClientConnected += handler = () => {
-            Debug.Log("Completed !");
             tcs.TrySetResult(true);
             mirrorNetwork.OnClientConnected -= handler;
         };
@@ -179,6 +178,6 @@ public class NetworkManager : MonoBehaviour
 
         mirrorNetwork.StartClient(uri);
 
-        return await tcs.Task ? Result.Ok() : Result.Fail("Failed to join room: probably timed out");
+        return await tcs.Task ? Result.Ok() : Result.Fail("probably timed out");
     }
 }

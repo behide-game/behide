@@ -168,11 +168,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09c2b9adb023e6547aa45a0e8bf5fcfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  authInterfaceLogin: 1
+  authInterfaceLogin: 0
   authInterfaceCredentialType: 4
   devAuthToolPort: 7878
   devAuthToolCredentialName: carne8
-  connectInterfaceCredentialType: 0
+  connectInterfaceCredentialType: 10
   deviceModel: PC Windows 64bit
   displayName: User
   epicLoggerLevel: 0
@@ -211,8 +211,8 @@ GameObject:
   m_Component:
   - component: {fileID: 231162957}
   - component: {fileID: 231162956}
-  - component: {fileID: 231162958}
   - component: {fileID: 231162959}
+  - component: {fileID: 231162958}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -276,7 +276,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 231162955}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9618965136d31042a333420f1b202d7, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e9f224951f317c46a1dac10a78ea91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &712064898
@@ -737,13 +737,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1667443939}
-  - component: {fileID: 1667443938}
-  - component: {fileID: 1667443937}
   - component: {fileID: 1667443940}
-  - component: {fileID: 1667443941}
+  - component: {fileID: 1667443946}
+  - component: {fileID: 1667443945}
   - component: {fileID: 1667443944}
   - component: {fileID: 1667443943}
   - component: {fileID: 1667443942}
+  - component: {fileID: 1667443938}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -751,18 +751,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1667443937
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1667443936}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0f70232b7995844ebf697748c21e9ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1667443938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -775,6 +763,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2d73feaabfe9c54ba1d9da691e2b391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scenes: {fileID: 0}
+  ui: {fileID: 0}
   session: {fileID: 0}
   network: {fileID: 0}
   party: {fileID: 0}
@@ -808,21 +798,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   file: {fileID: 4900000, guid: e826f14ab8ac59e44a4286763b3a584b, type: 3}
---- !u!114 &1667443941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1667443936}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9021b6cc314944290986ab6feb48db79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  height: 150
-  maxLogCount: 50
-  hotKey: 293
 --- !u!114 &1667443942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -864,3 +839,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26d197a50cfec6a4b93d3f764f648038, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1667443945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667443936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 048fec1448b1b864ea604b11aa3ef5cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1667443946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667443936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f83d53e65c1575c4c81bf067adc56edd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameSceneName: game
+  homeSceneName: home
