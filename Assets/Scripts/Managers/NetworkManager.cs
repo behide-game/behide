@@ -73,7 +73,7 @@ public class NetworkManager : MonoBehaviour
 
         var ui = GameManager.instance.ui;
 
-        if (connected.behide.Success) ui.LogInfo("Behide server connected.");
+        if (connected.behide.Success) ui.LogInfo("Behide server connected");
         else ui.LogError(connected.behide.Error);
     }
 
@@ -113,7 +113,7 @@ public class NetworkManager : MonoBehaviour
 
         var ui = GameManager.instance.ui;
 
-        if (connected.eos.Success) ui.LogInfo("EOS connected.");
+        if (connected.eos.Success) ui.LogInfo("EOS connected");
         else ui.LogError(connected.eos.Error);
     }
 
