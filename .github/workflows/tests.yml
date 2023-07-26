@@ -25,10 +25,17 @@ jobs:
       # Test
       - name: Run tests
         uses: game-ci/unity-test-runner@v2
+        id: testStep
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: Test results
+          path: ${{ steps.testStep.outputs.artifactsPath }}
 
       # Test report
       - name: Test Report
@@ -36,5 +43,5 @@ jobs:
         if: success() || failure()
         with:
           name: Unity Playmode Tests
-          path: artifacts/playmode/*.xml
+          path: artifacts/**/*.xml
           reporter: jest-junit
