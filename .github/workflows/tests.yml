@@ -2,7 +2,6 @@ name: ⚗️ Tests
 
 on:
   push:
-  pull_request:
 
 jobs:
   tests:
@@ -14,13 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Cache
-      - uses: actions/cache@v3
-        with:
-          path: Library
-          key: Library-${{ matrix.targetPlatform }}
-          restore-keys: Library-
-
       # Test
       - name: Run tests
         uses: game-ci/unity-test-runner@v2
@@ -28,3 +20,12 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      # Test report
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Unity Playmode Tests
+          path: artifacts/playmode/*.xml
+          reporter: jest-junit
