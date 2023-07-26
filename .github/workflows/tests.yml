@@ -44,4 +44,4 @@ jobs:
         with:
           name: Unity Playmode Tests
           path: artifacts/**/*.xml
-          reporter: jest-junit
+          reporter: java-junit
