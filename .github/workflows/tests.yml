@@ -13,6 +13,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      # Cache
+      - uses: actions/cache@v2
+        with:
+          path: path/to/your/project/Library
+          key: Library-Behide-Tests
+          restore-keys: |
+            Library-Behide-
+            Library-
+
       # Test
       - name: Run tests
         uses: game-ci/unity-test-runner@v2
