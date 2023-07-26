@@ -16,7 +16,7 @@ jobs:
       # Cache
       - uses: actions/cache@v2
         with:
-          path: path/to/your/project/Library
+          path: Library
           key: Library-Behide-Tests
           restore-keys: |
             Library-Behide-
