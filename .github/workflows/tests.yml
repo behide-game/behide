@@ -30,6 +30,7 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+          testMode: standalone
 
       - uses: actions/upload-artifact@v2
         if: always()
