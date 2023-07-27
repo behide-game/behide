@@ -6,7 +6,7 @@ on:
 jobs:
   tests:
     name: Tests
-    runs-on: ubuntu-latest # behide-internal
+    runs-on: test # behide-internal
     steps:
 
       # Checkout
