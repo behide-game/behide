@@ -14,8 +14,7 @@ namespace DotEnv
         public static readonly string editorFilePath = Path.Combine(Application.dataPath, "../", $".{filename}");
         public static readonly string resourcesDirPath = Path.Combine(Application.dataPath, "Resources");
         public static readonly string runtimeFilePath = Path.Combine(resourcesDirPath, $"{filename}.txt");
-        private static Dictionary<string, string> _variables;
-        public static Dictionary<string, string> variables => _variables ??= ParseEnvironmentFile();
+        public static Dictionary<string, string> variables => ParseEnvironmentFile();
 
         public static Dictionary<string, string> ParseEnvironmentFile(string contents)
         {

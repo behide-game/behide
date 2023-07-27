@@ -75,5 +75,6 @@ crashlytics-build.properties
 .vscode/
 
 .env
+Assets/Resources/env.txt
 
 *.log
