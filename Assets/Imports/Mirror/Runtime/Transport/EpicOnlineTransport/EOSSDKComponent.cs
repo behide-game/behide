@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 
 using UnityEngine;
 using UnityEngine.Events;
-using Unity.Services.RemoteConfig;
-using Unity.Services.Authentication;
-using Unity.Services.Core;
+// using Unity.Services.RemoteConfig;
+// using Unity.Services.Authentication;
+// using Unity.Services.Core;
 
 /// <summary>
 /// Manages the Epic Online Services SDK
@@ -57,7 +57,7 @@ namespace EpicTransport {
         private float platformTickTimer = 0f;
         public uint tickBudgetInMilliseconds = 0;
 
-        public UnityEvent<Result> OnConnected;
+        public UnityEvent<Epic.OnlineServices.Result> OnConnected;
 
         // End Unity Inspector shown variables
 
@@ -176,34 +176,22 @@ namespace EpicTransport {
         public struct userAttributes { }
         public struct appAttributes { }
 
-        private async Task SetupApiKeys()
+        private void SetupApiKeys()
         {
-            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
-            Task<bool> task = tcs.Task;
+            string error = null;
 
-            await UnityServices.InitializeAsync();
-            if (!AuthenticationService.Instance.IsSignedIn)
-            {
-                await AuthenticationService.Instance.SignInAnonymouslyAsync();
-            }
+            if (!DotEnv.env.TryParseEnvironmentVariable("EPIC_PRODUCT_NAME",    out epicProductName))    error = "EPIC_PRODUCT_NAME";
+            if (!DotEnv.env.TryParseEnvironmentVariable("EPIC_PRODUCT_VERSION", out epicProductVersion)) error = "EPIC_PRODUCT_VERSION";
+            if (!DotEnv.env.TryParseEnvironmentVariable("EPIC_PRODUCT_ID",      out epicProductId))      error = "EPIC_PRODUCT_ID";
+            if (!DotEnv.env.TryParseEnvironmentVariable("EPIC_SANDBOX_ID",      out epicSandboxId))      error = "EPIC_SANDBOX_ID";
+            if (!DotEnv.env.TryParseEnvironmentVariable("EPIC_DEPLOYMENT_ID",   out epicDeploymentId))   error = "EPIC_DEPLOYMENT_ID";
+            if (!DotEnv.env.TryParseEnvironmentVariable("EPIC_CLIENT_ID",       out epicClientId))       error = "EPIC_CLIENT_ID";
+            if (!DotEnv.env.TryParseEnvironmentVariable("EPIC_CLIENT_SECRET",   out epicClientSecret))   error = "EPIC_CLIENT_SECRET";
 
-            RemoteConfigService.Instance.FetchCompleted += _ =>
-            {
-                epicProductName = (string)RemoteConfigService.Instance.appConfig.config["EPIC_PRODUCT_NAME"];
-                epicProductVersion = (string)RemoteConfigService.Instance.appConfig.config["EPIC_PRODUCT_VERSION"];
-                epicProductId = (string)RemoteConfigService.Instance.appConfig.config["EPIC_PRODUCT_ID"];
-                epicSandboxId = (string)RemoteConfigService.Instance.appConfig.config["EPIC_SANDBOX_ID"];
-                epicDeploymentId = (string)RemoteConfigService.Instance.appConfig.config["EPIC_DEPLOYMENT_ID"];
-                epicClientId = (string)RemoteConfigService.Instance.appConfig.config["EPIC_CLIENT_ID"];
-                epicClientSecret = (string)RemoteConfigService.Instance.appConfig.config["EPIC_CLIENT_SECRET"];
-                tcs.SetResult(true);
-            };
-            RemoteConfigService.Instance.FetchConfigs(new userAttributes(), new appAttributes());
-
-            await task;
+            if (error != null) throw new Exception("Environment variable not found: " + error);
         }
 
-        private async void Awake() {
+        private void Awake() {
             // Prevent multiple instances
             if (instance != null) {
                 Destroy(gameObject);
@@ -223,7 +211,7 @@ namespace EpicTransport {
 #endif
 
             if (!delayedInitialization) {
-                await SetupApiKeys();
+                SetupApiKeys();
                 Initialize();
             }
         }
@@ -239,8 +227,8 @@ namespace EpicTransport {
             var initializeResult = PlatformInterface.Initialize(initializeOptions);
 
             // This code is called each time the game is run in the editor, so we catch the case where the SDK has already been initialized in the editor.
-            var isAlreadyConfiguredInEditor = Application.isEditor && initializeResult == Result.AlreadyConfigured;
-            if (initializeResult != Result.Success && !isAlreadyConfiguredInEditor) {
+            var isAlreadyConfiguredInEditor = Application.isEditor && initializeResult == Epic.OnlineServices.Result.AlreadyConfigured;
+            if (initializeResult != Epic.OnlineServices.Result.Success && !isAlreadyConfiguredInEditor) {
                 throw new System.Exception("Failed to initialize platform: " + initializeResult);
             }
 
@@ -266,13 +254,13 @@ namespace EpicTransport {
             }
 
             if (checkForEpicLauncherAndRestart) {
-                Result result = EOS.CheckForLauncherAndRestart();
+                Epic.OnlineServices.Result result = EOS.CheckForLauncherAndRestart();
 
                 // If not started through epic launcher the app will be restarted and we can quit
-                if (result != Result.NoChange) {
+                if (result != Epic.OnlineServices.Result.NoChange) {
 
                     // Log error if launcher check failed, but still quit to prevent hacking
-                    if (result == Result.UnexpectedError) {
+                    if (result == Epic.OnlineServices.Result.UnexpectedError) {
                         Debug.LogError("Unexpected Error while checking if app was started through epic launcher");
                     }
 
@@ -320,12 +308,12 @@ namespace EpicTransport {
         }
 
         private void OnAuthInterfaceLogin(Epic.OnlineServices.Auth.LoginCallbackInfo loginCallbackInfo) {
-            if (loginCallbackInfo.ResultCode == Result.Success) {
+            if (loginCallbackInfo.ResultCode == Epic.OnlineServices.Result.Success) {
                 Debug.Log("Auth Interface Login succeeded");
 
                 string accountIdString;
-                Result result = loginCallbackInfo.LocalUserId.ToString(out accountIdString);
-                if (Result.Success == result) {
+                Epic.OnlineServices.Result result = loginCallbackInfo.LocalUserId.ToString(out accountIdString);
+                if (Epic.OnlineServices.Result.Success == result) {
                     Debug.Log("EOS User ID:" + accountIdString);
 
                     localUserAccountIdString = accountIdString;
@@ -339,7 +327,7 @@ namespace EpicTransport {
         }
 
         private void OnCreateDeviceId(Epic.OnlineServices.Connect.CreateDeviceIdCallbackInfo createDeviceIdCallbackInfo) {
-            if (createDeviceIdCallbackInfo.ResultCode == Result.Success || createDeviceIdCallbackInfo.ResultCode == Result.DuplicateNotAllowed) {
+            if (createDeviceIdCallbackInfo.ResultCode == Epic.OnlineServices.Result.Success || createDeviceIdCallbackInfo.ResultCode == Epic.OnlineServices.Result.DuplicateNotAllowed) {
                 ConnectInterfaceLogin();
             } else if(Epic.OnlineServices.Common.IsOperationComplete(createDeviceIdCallbackInfo.ResultCode)) {
                 Debug.Log("Device ID creation returned " + createDeviceIdCallbackInfo.ResultCode);
@@ -351,9 +339,9 @@ namespace EpicTransport {
 
             if (connectInterfaceCredentialType == Epic.OnlineServices.ExternalCredentialType.Epic) {
                 Epic.OnlineServices.Auth.Token token;
-                Result result = EOS.GetAuthInterface().CopyUserAuthToken(new Epic.OnlineServices.Auth.CopyUserAuthTokenOptions(), localUserAccountId, out token);
+                Epic.OnlineServices.Result result = EOS.GetAuthInterface().CopyUserAuthToken(new Epic.OnlineServices.Auth.CopyUserAuthTokenOptions(), localUserAccountId, out token);
 
-                if (result == Result.Success) {
+                if (result == Epic.OnlineServices.Result.Success) {
                     connectInterfaceCredentialToken = token.AccessToken;
                 } else {
                     Debug.LogError("Failed to retrieve User Auth Token");
@@ -371,12 +359,12 @@ namespace EpicTransport {
         }
 
         private void OnConnectInterfaceLogin(Epic.OnlineServices.Connect.LoginCallbackInfo loginCallbackInfo) {
-            if (loginCallbackInfo.ResultCode == Result.Success) {
+            if (loginCallbackInfo.ResultCode == Epic.OnlineServices.Result.Success) {
                 Debug.Log("Connect Interface Login succeeded");
 
                 string productIdString;
-                Result result = loginCallbackInfo.LocalUserId.ToString(out productIdString);
-                if (Result.Success == result) {
+                Epic.OnlineServices.Result result = loginCallbackInfo.LocalUserId.ToString(out productIdString);
+                if (Epic.OnlineServices.Result.Success == result) {
                     Debug.Log("EOS User Product ID:" + productIdString);
 
                     localUserProductIdString = productIdString;
@@ -395,7 +383,7 @@ namespace EpicTransport {
 
                 Debug.Log("Login returned " + loginCallbackInfo.ResultCode + "\nRetrying...");
                 EOS.GetConnectInterface().CreateUser(new Epic.OnlineServices.Connect.CreateUserOptions() { ContinuanceToken = loginCallbackInfo.ContinuanceToken }, null, (Epic.OnlineServices.Connect.CreateUserCallbackInfo cb) => {
-                    if (cb.ResultCode != Result.Success) { Debug.Log(cb.ResultCode); return; }
+                    if (cb.ResultCode != Epic.OnlineServices.Result.Success) { Debug.Log(cb.ResultCode); return; }
                     localUserProductId = cb.LocalUserId;
                     ConnectInterfaceLogin();
                 });

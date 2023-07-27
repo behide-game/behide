@@ -127,7 +127,7 @@ namespace EpicTransport {
 
 
         protected void Send(ProductUserId host, SocketId socketId, byte[] msgBuffer, byte channel) {
-            Result result = EOSSDKComponent.GetP2PInterface().SendPacket(new SendPacketOptions() {
+            Epic.OnlineServices.Result result = EOSSDKComponent.GetP2PInterface().SendPacket(new SendPacketOptions() {
                 AllowDelayedDelivery = true,
                 Channel = channel,
                 Data = msgBuffer,
@@ -137,19 +137,19 @@ namespace EpicTransport {
                 SocketId = socketId
             });
 
-            if(result != Result.Success) {
+            if(result != Epic.OnlineServices.Result.Success) {
                 Debug.LogError("Send failed " + result);
             }
         }
 
         private bool Receive(out ProductUserId clientProductUserId, out SocketId socketId, out byte[] receiveBuffer, byte channel) {
-            Result result = EOSSDKComponent.GetP2PInterface().ReceivePacket(new ReceivePacketOptions() {
+            Epic.OnlineServices.Result result = EOSSDKComponent.GetP2PInterface().ReceivePacket(new ReceivePacketOptions() {
                 LocalUserId = EOSSDKComponent.LocalUserProductId,
                 MaxDataSizeBytes = P2PInterface.MaxPacketSize,
                 RequestedChannel = channel
             }, out clientProductUserId, out socketId, out channel, out receiveBuffer);
 
-            if (result == Result.Success) {
+            if (result == Epic.OnlineServices.Result.Success) {
                 return true;
             }
 

@@ -1,7 +1,6 @@
-using System.IO;
 using UnityEngine;
 
-class FakeUsername : MonoBehaviour {
+public class FakeUsername : MonoBehaviour {
     [SerializeField] private TextAsset file;
     static private string[] usernames;
 

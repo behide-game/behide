@@ -6,7 +6,7 @@ on:
 jobs:
   tests:
     name: Tests
-    runs-on: behide-internal
+    runs-on: ubuntu-latest # behide-internal
     steps:
 
       # Checkout
@@ -16,11 +16,15 @@ jobs:
       # Cache
       - uses: actions/cache@v2
         with:
-          path: Library
+          path: ./Library/
           key: Library-Behide-Tests
           restore-keys: |
             Library-Behide-
             Library-
+
+      # Environment variables
+      - name: Create env file
+        run: echo "${{ secrets.ENV_FILE }}" > .env
 
       # Test
       - name: Run tests
@@ -38,11 +42,11 @@ jobs:
           name: Test results
           path: ${{ steps.testStep.outputs.artifactsPath }}
 
-      # Test report
-      - name: Test Report
-        uses: dorny/test-reporter@v1
-        if: success() || failure()
-        with:
-          name: Unity Playmode Tests
-          path: artifacts/**/*.xml
-          reporter: java-junit
+      # # Test report
+      # - name: Test Report
+      #   uses: dorny/test-reporter@v1
+      #   if: success() || failure()
+      #   with:
+      #     name: Unity Playmode Tests
+      #     path: artifacts/**/*.xml
+      #     reporter: java-junit

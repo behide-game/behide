@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "Unity.InputSystem",
         "Unity.InputSystem.TestFramework",
-        "GameAssembly"
+        "GameAssembly",
+        "Behide.Utils"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

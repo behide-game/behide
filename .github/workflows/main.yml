@@ -19,9 +19,13 @@ jobs:
       # Cache
       - uses: actions/cache@v3
         with:
-          path: Library
+          path: ./Library/
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
+
+      # Environment variables
+      - name: Create env file
+        run: echo "${{ secrets.ENV_FILE }}" > .env
 
       # Save version
       - uses: actions-ecosystem/action-regex-match@v2
@@ -85,12 +89,13 @@ jobs:
         run: |
           echo "Project version is: $(cat version.txt)"
           echo "PROJECT_VERSION=$(cat version.txt)" >> $GITHUB_ENV
+          echo "${{ secrets.ENV_FILE }}" > .env
 
 
       # Cache
       - uses: actions/cache@v3
         with:
-          path: Library
+          path: ./Library/
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
 
