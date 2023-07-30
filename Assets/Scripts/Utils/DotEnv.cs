@@ -43,7 +43,7 @@ namespace DotEnv
 #if UNITY_EDITOR
             return ParseEnvironmentFile(File.ReadAllText(editorFilePath, Encoding.UTF8));
 #else
-            return ParseEnvironmentFile(((TextAsset)Resources.Load(filename)).text);
+            return ParseEnvironmentFile((Resources.Load<TextAsset>(filename)).text);
 #endif
         }
 

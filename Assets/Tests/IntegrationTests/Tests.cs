@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.SceneManagement;
 
-public class Tests
+class TestsFixture
 {
     GameManager gameManager;
     string startScreenSceneName = "start screen";
 
     [OneTimeSetUp]
-    public void LoadScene()
+    public void OneTimeSetup()
     {
         SceneManager.LoadScene(startScreenSceneName);
     }

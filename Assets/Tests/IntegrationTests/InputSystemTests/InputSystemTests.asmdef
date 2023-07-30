@@ -1,12 +1,11 @@
 {
-    "name": "Tests",
+    "name": "InputSystemTests",
     "rootNamespace": "",
     "references": [
-        "UnityEngine.TestRunner",
+        "GameAssembly",
         "Unity.InputSystem",
         "Unity.InputSystem.TestFramework",
-        "GameAssembly",
-        "Behide.Utils"
+        "UnityEngine.TestRunner"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
