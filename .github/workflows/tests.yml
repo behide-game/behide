@@ -6,7 +6,7 @@ on:
 jobs:
   tests:
     name: Tests
-    runs-on: test # behide-internal
+    runs-on: behide-internal
     steps:
 
       # Checkout
