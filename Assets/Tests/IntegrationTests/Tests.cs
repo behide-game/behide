@@ -3,6 +3,8 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem.UI;
+using System;
 
 class TestsFixture
 {
@@ -13,6 +15,12 @@ class TestsFixture
     public void OneTimeSetup()
     {
         SceneManager.LoadScene(startScreenSceneName);
+
+        try
+        {
+            GameObject.Find("UI").GetComponent<InputSystemUIInputModule>().enabled = false;
+        }
+        catch (Exception) { }
     }
 
     [UnityTest]
