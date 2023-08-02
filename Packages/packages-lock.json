@@ -294,13 +294,6 @@
       },
       "url": "https://packages.unity.com"
     },
-    "xyz.candycoded.gitstatus": {
-      "version": "https://github.com/CandyCoded/gitstatus.git#v2.1.0",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "e631e4ff75a9cf1427a6a8d34bc21a59736ad76f"
-    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,

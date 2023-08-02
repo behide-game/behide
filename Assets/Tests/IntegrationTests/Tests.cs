@@ -4,25 +4,27 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.InputSystem.UI;
-using UnityEditor.SceneManagement;
 
 class TestsFixture : IPrebuildSetup
 {
     GameManager gameManager;
     string startScreenSceneName = "start screen";
-    string startScreenScenePath = "Assets/Scenes/Start screen/Start screen.unity";
     string initialSceneName;
 
     public void Setup()
     {
-        var initialScenePath = EditorSceneManager.GetActiveScene().path;
-        var scene = EditorSceneManager.GetSceneByPath(startScreenScenePath);
+        #if UNITY_EDITOR
+        var startScreenScenePath = "Assets/Scenes/Start screen/Start screen.unity";
 
-        EditorSceneManager.OpenScene(startScreenScenePath);
+        var initialScenePath = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().path;
+        var scene = UnityEditor.SceneManagement.EditorSceneManager.GetSceneByPath(startScreenScenePath);
+
+        UnityEditor.SceneManagement.EditorSceneManager.OpenScene(startScreenScenePath);
         GameObject.Find("InputManager").GetComponent<InputSystemUIInputModule>().enabled = false;
-        EditorSceneManager.SaveOpenScenes();
+        UnityEditor.SceneManagement.EditorSceneManager.SaveOpenScenes();
 
-        EditorSceneManager.OpenScene(initialScenePath);
+        UnityEditor.SceneManagement.EditorSceneManager.OpenScene(initialScenePath);
+        #endif
     }
 
 
