@@ -6,6 +6,7 @@
         "UtilsAssembly",
         "Tests.Common",
         "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
         "Unity.InputSystem",
         "Unity.InputSystem.TestFramework"
     ],
