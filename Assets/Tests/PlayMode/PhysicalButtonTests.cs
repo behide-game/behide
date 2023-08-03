@@ -16,15 +16,19 @@ public class PhysicalButtonTests : InputTestFixture
 
     public override void Setup()
     {
-        SceneManager.LoadScene("Tests scene");
+        SceneManager.LoadScene("Tests scene", LoadSceneMode.Additive);
         keyboard = InputSystem.AddDevice<Keyboard>();
         gamepad = InputSystem.AddDevice<Gamepad>();
     }
 
-    [UnityTest]
-    public IEnumerator PhysicalButtonTest()
+    public override void TearDown()
     {
-        yield return null;
+        SceneManager.UnloadSceneAsync("Tests scene");
+    }
+
+    [UnityTest]
+    public IEnumerator ChangeDeviceTest()
+    {
         VisualElement uiRoot = GameObject.Find("UI").GetComponent<UIDocument>().rootVisualElement;
 
         Func<VisualElement> physicalButton = () => uiRoot.Query("PhysicalButton");
@@ -39,6 +43,7 @@ public class PhysicalButtonTests : InputTestFixture
 
             PressAndRelease(key);
             InputSystem.Update();
+            yield return null; // Not necessary. It allows to see that device changed when debugging.
 
             Assert.AreEqual(sprite, imageToCheck());
         }
