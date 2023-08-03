@@ -13,4 +13,5 @@
             <ui:Label text="Join a party created by your friend with a code" display-tooltip-when-elided="true" name="Subtitle" class="subtitle button-subtitle" />
         </ui:Button>
     </ui:VisualElement>
+    <ui:Label name="EventStack" style="color: rgb(255, 255, 255); font-size: 10px; -unity-font: url(&apos;project://database/Assets/Imports/Fonts/Mona%20Sans/Mona-Sans-Regular.ttf?fileID=12800000&amp;guid=5d4f0968aa541ca4b8f3e162b61d5764&amp;type=3#Mona-Sans-Regular&apos;); -unity-font-definition: initial; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-text-align: lower-left; white-space: normal; position: absolute; left: 30px; bottom: 30px; right: 55%;" />
 </ui:UXML>

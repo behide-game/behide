@@ -75,5 +75,8 @@ crashlytics-build.properties
 .vscode/
 
 .env
+Assets/Resources/env.txt
+InitTestScene*.unity
+InitTestScene*.unity.meta
 
 *.log

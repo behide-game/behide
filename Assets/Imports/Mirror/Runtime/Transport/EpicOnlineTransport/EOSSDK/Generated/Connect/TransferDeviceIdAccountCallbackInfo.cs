@@ -20,10 +20,10 @@ namespace Epic.OnlineServices.Connect
 
 		/// <summary>
 		/// The ProductUserIdToPreserve that was passed to the original <see cref="ConnectInterface.TransferDeviceIdAccount" /> call.
-		/// 
+		///
 		/// On successful operation, this <see cref="ProductUserId" /> will have a valid authentication session
 		/// and the other <see cref="ProductUserId" /> value has been discarded and lost forever.
-		/// 
+		///
 		/// The application should remove any registered notification callbacks for the discarded <see cref="ProductUserId" /> as obsolete.
 		/// </summary>
 		public ProductUserId LocalUserId { get; private set; }

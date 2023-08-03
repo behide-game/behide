@@ -1,0 +1,52 @@
+name: ⚗️ Tests
+
+on:
+  push:
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: behide-internal-service
+    steps:
+
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Cache
+      - uses: actions/cache@v2
+        with:
+          path: ./Library/
+          key: Library-Behide-Tests
+          restore-keys: |
+            Library-Behide-
+            Library-
+
+      # Environment variables
+      - name: Create env file
+        run: echo "${{ secrets.ENV_FILE }}" > Assets/Resources/env.txt
+
+      # Test
+      - name: Run tests
+        uses: game-ci/unity-test-runner@v2
+        id: testStep
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          testMode: standalone
+
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: Test results
+          path: ${{ steps.testStep.outputs.artifactsPath }}
+
+      # # Test report
+      # - name: Test Report
+      #   uses: dorny/test-reporter@v1
+      #   if: success() || failure()
+      #   with:
+      #     name: Unity Playmode Tests
+      #     path: artifacts/**/*.xml
+      #     reporter: java-junit

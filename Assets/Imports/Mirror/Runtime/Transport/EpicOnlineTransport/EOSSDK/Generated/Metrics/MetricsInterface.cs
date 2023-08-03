@@ -25,7 +25,7 @@ namespace Epic.OnlineServices.Metrics
 
 		/// <summary>
 		/// Logs the start of a new game session for a local player.
-		/// 
+		///
 		/// The game client should call this function whenever it joins into a new multiplayer, peer-to-peer or single player game session.
 		/// Each call to BeginPlayerSession must be matched with a corresponding call to EndPlayerSession.
 		/// </summary>
@@ -47,7 +47,7 @@ namespace Epic.OnlineServices.Metrics
 
 		/// <summary>
 		/// Logs the end of a game session for a local player.
-		/// 
+		///
 		/// Call once when the game client leaves the active game session.
 		/// Each call to BeginPlayerSession must be matched with a corresponding call to EndPlayerSession.
 		/// </summary>

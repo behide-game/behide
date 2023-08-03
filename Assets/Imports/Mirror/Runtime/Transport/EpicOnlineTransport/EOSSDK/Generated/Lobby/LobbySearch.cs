@@ -140,7 +140,7 @@ namespace Epic.OnlineServices.Lobby
 
 		/// <summary>
 		/// Remove a parameter from the array of search criteria.
-		/// 
+		///
 		/// @params Options a search parameter key name to remove
 		/// </summary>
 		/// <returns>

@@ -133,7 +133,7 @@ namespace Epic.OnlineServices.Auth
 
 		/// <summary>
 		/// Deletes a previously received and locally stored persistent auth access token for the currently logged in user of the local device.
-		/// 
+		///
 		/// On Desktop and Mobile platforms, the access token is deleted from the keychain of the local user and a backend request is made to revoke the token on the authentication server.
 		/// On Console platforms, even though the caller is responsible for storing and deleting the access token on the local device,
 		/// this function should still be called with the access token before its deletion to make the best effort in attempting to also revoke it on the authentication server.
@@ -205,12 +205,12 @@ namespace Epic.OnlineServices.Auth
 
 		/// <summary>
 		/// Link external account by continuing previous login attempt with a continuance token.
-		/// 
+		///
 		/// On Desktop and Mobile platforms, the user will be presented the Epic Account Portal to resolve their identity.
-		/// 
+		///
 		/// On Console, the user will login to their Epic Account using an external device, e.g. a mobile device or a desktop PC,
 		/// by browsing to the presented authentication URL and entering the device code presented by the game on the console.
-		/// 
+		///
 		/// On success, the user will be logged in at the completion of this action.
 		/// This will commit this external account to the Epic Account and cannot be undone in the SDK.
 		/// </summary>

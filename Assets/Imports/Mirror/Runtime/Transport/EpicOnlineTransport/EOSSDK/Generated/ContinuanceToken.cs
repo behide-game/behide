@@ -15,7 +15,7 @@ namespace Epic.OnlineServices
 
 		/// <summary>
 		/// Retrieve a null-terminated stringified continuance token from an <see cref="ContinuanceToken" />.
-		/// 
+		///
 		/// To get the required buffer size, call once with OutBuffer set to NULL, InOutBufferLength will contain the buffer size needed.
 		/// Call again with valid params to get the stringified continuance token which will only contain UTF8-encoded printable characters (excluding the null-terminator).
 		/// </summary>

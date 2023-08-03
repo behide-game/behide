@@ -142,7 +142,7 @@ namespace Epic.OnlineServices.Achievements
 
 		/// <summary>
 		/// DEPRECATED! Use <see cref="AddNotifyAchievementsUnlockedV2" /> instead.
-		/// 
+		///
 		/// Register to receive achievement unlocked notifications.
 		/// @note must call <see cref="RemoveNotifyAchievementsUnlocked" /> to remove the notification
 		/// <seealso cref="RemoveNotifyAchievementsUnlocked" />
@@ -204,7 +204,7 @@ namespace Epic.OnlineServices.Achievements
 
 		/// <summary>
 		/// DEPRECATED! Use <see cref="CopyAchievementDefinitionV2ByAchievementId" /> instead.
-		/// 
+		///
 		/// Fetches an achievement definition from a given achievement ID.
 		/// <seealso cref="Release" />
 		/// <seealso cref="CopyAchievementDefinitionV2ByAchievementId" />
@@ -237,7 +237,7 @@ namespace Epic.OnlineServices.Achievements
 
 		/// <summary>
 		/// DEPRECATED! Use <see cref="CopyAchievementDefinitionV2ByIndex" /> instead.
-		/// 
+		///
 		/// Fetches an achievement definition from a given index.
 		/// <seealso cref="CopyAchievementDefinitionV2ByIndex" />
 		/// <seealso cref="Release" />
@@ -394,7 +394,7 @@ namespace Epic.OnlineServices.Achievements
 
 		/// <summary>
 		/// DEPRECATED! Use <see cref="CopyPlayerAchievementByAchievementId" /> instead.
-		/// 
+		///
 		/// Fetches an unlocked achievement from a given achievement ID.
 		/// <seealso cref="Release" />
 		/// </summary>
@@ -426,7 +426,7 @@ namespace Epic.OnlineServices.Achievements
 
 		/// <summary>
 		/// DEPRECATED! Use <see cref="CopyPlayerAchievementByAchievementId" /> instead.
-		/// 
+		///
 		/// Fetches an unlocked achievement from a given index.
 		/// <seealso cref="Release" />
 		/// </summary>
@@ -498,7 +498,7 @@ namespace Epic.OnlineServices.Achievements
 
 		/// <summary>
 		/// DEPRECATED! Use <see cref="GetPlayerAchievementCount" />, <see cref="CopyPlayerAchievementByIndex" /> and filter for unlocked instead.
-		/// 
+		///
 		/// Fetch the number of unlocked achievements that are cached locally.
 		/// <seealso cref="CopyUnlockedAchievementByIndex" />
 		/// </summary>
@@ -520,7 +520,7 @@ namespace Epic.OnlineServices.Achievements
 
 		/// <summary>
 		/// Query for a list of definitions for all existing achievements, including localized text, icon IDs and whether an achievement is hidden.
-		/// 
+		///
 		/// @note When the Social Overlay is enabled then this will be called automatically. The Social Overlay is enabled by default (see <see cref="Platform.PlatformFlags.DisableSocialOverlay" />).
 		/// </summary>
 		/// <param name="options">Structure containing information about the application whose achievement definitions we're retrieving.</param>
@@ -547,7 +547,7 @@ namespace Epic.OnlineServices.Achievements
 
 		/// <summary>
 		/// Query for a list of achievements for a specific player, including progress towards completion for each achievement.
-		/// 
+		///
 		/// @note When the Social Overlay is enabled then this will be called automatically. The Social Overlay is enabled by default (see <see cref="Platform.PlatformFlags.DisableSocialOverlay" />).
 		/// </summary>
 		/// <param name="options">Structure containing information about the player whose achievements we're retrieving.</param>

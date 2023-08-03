@@ -50,7 +50,7 @@ namespace Epic.OnlineServices.RTC
 		/// <summary>
 		/// Register to receive notifications when disconnected from the room. If the returned NotificationId is valid, you must call
 		/// <see cref="RemoveNotifyDisconnected" /> when you no longer wish to have your CompletionDelegate called.
-		/// 
+		///
 		/// This function will always return <see cref="Common.InvalidNotificationid" /> when used with lobby RTC room. To be notified of the connection
 		/// status of a Lobby-managed RTC room, use the <see cref="Lobby.LobbyInterface.AddNotifyRTCRoomConnectionChanged" /> function instead.
 		/// <seealso cref="Common.InvalidNotificationid" />
@@ -83,10 +83,10 @@ namespace Epic.OnlineServices.RTC
 		/// <summary>
 		/// Register to receive notifications when a participant's status changes (e.g: join or leave the room). If the returned NotificationId is valid, you must call
 		/// <see cref="RemoveNotifyParticipantStatusChanged" /> when you no longer wish to have your CompletionDelegate called.
-		/// 
+		///
 		/// If you register to this notification before joining a room, you will receive a notification for every member already in the room when you join said room.
 		/// This allows you to know who is already in the room when you join.
-		/// 
+		///
 		/// To be used effectively with a Lobby-managed RTC room, this should be registered during the <see cref="Lobby.LobbyInterface.CreateLobby" /> or <see cref="Lobby.LobbyInterface.JoinLobby" /> completion
 		/// callbacks when the ResultCode is <see cref="Result.Success" />. If this notification is registered after that point, it is possible to miss notifications for
 		/// already-existing room participants.
@@ -164,7 +164,7 @@ namespace Epic.OnlineServices.RTC
 
 		/// <summary>
 		/// Use this function to join a room.
-		/// 
+		///
 		/// This function does not need to called for the Lobby RTC Room system; doing so will return <see cref="Result.AccessDenied" />. The lobby system will
 		/// automatically join and leave RTC Rooms for all lobbies that have RTC rooms enabled.
 		/// </summary>
@@ -189,7 +189,7 @@ namespace Epic.OnlineServices.RTC
 		/// <summary>
 		/// Use this function to leave a room and clean up all the resources associated with it. This function has to always be called when the
 		/// room is abandoned even if the user is already disconnected for other reasons.
-		/// 
+		///
 		/// This function does not need to called for the Lobby RTC Room system; doing so will return <see cref="Result.AccessDenied" />. The lobby system will
 		/// automatically join and leave RTC Rooms for all lobbies that have RTC rooms enabled.
 		/// </summary>

@@ -135,9 +135,9 @@ namespace EpicTransport {
                     sessionOptions.DisplayName = EOSSDKComponent.DisplayName;
                     sessionOptions.GameSessionId = null;
                     sessionOptions.ServerIp = null;
-                    Result result = EOSSDKComponent.GetMetricsInterface().BeginPlayerSession(sessionOptions);
+                    Epic.OnlineServices.Result result = EOSSDKComponent.GetMetricsInterface().BeginPlayerSession(sessionOptions);
 
-                    if(result == Result.Success) {
+                    if(result == Epic.OnlineServices.Result.Success) {
                         Debug.Log("Started Metric Session");
                     }
                 }
@@ -193,9 +193,9 @@ namespace EpicTransport {
                     sessionOptions.DisplayName = EOSSDKComponent.DisplayName;
                     sessionOptions.GameSessionId = null;
                     sessionOptions.ServerIp = null;
-                    Result result = EOSSDKComponent.GetMetricsInterface().BeginPlayerSession(sessionOptions);
+                    Epic.OnlineServices.Result result = EOSSDKComponent.GetMetricsInterface().BeginPlayerSession(sessionOptions);
 
-                    if (result == Result.Success) {
+                    if (result == Epic.OnlineServices.Result.Success) {
                         Debug.Log("Started Metric Session");
                     }
                 }
@@ -263,9 +263,9 @@ namespace EpicTransport {
                 // Stop Metrics collection session
                 EndPlayerSessionOptions endSessionOptions = new EndPlayerSessionOptions();
                 endSessionOptions.AccountId = EOSSDKComponent.LocalUserAccountId;
-                Result result = EOSSDKComponent.GetMetricsInterface().EndPlayerSession(endSessionOptions);
+                Epic.OnlineServices.Result result = EOSSDKComponent.GetMetricsInterface().EndPlayerSession(endSessionOptions);
 
-                if (result == Result.Success) {
+                if (result == Epic.OnlineServices.Result.Success) {
                     Debug.LogError("Stopped Metric Session");
                 }
             }
