@@ -8,16 +8,15 @@ using UnityEngine.TestTools;
 public class LaunchGameTests : InputTestFixture
 {
     GameManager gameManager;
-    string startScreenSceneName = "start screen";
 
     public override void Setup()
     {
-        SceneManager.LoadScene(startScreenSceneName, LoadSceneMode.Additive);
+        SceneManager.LoadScene("start screen", LoadSceneMode.Additive);
     }
 
     public override void TearDown()
     {
-        SceneManager.UnloadSceneAsync(startScreenSceneName);
+        SceneManager.UnloadSceneAsync("start screen");
     }
 
     [UnityTest]
