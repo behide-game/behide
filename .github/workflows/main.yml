@@ -19,9 +19,13 @@ jobs:
       # Cache
       - uses: actions/cache@v3
         with:
-          path: Library
+          path: ./Library/
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
+
+      # Environment variables
+      - name: Create env file
+        run: echo "${{ secrets.ENV_FILE }}" > .env
 
       # Save version
       - uses: actions-ecosystem/action-regex-match@v2
@@ -50,6 +54,15 @@ jobs:
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
+      # Test report
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Unity Playmode Tests
+          path: artifacts/playmode/*.xml
+          reporter: jest-junit
+
   build:
     name: Build
     needs: tests
@@ -76,12 +89,13 @@ jobs:
         run: |
           echo "Project version is: $(cat version.txt)"
           echo "PROJECT_VERSION=$(cat version.txt)" >> $GITHUB_ENV
+          echo "${{ secrets.ENV_FILE }}" > .env
 
 
       # Cache
       - uses: actions/cache@v3
         with:
-          path: Library
+          path: ./Library/
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
 

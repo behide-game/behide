@@ -1,6 +1,6 @@
 #nullable enable
-
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.InputSystem;
@@ -16,58 +16,82 @@ public class StartScreen : MonoBehaviour
 
     private bool usernameModalOpened = false;
 
-    private Func<VisualElement> home = null!;
-    private Func<VisualElement> usernameModal = null!;
+    private VisualElement home() => uiDocument.rootVisualElement.Query<VisualElement>("Home");
+    private VisualElement usernameModal() => uiDocument.rootVisualElement.Query<VisualElement>("UsernameModal");
 
     void Awake() => gameManager = GameManager.instance;
 
-    void Start()
+    async void Start()
     {
-        home = () => uiDocument.rootVisualElement.Query<VisualElement>("Home");
-        usernameModal = () => uiDocument.rootVisualElement.Query<VisualElement>("UsernameModal");
         startInputAction.ToInputAction().performed += OnStartPressed;
 
         // Setup username modal
-        if (PlayerPrefs.HasKey("username")) return;
+        if (!PlayerPrefs.HasKey("username")) {
+            // Set placeholder
+            var textField = usernameModal().Q<TextField>("UsernameTextField");
+            var fakeUsername = FakeUsername.getRandom();
+            TextFieldUtils.SetPlaceholderText(textField, fakeUsername + "...");
 
-        // Set placeholder
-        var textField = usernameModal().Q<TextField>("UsernameTextField");
-        var fakeUsername = FakeUsername.getRandom();
-        TextFieldUtils.SetPlaceholderText(textField, fakeUsername + "...");
+            // Handle validate
+            validateInputAction.ToInputAction().performed += _ =>
+            {
+                if (startInputAction.ToInputAction().triggered) return;
+                SubmitUsername(textField.text);
+            };
+        }
 
-        // Handle validate
-        validateInputAction.ToInputAction().performed += _ =>
+        // Default UI
+        var homeText = home().Query<Label>("Subtitle").First();
+        var readyHomeText = home().Query("ReadySubtitle").First();
+
+        homeText.text = "Connecting...";
+
+        await Task.Run(() =>
         {
-            if (startInputAction.ToInputAction().triggered) return;
-            SubmitUsername(textField.text);
-        };
-    }
+            while (true)
+            {
+                if (gameManager.network.connected.behide != null && gameManager.network.connected.eos != null)
+                {
+                    break;
+                }
+            }
+        });
+        // await UniTask.WaitUntil(() => gameManager.network.connected.behide != null);
+        // await UniTask.WaitUntil(() => gameManager.network.connected.eos != null);
 
-    void Update()
-    {
-        Label homeText = home().Query<Label>("Subtitle");
-        VisualElement readyHomeText = home().Query("ReadySubtitle");
-
-        if (gameManager.connectionsManager.connected.behide && gameManager.connectionsManager.connected.eos)
+        if (gameManager.network.connected.behide!.Success && gameManager.network.connected.eos!.Success)
         {
             homeText.style.display = DisplayStyle.None;
             readyHomeText.style.display = DisplayStyle.Flex;
         }
-        else if ((gameManager.connectionsManager.connectError ?? "") != "")
-        {
-            homeText.text = $"Failed to connect";
-            Label errorText = home().Query<Label>("ErrorMessage");
-            errorText.text = gameManager.connectionsManager.connectError;
-        }
-        else homeText.text = "Connecting...";
+        else homeText.text = "Failed to connect";
     }
+
+    // void Update()
+    // {
+    //     Label homeText = home().Query<Label>("Subtitle");
+    //     VisualElement readyHomeText = home().Query("ReadySubtitle");
+
+    //     if (gameManager.connectionsManager.connected.behide && gameManager.connectionsManager.connected.eos)
+    //     {
+    //         homeText.style.display = DisplayStyle.None;
+    //         readyHomeText.style.display = DisplayStyle.Flex;
+    //     }
+    //     else if ((gameManager.connectionsManager.connectError ?? "") != "")
+    //     {
+    //         homeText.text = $"Failed to connect";
+    //         Label errorText = home().Query<Label>("ErrorMessage");
+    //         errorText.text = gameManager.connectionsManager.connectError;
+    //     }
+    //     else homeText.text = "Connecting...";
+    // }
 
 
     public void OnStartPressed(InputAction.CallbackContext context)
     {
         if (usernameModalOpened
-            || !gameManager.connectionsManager.connected.behide
-            || !gameManager.connectionsManager.connected.eos) return;
+            || !gameManager.network.behideConnected()
+            || !gameManager.network.eosConnected()) return;
 
         startInputAction.ToInputAction().Disable();
 
@@ -106,7 +130,7 @@ public class StartScreen : MonoBehaviour
     private void SwitchScene()
     {
         string username = PlayerPrefs.GetString("username");
-        gameManager.SetUsername(username);
+        gameManager.session.SetUsername(username);
         SceneManager.LoadSceneAsync(homeSceneName);
     }
 }

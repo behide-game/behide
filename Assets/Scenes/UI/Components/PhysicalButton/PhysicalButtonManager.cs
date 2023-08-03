@@ -58,7 +58,17 @@ public class PhysicalButtonManager : MonoBehaviour
 
     private void OnControlsChanged(PlayerInput playerInput)
     {
-        InputDevice device = playerInput.devices[0];
+        InputDevice device;
+
+        try
+        {
+            device = playerInput.devices[0];
+        }
+        catch (ArgumentOutOfRangeException error) {
+            Debug.LogWarning($"No input devices available: {playerInput.devices.Count}");
+            Debug.LogWarning(error);
+            return;
+        }
 
         if (lastDeviceId == device.deviceId) return;
         lastDeviceId = device.deviceId;

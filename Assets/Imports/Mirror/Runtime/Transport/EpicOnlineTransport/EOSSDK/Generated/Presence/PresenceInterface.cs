@@ -199,7 +199,7 @@ namespace Epic.OnlineServices.Presence
 		/// <summary>
 		/// Gets a join info custom game-data string for a specific user. This is a helper function for reading the presence data related to how a user can be joined.
 		/// Its meaning is entirely application dependent.
-		/// 
+		///
 		/// This value will be valid only after a QueryPresence call has successfully completed.
 		/// <seealso cref="PresenceModification.PresencemodificationJoininfoMaxLength" />
 		/// </summary>

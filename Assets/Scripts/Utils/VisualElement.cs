@@ -5,7 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 
-class VisualElementUtils
+public class VisualElementUtils
 {
     public static VisualElement[] FindFocusableChildren(VisualElement root)
     {

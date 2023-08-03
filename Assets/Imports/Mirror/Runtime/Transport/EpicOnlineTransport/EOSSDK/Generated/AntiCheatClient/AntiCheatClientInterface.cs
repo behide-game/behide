@@ -220,7 +220,7 @@ namespace Epic.OnlineServices.AntiCheatClient
 		/// <summary>
 		/// Ends a multiplayer game session, either by leaving an ongoing session or shutting it down entirely.
 		/// Mode: All
-		/// 
+		///
 		/// Must be called when the multiplayer session ends, or when the local user leaves a session in progress.
 		/// </summary>
 		/// <param name="options">Structure containing input data.</param>
@@ -271,7 +271,7 @@ namespace Epic.OnlineServices.AntiCheatClient
 		/// <summary>
 		/// Polls for changes in client integrity status.
 		/// Mode: All
-		/// 
+		///
 		/// The purpose of this function is to allow the game to display information
 		/// about anti-cheat integrity problems to the user. These are often the result of a
 		/// corrupt game installation rather than cheating attempts. This function does not
@@ -311,7 +311,7 @@ namespace Epic.OnlineServices.AntiCheatClient
 		/// Optional NetProtect feature for game message encryption.
 		/// Encrypts an arbitrary message that will be sent to the game server and decrypted on the other side.
 		/// Mode: <see cref="AntiCheatClientMode.ClientServer" />.
-		/// 
+		///
 		/// Options.Data and OutBuffer may refer to the same buffer to encrypt in place.
 		/// </summary>
 		/// <param name="options">Structure containing input data.</param>
@@ -388,7 +388,7 @@ namespace Epic.OnlineServices.AntiCheatClient
 		/// <summary>
 		/// Registers a connected peer-to-peer client.
 		/// Mode: <see cref="AntiCheatClientMode.PeerToPeer" />.
-		/// 
+		///
 		/// Must be paired with a call to <see cref="UnregisterPeer" /> if this user leaves the session
 		/// in progress, or <see cref="EndSession" /> if the entire session is ending.
 		/// </summary>
@@ -462,7 +462,7 @@ namespace Epic.OnlineServices.AntiCheatClient
 		/// Optional NetProtect feature for game message encryption.
 		/// Decrypts an encrypted message received from the game server.
 		/// Mode: <see cref="AntiCheatClientMode.ClientServer" />.
-		/// 
+		///
 		/// Options.Data and OutBuffer may refer to the same buffer to decrypt in place.
 		/// </summary>
 		/// <param name="options">Structure containing input data.</param>
@@ -495,7 +495,7 @@ namespace Epic.OnlineServices.AntiCheatClient
 		/// <summary>
 		/// Unregisters a disconnected peer-to-peer client.
 		/// Mode: <see cref="AntiCheatClientMode.PeerToPeer" />.
-		/// 
+		///
 		/// Must be called when a user leaves a session in progress.
 		/// </summary>
 		/// <param name="options">Structure containing input data.</param>

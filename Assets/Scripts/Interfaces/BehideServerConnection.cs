@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -5,6 +6,13 @@ using UnityEngine;
 
 using SuperSimpleTcp;
 using BehideServer.Types;
+
+public class BehideResponseNotExcepted : Exception
+{
+    public BehideResponseNotExcepted() { }
+    public BehideResponseNotExcepted(string message) : base(message) { }
+    public BehideResponseNotExcepted(string message, Exception inner) : base(message, inner) { }
+}
 
 public class BehideServerConnection : IDisposable
 {
@@ -14,9 +22,9 @@ public class BehideServerConnection : IDisposable
     private IPEndPoint endPoint;
     public string serverVersion;
 
-    public event EventHandler OnConnected;
-    public event EventHandler OnDisconnected;
-    public event EventHandler<Response> ResponseReceived;
+    public event EventHandler OnConnected = null!;
+    public event EventHandler OnDisconnected = null!;
+    public event EventHandler<Response> ResponseReceived = null!;
 
     public BlockingQueue<Response> ResponseQueue;
     public Task<Response> GetLastResponse() => ResponseQueue.Dequeue(1000);
@@ -27,6 +35,7 @@ public class BehideServerConnection : IDisposable
         serverVersion = BehideServer.Version.GetVersion();
         endPoint = newEndPoint;
         ResponseQueue = new BlockingQueue<Response>();
+        tcp = new SimpleTcpClient(endPoint);
     }
 
     ~BehideServerConnection() => Dispose();
@@ -50,7 +59,7 @@ public class BehideServerConnection : IDisposable
 
     async public Task SendMessage(Msg message) => await tcp.SendAsync(message.ToBytes());
 
-    async public Task<Response> SendMessage(Msg message, ResponseHeader expectedResponseHeader)
+    async public Task<Response> SendMessage(Msg message, ResponseHeader expectedResponseHeader) // TODO: use result
     {
         _ = SendMessage(message);
         Response response = await ResponseQueue.Dequeue();
@@ -58,8 +67,7 @@ public class BehideServerConnection : IDisposable
         if (response.Header != expectedResponseHeader)
         {
             string errorMsg = $"Response don't match the expected header: Expected: {expectedResponseHeader}; Actual: {response.Header}";
-            Debug.LogError(errorMsg);
-            throw new Exception(errorMsg);
+            throw new BehideResponseNotExcepted(errorMsg);
         }
 
         return response;
@@ -71,8 +79,6 @@ public class BehideServerConnection : IDisposable
     /// </summary>
     async public Task Start()
     {
-        tcp = new SimpleTcpClient(endPoint);
-
         tcp.Events.DataReceived += OnData;
         tcp.Events.Connected += TcpOnConnected;
         tcp.Events.Disconnected += TcpOnDisconnected;
@@ -97,5 +103,21 @@ public class BehideServerConnection : IDisposable
 
         ResponseQueue.Enqueue(response);
         ResponseReceived.Invoke(sender, response);
+    }
+
+
+    public async Task<string?> CheckBehideServerVersion()
+    {
+        Msg msg = Msg.NewCheckServerVersion(BehideServer.Version.GetVersion());
+
+        try
+        {
+            Response response = await SendMessage(msg, ResponseHeader.CorrectServerVersion);
+            return null;
+        }
+        catch (Exception error)
+        {
+            return error.Message;
+        }
     }
 }

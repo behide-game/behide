@@ -56,9 +56,9 @@ namespace Epic.OnlineServices.Platform
 
 		/// <summary>
 		/// Create a single Epic Online Services Platform Instance.
-		/// 
+		///
 		/// The platform instance is used to gain access to the various Epic Online Services.
-		/// 
+		///
 		/// This function returns an opaque handle to the platform instance, and that handle must be passed to <see cref="Release" /> to release the instance.
 		/// </summary>
 		/// <returns>
@@ -629,9 +629,9 @@ namespace Epic.OnlineServices.Platform
 
 		/// <summary>
 		/// Initialize the Epic Online Services SDK.
-		/// 
+		///
 		/// Before calling any other function in the SDK, clients must call this function.
-		/// 
+		///
 		/// This function must only be called one time and must have a corresponding <see cref="Shutdown" /> call.
 		/// </summary>
 		/// <param name="options">- The initialization options to use for the SDK.</param>
@@ -655,7 +655,7 @@ namespace Epic.OnlineServices.Platform
 
 		/// <summary>
 		/// Release an Epic Online Services platform instance previously returned from <see cref="Create" />.
-		/// 
+		///
 		/// This function should only be called once per instance returned by <see cref="Create" />. Undefined behavior will result in calling it with a single instance more than once.
 		/// Typically only a single platform instance needs to be created during the lifetime of a game.
 		/// You should release each platform instance before calling the <see cref="Shutdown" /> function.
@@ -713,7 +713,7 @@ namespace Epic.OnlineServices.Platform
 
 		/// <summary>
 		/// Tear down the Epic Online Services SDK.
-		/// 
+		///
 		/// Once this function has been called, no more SDK calls are permitted; calling anything after <see cref="Shutdown" /> will result in undefined behavior.
 		/// </summary>
 		/// <returns>

@@ -156,7 +156,7 @@ namespace Epic.OnlineServices.Sessions
 		/// Set the host address associated with this session
 		/// Setting this is optional, if the value is not set the SDK will fill the value in from the service.
 		/// It is useful to set if other addressing mechanisms are desired or if LAN addresses are preferred during development
-		/// 
+		///
 		/// @note No validation of this value occurs to allow for flexibility in addressing methods
 		/// </summary>
 		/// <param name="options">Options associated with the host address of the session</param>

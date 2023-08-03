@@ -51,7 +51,7 @@ namespace Epic.OnlineServices
 		/// Returns a string representation of an <see cref="Result" />.
 		/// The return value is never null.
 		/// The return value must not be freed.
-		/// 
+		///
 		/// Example: <see cref="ToString" />(<see cref="Result.Success" />) returns "<see cref="Result.Success" />"
 		/// </summary>
 		public static string ToString(Result result)

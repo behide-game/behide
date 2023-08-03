@@ -200,7 +200,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// <summary>
 		/// Optional Cerberus feature for gameplay data collection.
 		/// Logs a custom gameplay event.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -224,7 +224,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// <summary>
 		/// Optional Cerberus feature for gameplay data collection.
 		/// Logs a game round's end and outcome.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -248,7 +248,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// <summary>
 		/// Optional Cerberus feature for gameplay data collection.
 		/// Logs a new game round start.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -273,7 +273,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// Optional Cerberus feature for gameplay data collection.
 		/// Logs a player despawning in the game, for example as a result of the character's death,
 		/// switching to spectator mode, etc.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -297,7 +297,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// <summary>
 		/// Optional Cerberus feature for gameplay data collection.
 		/// Logs a player being revived after being downed (see <see cref="LogPlayerTakeDamage" /> options).
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -321,7 +321,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// <summary>
 		/// Optional Cerberus feature for gameplay data collection.
 		/// Logs a player spawning into the game.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -345,7 +345,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// <summary>
 		/// Optional Cerberus feature for gameplay data collection.
 		/// Logs that a player has taken damage.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -369,7 +369,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// <summary>
 		/// Optional Cerberus feature for gameplay data collection.
 		/// Logs a player's general state including position and view direction.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -394,7 +394,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// Optional Cerberus feature for gameplay data collection.
 		/// Logs that a player has used a special ability or item which affects their character's capabilities,
 		/// for example temporarily increasing their speed or allowing them to see nearby players behind walls.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -418,7 +418,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// <summary>
 		/// Optional Cerberus feature for gameplay data collection.
 		/// Logs that a player has used a weapon, for example firing one bullet or making one melee attack.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -442,7 +442,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// <summary>
 		/// Optional NetProtect feature for game message encryption.
 		/// Encrypts an arbitrary message that will be sent to a game client and decrypted on the other side.
-		/// 
+		///
 		/// Options.Data and OutBuffer may refer to the same buffer to encrypt in place.
 		/// </summary>
 		/// <param name="options">Structure containing input data.</param>
@@ -474,7 +474,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 
 		/// <summary>
 		/// Call when an anti-cheat message is received from a client.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -497,7 +497,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 
 		/// <summary>
 		/// Register a connected client. Must be paired with a call to UnregisterClient.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -521,7 +521,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// <summary>
 		/// Optional Cerberus feature for gameplay data collection.
 		/// Registers a custom gameplay event.
-		/// 
+		///
 		/// All custom game events must be registered before <see cref="BeginSession" /> is called for the first time.
 		/// After the first call to <see cref="BeginSession" />, this function cannot be called any longer.
 		/// </summary>
@@ -577,7 +577,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 
 		/// <summary>
 		/// Optional. Sets or updates client details including input device and admin status.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -601,10 +601,10 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// <summary>
 		/// Optional. Can be used to indicate that a client is legitimately known to be
 		/// temporarily unable to communicate, for example as a result of loading a new level.
-		/// 
+		///
 		/// The bIsNetworkActive flag must be set back to true when users enter normal
 		/// gameplay, otherwise anti-cheat enforcement will not work correctly.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -628,7 +628,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// <summary>
 		/// Optional. Sets or updates a game session identifier which can be attached to other data for reference.
 		/// The identifier can be updated at any time for currently and subsequently registered clients.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>
@@ -652,7 +652,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 		/// <summary>
 		/// Optional NetProtect feature for game message encryption.
 		/// Decrypts an encrypted message received from a game client.
-		/// 
+		///
 		/// Options.Data and OutBuffer may refer to the same buffer to decrypt in place.
 		/// </summary>
 		/// <param name="options">Structure containing input data.</param>
@@ -683,7 +683,7 @@ namespace Epic.OnlineServices.AntiCheatServer
 
 		/// <summary>
 		/// Unregister a disconnected client.
-		/// 
+		///
 		/// This function may only be called between a successful call to <see cref="BeginSession" /> and
 		/// the matching <see cref="EndSession" /> call.
 		/// </summary>

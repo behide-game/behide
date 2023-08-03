@@ -1,12 +1,13 @@
 {
-    "name": "Tests",
+    "name": "PlayModeTests",
     "rootNamespace": "",
     "references": [
+        "GameAssembly",
+        "UtilsAssembly",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Unity.InputSystem",
-        "Unity.InputSystem.TestFramework",
-        "GameAssembly"
+        "Unity.InputSystem.TestFramework"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

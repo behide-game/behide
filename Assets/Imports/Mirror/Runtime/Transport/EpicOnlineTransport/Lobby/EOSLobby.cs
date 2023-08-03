@@ -116,7 +116,7 @@ public class EOSLobby : MonoBehaviour {
             List<Attribute> lobbyReturnData = new List<Attribute>();
 
             //if the result of CreateLobby is not successful, invoke an error event and return
-            if (callback.ResultCode != Result.Success) {
+            if (callback.ResultCode != Epic.OnlineServices.Result.Success) {
                 CreateLobbyFailed?.Invoke("There was an error while creating a lobby. Error: " + callback.ResultCode);
                 return;
             }
@@ -145,7 +145,7 @@ public class EOSLobby : MonoBehaviour {
             EOSSDKComponent.GetLobbyInterface().UpdateLobby(new UpdateLobbyOptions { LobbyModificationHandle = modHandle }, null, (UpdateLobbyCallbackInfo updateCallback) => {
 
                 //if there was an error while updating the lobby, invoke an error event and return
-                if (updateCallback.ResultCode != Result.Success) {
+                if (updateCallback.ResultCode != Epic.OnlineServices.Result.Success) {
                     CreateLobbyFailed?.Invoke("There was an error while updating the lobby. Error: " + updateCallback.ResultCode);
                     return;
                 }
@@ -193,7 +193,7 @@ public class EOSLobby : MonoBehaviour {
         //find lobbies
         search.Find(new LobbySearchFindOptions { LocalUserId = EOSSDKComponent.LocalUserProductId }, null, (LobbySearchFindCallbackInfo callback) => {
             //if the search was unsuccessful, invoke an error event and return
-            if (callback.ResultCode != Result.Success) {
+            if (callback.ResultCode != Epic.OnlineServices.Result.Success) {
                 FindLobbiesFailed?.Invoke("There was an error while finding lobbies. Error: " + callback.ResultCode);
                 return;
             }
@@ -224,7 +224,7 @@ public class EOSLobby : MonoBehaviour {
         //join lobby
         EOSSDKComponent.GetLobbyInterface().JoinLobby(new JoinLobbyOptions { LobbyDetailsHandle = lobbyToJoin, LocalUserId = EOSSDKComponent.LocalUserProductId, PresenceEnabled = presenceEnabled }, null, (JoinLobbyCallbackInfo callback) => {
             //if the result was not a success, invoke an error event and return
-            if (callback.ResultCode != Result.Success) {
+            if (callback.ResultCode != Epic.OnlineServices.Result.Success) {
                 JoinLobbyFailed?.Invoke("There was an error while joining a lobby. Error: " + callback.ResultCode);
                 return;
             }
@@ -267,7 +267,7 @@ public class EOSLobby : MonoBehaviour {
             //Destroy lobby
             EOSSDKComponent.GetLobbyInterface().DestroyLobby(new DestroyLobbyOptions { LobbyId = currentLobbyId, LocalUserId = EOSSDKComponent.LocalUserProductId }, null, (DestroyLobbyCallbackInfo callback) => {
                 //if the result was not a success, log error and return
-                if (callback.ResultCode != Result.Success) {
+                if (callback.ResultCode != Epic.OnlineServices.Result.Success) {
                     LeaveLobbyFailed?.Invoke("There was an error while destroying the lobby. Error: " + callback.ResultCode);
                     return;
                 }
@@ -280,7 +280,7 @@ public class EOSLobby : MonoBehaviour {
         else {
             EOSSDKComponent.GetLobbyInterface().LeaveLobby(new LeaveLobbyOptions { LobbyId = currentLobbyId, LocalUserId = EOSSDKComponent.LocalUserProductId }, null, (LeaveLobbyCallbackInfo callback) => {
                 //if the result was not a success, log error and return
-                if (callback.ResultCode != Result.Success && callback.ResultCode != Result.NotFound) {
+                if (callback.ResultCode != Epic.OnlineServices.Result.Success && callback.ResultCode != Epic.OnlineServices.Result.NotFound) {
                     LeaveLobbyFailed?.Invoke("There was an error while leaving the lobby. Error: " + callback.ResultCode);
                     return;
                 }
@@ -308,7 +308,7 @@ public class EOSLobby : MonoBehaviour {
         modHandle.RemoveAttribute(new LobbyModificationRemoveAttributeOptions { Key = key });
 
         EOSSDKComponent.GetLobbyInterface().UpdateLobby(new UpdateLobbyOptions { LobbyModificationHandle = modHandle }, null, (UpdateLobbyCallbackInfo callback) => {
-            if (callback.ResultCode != Result.Success) {
+            if (callback.ResultCode != Epic.OnlineServices.Result.Success) {
                 AttributeUpdateFailed?.Invoke(key, $"There was an error while removing attribute \"{ key }\". Error: " + callback.ResultCode);
                 return;
             }
@@ -329,7 +329,7 @@ public class EOSLobby : MonoBehaviour {
         modHandle.AddAttribute(new LobbyModificationAddAttributeOptions { Attribute = attribute, Visibility = LobbyAttributeVisibility.Public });
 
         EOSSDKComponent.GetLobbyInterface().UpdateLobby(new UpdateLobbyOptions { LobbyModificationHandle = modHandle }, null, (UpdateLobbyCallbackInfo callback) => {
-            if (callback.ResultCode != Result.Success) {
+            if (callback.ResultCode != Epic.OnlineServices.Result.Success) {
                 AttributeUpdateFailed?.Invoke(attribute.Key, $"There was an error while updating attribute \"{ attribute.Key }\". Error: " + callback.ResultCode);
                 return;
             }

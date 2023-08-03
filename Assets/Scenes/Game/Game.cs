@@ -11,12 +11,12 @@ public class Game : MonoBehaviour
 
     void OnGUI()
     {
-        if (gameManager.room == null) return;
+        if (gameManager.session.room == null) return;
 
         GUILayout.BeginArea(new Rect(50, 50, 200, 200));
         GUILayout.BeginVertical();
 
-        if (GUILayout.Button("End game")) gameManager.EndGame();
+        if (GUILayout.Button("End game")) gameManager.party.EndGame();
 
         GUILayout.EndVertical();
         GUILayout.EndArea();

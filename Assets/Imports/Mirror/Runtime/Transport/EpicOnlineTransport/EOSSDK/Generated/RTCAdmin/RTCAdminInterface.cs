@@ -130,7 +130,7 @@ namespace Epic.OnlineServices.RTCAdmin
 
 		/// <summary>
 		/// Query for a list of user tokens for joining a room.
-		/// 
+		///
 		/// Each query generates a query id ( see <see cref="QueryJoinRoomTokenCompleteCallbackInfo" /> ) which should be used
 		/// to retrieve the tokens from inside the callback.
 		/// </summary>
@@ -158,7 +158,7 @@ namespace Epic.OnlineServices.RTCAdmin
 
 		/// <summary>
 		/// Starts an asynchronous task remotely mutes/unmutes a room participant.
-		/// 
+		///
 		/// This remotely mutes the specified participant, so no audio is sent from that participant to any other participant in the room.
 		/// </summary>
 		/// <param name="options">structure containing the room and user to mute.</param>
