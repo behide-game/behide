@@ -7,22 +7,28 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.UIElements;
 
-public class PhysicalButtonTests : InputTestFixture
+public class PhysicalButtonTests
 {
     Keyboard keyboard;
     Gamepad gamepad;
     string keyboardSpriteName = "Mouse_Left_Key_Dark";
     string gamepadSpriteName = "XboxSeriesX_RT";
+    InputTestFixture input = new();
 
-    public override void Setup()
+    [OneTimeSetUp]
+    public void Setup()
     {
         SceneManager.LoadScene("Tests scene", LoadSceneMode.Additive);
+        input.Setup();
+
         keyboard = InputSystem.AddDevice<Keyboard>();
         gamepad = InputSystem.AddDevice<Gamepad>();
     }
 
-    public override void TearDown()
+    [OneTimeTearDown]
+    public void TearDown()
     {
+        input.TearDown();
         SceneManager.UnloadSceneAsync("Tests scene");
     }
 
@@ -44,7 +50,7 @@ public class PhysicalButtonTests : InputTestFixture
             var key = device is Keyboard ? (device as Keyboard).aKey : (device as Gamepad).aButton;
             var sprite = device is Keyboard ? keyboardSpriteName : gamepadSpriteName;
 
-            PressAndRelease(key);
+            input.PressAndRelease(key);
             InputSystem.Update();
             yield return new WaitForSeconds(1); // Not necessary. It allows to see that device changed when debugging.
 
