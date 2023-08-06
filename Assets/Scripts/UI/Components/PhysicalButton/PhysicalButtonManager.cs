@@ -102,5 +102,7 @@ public class PhysicalButtonManager : MonoBehaviour
             Background background = Background.FromSprite(keyImage.Value.image);
             e.element.Children().First().Q("Image").style.backgroundImage = background;
         }
+
+        Debug.Log($"Changed");
     }
 }

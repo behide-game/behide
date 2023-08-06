@@ -35,7 +35,7 @@ public class PhysicalButtonTests : InputTestFixture
         Func<VisualElement> physicalButtonImage = () => physicalButton().Query("Image");
         Func<string> imageToCheck = () => physicalButtonImage().style.backgroundImage.value.sprite.name;
 
-        var tests = new InputDevice[] { keyboard, gamepad, gamepad, keyboard, gamepad };
+        var tests = new InputDevice[] { keyboard, gamepad, gamepad, keyboard, gamepad, keyboard, keyboard };
         var i = 0;
 
         foreach (var device in tests) {
