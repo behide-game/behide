@@ -24,7 +24,9 @@ jobs:
 
       # Environment variables
       - name: Create env file
-        run: echo "${{ secrets.ENV_FILE }}" > Assets/Resources/env.txt
+        run: |
+          touch Assets/Resources/env.txt
+          echo "${{ secrets.ENV_FILE }}" > Assets/Resources/env.txt
 
       # Test
       - name: Run tests
@@ -34,7 +36,7 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          testMode: standalone
+          testMode: PlayMode
 
       - uses: actions/upload-artifact@v2
         if: always()
