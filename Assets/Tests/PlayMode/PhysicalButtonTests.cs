@@ -46,7 +46,7 @@ public class PhysicalButtonTests : InputTestFixture
 
             PressAndRelease(key);
             InputSystem.Update();
-            yield return null; // Not necessary. It allows to see that device changed when debugging.
+            yield return new WaitForSeconds(1); // Not necessary. It allows to see that device changed when debugging.
 
             Assert.AreEqual(sprite, imageToCheck());
             i++;
