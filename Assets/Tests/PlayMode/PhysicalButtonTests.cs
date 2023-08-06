@@ -36,8 +36,11 @@ public class PhysicalButtonTests : InputTestFixture
         Func<string> imageToCheck = () => physicalButtonImage().style.backgroundImage.value.sprite.name;
 
         var tests = new InputDevice[] { keyboard, gamepad, gamepad, keyboard, gamepad, keyboard, keyboard };
+        var i = 0;
 
         foreach (var device in tests) {
+            Debug.Log($"Iteration {i}");
+
             var key = device is Keyboard ? (device as Keyboard).aKey : (device as Gamepad).aButton;
             var sprite = device is Keyboard ? keyboardSpriteName : gamepadSpriteName;
 
@@ -46,6 +49,7 @@ public class PhysicalButtonTests : InputTestFixture
             yield return null; // Not necessary. It allows to see that device changed when debugging.
 
             Assert.AreEqual(sprite, imageToCheck());
+            i++;
         }
     }
 }
