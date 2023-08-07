@@ -76,6 +76,7 @@ crashlytics-build.properties
 
 .env
 Assets/Resources/env.txt
+Assets/Resources/env.txt.meta
 InitTestScene*.unity
 InitTestScene*.unity.meta
 
