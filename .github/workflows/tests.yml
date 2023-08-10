@@ -24,7 +24,10 @@ jobs:
 
       # Environment variables
       - name: Create env file
-        run: echo "${{ secrets.ENV_FILE }}" > Assets/Resources/env.txt
+        run: |
+          mkdir -p Assets/Resources
+          touch Assets/Resources/env.txt
+          echo "${{ secrets.ENV_FILE }}" > Assets/Resources/env.txt
 
       # Test
       - name: Run tests
@@ -41,12 +44,3 @@ jobs:
         with:
           name: Test results
           path: ${{ steps.testStep.outputs.artifactsPath }}
-
-      # # Test report
-      # - name: Test Report
-      #   uses: dorny/test-reporter@v1
-      #   if: success() || failure()
-      #   with:
-      #     name: Unity Playmode Tests
-      #     path: artifacts/**/*.xml
-      #     reporter: java-junit

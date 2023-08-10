@@ -9,7 +9,7 @@ using UnityEditor.SceneManagement;
 
 public class SetupClass : IPrebuildSetup
 {
-    string[] scenesToEdit = new string[]
+    static string[] scenesToEdit = new string[]
     {
         "Assets/Scenes/Start screen/Start screen.unity",
         "Assets/Tests/PlayMode/Scene/Tests scene.unity"
@@ -18,6 +18,8 @@ public class SetupClass : IPrebuildSetup
     public void Setup()
     {
 #if UNITY_EDITOR
+        PlayerPrefs.SetString("username", "Test username");
+
         foreach (var scenePath in scenesToEdit)
         {
             var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Additive);
@@ -33,6 +35,32 @@ public class SetupClass : IPrebuildSetup
             EditorSceneManager.SaveScene(scene);
             EditorSceneManager.CloseScene(scene, true);
         }
+#endif
+    }
+
+    static public void Cleanup()
+    {
+#if UNITY_EDITOR
+        System.Threading.Tasks.Task.Delay(5000).Wait();
+        var initialScenePath = EditorSceneManager.GetActiveScene().path;
+
+        PlayerPrefs.DeleteKey("username");
+        foreach (var scenePath in scenesToEdit)
+        {
+            var scene = EditorSceneManager.OpenScene(scenePath);
+
+            try
+            {
+                GameObject.Find("InputManager")
+                    .GetComponent<InputSystemUIInputModule>()
+                    .enabled = true;
+            }
+            catch (Exception) { }
+
+            EditorSceneManager.SaveScene(scene);
+        }
+
+        EditorSceneManager.OpenScene(initialScenePath);
 #endif
     }
 
