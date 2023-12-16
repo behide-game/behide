@@ -1,0 +1,7 @@
+[gd_resource type="Environment" format=3 uid="uid://dpgne1l08bk67"]
+
+[resource]
+sdfgi_enabled = true
+sdfgi_use_occlusion = true
+sdfgi_bounce_feedback = 1.0
+glow_enabled = true

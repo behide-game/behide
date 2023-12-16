@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://c1m24mholrw3n"]
+
+[ext_resource type="Script" path="res://Scripts/Player/PlayerMovements.cs" id="1_n4a4i"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_7d2en"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_arefm"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2qgvv"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/sync = true
+properties/0/watch = false
+
+[node name="Player" type="CharacterBody3D"]
+motion_mode = 1
+script = ExtResource("1_n4a4i")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_7d2en")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_arefm")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_2qgvv")

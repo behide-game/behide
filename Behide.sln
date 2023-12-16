@@ -1,0 +1,27 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Behide", "Behide.csproj", "{17CF3CC3-0B43-4F81-B51B-4BFAC60B06C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addons", "addons\Addons.csproj", "{BDAE413F-73CA-445C-8EA1-BC0FD5EC3CD0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		ExportDebug|Any CPU = ExportDebug|Any CPU
+		ExportRelease|Any CPU = ExportRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{17CF3CC3-0B43-4F81-B51B-4BFAC60B06C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17CF3CC3-0B43-4F81-B51B-4BFAC60B06C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17CF3CC3-0B43-4F81-B51B-4BFAC60B06C0}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{17CF3CC3-0B43-4F81-B51B-4BFAC60B06C0}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{17CF3CC3-0B43-4F81-B51B-4BFAC60B06C0}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{17CF3CC3-0B43-4F81-B51B-4BFAC60B06C0}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{BDAE413F-73CA-445C-8EA1-BC0FD5EC3CD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDAE413F-73CA-445C-8EA1-BC0FD5EC3CD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDAE413F-73CA-445C-8EA1-BC0FD5EC3CD0}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{BDAE413F-73CA-445C-8EA1-BC0FD5EC3CD0}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{BDAE413F-73CA-445C-8EA1-BC0FD5EC3CD0}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{BDAE413F-73CA-445C-8EA1-BC0FD5EC3CD0}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+	EndGlobalSection
+EndGlobal

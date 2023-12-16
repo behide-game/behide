@@ -1,0 +1,129 @@
+[gd_scene load_steps=13 format=3 uid="uid://di44b64787kkt"]
+
+[ext_resource type="Script" path="res://Scripts/EOS/EOSManager.cs" id="1_3rb2v"]
+[ext_resource type="Script" path="res://Scripts/NetworkManager.cs" id="2_vaj12"]
+[ext_resource type="Script" path="res://Scripts/UI/UIManager.cs" id="3_rq1p2"]
+[ext_resource type="Script" path="res://Scripts/UI/LogStack.cs" id="3_x8st0"]
+[ext_resource type="Environment" uid="uid://dpgne1l08bk67" path="res://start_screen.tres" id="5_n7qbl"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_agcx7"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5wq7r"]
+metallic = 1.0
+roughness = 0.33
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n1caj"]
+metallic = 1.0
+roughness = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_37o2f"]
+albedo_color = Color(0, 0, 1, 1)
+emission_enabled = true
+emission = Color(0, 0, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8xhvt"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slxqs"]
+albedo_color = Color(100, 0, 0, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_yrxi3"]
+
+[node name="StartScreen" type="Node3D"]
+
+[node name="Managers" type="Node3D" parent="."]
+
+[node name="EOSManager" type="Node3D" parent="Managers"]
+script = ExtResource("1_3rb2v")
+
+[node name="NetworkManager" type="Node3D" parent="Managers"]
+script = ExtResource("2_vaj12")
+
+[node name="UIManager" type="Node3D" parent="Managers"]
+script = ExtResource("3_rq1p2")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Buttons" type="HBoxContainer" parent="UI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Client" type="Button" parent="UI/Buttons"]
+layout_mode = 2
+text = "Start client"
+
+[node name="Server" type="Button" parent="UI/Buttons"]
+layout_mode = 2
+text = "Start server"
+
+[node name="LogStack" type="RichTextLabel" parent="UI"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+fit_content = true
+script = ExtResource("3_x8st0")
+
+[node name="Networking" type="Node3D" parent="."]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Networking"]
+root_path = NodePath("../..")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="Networking"]
+spawn_path = NodePath("../../World/Cube")
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="Cylinder" type="MeshInstance3D" parent="World"]
+transform = Transform3D(0.869131, -0.464683, 0.169354, 0.364815, 0.833541, 0.414874, -0.333948, -0.298797, 0.893979, -0.843338, 1.27073, -2.53851)
+mesh = SubResource("CylinderMesh_agcx7")
+surface_material_override/0 = SubResource("StandardMaterial3D_5wq7r")
+
+[node name="Cylinder2" type="MeshInstance3D" parent="World"]
+transform = Transform3D(0.983348, -0.112925, 0.142387, 0.114088, 0.993471, 0, -0.141457, 0.0162446, 0.989811, 0.894905, 1.88666, 0.161042)
+mesh = SubResource("CylinderMesh_agcx7")
+surface_material_override/0 = SubResource("StandardMaterial3D_n1caj")
+
+[node name="Cylinder3" type="MeshInstance3D" parent="World"]
+transform = Transform3D(0.973179, 0.219716, -0.0681733, -0.23005, 0.929466, -0.288393, 0, 0.296342, 0.955082, 0.894905, 1.21137, 1.68972)
+mesh = SubResource("CylinderMesh_agcx7")
+
+[node name="Cylinder4" type="MeshInstance3D" parent="World"]
+transform = Transform3D(0.727928, 0.612174, -0.30881, -0.459654, 0.76989, 0.442706, 0.508763, -0.180312, 0.841812, 0.779908, 0.899893, -1.52189)
+mesh = SubResource("CylinderMesh_agcx7")
+surface_material_override/0 = SubResource("StandardMaterial3D_37o2f")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World"]
+transform = Transform3D(-0.831184, -0.326939, 0.449715, 0.251862, 0.499693, 0.828777, -0.49568, 0.802133, -0.332994, 0, 3.55168, 0)
+
+[node name="Cube" type="MeshInstance3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25312, 1, 0)
+mesh = SubResource("BoxMesh_8xhvt")
+surface_material_override/0 = SubResource("StandardMaterial3D_slxqs")
+
+[node name="Floor" type="MeshInstance3D" parent="World"]
+transform = Transform3D(30, 0, 0, 0, -1.31134e-06, 1, 0, -30, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("QuadMesh_yrxi3")
+
+[node name="Camera3D" type="Camera3D" parent="World"]
+transform = Transform3D(0.707107, 0.43091, -0.56064, 0, 0.792864, 0.609398, 0.707107, -0.43091, 0.56064, -3, 4.52279, 3)
+environment = ExtResource("5_n7qbl")
+current = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World"]
+environment = ExtResource("5_n7qbl")
+
+[connection signal="TextLogged" from="Managers/UIManager" to="UI/LogStack" method="LogMessage"]
+[connection signal="pressed" from="UI/Buttons/Client" to="Managers/NetworkManager" method="StartClient"]
+[connection signal="pressed" from="UI/Buttons/Server" to="Managers/NetworkManager" method="StartServer"]

@@ -1,0 +1,91 @@
+[gd_scene load_steps=7 format=3 uid="uid://bq63a6mdt3w4"]
+
+[ext_resource type="Script" path="res://Scripts/Networking/NetworkManager.cs" id="1_di555"]
+[ext_resource type="Script" path="res://Scripts/UI/UIManager.cs" id="4_joo3b"]
+[ext_resource type="Script" path="res://Scripts/UI/LogStack.cs" id="4_sr8pm"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4a32d"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g3t4d"]
+albedo_color = Color(0.360784, 0, 0, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ch3tv"]
+size = Vector3(2, 0.4, 2)
+
+[node name="multiplayer" type="Node3D"]
+
+[node name="Managers" type="Node3D" parent="."]
+
+[node name="NetworkManager" type="Node3D" parent="Managers"]
+script = ExtResource("1_di555")
+
+[node name="UIManager" type="Node3D" parent="Managers"]
+script = ExtResource("4_joo3b")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Buttons" type="HBoxContainer" parent="UI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Client" type="Button" parent="UI/Buttons"]
+layout_mode = 2
+text = "Start client"
+
+[node name="Server" type="Button" parent="UI/Buttons"]
+layout_mode = 2
+text = "Start server"
+
+[node name="RoomIdField" type="TextEdit" parent="UI"]
+layout_mode = 2
+offset_top = 50.0
+offset_right = 189.0
+offset_bottom = 92.0
+size_flags_vertical = 3
+placeholder_text = "Room ID"
+
+[node name="LogStack" type="RichTextLabel" parent="UI"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+fit_content = true
+script = ExtResource("4_sr8pm")
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="Light" type="DirectionalLight3D" parent="World"]
+transform = Transform3D(0.979768, -0.0894539, 0.179033, 0, 0.894552, 0.446963, -0.200137, -0.43792, 0.876454, 0, 4.47552, 0)
+
+[node name="Ground" type="StaticBody3D" parent="World"]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+
+[node name="Plane" type="MeshInstance3D" parent="World/Ground"]
+mesh = SubResource("PlaneMesh_4a32d")
+surface_material_override/0 = SubResource("StandardMaterial3D_g3t4d")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+shape = SubResource("BoxShape3D_ch3tv")
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://player.tscn")
+spawn_path = NodePath("..")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.825015, -0.249057, 0.507268, 0, 0.897643, 0.440723, -0.565111, -0.363603, 0.740569, 3, 3, 3)
+
+[connection signal="TextLogged" from="Managers/UIManager" to="UI/LogStack" method="LogMessage"]
+[connection signal="pressed" from="UI/Buttons/Client" to="Managers/NetworkManager" method="StartClient"]
+[connection signal="pressed" from="UI/Buttons/Server" to="Managers/NetworkManager" method="StartHost"]
+[connection signal="spawned" from="MultiplayerSpawner" to="Managers/UIManager" method="Log" binds= ["\"Spawned\""]]
