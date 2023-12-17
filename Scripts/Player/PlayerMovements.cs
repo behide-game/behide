@@ -26,6 +26,9 @@ public partial class PlayerMovements : CharacterBody3D
         // Set camera
         camera = GetNode<Node3D>("./CameraDisk");
         if (!IsMultiplayerAuthority()) camera.QueueFree();
+
+        // Lock mouse
+        Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -53,7 +56,20 @@ public partial class PlayerMovements : CharacterBody3D
     public override void _Input(InputEvent rawEvent)
     {
         if (!IsMultiplayerAuthority()) return;
-        if (rawEvent is not InputEventMouseMotion mouseMotion) return;
+
+        if (rawEvent.IsActionPressed("ui_cancel"))
+            Input.MouseMode = Input.MouseMode switch
+            {
+                Input.MouseModeEnum.Captured => Input.MouseModeEnum.Visible,
+                _ => Input.MouseModeEnum.Captured,
+            };
+
+        if (rawEvent is InputEventMouseMotion mouseMotion) ProcessRotation(mouseMotion);
+    }
+
+    private void ProcessRotation(InputEventMouseMotion mouseMotion)
+    {
+        if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
         rotationY -= mouseMotion.Relative.X * verticalSensitivity;
         rotationX -= mouseMotion.Relative.Y * horizontalSensitivity;

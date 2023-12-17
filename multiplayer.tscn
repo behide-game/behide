@@ -1,16 +1,63 @@
-[gd_scene load_steps=7 format=3 uid="uid://bq63a6mdt3w4"]
+[gd_scene load_steps=18 format=3 uid="uid://bq63a6mdt3w4"]
 
 [ext_resource type="Script" path="res://Scripts/Networking/NetworkManager.cs" id="1_di555"]
+[ext_resource type="Material" uid="uid://m80rmki4fbox" path="res://sky/night_sky.tres" id="4_f4nhd"]
 [ext_resource type="Script" path="res://Scripts/UI/UIManager.cs" id="4_joo3b"]
 [ext_resource type="Script" path="res://Scripts/UI/LogStack.cs" id="4_sr8pm"]
 
+[sub_resource type="Sky" id="Sky_ieg05"]
+sky_material = ExtResource("4_f4nhd")
+
+[sub_resource type="Environment" id="Environment_aryiw"]
+background_mode = 2
+sky = SubResource("Sky_ieg05")
+ambient_light_source = 3
+ambient_light_color = Color(0.45098, 0.333333, 0.309804, 1)
+ambient_light_energy = 0.5
+reflected_light_source = 2
+tonemap_mode = 2
+ssr_enabled = true
+ssr_max_steps = 128
+ssao_enabled = true
+sdfgi_enabled = true
+glow_enabled = true
+glow_bloom = 0.2
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.003
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_4a32d"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g3t4d"]
-albedo_color = Color(0.360784, 0, 0, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4lxdw"]
+metallic = 1.0
+metallic_specular = 0.0
+roughness = 0.3
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ch3tv"]
 size = Vector3(2, 0.4, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_532ao"]
+albedo_color = Color(0, 0, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lsdqq"]
+material = SubResource("StandardMaterial3D_532ao")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wmulr"]
+albedo_color = Color(0, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3wwuh"]
+material = SubResource("StandardMaterial3D_wmulr")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_38yag"]
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wlohe"]
+material = SubResource("StandardMaterial3D_38yag")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l5tob"]
+albedo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0cf8p"]
+material = SubResource("StandardMaterial3D_l5tob")
 
 [node name="multiplayer" type="Node3D"]
 
@@ -64,6 +111,9 @@ script = ExtResource("4_sr8pm")
 
 [node name="World" type="Node3D" parent="."]
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World"]
+environment = SubResource("Environment_aryiw")
+
 [node name="Light" type="DirectionalLight3D" parent="World"]
 transform = Transform3D(0.979768, -0.0894539, 0.179033, 0, 0.894552, 0.446963, -0.200137, -0.43792, 0.876454, 0, 4.47552, 0)
 
@@ -72,11 +122,27 @@ transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
 
 [node name="Plane" type="MeshInstance3D" parent="World/Ground"]
 mesh = SubResource("PlaneMesh_4a32d")
-surface_material_override/0 = SubResource("StandardMaterial3D_g3t4d")
+surface_material_override/0 = SubResource("StandardMaterial3D_4lxdw")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="World/Ground"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
 shape = SubResource("BoxShape3D_ch3tv")
+
+[node name="Cube blue" type="MeshInstance3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 3)
+mesh = SubResource("BoxMesh_lsdqq")
+
+[node name="Cube green" type="MeshInstance3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, 0)
+mesh = SubResource("BoxMesh_3wwuh")
+
+[node name="Cube yellow" type="MeshInstance3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 0)
+mesh = SubResource("BoxMesh_wlohe")
+
+[node name="Cube purple" type="MeshInstance3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -3)
+mesh = SubResource("BoxMesh_0cf8p")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://player.tscn")
