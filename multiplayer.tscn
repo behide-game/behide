@@ -82,10 +82,9 @@ shape = SubResource("BoxShape3D_ch3tv")
 _spawnable_scenes = PackedStringArray("res://player.tscn")
 spawn_path = NodePath("..")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(0.825015, -0.249057, 0.507268, 0, 0.897643, 0.440723, -0.565111, -0.363603, 0.740569, 3, 3, 3)
 
 [connection signal="TextLogged" from="Managers/UIManager" to="UI/LogStack" method="LogMessage"]
 [connection signal="pressed" from="UI/Buttons/Client" to="Managers/NetworkManager" method="StartClient"]
 [connection signal="pressed" from="UI/Buttons/Server" to="Managers/NetworkManager" method="StartHost"]
-[connection signal="spawned" from="MultiplayerSpawner" to="Managers/UIManager" method="Log" binds= ["\"Spawned\""]]

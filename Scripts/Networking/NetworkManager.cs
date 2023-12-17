@@ -8,6 +8,7 @@ public partial class NetworkManager : Node3D
     private Signaling signaling = null!;
     private WebRtcMultiplayerPeer multiplayer = null!;
     private int nextPeerId = 2;
+    private bool ready = false;
 
     public override void _EnterTree()
     {
@@ -18,6 +19,7 @@ public partial class NetworkManager : Node3D
 
     public async void StartHost()
     {
+        ready = true;
         multiplayer.CreateServer();
         Multiplayer.MultiplayerPeer = multiplayer;
 
@@ -35,6 +37,12 @@ public partial class NetworkManager : Node3D
 
     public async void StartClient()
     {
+        if (ready)
+        {
+            SpawnPlayers();
+            return;
+        }
+
         multiplayer.CreateClient(2);
         Multiplayer.MultiplayerPeer = multiplayer;
 
@@ -61,5 +69,24 @@ public partial class NetworkManager : Node3D
         multiplayer.AddPeer(peer.GetPeerConnection(), 1);
 
         _ = peer.Connect();
+    }
+
+    public void SpawnPlayers()
+    {
+        var mainNode = GetNode("/root/multiplayer");
+
+        System.Action<string> spawnPlayer = playerId =>
+        {
+            var playerPrefab = GD.Load<PackedScene>("res://player.tscn");
+            var playerNode = playerPrefab.Instantiate();
+            playerNode.Name = playerId;
+
+            mainNode.AddChild(playerNode);
+        };
+
+        spawnPlayer("1");
+
+        foreach (var peer in multiplayer.GetPeers())
+            spawnPlayer(peer.Key.AsInt32().ToString());
     }
 }
