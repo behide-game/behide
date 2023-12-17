@@ -6,6 +6,8 @@ public partial class PlayerMovements : CharacterBody3D
 {
     private Node3D camera = null!;
 
+    // Move speed in m/s
+    [Export] private int moveSpeed = 8;
     // Rotation sensitivities
     [Export] private float verticalSensitivity = 0.005f;
     [Export] private float horizontalSensitivity = 0.005f;
@@ -14,18 +16,16 @@ public partial class PlayerMovements : CharacterBody3D
     private float rotationX = 0f;
     private float rotationY = 0f;
 
-
-    public override void _EnterTree()
+    public override void _EnterTree() => SetMultiplayerAuthority(int.Parse(Name));
+    public override void _Ready()
     {
-        SetMultiplayerAuthority(int.Parse(Name));
-        if (!IsMultiplayerAuthority()) return;
-
         // Delete main camera
         Node? cameraNode = GetNodeOrNull("/root/multiplayer/Camera");
         cameraNode?.QueueFree();
 
         // Set camera
         camera = GetNode<Node3D>("./CameraDisk");
+        if (!IsMultiplayerAuthority()) camera.QueueFree();
     }
 
     public override void _PhysicsProcess(double delta)
@@ -45,27 +45,28 @@ public partial class PlayerMovements : CharacterBody3D
         if (Input.IsActionPressed("move_forward")) direction.Z -= 1.0f;
 
         if (direction != Vector3.Zero) direction = direction.Normalized().Rotated(Vector3.Up, rotationY);
-        Velocity = direction * 8; // Speed in m/s
+        Velocity = direction * moveSpeed;
 
         MoveAndSlide();
     }
 
     public override void _Input(InputEvent rawEvent)
     {
+        if (!IsMultiplayerAuthority()) return;
         if (rawEvent is not InputEventMouseMotion mouseMotion) return;
 
         rotationY -= mouseMotion.Relative.X * verticalSensitivity;
         rotationX -= mouseMotion.Relative.Y * horizontalSensitivity;
         rotationX = System.Math.Clamp(rotationX, -1, 1);
 
-        // Left / Right
+        // Left / Right (rotate the whole player)
         var transform = Transform;
         transform.Basis = Basis.Identity;
         Transform = transform;
 
         Rotate(Vector3.Up, rotationY);
 
-        // Up / Down
+        // Up / Down (Rotate camera disk)
         var cameraTransform = camera.Transform;
         cameraTransform.Basis = Basis.Identity;
         camera.Transform = cameraTransform;
