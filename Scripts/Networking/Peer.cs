@@ -10,13 +10,13 @@ using Behide.OnlineServices;
 /// <summary>
 /// Interface of Peer.gd
 /// </summary>
-partial class PeerConnection : GodotObject
+class PeerConnection
 {
     public event Action<SdpDescription>? SessionDescriptionCreated;
     public event Action<IceCandidate>? IceCandidateCreated;
     public IceCandidate[] createdIceCandidates = [];
 
-    private Godot.Collections.Dictionary iceServers = new() {
+    private readonly Godot.Collections.Dictionary iceServers = new() {
         {
             "iceServers",
             new Godot.Collections.Array {
@@ -25,29 +25,29 @@ partial class PeerConnection : GodotObject
                 },
                 new Godot.Collections.Dictionary {
                     { "urls", "turn:a.relay.metered.ca:80" },
-                    { "username", "11822db4820edb041e79dfac" },
-                    { "credential", "Y1jxzNaC9poLjl7t" }
+                    { "username", "TO REPLACE WITH SECRETS" },
+                    { "credential", "TO REPLACE WITH SECRETS" }
                 },
                 new Godot.Collections.Dictionary {
                     { "urls", "turn:a.relay.metered.ca:80?transport=tcp" },
-                    { "username", "11822db4820edb041e79dfac" },
-                    { "credential", "Y1jxzNaC9poLjl7t" }
+                    { "username", "TO REPLACE WITH SECRETS" },
+                    { "credential", "TO REPLACE WITH SECRETS" }
                 },
                 new Godot.Collections.Dictionary {
                     { "urls", "turn:a.relay.metered.ca:443" },
-                    { "username", "11822db4820edb041e79dfac" },
-                    { "credential", "Y1jxzNaC9poLjl7t" }
+                    { "username", "TO REPLACE WITH SECRETS" },
+                    { "credential", "TO REPLACE WITH SECRETS" }
                 },
                 new Godot.Collections.Dictionary {
                     { "urls", "turn:a.relay.metered.ca:443?transport=tcp" },
-                    { "username", "11822db4820edb041e79dfac" },
-                    { "credential", "Y1jxzNaC9poLjl7t" }
+                    { "username", "TO REPLACE WITH SECRETS" },
+                    { "credential", "TO REPLACE WITH SECRETS" }
                 }
             }
         }
     };
 
-    private WebRtcPeerConnection peer;
+    private readonly WebRtcPeerConnection peer;
 
     public PeerConnection()
     {
@@ -61,14 +61,15 @@ partial class PeerConnection : GodotObject
         peer.IceCandidateCreated += (string media, long index, string name) =>
         {
             var ic = new IceCandidate(media, (int)index, name);
-            createdIceCandidates = [.. createdIceCandidates, ic];
-            IceCandidateCreated?.Invoke(ic);
+            if (IceCandidateCreated is null)
+                createdIceCandidates = [..createdIceCandidates, ic];
+            else
+                IceCandidateCreated.Invoke(ic);
         };
 
         peer.Initialize(iceServers);
     }
 
-    // To check (use channel state instead)
     public bool IsConnected() => peer.GetConnectionState() == WebRtcPeerConnection.ConnectionState.Connected;
 
     public Error Poll() => peer.Poll();
@@ -82,10 +83,9 @@ partial class PeerConnection : GodotObject
 
 /// <summary>
 /// <para>This class manage a WebRTC peer connection.</para>
-/// <para>TLDR: It connects WebRTC using a Signaling instance.</para>
-/// <para>It fetches offer, publishes answer and exchanges ice candidates using the Signaling instance passed in his constructor.</para>
+/// <para>It fetches offer, publishes answer and exchanges ice candidates.</para>
 /// </summary>
-class ClientPeerConnection(Signaling signaling, OfferId offerId)
+class AnswerPeerConnection(Signaling signaling, OfferId offerId)
 {
     private readonly PeerConnection peer = new();
 
@@ -116,6 +116,7 @@ class ClientPeerConnection(Signaling signaling, OfferId offerId)
         // Receive
         foreach (var ic in signaling.receivedIceCandidates) peer.AddIceCandidate(ic);
         signaling.IceCandidateReceived += peer.AddIceCandidate;
+        signaling.receivedIceCandidates = [];
 
         // Send
         peer.IceCandidateCreated += ic => _ = signaling.SendIceCandidate(offerId, ic);
@@ -127,9 +128,9 @@ class ClientPeerConnection(Signaling signaling, OfferId offerId)
 
 /// <summary>
 /// <para>This class manage a WebRTC peer connection.</para>
-/// <para>It publishes offer and exchanges ice candidates using the Signaling instance passed in it's constructor.</para>
+/// <para>It publishes offer, receives answer and exchanges ice candidates.</para>
 /// </summary>
-class HostPeerConnection(Signaling signaling)
+class OfferPeerConnection(Signaling signaling)
 {
     private readonly PeerConnection peer = new();
     public event Action? PeerConnected;
@@ -168,6 +169,7 @@ class HostPeerConnection(Signaling signaling)
         // Receive
         signaling.IceCandidateReceived += peer.AddIceCandidate;
         foreach (var ic in signaling.receivedIceCandidates) peer.AddIceCandidate(ic);
+        signaling.receivedIceCandidates = [];
 
         // Send
         peer.IceCandidateCreated += ic => _ = signaling.SendIceCandidate(offerId, ic);

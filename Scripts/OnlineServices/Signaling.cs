@@ -111,8 +111,10 @@ public partial class Signaling : Node
         };
         hub.IceCandidateReceived += ic =>
         {
-            receivedIceCandidates = [..receivedIceCandidates, ic];
-            IceCandidateReceived?.Invoke(ic);
+            if (IceCandidateReceived is null)
+                receivedIceCandidates = [..receivedIceCandidates, ic];
+            else
+                IceCandidateReceived.Invoke(ic);
         };
 
         switch (await hub.Start())

@@ -7,6 +7,7 @@ public partial class NetworkManager : Node3D
 {
     private Signaling signaling = null!;
     private WebRtcMultiplayerPeer multiplayer = null!;
+    private int nextPeerId = 2;
 
     public override void _EnterTree()
     {
@@ -23,9 +24,8 @@ public partial class NetworkManager : Node3D
         // Handle new connection
         signaling.OfferIdCreationRequested += () =>
         {
-            var peer = new HostPeerConnection(signaling);
-            var peerId = new System.Random().Next(2, int.MaxValue);
-            multiplayer.AddPeer(peer.GetPeerConnection(), peerId);
+            var peer = new OfferPeerConnection(signaling);
+            multiplayer.AddPeer(peer.GetPeerConnection(), nextPeerId++);
 
             return peer.CreateOffer();
         };
@@ -57,7 +57,7 @@ public partial class NetworkManager : Node3D
             _ => throw new System.NotImplementedException()
         };
 
-        var peer = new ClientPeerConnection(signaling, offerId);
+        var peer = new AnswerPeerConnection(signaling, offerId);
         multiplayer.AddPeer(peer.GetPeerConnection(), 1);
 
         _ = peer.Connect();
