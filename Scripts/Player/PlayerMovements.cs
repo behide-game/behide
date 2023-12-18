@@ -6,6 +6,9 @@ public partial class PlayerMovements : CharacterBody3D
 {
     private Node3D camera = null!;
 
+    // Get the gravity from the project settings to be synced with RigidBody nodes.
+    private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+
     // Move speed in m/s
     [Export] private int moveSpeed = 8;
     // Rotation sensitivities
@@ -39,18 +42,41 @@ public partial class PlayerMovements : CharacterBody3D
             return;
         }
 
-        var direction = Vector3.Zero;
+        Vector3 velocity = Velocity;
 
-        // We check for each move input and update the direction accordingly.
-        if (Input.IsActionPressed("move_right")) direction.X += 1.0f;
-        if (Input.IsActionPressed("move_left")) direction.X -= 1.0f;
-        if (Input.IsActionPressed("move_back")) direction.Z += 1.0f;
-        if (Input.IsActionPressed("move_forward")) direction.Z -= 1.0f;
+        // Add the gravity.
+        if (!IsOnFloor())
+            velocity.Y -= gravity * (float)delta;
 
-        if (direction != Vector3.Zero) direction = direction.Normalized().Rotated(Vector3.Up, rotationY);
-        Velocity = direction * moveSpeed;
+        // Get the input direction and handle the movement/deceleration.
+        Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
+        Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+        if (direction != Vector3.Zero)
+        {
+            velocity.X = direction.X * moveSpeed;
+            velocity.Z = direction.Z * moveSpeed;
+        }
+        else
+        {
+            velocity.X = Mathf.MoveToward(Velocity.X, 0, moveSpeed);
+            velocity.Z = Mathf.MoveToward(Velocity.Z, 0, moveSpeed);
+        }
 
+        Velocity = velocity;
         MoveAndSlide();
+
+        // Propagate collisions
+        for (var i = 0; i < GetSlideCollisionCount(); i++)
+        {
+            var collision = GetSlideCollision(i);
+            var collider = collision.GetCollider();
+
+            if (collider is RigidBody3D rb)
+            {
+                rb.ApplyCentralImpulse(collision.GetNormal() * -0.3f);
+                // rb.ApplyImpulse(collision.GetNormal() * -0.1f, collision.GetPosition());
+            }
+        }
     }
 
     public override void _Input(InputEvent rawEvent)

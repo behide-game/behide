@@ -1,9 +1,9 @@
 [gd_resource type="Environment" load_steps=4 format=3 uid="uid://bewpkim0upd8b"]
 
-[ext_resource type="Shader" path="res://stylized_sky.gdshader" id="1_gxw5i"]
+[ext_resource type="Shader" path="res://sky/stylized_sky.gdshader" id="1_k7wh5"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_m8wmg"]
-shader = ExtResource("1_gxw5i")
+shader = ExtResource("1_k7wh5")
 shader_parameter/clouds_samples = 16
 shader_parameter/shadow_sample = 4
 shader_parameter/clouds_density = 0.5

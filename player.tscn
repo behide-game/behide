@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://c1m24mholrw3n"]
+[gd_scene load_steps=6 format=3 uid="uid://c43borx3s3d4b"]
 
 [ext_resource type="Script" path="res://Scripts/Player/PlayerMovements.cs" id="1_n4a4i"]
 
@@ -25,11 +25,11 @@ skeleton = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_arefm")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_2qgvv")
-
 [node name="CameraDisk" type="Node3D" parent="."]
 
 [node name="Camera" type="Camera3D" parent="CameraDisk"]
 transform = Transform3D(0.998434, -0.000875793, 0.0559366, -0.00350298, 0.996937, 0.0781348, -0.0558337, -0.0782084, 0.995372, 1.6, 1.6, 5)
 keep_aspect = 0
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_2qgvv")
