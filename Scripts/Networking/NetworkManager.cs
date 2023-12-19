@@ -6,14 +6,13 @@ using Behide.OnlineServices;
 public partial class NetworkManager : Node3D
 {
     private Signaling signaling = null!;
-    private WebRtcMultiplayerPeer multiplayer = null!;
+    private WebRtcMultiplayerPeer multiplayer = new();
     private int nextPeerId = 2;
     private bool ready = false;
 
     public override void _EnterTree()
     {
         signaling = GetNode<Signaling>("/root/WebRtcSignaling");
-        multiplayer = new WebRtcMultiplayerPeer();
         multiplayer.PeerConnected += peerId => GD.Print("Peer connected: ", peerId);
     }
 

@@ -72,12 +72,18 @@ public partial class PlayerMovements : CharacterBody3D
             var collider = collision.GetCollider();
 
             if (collider is RigidBody3D rb)
-            {
-                rb.ApplyCentralImpulse(collision.GetNormal() * -0.3f);
-                // rb.ApplyImpulse(collision.GetNormal() * -0.1f, collision.GetPosition());
-            }
+                RpcId(
+                    rb.GetMultiplayerAuthority(),
+                    nameof(PushRigidbody),
+                    rb.GetPath(),
+                    collision.GetNormal() * -0.3f
+                );
         }
     }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+    private void PushRigidbody(string rbNodePath, Vector3 impulse) =>
+        GetNode<RigidBody3D>(rbNodePath).ApplyCentralImpulse(impulse);
 
     public override void _Input(InputEvent rawEvent)
     {
