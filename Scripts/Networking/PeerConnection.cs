@@ -27,23 +27,23 @@ class PeerConnection
                 },
                 new Godot.Collections.Dictionary {
                     { "urls", "turn:a.relay.metered.ca:80" },
-                    { "username", "TO REPLACE WITH SECRETS" },
-                    { "credential", "TO REPLACE WITH SECRETS" }
+                    { "username", Secrets.RelayUsername },
+                    { "credential", Secrets.RelayPassword }
                 },
                 new Godot.Collections.Dictionary {
                     { "urls", "turn:a.relay.metered.ca:80?transport=tcp" },
-                    { "username", "TO REPLACE WITH SECRETS" },
-                    { "credential", "TO REPLACE WITH SECRETS" }
+                    { "username", Secrets.RelayUsername },
+                    { "credential", Secrets.RelayPassword }
                 },
                 new Godot.Collections.Dictionary {
                     { "urls", "turn:a.relay.metered.ca:443" },
-                    { "username", "TO REPLACE WITH SECRETS" },
-                    { "credential", "TO REPLACE WITH SECRETS" }
+                    { "username", Secrets.RelayUsername },
+                    { "credential", Secrets.RelayPassword }
                 },
                 new Godot.Collections.Dictionary {
                     { "urls", "turn:a.relay.metered.ca:443?transport=tcp" },
-                    { "username", "TO REPLACE WITH SECRETS" },
-                    { "credential", "TO REPLACE WITH SECRETS" }
+                    { "username", Secrets.RelayUsername },
+                    { "credential", Secrets.RelayPassword }
                 }
             }
         }

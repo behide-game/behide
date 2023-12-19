@@ -25,7 +25,7 @@ class SignalingHub
         try
         {
             hub = new HubConnectionBuilder()
-                .WithUrl("http://127.0.0.1:5001/webrtc-signaling")
+                .WithUrl(Secrets.SignalingHubUrl)
                 .WithAutomaticReconnect()
                 .ConfigureLogging(options =>
                 {
