@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FSharp.Core;
 
-using GodotInterop.Logger;
+using Behide.GodotInterop;
 
 class SignalingHub
 {
@@ -155,8 +155,5 @@ public partial class Signaling : Node
     }
 
     public Task SendAnswer(OfferId offerId, SdpDescription sdpAnswer) => hub.SendAnswer(offerId, sdpAnswer);
-        // await hubConnection.InvokeAsync<FSharpOption<SdpDescription>>("SendAnswer", offerId, sdpAnswer);
-        // TODO: Check if this ^ changed line don't break anything
-
     public Task SendIceCandidate(OfferId offerId, IceCandidate iceCandidate) => hub.SendIceCandidate(offerId, iceCandidate);
 }

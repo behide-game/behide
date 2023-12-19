@@ -8,7 +8,9 @@ using Behide.OnlineServices;
 
 
 /// <summary>
-/// Interface of Peer.gd
+/// Use Peer.gd to instantiate a WebRtcPeerConnection
+/// See https://github.com/godotengine/webrtc-native/issues/116
+/// Wait https://github.com/godotengine/godot/pull/84947 to be merged
 /// </summary>
 class PeerConnection
 {
@@ -87,7 +89,7 @@ class PeerConnection
 /// </summary>
 class AnswerPeerConnection(Signaling signaling, OfferId offerId)
 {
-    private readonly PeerConnection peer = new();
+    private readonly PeerConnection peerConnection = new();
 
     /// <summary>
     /// Connect the underlying RTC peer.
@@ -99,31 +101,31 @@ class AnswerPeerConnection(Signaling signaling, OfferId offerId)
         var offer = await signaling.GetOffer(offerId);
 
         // Await local sdp
-        peer.SessionDescriptionCreated += async sdp =>
+        peerConnection.SessionDescriptionCreated += async sdp =>
         {
             await signaling.SendAnswer(offerId, sdp);
             ExchangeIceCandidates(offerId);
         };
 
         // Inject offer into local peer
-        peer.SetRemoteSdpDescription(offer);
+        peerConnection.SetRemoteSdpDescription(offer);
 
-        await GDTask.WaitUntil(peer.IsConnected);
+        await GDTask.WaitUntil(peerConnection.IsConnected);
     }
 
     private void ExchangeIceCandidates(OfferId offerId)
     {
         // Receive
-        foreach (var ic in signaling.receivedIceCandidates) peer.AddIceCandidate(ic);
-        signaling.IceCandidateReceived += peer.AddIceCandidate;
+        foreach (var ic in signaling.receivedIceCandidates) peerConnection.AddIceCandidate(ic);
+        signaling.IceCandidateReceived += peerConnection.AddIceCandidate;
         signaling.receivedIceCandidates = [];
 
         // Send
-        peer.IceCandidateCreated += ic => _ = signaling.SendIceCandidate(offerId, ic);
-        foreach (var ic in peer.createdIceCandidates) _ = signaling.SendIceCandidate(offerId, ic);
+        peerConnection.IceCandidateCreated += ic => _ = signaling.SendIceCandidate(offerId, ic);
+        foreach (var ic in peerConnection.createdIceCandidates) _ = signaling.SendIceCandidate(offerId, ic);
     }
 
-    public WebRtcPeerConnection GetPeerConnection() => peer.GetPeerConnection();
+    public WebRtcPeerConnection GetPeerConnection() => peerConnection.GetPeerConnection();
 }
 
 /// <summary>
@@ -132,7 +134,7 @@ class AnswerPeerConnection(Signaling signaling, OfferId offerId)
 /// </summary>
 class OfferPeerConnection(Signaling signaling)
 {
-    private readonly PeerConnection peer = new();
+    private readonly PeerConnection peerConnection = new();
     public event Action? PeerConnected;
 
     /// <summary>
@@ -144,7 +146,7 @@ class OfferPeerConnection(Signaling signaling)
         var offerIdTcs = new TaskCompletionSource<OfferId>();
 
         // SDP offer created => Publish offer
-        peer.SessionDescriptionCreated += async sdp =>
+        peerConnection.SessionDescriptionCreated += async sdp =>
         {
             var offerId = await signaling.AddOffer(sdp);
             offerIdTcs.TrySetResult(offerId);
@@ -153,28 +155,28 @@ class OfferPeerConnection(Signaling signaling)
         // Handle answer
         signaling.SdpAnswerReceived += async answer =>
         {
-            peer.SetRemoteSdpDescription(answer);
+            peerConnection.SetRemoteSdpDescription(answer);
             ExchangeIceCandidates(await offerIdTcs.Task);
 
-            await GDTask.WaitUntil(peer.IsConnected);
+            await GDTask.WaitUntil(peerConnection.IsConnected);
             PeerConnected?.Invoke();
         };
 
-        peer.CreateOffer();
+        peerConnection.CreateOffer();
         return await offerIdTcs.Task;
     }
 
     private void ExchangeIceCandidates(OfferId offerId)
     {
         // Receive
-        signaling.IceCandidateReceived += peer.AddIceCandidate;
-        foreach (var ic in signaling.receivedIceCandidates) peer.AddIceCandidate(ic);
+        signaling.IceCandidateReceived += peerConnection.AddIceCandidate;
+        foreach (var ic in signaling.receivedIceCandidates) peerConnection.AddIceCandidate(ic);
         signaling.receivedIceCandidates = [];
 
         // Send
-        peer.IceCandidateCreated += ic => _ = signaling.SendIceCandidate(offerId, ic);
-        foreach (var ic in peer.createdIceCandidates) _ = signaling.SendIceCandidate(offerId, ic);
+        peerConnection.IceCandidateCreated += ic => _ = signaling.SendIceCandidate(offerId, ic);
+        foreach (var ic in peerConnection.createdIceCandidates) _ = signaling.SendIceCandidate(offerId, ic);
     }
 
-    public WebRtcPeerConnection GetPeerConnection() => peer.GetPeerConnection();
+    public WebRtcPeerConnection GetPeerConnection() => peerConnection.GetPeerConnection();
 }

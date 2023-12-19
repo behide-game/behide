@@ -1,4 +1,4 @@
-namespace GodotInterop.Logger;
+namespace Behide.GodotInterop;
 
 using Godot;
 

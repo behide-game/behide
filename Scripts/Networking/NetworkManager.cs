@@ -74,14 +74,14 @@ public partial class NetworkManager : Node3D
     {
         var mainNode = GetNode("/root/multiplayer");
 
-        System.Action<string> spawnPlayer = playerId =>
+        void spawnPlayer(string playerId)
         {
             var playerPrefab = GD.Load<PackedScene>("res://player.tscn");
             var playerNode = playerPrefab.Instantiate();
             playerNode.Name = playerId;
 
             mainNode.AddChild(playerNode);
-        };
+        }
 
         spawnPlayer("1");
 

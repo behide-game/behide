@@ -1,6 +1,8 @@
+namespace Behide;
+
 using Microsoft.FSharp.Core;
 
-class Option<T>
+public class Option<T>
 {
     static public FSharpOption<T> FromNullable(T? nullable) =>
         nullable switch
