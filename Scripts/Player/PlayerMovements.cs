@@ -45,8 +45,7 @@ public partial class PlayerMovements : CharacterBody3D
         Vector3 velocity = Velocity;
 
         // Add the gravity.
-        if (!IsOnFloor())
-            velocity.Y -= gravity * (float)delta;
+        if (!IsOnFloor()) velocity.Y -= gravity * (float)delta;
 
         // Get the input direction and handle the movement/deceleration.
         Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");

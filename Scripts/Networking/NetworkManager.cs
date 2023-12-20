@@ -31,7 +31,12 @@ public partial class NetworkManager : Node3D
             return peer.CreateOffer();
         };
 
-        GD.Print(await signaling.CreateRoom());
+        var res = await signaling.CreateRoom();
+        GetNode<TextEdit>("/root/multiplayer/UI/RoomIdField").Text = res switch
+        {
+            Result<RoomId>.Ok roomId => RoomId.raw(roomId.Value),
+            _ => "error",
+        };
     }
 
     public async void StartClient()
@@ -76,7 +81,7 @@ public partial class NetworkManager : Node3D
 
         void spawnPlayer(string playerId)
         {
-            var playerPrefab = GD.Load<PackedScene>("res://player.tscn");
+            var playerPrefab = GD.Load<PackedScene>("res://Prefabs/player.tscn");
             var playerNode = playerPrefab.Instantiate();
             playerNode.Name = playerId;
 

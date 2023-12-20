@@ -1,9 +1,0 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://djdc0jxhlvkxa"]
-
-[resource]
-metallic = 1.0
-roughness = 0.18
-emission = Color(1, 0, 0, 1)
-emission_energy_multiplier = 0.08
-backlight = Color(1, 0, 1, 1)
-grow_amount = -0.025
