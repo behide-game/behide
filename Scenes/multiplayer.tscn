@@ -93,6 +93,7 @@ script = ExtResource("3_u0l6o")
 [node name="World" type="Node3D" parent="."]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="World"]
+_spawnable_scenes = PackedStringArray("res://Prefabs/player.tscn")
 spawn_path = NodePath("../..")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="World"]
