@@ -1,23 +1,39 @@
-#nullable disable
 namespace Behide.Game;
 
 using Godot;
 
+[Tool]
 public partial class BehideObject : RigidBody3D
 {
-    [Export] private BehideObjectData behideObject;
-
-    public override void _Ready()
+    private Resource? _resource;
+    [Export] public Resource? resource
     {
-        // Set mass
-        Mass = behideObject.Mass;
+        get => _resource;
+        set
+        {
+            _resource = value;
+            if (Engine.IsEditorHint())
+            {
+                if (value is null) return;
+                ReloadResource(value);
+            }
+        }
+    }
 
-        // Set visual mesh
-        GetNode<MeshInstance3D>("./MeshInstance3D").Mesh = behideObject.Mesh;
+    public override void _EnterTree()
+    {
+        if (Engine.IsEditorHint()) return;
+        ReloadResource(resource!);
+    }
 
-        // // Set collision shape
-        var collisionShapeNode = GetNode<CollisionShape3D>("./CollisionShape3D");
-        // collisionShapeNode.Shape = behideObject.Shape;
-        collisionShapeNode.Disabled = false;
+    public void ReloadResource(Resource behideObject)
+    {
+        var mass = behideObject.Get("Mass").As<float>();
+        var mesh = behideObject.Get("Mesh").As<Mesh>();
+        var shape = behideObject.Get("Shape").As<Shape3D>();
+
+        Mass = mass;
+        GetNode<MeshInstance3D>("./MeshInstance3D").Mesh = mesh;
+        GetNode<CollisionShape3D>("./CollisionShape3D").Shape = shape;
     }
 }
