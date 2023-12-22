@@ -1,6 +1,6 @@
 [gd_resource type="Environment" load_steps=4 format=3 uid="uid://bewpkim0upd8b"]
 
-[ext_resource type="Shader" path="res://sky/stylized_sky.gdshader" id="1_k7wh5"]
+[ext_resource type="Shader" path="res://Sky/stylized_sky.gdshader" id="1_k7wh5"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_m8wmg"]
 shader = ExtResource("1_k7wh5")

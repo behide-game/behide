@@ -103,9 +103,11 @@ public partial class PlayerMovements : CharacterBody3D
     {
         if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
+        var maxRot = Mathf.DegToRad(90);
+
         rotationY -= mouseMotion.Relative.X * verticalSensitivity;
         rotationX -= mouseMotion.Relative.Y * horizontalSensitivity;
-        rotationX = System.Math.Clamp(rotationX, -1, 1);
+        rotationX = System.Math.Clamp(rotationX, -maxRot, maxRot);
 
         // Left / Right (rotate the whole player)
         var transform = Transform;
