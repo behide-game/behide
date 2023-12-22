@@ -1,0 +1,10 @@
+# Godot 4+ specific ignores
+.godot/
+
+bin/
+obj/
+.vs/
+
+Builds/
+.env
+webrtc/

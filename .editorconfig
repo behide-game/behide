@@ -1,0 +1,12 @@
+[*]
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.csproj]
+indent_size = 2
+
+
+[*.gd]
+indent_style = tab
