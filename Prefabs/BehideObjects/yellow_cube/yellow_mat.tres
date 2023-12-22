@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bkjqm002m5sap"]
+
+[resource]
+albedo_color = Color(1, 1, 0, 1)
+roughness = 0.4
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+grow_amount = 0.451
+distance_fade_min_distance = 2.0
+distance_fade_max_distance = 3.0
