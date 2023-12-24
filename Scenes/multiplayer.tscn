@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://bq63a6mdt3w4"]
+[gd_scene load_steps=14 format=3 uid="uid://bq63a6mdt3w4"]
 
 [ext_resource type="Script" path="res://Scripts/Networking/NetworkManager.cs" id="1_sutpi"]
 [ext_resource type="Script" path="res://Scripts/UI/UIManager.cs" id="2_onner"]
+[ext_resource type="Script" path="res://Scripts/RoomManager.cs" id="3_i6hkt"]
 [ext_resource type="Script" path="res://Scripts/UI/LogStack.cs" id="3_u0l6o"]
 [ext_resource type="Environment" uid="uid://c8ttkksgix01d" path="res://Scenes/environment.tres" id="4_tyqxg"]
 [ext_resource type="PackedScene" uid="uid://cuuh5753pn6hj" path="res://Prefabs/behide_object.tscn" id="6_s06yr"]
@@ -25,6 +26,9 @@ script = ExtResource("1_sutpi")
 
 [node name="UIManager" type="Node3D" parent="Managers"]
 script = ExtResource("2_onner")
+
+[node name="RoomManager" type="Node3D" parent="Managers"]
+script = ExtResource("3_i6hkt")
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -137,12 +141,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 6)
 resource = ExtResource("10_wgnhc")
 
 [node name="Ball8" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -6)
 resource = ExtResource("10_wgnhc")
 
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(0.825015, -0.249057, 0.507268, 0, 0.897643, 0.440723, -0.565111, -0.363603, 0.740569, 3, 3, 3)
 
 [connection signal="TextLogged" from="Managers/UIManager" to="UI/LogStack" method="LogMessage"]
-[connection signal="pressed" from="UI/Buttons/Client" to="Managers/NetworkManager" method="StartClient"]
-[connection signal="pressed" from="UI/Buttons/Server" to="Managers/NetworkManager" method="StartHost"]
+[connection signal="pressed" from="UI/Buttons/Client" to="Managers/RoomManager" method="JoinRoom"]
+[connection signal="pressed" from="UI/Buttons/Server" to="Managers/RoomManager" method="CreateRoom"]
