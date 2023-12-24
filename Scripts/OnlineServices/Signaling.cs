@@ -12,13 +12,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FSharp.Core;
 
 using Behide.GodotInterop;
+using System.Collections.Generic;
+
 
 class SignalingHub
 {
     private HubConnection hub = null!;
-    public event Action<SdpDescription>? SdpAnswerReceived;
-    public event Action<IceCandidate>? IceCandidateReceived;
-    public event Func<Task<OfferId?>>? OfferIdCreationRequested;
+    public event Action<OfferId, SdpDescription>? SdpAnswerReceived;
+    public event Action<OfferId, IceCandidate>? IceCandidateReceived;
+    public event Func<Task<(int, OfferId)?>>? OfferIdCreationRequested;
 
     public async Task<Result> Start()
     {
@@ -55,37 +57,37 @@ class SignalingHub
     {
         hub.Closed += error => Task.Run(() => GD.PrintErr("SignalR connection closed"));
 
-        hub.On<SdpDescription>("SdpAnswerReceived", answer => SdpAnswerReceived?.Invoke(answer));
-        hub.On<IceCandidate>("IceCandidateReceived", iceCandidate => IceCandidateReceived?.Invoke(iceCandidate));
+        hub.On<OfferId, SdpDescription>("SdpAnswerReceived", (offerId, answer) => SdpAnswerReceived?.Invoke(offerId, answer));
+        hub.On<OfferId, IceCandidate>("IceCandidateReceived", (offerId, iceCandidate) => IceCandidateReceived?.Invoke(offerId, iceCandidate));
 
         hub.On("CreateOffer", async () =>
         {
-            Task<OfferId?>? func = OfferIdCreationRequested?.Invoke();
-            OfferId? res = func is null ? null : await func;
+            var func = OfferIdCreationRequested?.Invoke();
+            var res = func is null ? null : await func;
 
-            return Option<OfferId>.FromNullable(res);
+            return res.HasValue
+                ? FSharpOption<(int, OfferId)>.Some(res.Value)
+                : FSharpOption<(int, OfferId)>.None;
         });
     }
 
-    private async Task<Result<T>> InvokeOption<T>(string methodName, object? arg = null)
+    private async Task<Result<T>> InvokeResult<T>(string methodName, object? arg = null)
     {
-        // GD.Print($"Invoking \"{methodName}\" on hub with {arg} as parameter");
         var res = arg is null
-            ? await hub.InvokeAsync<FSharpOption<T>>(methodName)
-            : await hub.InvokeAsync<FSharpOption<T>>(methodName, arg);
+            ? await hub.InvokeAsync<FSharpResult<T, string>>(methodName)
+            : await hub.InvokeAsync<FSharpResult<T, string>>(methodName, arg);
 
-        if (FSharpOption<T>.get_IsSome(res))
-            return new Result<T>.Ok(res.Value);
-        else
-            return new Result<T>.Error("400 like error");
+        return res.IsOk
+            ? new Result<T>.Ok(res.ResultValue)
+            : new Result<T>.Error(res.ErrorValue);
     }
 
-    public Task<Result<RoomId>> CreateRoom() => InvokeOption<RoomId>("CreateRoom");
-    public Task<Result<OfferId>> JoinRoom(RoomId roomId) => InvokeOption<OfferId>("JoinRoom", roomId);
+    public Task<Result<RoomId>> CreateRoom() => InvokeResult<RoomId>("CreateRoom");
+    public Task<Result<(int, OfferId)>> JoinRoom(RoomId roomId) => InvokeResult<(int, OfferId)>("JoinRoom", roomId);
 
-    public Task<Result<OfferId>>        AddOffer(SdpDescription sdp) => InvokeOption<OfferId>("AddOffer", sdp);
-    public Task<bool>                   DeleteOffer(OfferId offerId) => hub.InvokeAsync<bool>("DeleteOffer", offerId);
-    public Task<Result<SdpDescription>> GetOffer(OfferId offerId)    => InvokeOption<SdpDescription>("GetOffer", offerId);
+    public Task<Result<OfferId>>        AddOffer(SdpDescription sdp) => InvokeResult<OfferId>("AddOffer", sdp);
+    // public Task<bool>                   DeleteOffer(OfferId offerId) => hub.InvokeAsync<bool>("DeleteOffer", offerId);
+    public Task<Result<SdpDescription>> GetOffer(OfferId offerId)    => InvokeResult<SdpDescription>("GetOffer", offerId);
 
     public Task SendAnswer(OfferId offerId, SdpDescription sdp)     => hub.SendAsync("SendAnswer", offerId, sdp);
     public Task SendIceCandidate(OfferId offerId, IceCandidate ice) => hub.SendAsync("SendIceCandidate", offerId, ice);
@@ -94,27 +96,34 @@ class SignalingHub
 public partial class Signaling : Node
 {
     private readonly SignalingHub hub = new();
-    public IceCandidate[] receivedIceCandidates = [];
+    public Dictionary<OfferId, IceCandidate[]> receivedIceCandidates = [];
 
-    public event Action<SdpDescription>? SdpAnswerReceived;
-    public event Action<IceCandidate>? IceCandidateReceived;
-    public event Func<Task<OfferId>>? OfferIdCreationRequested;
+    public event Action<OfferId, SdpDescription>? SdpAnswerReceived;
+    public event Action<OfferId, IceCandidate>? IceCandidateReceived;
+    public event Func<Task<(int, OfferId)>>? OfferIdCreationRequested;
 
     public override async void _EnterTree()
     {
-        hub.SdpAnswerReceived += sdp => SdpAnswerReceived?.Invoke(sdp);
+        hub.SdpAnswerReceived += (offerId, sdp) => SdpAnswerReceived?.Invoke(offerId, sdp);
         hub.OfferIdCreationRequested += async () =>
         {
-            Task<OfferId>? func = OfferIdCreationRequested?.Invoke();
-            OfferId? res = func is null ? null : await func;
-            return res;
+            var func = OfferIdCreationRequested?.Invoke();
+            return func is null ? null : await func;
         };
-        hub.IceCandidateReceived += ic =>
+        hub.IceCandidateReceived += (offerId, iceCandidate) =>
         {
-            if (IceCandidateReceived is null)
-                receivedIceCandidates = [..receivedIceCandidates, ic];
-            else
-                IceCandidateReceived.Invoke(ic);
+            if (IceCandidateReceived is not null)
+            {
+                IceCandidateReceived.Invoke(offerId, iceCandidate);
+                return;
+            }
+
+            var succeed = receivedIceCandidates.TryAdd(offerId, [iceCandidate]);
+            if (!succeed)
+            {
+                receivedIceCandidates.Remove(offerId, out var prevIceCandidates);
+                receivedIceCandidates.Add(offerId, [..prevIceCandidates, iceCandidate]);
+            }
         };
 
         switch (await hub.Start())
@@ -128,7 +137,7 @@ public partial class Signaling : Node
 
 
     public Task<Result<RoomId>> CreateRoom() => hub.CreateRoom();
-    public Task<Result<OfferId>> JoinRoom(RoomId roomId) => hub.JoinRoom(roomId);
+    public Task<Result<(int, OfferId)>> JoinRoom(RoomId roomId) => hub.JoinRoom(roomId);
 
     public async Task<OfferId> AddOffer(SdpDescription sdp)
     {

@@ -22,13 +22,22 @@ public partial class PlayerMovements : CharacterBody3D
     public override void _EnterTree() => SetMultiplayerAuthority(int.Parse(Name));
     public override void _Ready()
     {
+        if (!IsMultiplayerAuthority())
+        {
+            SetProcess(false);
+            SetPhysicsProcess(false);
+
+            // Delete player's camera
+            GetNode<Node3D>("./CameraDisk").QueueFree();
+            return;
+        }
+
         // Delete main camera
         Node? cameraNode = GetNodeOrNull("/root/multiplayer/Camera");
-        cameraNode?.QueueFree();
+        cameraNode.QueueFree();
 
-        // Set camera
+        // Set new camera
         camera = GetNode<Node3D>("./CameraDisk");
-        if (!IsMultiplayerAuthority()) camera.QueueFree();
 
         // Lock mouse
         Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -36,12 +45,6 @@ public partial class PlayerMovements : CharacterBody3D
 
     public override void _PhysicsProcess(double delta)
     {
-        if (!IsMultiplayerAuthority())
-        {
-            MoveAndSlide();
-            return;
-        }
-
         Vector3 velocity = Velocity;
 
         // Add the gravity.

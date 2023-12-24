@@ -5,6 +5,8 @@ using System;
 using System.Threading.Tasks;
 using Fractural.Tasks;
 using Behide.OnlineServices;
+using System.Collections.Generic;
+
 
 
 /// <summary>
@@ -116,9 +118,15 @@ class AnswerPeerConnection(Signaling signaling, OfferId offerId)
     private void ExchangeIceCandidates(OfferId offerId)
     {
         // Receive
-        foreach (var ic in signaling.receivedIceCandidates) peerConnection.AddIceCandidate(ic);
-        signaling.IceCandidateReceived += peerConnection.AddIceCandidate;
-        signaling.receivedIceCandidates = [];
+        signaling.IceCandidateReceived += (receivedOfferId, iceCandidate) =>
+        {
+            if (offerId.Equals(receivedOfferId))
+                peerConnection.AddIceCandidate(iceCandidate);
+        };
+
+        var receivedIceCandidates = signaling.receivedIceCandidates.GetValueOrDefault(offerId);
+        foreach (var ic in receivedIceCandidates ?? []) peerConnection.AddIceCandidate(ic);
+        signaling.receivedIceCandidates.Remove(offerId);
 
         // Send
         peerConnection.IceCandidateCreated += ic => _ = signaling.SendIceCandidate(offerId, ic);
@@ -153,8 +161,10 @@ class OfferPeerConnection(Signaling signaling)
         };
 
         // Handle answer
-        signaling.SdpAnswerReceived += async answer =>
+        signaling.SdpAnswerReceived += async (offerId, answer) =>
         {
+            if (!offerId.Equals(await offerIdTcs.Task)) return;
+
             peerConnection.SetRemoteSdpDescription(answer);
             ExchangeIceCandidates(await offerIdTcs.Task);
 
@@ -169,9 +179,15 @@ class OfferPeerConnection(Signaling signaling)
     private void ExchangeIceCandidates(OfferId offerId)
     {
         // Receive
-        signaling.IceCandidateReceived += peerConnection.AddIceCandidate;
-        foreach (var ic in signaling.receivedIceCandidates) peerConnection.AddIceCandidate(ic);
-        signaling.receivedIceCandidates = [];
+        signaling.IceCandidateReceived += (receivedOfferId, iceCandidate) =>
+        {
+            if (offerId.Equals(receivedOfferId))
+                peerConnection.AddIceCandidate(iceCandidate);
+        };
+
+        var receivedIceCandidates = signaling.receivedIceCandidates.GetValueOrDefault(offerId);
+        foreach (var ic in receivedIceCandidates ?? []) peerConnection.AddIceCandidate(ic);
+        signaling.receivedIceCandidates.Remove(offerId);
 
         // Send
         peerConnection.IceCandidateCreated += ic => _ = signaling.SendIceCandidate(offerId, ic);
