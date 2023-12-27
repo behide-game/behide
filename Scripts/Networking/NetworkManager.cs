@@ -23,8 +23,8 @@ public partial class NetworkManager : Node3D
         // Handle new connection
         signaling.OfferIdCreationRequested += async askingPeerId =>
         {
-            var peer = new OfferPeerConnection(signaling);
-            multiplayer.AddPeer(peer.GetPeerConnection(), askingPeerId);
+            var peer = new OfferPeerConnector(signaling);
+            multiplayer.AddPeer(peer.GetConnection(), askingPeerId);
 
             return await peer.CreateOffer();
         };
@@ -48,8 +48,8 @@ public partial class NetworkManager : Node3D
         // Handle following players connection
         signaling.OfferIdCreationRequested += async askingPeerId =>
         {
-            var peer = new OfferPeerConnection(signaling);
-            multiplayer.AddPeer(peer.GetPeerConnection(), askingPeerId);
+            var peer = new OfferPeerConnector(signaling);
+            multiplayer.AddPeer(peer.GetConnection(), askingPeerId);
 
             return await peer.CreateOffer();
         };
@@ -58,8 +58,8 @@ public partial class NetworkManager : Node3D
         var tasks = joinRoomInfo.PlayersConnectionInfo.Select(async connInfo =>
         {
             GameManager.Ui.Log($"Connecting to {connInfo.PeerId}");
-            var peer = new AnswerPeerConnection(signaling, connInfo.OfferId);
-            multiplayer.AddPeer(peer.GetPeerConnection(), connInfo.PeerId);
+            var peer = new AnswerPeerConnector(signaling, connInfo.OfferId);
+            multiplayer.AddPeer(peer.GetConnection(), connInfo.PeerId);
 
             await peer.Connect();
         });
