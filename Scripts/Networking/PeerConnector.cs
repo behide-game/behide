@@ -85,13 +85,39 @@ class PeerConnection
 }
 
 
+class PeerConnector(Signaling signaling)
+{
+    protected readonly PeerConnection peerConnection = new();
+    protected readonly Signaling signaling = signaling;
+
+    protected void ExchangeIceCandidates(OfferId offerId)
+    {
+        // Receive
+        signaling.IceCandidateReceived += (receivedOfferId, iceCandidate) =>
+        {
+            if (offerId.Equals(receivedOfferId))
+                peerConnection.AddIceCandidate(iceCandidate);
+        };
+
+        var receivedIceCandidates = signaling.receivedIceCandidates.GetValueOrDefault(offerId);
+        foreach (var ic in receivedIceCandidates ?? []) peerConnection.AddIceCandidate(ic);
+        signaling.receivedIceCandidates.Remove(offerId);
+
+        // Send
+        peerConnection.IceCandidateCreated += ic => _ = signaling.SendIceCandidate(offerId, ic);
+        foreach (var ic in peerConnection.createdIceCandidates) _ = signaling.SendIceCandidate(offerId, ic);
+    }
+
+    public WebRtcPeerConnection GetConnection() => peerConnection.GetPeerConnection();
+}
+
 /// <summary>
 /// <para>This class manage a WebRTC peer connection.</para>
 /// <para>It fetches offer, publishes answer and exchanges ice candidates.</para>
 /// </summary>
-class AnswerPeerConnection(Signaling signaling, OfferId offerId)
+class AnswerPeerConnector(Signaling signaling, OfferId offerId) : PeerConnector(signaling)
 {
-    private readonly PeerConnection peerConnection = new();
+    private readonly OfferId offerId = offerId;
 
     /// <summary>
     /// Connect the underlying RTC peer.
@@ -115,36 +141,14 @@ class AnswerPeerConnection(Signaling signaling, OfferId offerId)
         await GDTask.WaitUntil(peerConnection.IsConnected);
         await signaling.EndConnectionAttempt(offerId);
     }
-
-    private void ExchangeIceCandidates(OfferId offerId)
-    {
-        // Receive
-        signaling.IceCandidateReceived += (receivedOfferId, iceCandidate) =>
-        {
-            if (offerId.Equals(receivedOfferId))
-                peerConnection.AddIceCandidate(iceCandidate);
-        };
-
-        var receivedIceCandidates = signaling.receivedIceCandidates.GetValueOrDefault(offerId);
-        foreach (var ic in receivedIceCandidates ?? []) peerConnection.AddIceCandidate(ic);
-        signaling.receivedIceCandidates.Remove(offerId);
-
-        // Send
-        peerConnection.IceCandidateCreated += ic => _ = signaling.SendIceCandidate(offerId, ic);
-        foreach (var ic in peerConnection.createdIceCandidates) _ = signaling.SendIceCandidate(offerId, ic);
-    }
-
-    public WebRtcPeerConnection GetPeerConnection() => peerConnection.GetPeerConnection();
 }
 
 /// <summary>
 /// <para>This class manage a WebRTC peer connection.</para>
 /// <para>It publishes offer, receives answer and exchanges ice candidates.</para>
 /// </summary>
-class OfferPeerConnection(Signaling signaling)
+class OfferPeerConnector(Signaling signaling) : PeerConnector(signaling)
 {
-    private readonly PeerConnection peerConnection = new();
-
     /// <summary>
     /// Publish an offer and handle connection
     /// </summary>
@@ -175,24 +179,4 @@ class OfferPeerConnection(Signaling signaling)
         peerConnection.CreateOffer();
         return await offerIdTcs.Task;
     }
-
-    private void ExchangeIceCandidates(OfferId offerId)
-    {
-        // Receive
-        signaling.IceCandidateReceived += (receivedOfferId, iceCandidate) =>
-        {
-            if (offerId.Equals(receivedOfferId))
-                peerConnection.AddIceCandidate(iceCandidate);
-        };
-
-        var receivedIceCandidates = signaling.receivedIceCandidates.GetValueOrDefault(offerId);
-        foreach (var ic in receivedIceCandidates ?? []) peerConnection.AddIceCandidate(ic);
-        signaling.receivedIceCandidates.Remove(offerId);
-
-        // Send
-        peerConnection.IceCandidateCreated += ic => _ = signaling.SendIceCandidate(offerId, ic);
-        foreach (var ic in peerConnection.createdIceCandidates) _ = signaling.SendIceCandidate(offerId, ic);
-    }
-
-    public WebRtcPeerConnection GetPeerConnection() => peerConnection.GetPeerConnection();
 }
