@@ -20,7 +20,7 @@ class SignalingHub
     private HubConnection hub = null!;
     public event Action<OfferId, SdpDescription>? SdpAnswerReceived;
     public event Action<OfferId, IceCandidate>? IceCandidateReceived;
-    public event Func<Task<(int, OfferId)?>>? OfferIdCreationRequested;
+    public event Func<int, Task<OfferId?>>? OfferIdCreationRequested;
 
     public async Task<Result> Start()
     {
@@ -60,14 +60,13 @@ class SignalingHub
         hub.On<OfferId, SdpDescription>("SdpAnswerReceived", (offerId, answer) => SdpAnswerReceived?.Invoke(offerId, answer));
         hub.On<OfferId, IceCandidate>("IceCandidateReceived", (offerId, iceCandidate) => IceCandidateReceived?.Invoke(offerId, iceCandidate));
 
-        hub.On("CreateOffer", async () =>
+        hub.On<int, FSharpOption<OfferId>>("CreateOffer", async askingPeerId =>
         {
-            var func = OfferIdCreationRequested?.Invoke();
-            var res = func is null ? null : await func;
+            var res = OfferIdCreationRequested is null
+                ? null
+                : await OfferIdCreationRequested.Invoke(askingPeerId);
 
-            return res.HasValue
-                ? FSharpOption<(int, OfferId)>.Some(res.Value)
-                : FSharpOption<(int, OfferId)>.None;
+            return Option<OfferId>.FromNullable(res);
         });
     }
 
@@ -83,7 +82,7 @@ class SignalingHub
     }
 
     public Task<Result<RoomId>> CreateRoom() => InvokeResult<RoomId>("CreateRoom");
-    public Task<Result<(int, OfferId)>> JoinRoom(RoomId roomId) => InvokeResult<(int, OfferId)>("JoinRoom", roomId);
+    public Task<Result<JoinRoomRes>> JoinRoom(RoomId roomId) => InvokeResult<JoinRoomRes>("JoinRoom", roomId);
 
     public Task<Result<OfferId>>        AddOffer(SdpDescription sdp) => InvokeResult<OfferId>("AddOffer", sdp);
     // public Task<bool>                   DeleteOffer(OfferId offerId) => hub.InvokeAsync<bool>("DeleteOffer", offerId);
@@ -100,16 +99,17 @@ public partial class Signaling : Node
 
     public event Action<OfferId, SdpDescription>? SdpAnswerReceived;
     public event Action<OfferId, IceCandidate>? IceCandidateReceived;
-    public event Func<Task<(int, OfferId)>>? OfferIdCreationRequested;
+    public event Func<int, Task<OfferId>>? OfferIdCreationRequested;
 
     public override async void _EnterTree()
     {
         hub.SdpAnswerReceived += (offerId, sdp) => SdpAnswerReceived?.Invoke(offerId, sdp);
-        hub.OfferIdCreationRequested += async () =>
-        {
-            var func = OfferIdCreationRequested?.Invoke();
-            return func is null ? null : await func;
-        };
+
+        hub.OfferIdCreationRequested += async askingPeerId =>
+            OfferIdCreationRequested is null
+                ? null
+                : await OfferIdCreationRequested.Invoke(askingPeerId);
+
         hub.IceCandidateReceived += (offerId, iceCandidate) =>
         {
             if (IceCandidateReceived is not null)
@@ -126,6 +126,7 @@ public partial class Signaling : Node
             }
         };
 
+
         switch (await hub.Start())
         {
             case Result.Ok: GD.Print("SignalR connected !"); break;
@@ -137,7 +138,7 @@ public partial class Signaling : Node
 
 
     public Task<Result<RoomId>> CreateRoom() => hub.CreateRoom();
-    public Task<Result<(int, OfferId)>> JoinRoom(RoomId roomId) => hub.JoinRoom(roomId);
+    public Task<Result<JoinRoomRes>> JoinRoom(RoomId roomId) => hub.JoinRoom(roomId);
 
     public async Task<OfferId> AddOffer(SdpDescription sdp)
     {

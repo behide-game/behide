@@ -26,8 +26,10 @@ public partial class RoomManager : Node3D
         Multiplayer.PeerConnected += peerId =>
         {
             GameManager.Ui.Log($"New peer connected: {peerId}");
-            if (Multiplayer.GetPeers().Length == 3) SpawnPlayers();
+            SpawnPlayer(peerId);
         };
+
+        SpawnPlayer(Multiplayer.GetUniqueId());
     }
 
     public async void JoinRoom()
@@ -46,29 +48,24 @@ public partial class RoomManager : Node3D
         // Connect
         GameManager.Ui.Log($"Connecting...");
         await network.StartClient(roomId.Value);
-        GameManager.Ui.Log("Connected as " + Multiplayer.GetUniqueId());
     }
 
-    public void SpawnPlayers()
+    public void SpawnPlayer(long playerId)
     {
+        GD.Print($"Spawning {playerId}");
         var mainNode = GetNode("/root/multiplayer");
 
-        void spawnPlayer(int playerId)
-        {
-            var playerPrefab = GD.Load<PackedScene>("res://Prefabs/player.tscn");
-            var playerNode = playerPrefab.Instantiate<Node3D>();
-            playerNode.Name = playerId.ToString();
+        // Create node and set his name
+        var playerPrefab = GD.Load<PackedScene>("res://Prefabs/player.tscn");
+        var playerNode = playerPrefab.Instantiate<Node3D>();
+        playerNode.Name = playerId.ToString();
 
-            var transform = playerNode.Transform;
-            transform.Origin = new Vector3(0, playerId * 2, 0);
-            playerNode.Transform = transform;
+        // Set player spawn position
+        var transform = playerNode.Transform;
+        transform.Origin = new Vector3(0, playerId * 10, 0);
+        playerNode.Transform = transform;
 
-            mainNode.AddChild(playerNode);
-        }
-
-        // Spawn host
-        spawnPlayer(Multiplayer.GetUniqueId());
-        // Spawn other players
-        foreach (var peerId in Multiplayer.GetPeers()) spawnPlayer(peerId);
+        // Put node in the world
+        mainNode.AddChild(playerNode, true);
     }
 }
