@@ -113,6 +113,7 @@ class AnswerPeerConnection(Signaling signaling, OfferId offerId)
         peerConnection.SetRemoteSdpDescription(offer);
 
         await GDTask.WaitUntil(peerConnection.IsConnected);
+        await signaling.EndConnectionAttempt(offerId);
     }
 
     private void ExchangeIceCandidates(OfferId offerId)
@@ -143,7 +144,6 @@ class AnswerPeerConnection(Signaling signaling, OfferId offerId)
 class OfferPeerConnection(Signaling signaling)
 {
     private readonly PeerConnection peerConnection = new();
-    public event Action? PeerConnected;
 
     /// <summary>
     /// Publish an offer and handle connection
@@ -169,7 +169,7 @@ class OfferPeerConnection(Signaling signaling)
             ExchangeIceCandidates(await offerIdTcs.Task);
 
             await GDTask.WaitUntil(peerConnection.IsConnected);
-            PeerConnected?.Invoke();
+            await signaling.EndConnectionAttempt(offerId);
         };
 
         peerConnection.CreateOffer();
