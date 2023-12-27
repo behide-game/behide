@@ -37,8 +37,8 @@ public partial class NetworkManager : Node3D
         // Retrieve offer and peer id
         var joinRoomInfo = await signaling.JoinRoom(roomId) switch
         {
-            Result<JoinRoomRes>.Ok res => res.Value,
-            Result<JoinRoomRes>.Error error => throw new System.Exception("Failed to retrieve offer ids: " + error.Failure),
+            Result<RoomConnectionInfo>.Ok res => res.Value,
+            Result<RoomConnectionInfo>.Error error => throw new System.Exception("Failed to retrieve offer ids: " + error.Failure),
             _ => throw new System.NotImplementedException()
         };
 
