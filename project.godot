@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GdTaskPlayerLoopAutoload="*res://addons/GDTask/GDTask/Autoload/GDTaskPlayerLoopAutoload.cs"
+GdTaskPlayerLoopAutoload="*res://Addons/GDTask/GDTask/Autoload/GDTaskPlayerLoopAutoload.cs"
 GameManager="*res://Scripts/GameManager.cs"
 WebRtcSignaling="*res://Scripts/OnlineServices/Signaling.cs"
 
