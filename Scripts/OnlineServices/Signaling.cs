@@ -82,11 +82,11 @@ class SignalingHub
     }
 
     public Task<Result<RoomId>> CreateRoom() => InvokeResult<RoomId>("CreateRoom");
-    public Task<Result<JoinRoomRes>> JoinRoom(RoomId roomId) => InvokeResult<JoinRoomRes>("JoinRoom", roomId);
+    public Task<Result<RoomConnectionInfo>> JoinRoom(RoomId roomId) => InvokeResult<RoomConnectionInfo>("JoinRoom", roomId);
 
     public Task<Result<OfferId>>        AddOffer(SdpDescription sdp) => InvokeResult<OfferId>("AddOffer", sdp);
-    // public Task<bool>                   DeleteOffer(OfferId offerId) => hub.InvokeAsync<bool>("DeleteOffer", offerId);
     public Task<Result<SdpDescription>> GetOffer(OfferId offerId)    => InvokeResult<SdpDescription>("GetOffer", offerId);
+    public Task                         EndConnectionAttempt(OfferId offerId) => hub.InvokeAsync("EndConnectionAttempt", offerId);
 
     public Task SendAnswer(OfferId offerId, SdpDescription sdp)     => hub.SendAsync("SendAnswer", offerId, sdp);
     public Task SendIceCandidate(OfferId offerId, IceCandidate ice) => hub.SendAsync("SendIceCandidate", offerId, ice);
@@ -138,7 +138,7 @@ public partial class Signaling : Node
 
 
     public Task<Result<RoomId>> CreateRoom() => hub.CreateRoom();
-    public Task<Result<JoinRoomRes>> JoinRoom(RoomId roomId) => hub.JoinRoom(roomId);
+    public Task<Result<RoomConnectionInfo>> JoinRoom(RoomId roomId) => hub.JoinRoom(roomId);
 
     public async Task<OfferId> AddOffer(SdpDescription sdp)
     {
@@ -163,6 +163,8 @@ public partial class Signaling : Node
             default: throw new Exception("Result type not valid");
         }
     }
+
+    public Task EndConnectionAttempt(OfferId offerId) => hub.EndConnectionAttempt(offerId);
 
     public Task SendAnswer(OfferId offerId, SdpDescription sdpAnswer) => hub.SendAnswer(offerId, sdpAnswer);
     public Task SendIceCandidate(OfferId offerId, IceCandidate iceCandidate) => hub.SendIceCandidate(offerId, iceCandidate);
