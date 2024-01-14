@@ -60,11 +60,6 @@ public partial class RoomManager : Node3D
         var playerNode = playerPrefab.Instantiate<Node3D>();
         playerNode.Name = playerId.ToString();
 
-        // Set player spawn position
-        var transform = playerNode.Transform;
-        transform.Origin = new Vector3(0, playerId * 10, 0);
-        playerNode.Transform = transform;
-
         // Put node in the world
         mainNode.AddChild(playerNode, true);
     }
