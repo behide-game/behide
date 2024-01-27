@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=13 format=3 uid="uid://m80rmki4fbox"]
 
-[ext_resource type="Shader" path="res://Sky/stylized_sky.gdshader" id="1_kacri"]
+[ext_resource type="Shader" path="res://Sky/High quality/stylized_sky.gdshader" id="1_kacri"]
 [ext_resource type="Texture2D" uid="uid://dvuwb0yce4sb7" path="res://Sky/assets/shooting_star_sampler.png" id="2_gp87k"]
 
 [sub_resource type="Gradient" id="Gradient_hjww8"]

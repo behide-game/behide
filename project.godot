@@ -21,6 +21,12 @@ GdTaskPlayerLoopAutoload="*res://Addons/GDTask/GDTask/Autoload/GDTaskPlayerLoopA
 GameManager="*res://Scripts/GameManager.cs"
 WebRtcSignaling="*res://Scripts/OnlineServices/Signaling.cs"
 
+[display]
+
+window/size/mode=4
+window/size/initial_position_type=4
+window/vsync/vsync_mode=0
+
 [dotnet]
 
 project/assembly_name="Behide"

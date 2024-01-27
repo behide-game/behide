@@ -8,3 +8,5 @@ obj/
 Builds/
 .env
 webrtc/
+
+*.VoxelGI_data.res

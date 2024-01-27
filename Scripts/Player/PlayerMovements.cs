@@ -12,13 +12,13 @@ public partial class PlayerMovements : CharacterBody3D
     public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
     // Move speed in m/s
-    [Export] private const int MoveSpeed = 5;
+    [Export] private int MoveSpeed = 5;
     // Rotation sensitivities
     [Export] private float MaxRotation = Mathf.DegToRad(90);
-    [Export] private const float VerticalSensitivity = 0.005f;
-    [Export] private const float HorizontalSensitivity = 0.005f;
+    [Export] private float VerticalSensitivity = 0.005f;
+    [Export] private float HorizontalSensitivity = 0.005f;
     // Move speed in m/s
-    [Export] private const float PushForce = 0.1f;
+    [Export] private float PushForce = 0.1f;
 
 
     // --- Initialization ---
