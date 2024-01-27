@@ -23,8 +23,10 @@ properties/1/replication_mode = 1
 [node name="Player" type="CharacterBody3D"]
 slide_on_ceiling = false
 script = ExtResource("1_mu3dd")
+PushForce = 0.2
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+gi_mode = 2
 mesh = SubResource("BoxMesh_x40yu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

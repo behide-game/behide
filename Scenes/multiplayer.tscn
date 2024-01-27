@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bq63a6mdt3w4"]
+[gd_scene load_steps=16 format=3 uid="uid://bq63a6mdt3w4"]
 
 [ext_resource type="Script" path="res://Scripts/Networking/NetworkManager.cs" id="1_sutpi"]
 [ext_resource type="Script" path="res://Scripts/UI/UIManager.cs" id="2_onner"]
@@ -10,6 +10,7 @@
 [ext_resource type="Resource" uid="uid://c7xkht1loifw3" path="res://Prefabs/BehideObjects/blue_cube/blue_cube.tres" id="7_yfvw8"]
 [ext_resource type="Resource" uid="uid://s6ycpy75saj2" path="res://Prefabs/BehideObjects/green_cube/green_cube.tres" id="8_yyqxy"]
 [ext_resource type="Resource" uid="uid://dwlhlbsva836h" path="res://Prefabs/BehideObjects/purple_cube/purple_cube.tres" id="9_k3vrc"]
+[ext_resource type="VoxelGIData" uid="uid://cf5qpep0o4out" path="res://Scenes/multiplayer.VoxelGI_data.res" id="10_egb2i"]
 [ext_resource type="Resource" uid="uid://chra8ec3wkom4" path="res://Prefabs/BehideObjects/yellow_cube/yellow_cube.tres" id="10_rnlv5"]
 [ext_resource type="Resource" uid="uid://bocjeygw1lfar" path="res://Prefabs/BehideObjects/mirror_ball/mirror_ball.tres" id="10_wgnhc"]
 
@@ -83,7 +84,6 @@ environment = ExtResource("4_tyqxg")
 [node name="Light" type="DirectionalLight3D" parent="World"]
 transform = Transform3D(0.979768, -0.0894539, 0.179033, 0, 0.894552, 0.446963, -0.200137, -0.43792, 0.876454, 0, 4.47552, 0)
 shadow_enabled = true
-sky_mode = 1
 
 [node name="Ground" type="StaticBody3D" parent="World"]
 transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)

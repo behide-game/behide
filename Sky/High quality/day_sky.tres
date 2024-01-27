@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=12 format=3 uid="uid://dh6ykun8bv60u"]
 
-[ext_resource type="Shader" path="res://Sky/stylized_sky.gdshader" id="1_i5n5i"]
+[ext_resource type="Shader" path="res://Sky/High quality/stylized_sky.gdshader" id="1_i5n5i"]
 
 [sub_resource type="Gradient" id="Gradient_hjww8"]
 offsets = PackedFloat32Array(0.48, 0.6)

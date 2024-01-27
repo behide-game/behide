@@ -18,6 +18,7 @@ properties/1/replication_mode = 1
 script = ExtResource("1_1t4dg")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+gi_mode = 2
 mesh = SubResource("BoxMesh_8l30g")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
