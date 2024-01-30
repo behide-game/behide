@@ -1,0 +1,75 @@
+[gd_scene load_steps=4 format=3 uid="uid://cva4wcyi4gv27"]
+
+[ext_resource type="Script" path="res://Scenes/Home/Home.cs" id="1_6ww0f"]
+[ext_resource type="Texture2D" uid="uid://b3lgwbn2cu3ao" path="res://Assets/Images/Behide-logo.svg" id="1_scmxo"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_aao6d"]
+font_size = 35
+
+[node name="Home" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6ww0f")
+
+[node name="Margin" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = 60.0
+offset_right = -60.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Logo" type="HBoxContainer" parent="Margin"]
+layout_mode = 1
+offset_right = 186.0
+offset_bottom = 49.0
+size_flags_horizontal = 0
+
+[node name="TextureRect" type="TextureRect" parent="Margin/Logo"]
+layout_mode = 2
+size_flags_horizontal = 0
+texture = ExtResource("1_scmxo")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="Margin/Logo"]
+layout_mode = 2
+text = "Behide"
+label_settings = SubResource("LabelSettings_aao6d")
+vertical_alignment = 1
+uppercase = true
+
+[node name="Buttons" type="VBoxContainer" parent="Margin"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -101.0
+offset_right = 70.0
+grow_vertical = 0
+size_flags_horizontal = 0
+
+[node name="Play" type="Button" parent="Margin/Buttons"]
+layout_mode = 2
+text = "Play"
+alignment = 0
+
+[node name="Settings" type="Button" parent="Margin/Buttons"]
+layout_mode = 2
+text = "Settings"
+alignment = 0
+
+[node name="Quit" type="Button" parent="Margin/Buttons"]
+layout_mode = 2
+text = "Quit
+"
+alignment = 0
+
+[connection signal="pressed" from="Margin/Buttons/Play" to="." method="PlayButtonPressed"]
