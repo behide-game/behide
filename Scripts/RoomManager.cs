@@ -1,66 +1,80 @@
 namespace Behide;
 
 using Godot;
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using Behide.Networking;
 using Behide.OnlineServices;
 
+public record Player(int Id, string Username);
+
 public partial class RoomManager : Node3D
 {
-    record Player(int Id, string Username);
-
     private NetworkManager network = null!;
-    public override void _EnterTree() => network = GetNode<NetworkManager>("/root/multiplayer/Managers/NetworkManager");
 
-    public async void CreateRoom()
+    public readonly List<Player> players = [];
+    public event Action<Player>? PlayerRegistered;
+
+    public override void _EnterTree()
+    {
+        network = GameManager.Network;
+    }
+
+
+    public async Task<Result<RoomId>> CreateRoom()
     {
         switch (await network.StartHost())
         {
             case Result<RoomId>.Error error:
-                GameManager.Ui.Log($"Failed to create a room: {error.Failure}");
-                break;
+                return new Result<RoomId>.Error($"Failed to create a room: {error.Failure}");
+
             case Result<RoomId>.Ok roomId:
-                GameManager.Ui.Log($"Room created: {roomId.Value.ToString().ToUpper()}");
-                break;
-        }
+                RegisterPlayer($"Player: {Multiplayer.GetUniqueId()}");
+                return new Result<RoomId>.Ok(roomId.Value);
 
-        Multiplayer.PeerConnected += peerId =>
-        {
-            GameManager.Ui.Log($"New peer connected: {peerId}");
-            SpawnPlayer(peerId);
+            default:
+                return new Result<RoomId>.Error($"Unexpected error");
         };
-
-        SpawnPlayer(Multiplayer.GetUniqueId());
     }
 
-    public async void JoinRoom()
+    public async void JoinRoom(RoomId roomId)
     {
-        // Retrieve roomId
-        var rawRoomId = GetNode<TextEdit>("/root/multiplayer/UI/RoomIdField").Text;
-
-        // Parse roomId
-        var roomId = RoomId.tryParse(rawRoomId);
-        if (Option<RoomId>.IsNone(roomId))
-        {
-            GameManager.Ui.LogError($"Invalid room id");
-            return;
-        }
-
         // Connect
-        GameManager.Ui.Log($"Connecting...");
-        await network.StartClient(roomId.Value);
+        // GameManager.Ui.Log($"Connecting...");
+        await network.StartClient(roomId);
+        RegisterPlayer($"Player: {Multiplayer.GetUniqueId()}");
     }
 
-    public void SpawnPlayer(long playerId)
+
+    public void RegisterPlayer(string username) => Rpc(nameof(RegisterPlayerRpc), username);
+
+    [Rpc(
+        MultiplayerApi.RpcMode.AnyPeer,
+        CallLocal = true,
+        TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+    )]
+    private void RegisterPlayerRpc(string username)
     {
-        GD.Print($"Spawning {playerId}");
-        var mainNode = GetNode("/root/multiplayer");
+        var playerId = Multiplayer.GetRemoteSenderId();
+        var player = new Player(playerId, username);
 
-        // Create node and set his name
-        var playerPrefab = GD.Load<PackedScene>("res://Prefabs/player.tscn");
-        var playerNode = playerPrefab.Instantiate<Node3D>();
-        playerNode.Name = playerId.ToString();
-
-        // Put node in the world
-        mainNode.AddChild(playerNode, true);
+        players.Add(player);
+        PlayerRegistered?.Invoke(player);
     }
+
+
+    // public void SpawnPlayer(long playerId)
+    // {
+    //     GD.Print($"Spawning {playerId}");
+    //     var mainNode = GetNode("/root/multiplayer");
+
+    //     // Create node and set his name
+    //     var playerPrefab = GD.Load<PackedScene>("res://Prefabs/player.tscn");
+    //     var playerNode = playerPrefab.Instantiate<Node3D>();
+    //     playerNode.Name = playerId.ToString();
+
+    //     // Put node in the world
+    //     mainNode.AddChild(playerNode, true);
+    // }
 }

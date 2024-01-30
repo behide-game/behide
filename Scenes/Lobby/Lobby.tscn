@@ -1,0 +1,182 @@
+[gd_scene load_steps=5 format=3 uid="uid://ch26lr3yfn732"]
+
+[ext_resource type="Script" path="res://Scenes/Lobby/Lobby.cs" id="1_vmtcs"]
+[ext_resource type="Texture2D" uid="uid://b3lgwbn2cu3ao" path="res://Assets/Images/Behide-logo.svg" id="2_2svve"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_285fj"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_8edeb"]
+font_size = 24
+
+[node name="Lobby" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vmtcs")
+
+[node name="ChooseMode" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = 60.0
+offset_right = -60.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 40
+
+[node name="CenterContainer" type="CenterContainer" parent="ChooseMode"]
+layout_mode = 2
+
+[node name="Logo" type="HBoxContainer" parent="ChooseMode/CenterContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="ChooseMode/CenterContainer/Logo"]
+layout_mode = 2
+size_flags_horizontal = 0
+texture = ExtResource("2_2svve")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="ChooseMode/CenterContainer/Logo"]
+layout_mode = 2
+text = "Behide"
+label_settings = SubResource("LabelSettings_285fj")
+vertical_alignment = 1
+uppercase = true
+
+[node name="Buttons" type="HBoxContainer" parent="ChooseMode"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Host" type="Button" parent="ChooseMode/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Host"
+
+[node name="Join" type="VBoxContainer" parent="ChooseMode/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LineEdit" type="LineEdit" parent="ChooseMode/Buttons/Join"]
+layout_mode = 2
+placeholder_text = "Code: ABC01"
+
+[node name="Validate" type="Button" parent="ChooseMode/Buttons/Join"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Join
+"
+
+[node name="Lobby" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = 60.0
+offset_right = -60.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 40
+
+[node name="Header" type="HBoxContainer" parent="Lobby"]
+layout_mode = 2
+alignment = 1
+
+[node name="Logo" type="HBoxContainer" parent="Lobby/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextureRect" type="TextureRect" parent="Lobby/Header/Logo"]
+layout_mode = 2
+size_flags_horizontal = 0
+texture = ExtResource("2_2svve")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="Lobby/Header/Logo"]
+layout_mode = 2
+text = "Behide"
+label_settings = SubResource("LabelSettings_285fj")
+vertical_alignment = 1
+uppercase = true
+
+[node name="Code" type="HBoxContainer" parent="Lobby/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="Label" type="Label" parent="Lobby/Header/Code"]
+layout_mode = 2
+text = "Code"
+label_settings = SubResource("LabelSettings_8edeb")
+vertical_alignment = 1
+uppercase = true
+
+[node name="Value" type="Label" parent="Lobby/Header/Code"]
+layout_mode = 2
+text = "abc01"
+label_settings = SubResource("LabelSettings_8edeb")
+vertical_alignment = 1
+uppercase = true
+
+[node name="Boxes" type="HBoxContainer" parent="Lobby"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="Players" type="PanelContainer" parent="Lobby/Boxes"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+
+[node name="VerticalAligner" type="VBoxContainer" parent="Lobby/Boxes/Players"]
+layout_mode = 2
+
+[node name="Label" type="CenterContainer" parent="Lobby/Boxes/Players/VerticalAligner"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Lobby/Boxes/Players/VerticalAligner/Label"]
+layout_mode = 2
+text = "Players"
+uppercase = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Lobby/Boxes/Players/VerticalAligner"]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+
+[node name="Players" type="VBoxContainer" parent="Lobby/Boxes/Players/VerticalAligner/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Lobby/Boxes"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+alignment = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Lobby/Boxes/VBoxContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Start" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Start"
+
+[node name="Quit" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Quit"
+
+[connection signal="pressed" from="ChooseMode/Buttons/Host" to="." method="HostButtonPressed"]
+[connection signal="pressed" from="ChooseMode/Buttons/Join/Validate" to="." method="JoinButtonPressed"]

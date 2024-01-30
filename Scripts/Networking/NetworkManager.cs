@@ -57,7 +57,7 @@ public partial class NetworkManager : Node3D
         // Connect to other players
         var tasks = joinRoomInfo.PlayersConnectionInfo.Select(async connInfo =>
         {
-            GameManager.Ui.Log($"Connecting to {connInfo.PeerId}");
+            // GameManager.Ui.Log($"Connecting to {connInfo.PeerId}");
             var peer = new AnswerPeerConnector(signaling, connInfo.OfferId);
             multiplayer.AddPeer(peer.GetConnection(), connInfo.PeerId);
 
