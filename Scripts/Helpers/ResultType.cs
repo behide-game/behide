@@ -12,4 +12,6 @@ public record Result<T> {
     public record Error(string Failure) : Result<T>;
 
     private Result() {}
+
+    public string? ErrorValue => (this as Error)?.Failure;
 }

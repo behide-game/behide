@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Behide"
-run/main_scene="res://Scenes/multiplayer.tscn"
+run/main_scene="res://Scenes/Home/Home.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -20,11 +20,12 @@ config/icon="res://icon.svg"
 GdTaskPlayerLoopAutoload="*res://Addons/GDTask/GDTask/Autoload/GDTaskPlayerLoopAutoload.cs"
 GameManager="*res://Scripts/GameManager.cs"
 WebRtcSignaling="*res://Scripts/OnlineServices/Signaling.cs"
+NetworkManager="*res://Scripts/Networking/NetworkManager.cs"
+RoomManager="*res://Scripts/RoomManager.cs"
 
 [display]
 
-window/size/mode=4
-window/size/initial_position_type=4
+window/size/initial_position_type=2
 window/vsync/vsync_mode=0
 
 [dotnet]
