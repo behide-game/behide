@@ -1,171 +1,107 @@
-namespace Behide.OnlineServices;
+namespace Behide.OnlineServices.Client;
 
 using Godot;
 
 using System;
-using System.Text.Json.Serialization;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FSharp.Core;
+using TypedSignalR.Client;
 
 using Behide.GodotInterop;
-using System.Collections.Generic;
+using Behide.Types;
+using Behide.OnlineServices.Signaling;
 
 
-class SignalingHub
+
+
+public class SignalingHubClient : ISignalingClient
 {
-    private HubConnection hub = null!;
-    public event Action<OfferId, SdpDescription>? SdpAnswerReceived;
-    public event Action<OfferId, IceCandidate>? IceCandidateReceived;
-    public event Func<int, Task<OfferId?>>? OfferIdCreationRequested;
+    public event Func<int, Task<Option<ConnAttemptId>>>? ConnAttemptIdCreationRequested;
+    public event Action<ConnAttemptId, SdpDescription>? SdpAnswerReceived_;
+    public event Action<ConnAttemptId, IceCandidate>? IceCandidateReceived_;
+    public Dictionary<ConnAttemptId, IceCandidate[]> receivedIceCandidates = [];
 
-    public async Task<Result> Start()
+    public async Task<FSharpOption<ConnAttemptId>> CreateOffer(int askingPeerId)
     {
-        try
+        return ConnAttemptIdCreationRequested is null
+            ? Option.None<ConnAttemptId>()
+            : await ConnAttemptIdCreationRequested.Invoke(askingPeerId);
+    }
+
+    public Task SdpAnswerReceived(ConnAttemptId offerId, SdpDescription sdpDescription)
+    {
+        SdpAnswerReceived_?.Invoke(offerId, sdpDescription);
+        return Task.CompletedTask;
+    }
+
+    public Task IceCandidateReceived(ConnAttemptId offerId, IceCandidate iceCandidate)
+    {
+        if (IceCandidateReceived_ is not null)
         {
-            hub = new HubConnectionBuilder()
-                .WithUrl(Secrets.SignalingHubUrl)
-                .WithAutomaticReconnect()
-                .ConfigureLogging(options =>
-                {
-                    options.AddProvider(new GodotLoggerProvider());
-                    options.SetMinimumLevel(LogLevel.Warning);
-                })
-                .AddJsonProtocol(options =>
-                {
-                    JsonFSharpOptions
-                        .Default()
-                        .AddToJsonSerializerOptions(options.PayloadSerializerOptions);
-                })
-                .Build();
-
-            SubscribeSignalREvents();
-
-            await hub.StartAsync();
-            return new Result.Ok();
+            IceCandidateReceived_.Invoke(offerId, iceCandidate);
+            return Task.CompletedTask;
         }
-        catch (Exception exn)
+
+        var succeed = receivedIceCandidates.TryAdd(offerId, [iceCandidate]);
+        if (!succeed)
         {
-            return new Result.Error($"Failed to connect to signaling hub: {exn.Message}");
+            receivedIceCandidates.Remove(offerId, out var prevIceCandidates);
+            receivedIceCandidates.Add(offerId, [..prevIceCandidates, iceCandidate]);
         }
+
+        return Task.CompletedTask;
     }
 
-    private void SubscribeSignalREvents()
-    {
-        hub.Closed += error => Task.Run(() => GD.PrintErr("SignalR connection closed"));
-
-        hub.On<OfferId, SdpDescription>("SdpAnswerReceived", (offerId, answer) => SdpAnswerReceived?.Invoke(offerId, answer));
-        hub.On<OfferId, IceCandidate>("IceCandidateReceived", (offerId, iceCandidate) => IceCandidateReceived?.Invoke(offerId, iceCandidate));
-
-        hub.On<int, FSharpOption<OfferId>>("CreateOffer", async askingPeerId =>
-        {
-            var res = OfferIdCreationRequested is null
-                ? null
-                : await OfferIdCreationRequested.Invoke(askingPeerId);
-
-            return Option<OfferId>.FromNullable(res);
-        });
-    }
-
-    private async Task<Result<T>> InvokeResult<T>(string methodName, object? arg = null)
-    {
-        var res = arg is null
-            ? await hub.InvokeAsync<FSharpResult<T, string>>(methodName)
-            : await hub.InvokeAsync<FSharpResult<T, string>>(methodName, arg);
-
-        return res.IsOk
-            ? new Result<T>.Ok(res.ResultValue)
-            : new Result<T>.Error(res.ErrorValue);
-    }
-
-    public Task<Result<RoomId>> CreateRoom() => InvokeResult<RoomId>("CreateRoom");
-    public Task<Result<RoomConnectionInfo>> JoinRoom(RoomId roomId) => InvokeResult<RoomConnectionInfo>("JoinRoom", roomId);
-
-    public Task<Result<OfferId>>        AddOffer(SdpDescription sdp) => InvokeResult<OfferId>("AddOffer", sdp);
-    public Task<Result<SdpDescription>> GetOffer(OfferId offerId)    => InvokeResult<SdpDescription>("GetOffer", offerId);
-    public Task                         EndConnectionAttempt(OfferId offerId) => hub.InvokeAsync("EndConnectionAttempt", offerId);
-
-    public Task SendAnswer(OfferId offerId, SdpDescription sdp)     => hub.SendAsync("SendAnswer", offerId, sdp);
-    public Task SendIceCandidate(OfferId offerId, IceCandidate ice) => hub.SendAsync("SendIceCandidate", offerId, ice);
 }
 
 public partial class Signaling : Node
 {
-    private readonly SignalingHub hub = new();
-    public Dictionary<OfferId, IceCandidate[]> receivedIceCandidates = [];
-
-    public event Action<OfferId, SdpDescription>? SdpAnswerReceived;
-    public event Action<OfferId, IceCandidate>? IceCandidateReceived;
-    public event Func<int, Task<OfferId>>? OfferIdCreationRequested;
+    private HubConnection connection = null!;
+    public ISignalingHub Hub { get; private set; } = null!;
+    public SignalingHubClient Client { get; private set; } = null!;
 
     public override async void _EnterTree()
     {
-        hub.SdpAnswerReceived += (offerId, sdp) => SdpAnswerReceived?.Invoke(offerId, sdp);
-
-        hub.OfferIdCreationRequested += async askingPeerId =>
-            OfferIdCreationRequested is null
-                ? null
-                : await OfferIdCreationRequested.Invoke(askingPeerId);
-
-        hub.IceCandidateReceived += (offerId, iceCandidate) =>
-        {
-            if (IceCandidateReceived is not null)
+        connection = new HubConnectionBuilder()
+            .WithUrl(Secrets.SignalingHubUrl)
+            .WithAutomaticReconnect()
+            .ConfigureLogging(options =>
             {
-                IceCandidateReceived.Invoke(offerId, iceCandidate);
-                return;
-            }
-
-            var succeed = receivedIceCandidates.TryAdd(offerId, [iceCandidate]);
-            if (!succeed)
+                options.AddProvider(new GodotLoggerProvider());
+                options.SetMinimumLevel(LogLevel.Warning);
+            })
+            .AddJsonProtocol(options =>
             {
-                receivedIceCandidates.Remove(offerId, out var prevIceCandidates);
-                receivedIceCandidates.Add(offerId, [..prevIceCandidates, iceCandidate]);
-            }
-        };
+                JsonFSharpOptions
+                    .Default()
+                    .AddToJsonSerializerOptions(options.PayloadSerializerOptions);
+            })
+            .Build();
 
+        connection.Closed += error => Task.Run(() => GD.PrintErr("SignalR connection closed"));
 
-        switch (await hub.Start())
+        // Creating typed hub
+        Hub = connection.CreateHubProxy<ISignalingHub>();
+
+        // Connecting the client (the class that handle hub requests) to the hub
+        Client = new SignalingHubClient();
+        connection.Register(Client as ISignalingClient);
+
+        // Starting the connection
+        try
         {
-            case Result.Ok: GD.Print("SignalR connected !"); break;
-            case Result.Error res:
-                GD.PrintErr("Failed to connect to behide online services: " + res.Failure);
-                break;
-        };
-    }
-
-
-    public Task<Result<RoomId>> CreateRoom() => hub.CreateRoom();
-    public Task<Result<RoomConnectionInfo>> JoinRoom(RoomId roomId) => hub.JoinRoom(roomId);
-
-    public async Task<OfferId> AddOffer(SdpDescription sdp)
-    {
-        switch (await hub.AddOffer(sdp)) {
-            case Result<OfferId>.Ok offerId: return offerId.Value;
-            case Result<OfferId>.Error error:
-                var msg = $"Failed to add offer: {error.Failure}";
-                GD.PrintErr(msg);
-                throw new Exception(msg);
-            default: throw new Exception("Result type not valid");
+            await connection.StartAsync();
+            GD.Print("SignalR connected !");
+        }
+        catch (Exception exn)
+        {
+            GD.PrintErr($"Failed to connect to signaling hub: {exn.Message}");
         }
     }
-
-    public async Task<SdpDescription> GetOffer(OfferId offerId)
-    {
-        switch (await hub.GetOffer(offerId)) {
-            case Result<SdpDescription>.Ok sdp: return sdp.Value;
-            case Result<SdpDescription>.Error error:
-                var msg = $"Failed to retrieve offer {offerId}: {error.Failure}";
-                GD.PrintErr(msg);
-                throw new Exception(msg);
-            default: throw new Exception("Result type not valid");
-        }
-    }
-
-    public Task EndConnectionAttempt(OfferId offerId) => hub.EndConnectionAttempt(offerId);
-
-    public Task SendAnswer(OfferId offerId, SdpDescription sdpAnswer) => hub.SendAnswer(offerId, sdpAnswer);
-    public Task SendIceCandidate(OfferId offerId, IceCandidate iceCandidate) => hub.SendIceCandidate(offerId, iceCandidate);
 }

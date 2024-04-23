@@ -4,10 +4,11 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Behide.Types;
 using Behide.Networking;
-using Behide.OnlineServices;
+using Behide.OnlineServices.Signaling;
 
-public record Player(int Id, string Username);
+public record Player(int PeerId, string Username);
 
 public partial class RoomManager : Node3D
 {
@@ -22,36 +23,45 @@ public partial class RoomManager : Node3D
     }
 
 
-    public async Task<Result<RoomId>> CreateRoom()
+    public async Task<Result<RoomId, string>> CreateRoom()
     {
-        switch (await network.StartHost())
+        var res = await network.StartHost();
+
+        if (res.HasValue(out var value))
         {
-            case Result<RoomId>.Error error:
-                return new Result<RoomId>.Error($"Failed to create a room: {error.Failure}");
+            // Register local player
+            RegisterPlayer($"Player: {Multiplayer.GetUniqueId()}");
+        }
 
-            case Result<RoomId>.Ok roomId:
-                RegisterPlayer($"Player: {Multiplayer.GetUniqueId()}");
-                return new Result<RoomId>.Ok(roomId.Value);
-
-            default:
-                return new Result<RoomId>.Error($"Unexpected error");
-        };
+        return res.MapError(error => $"Failed to create a room: {error}");
     }
 
-    public async void JoinRoom(RoomId roomId)
+    public async Task<Result<Unit, string>> JoinRoom(RoomId roomId)
     {
-        // Connect
         // GameManager.Ui.Log($"Connecting...");
-        await network.StartClient(roomId);
-        RegisterPlayer($"Player: {Multiplayer.GetUniqueId()}");
+        var res = await network.StartClient(roomId);
+
+        if (res.IsOk) RegisterPlayer($"Player: {Multiplayer.GetUniqueId()}");
+
+        return res.MapError(error => $"Failed to join the room: {error}");
     }
 
 
-    public void RegisterPlayer(string username) => Rpc(nameof(RegisterPlayerRpc), username);
+    /// <summary>
+    /// Send the player's info to the other players in the room
+    /// </summary>
+    /// <param name="username">The username of the player</param>
+    public void RegisterPlayer(string username)
+    {
+        // Register local player on already connected peers
+        Rpc(nameof(RegisterPlayerRpc), username);
+        // Register local player on futur peers
+        Multiplayer.PeerConnected += peerId => RpcId(peerId, nameof(RegisterPlayerRpc), username);
+    }
 
     [Rpc(
-        MultiplayerApi.RpcMode.AnyPeer,
-        CallLocal = true,
+        MultiplayerApi.RpcMode.AnyPeer, // Any peer can call this method
+        CallLocal = true,               // Local peer can call this method
         TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
     )]
     private void RegisterPlayerRpc(string username)

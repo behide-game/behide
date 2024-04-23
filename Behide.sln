@@ -1,5 +1,8 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34616.47
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Behide", "Behide.csproj", "{17CF3CC3-0B43-4F81-B51B-4BFAC60B06C0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Addons", "addons\Addons.csproj", "{BDAE413F-73CA-445C-8EA1-BC0FD5EC3CD0}"
@@ -23,5 +26,11 @@ Global
 		{BDAE413F-73CA-445C-8EA1-BC0FD5EC3CD0}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
 		{BDAE413F-73CA-445C-8EA1-BC0FD5EC3CD0}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
 		{BDAE413F-73CA-445C-8EA1-BC0FD5EC3CD0}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D9E2DE88-12B2-4884-BF48-2AA73DD3E20A}
 	EndGlobalSection
 EndGlobal
