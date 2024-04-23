@@ -1,7 +1,8 @@
 namespace Behide.Game.UI.Lobby;
 
 using Godot;
-using Behide.OnlineServices;
+using Behide.Types;
+using Behide.OnlineServices.Signaling;
 
 public partial class Lobby : Control
 {
@@ -17,6 +18,11 @@ public partial class Lobby : Control
         lobbyControl.Visible = false;
     }
 
+    public override void _ExitTree()
+    {
+        GameManager.Room.PlayerRegistered -= OnPlayerRegistered;
+    }
+
     private void ShowLobby(RoomId roomId)
     {
         chooseModeControl.Visible = false;
@@ -30,36 +36,31 @@ public partial class Lobby : Control
 
     private async void HostButtonPressed()
     {
-        switch (await GameManager.Room.CreateRoom())
-        {
-            case Result<RoomId>.Error error:
-                GameManager.Ui.LogError(error.Failure);
-                return;
+        var res = await GameManager.Room.CreateRoom();
 
-            case Result<RoomId>.Ok roomId:
-                ShowLobby(roomId.Value);
-                return;
-
-            default:
-                GameManager.Ui.LogError("Unexpected error");
-                return;
-        }
+        res.Match(
+            success: roomId => ShowLobby(roomId),
+            failure: error => GameManager.Ui.LogError(error)
+        );
     }
 
-    private void JoinButtonPressed()
+    private async void JoinButtonPressed()
     {
         var rawCode = GetNode<LineEdit>("ChooseMode/Buttons/Join/LineEdit").Text;
         var codeOpt = RoomId.tryParse(rawCode);
-        var code = Option<RoomId>.ToNullable(codeOpt);
 
-        if (code is null)
+        if (codeOpt.HasValue(out var code) == false)
         {
             GameManager.Ui.LogError("Invalid room code");
             return;
         }
 
-        GameManager.Room.JoinRoom(code);
-        ShowLobby(code);
+        var res = await GameManager.Room.JoinRoom(code);
+
+        res.Match(
+            success: _ => ShowLobby(code),
+            failure: error => GameManager.Ui.LogError(error)
+        );
     }
 
 

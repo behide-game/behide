@@ -1,10 +1,18 @@
 namespace Behide.Networking;
 
 using Godot;
-using Behide.OnlineServices;
 using System.Threading.Tasks;
 using System.Linq;
 
+using Behide.Types;
+using Behide.OnlineServices.Client;
+using Behide.OnlineServices.Signaling;
+using Behide.I18n.BOS.Errors;
+
+/// <summary>
+///  NetworkManager is responsible for handling the connection between the game and the signaling server.
+///  It create or join a room and handle the connection between the players.
+/// </summary>
 public partial class NetworkManager : Node3D
 {
     private Signaling signaling = null!;
@@ -15,55 +23,68 @@ public partial class NetworkManager : Node3D
         signaling = GetNode<Signaling>("/root/WebRtcSignaling");
     }
 
-    public async Task<Result<RoomId>> StartHost()
+    /// <summary>
+    /// Create a room and set the handler for the players who join
+    /// </summary>
+    public async Task<Result<RoomId, string>> StartHost()
     {
+        // Instantiate the multiplayer peer
         multiplayer.CreateMesh(1);
         Multiplayer.MultiplayerPeer = multiplayer;
 
         // Handle new connection
-        signaling.OfferIdCreationRequested += async askingPeerId =>
+        signaling.Client.ConnAttemptIdCreationRequested += async askingPeerId =>
         {
             var peer = new OfferPeerConnector(signaling);
             multiplayer.AddPeer(peer.GetConnection(), askingPeerId);
 
-            return await peer.CreateOffer();
+            return (await peer.CreateConnectionAttempt()).ToOption();
         };
 
-        return await signaling.CreateRoom();
+        // Create room
+        return (await signaling.Hub.CreateRoom())
+            .ToResult()
+            .MapError(err => err.ToLocalizedString());
     }
 
-    public async Task StartClient(RoomId roomId)
+    /// <summary>
+    /// Join a room and connect to the other players
+    /// </summary>
+    public async Task<Result<Unit, string>> StartClient(RoomId roomId)
     {
-        // Retrieve offer and peer id
-        var joinRoomInfo = await signaling.JoinRoom(roomId) switch
+        // Retrieve connection attempts and peer ids
+        var joinRoomRes = await signaling.Hub.JoinRoom(roomId);
+        if (joinRoomRes.HasError(out var error))
         {
-            Result<RoomConnectionInfo>.Ok res => res.Value,
-            Result<RoomConnectionInfo>.Error error => throw new System.Exception("Failed to retrieve offer ids: " + error.Failure),
-            _ => throw new System.NotImplementedException()
-        };
+            return error.ToLocalizedString();
+        }
+
+
+        var joinRoomInfo = joinRoomRes.ResultValue;
 
         multiplayer.CreateMesh(joinRoomInfo.PeerId);
         Multiplayer.MultiplayerPeer = multiplayer;
 
         // Handle following players connection
-        signaling.OfferIdCreationRequested += async askingPeerId =>
+        signaling.Client.ConnAttemptIdCreationRequested += async askingPeerId =>
         {
             var peer = new OfferPeerConnector(signaling);
             multiplayer.AddPeer(peer.GetConnection(), askingPeerId);
 
-            return await peer.CreateOffer();
+            return (await peer.CreateConnectionAttempt()).ToOption();
         };
 
         // Connect to other players
         var tasks = joinRoomInfo.PlayersConnectionInfo.Select(async connInfo =>
         {
             // GameManager.Ui.Log($"Connecting to {connInfo.PeerId}");
-            var peer = new AnswerPeerConnector(signaling, connInfo.OfferId);
+            var peer = new AnswerPeerConnector(signaling, connInfo.ConnAttemptId);
             multiplayer.AddPeer(peer.GetConnection(), connInfo.PeerId);
 
             await peer.Connect();
         });
 
         await Task.WhenAll(tasks);
+        return Unit.Value;
     }
 }
