@@ -8,17 +8,17 @@
     ".NETCoreApp,Version=v8.0": {
       "Behide.OnlineServices.Types/1.0.0": {
         "dependencies": {
-          "FSharp.Core": "8.0.100"
+          "FSharp.Core": "8.0.200"
         },
         "runtime": {
           "Behide.OnlineServices.Types.dll": {}
         }
       },
-      "FSharp.Core/8.0.100": {
+      "FSharp.Core/8.0.200": {
         "runtime": {
           "lib/netstandard2.1/FSharp.Core.dll": {
             "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.1.23.52306"
+            "fileVersion": "8.2.24.6203"
           }
         },
         "resources": {
@@ -71,12 +71,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "FSharp.Core/8.0.100": {
+    "FSharp.Core/8.0.200": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ZOVZ/o+jI3ormTZOa28Wh0tSRoyle1f7lKFcUN61sPiXI7eDZu8eSveFybgTeyIEyW0ujjp31cp7GOglDgsNEg==",
-      "path": "fsharp.core/8.0.100",
-      "hashPath": "fsharp.core.8.0.100.nupkg.sha512"
+      "sha512": "sha512-qnxoF3Fu0HzfOeYdrwmQOsLP1v+OtOMSIYkNVUwf6nGqWzL03Hh4r6VFCvCb54jlsgtt3WADVYkKkrgdeY5kiQ==",
+      "path": "fsharp.core/8.0.200",
+      "hashPath": "fsharp.core.8.0.200.nupkg.sha512"
     }
   }
 }

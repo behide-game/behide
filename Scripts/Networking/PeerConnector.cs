@@ -3,21 +3,22 @@ namespace Behide.Networking;
 using Godot;
 using System;
 using System.Threading.Tasks;
-using Fractural.Tasks;
-using Behide.OnlineServices;
 using System.Collections.Generic;
+using Fractural.Tasks;
+using Behide.Types;
+using Behide.OnlineServices.Signaling;
+using Behide.OnlineServices.Client;
+using Behide.I18n.BOS.Errors;
 
 
 
 /// <summary>
-/// Use Peer.gd to instantiate a WebRtcPeerConnection
-/// See https://github.com/godotengine/webrtc-native/issues/116
-/// Wait https://github.com/godotengine/godot/pull/84947 to be merged
+/// Extension of WebRtcPeerConnection TODO description
 /// </summary>
-class PeerConnection
+partial class PeerConnection : WebRtcPeerConnection
 {
-    public event Action<SdpDescription>? SessionDescriptionCreated;
-    public event Action<IceCandidate>? IceCandidateCreated;
+    new public event Action<SdpDescription>? SessionDescriptionCreated;
+    new public event Action<IceCandidate>? IceCandidateCreated;
     public IceCandidate[] createdIceCandidates = [];
 
     private readonly Godot.Collections.Dictionary iceServers = new() {
@@ -51,18 +52,10 @@ class PeerConnection
         }
     };
 
-    private readonly WebRtcPeerConnection peer;
-
     public PeerConnection()
     {
-        peer = GD.Load<GDScript>("res://Scripts/Networking/Peer.gd")
-            .New()
-            .AsGodotObject()
-            .Get("peer")
-            .As<WebRtcPeerConnection>();
-
-        peer.SessionDescriptionCreated += (type, sdp) => SessionDescriptionCreated?.Invoke(new SdpDescription(type, sdp));
-        peer.IceCandidateCreated += (string media, long index, string name) =>
+        (this as WebRtcPeerConnection).SessionDescriptionCreated += (type, sdp) => SessionDescriptionCreated?.Invoke(new SdpDescription(type, sdp));
+        (this as WebRtcPeerConnection).IceCandidateCreated += (string media, long index, string name) =>
         {
             var ic = new IceCandidate(media, (int)index, name);
             if (IceCandidateCreated is null)
@@ -71,75 +64,95 @@ class PeerConnection
                 IceCandidateCreated.Invoke(ic);
         };
 
-        peer.Initialize(iceServers);
+        Initialize(iceServers);
     }
 
-    public bool IsConnected() => peer.GetConnectionState() == WebRtcPeerConnection.ConnectionState.Connected;
+    public bool IsConnected() => GetConnectionState() == ConnectionState.Connected;
 
-    public Error Poll() => peer.Poll();
-    public Error CreateOffer() => peer.CreateOffer();
-    public void SetRemoteSdpDescription(SdpDescription sdp) => peer.SetRemoteDescription(sdp.type, sdp.sdp);
-    public void AddIceCandidate(IceCandidate ice) => peer.AddIceCandidate(ice.media, ice.index, ice.name);
-
-    public WebRtcPeerConnection GetPeerConnection() => peer;
+    public void SetRemoteSdpDescription(SdpDescription sdp) => SetRemoteDescription(sdp.type, sdp.sdp);
+    public void AddIceCandidate(IceCandidate ice) => AddIceCandidate(ice.media, ice.index, ice.name);
 }
-
 
 class PeerConnector(Signaling signaling)
 {
     protected readonly PeerConnection peerConnection = new();
     protected readonly Signaling signaling = signaling;
 
-    protected void ExchangeIceCandidates(OfferId offerId)
+    protected void ExchangeIceCandidates(ConnAttemptId offerId)
     {
         // Receive
-        signaling.IceCandidateReceived += (receivedOfferId, iceCandidate) =>
+        // Handle new ice candidates
+        signaling.Client.IceCandidateReceived_ += (receivedConnAttemptId, ice) =>
         {
-            if (offerId.Equals(receivedOfferId))
-                peerConnection.AddIceCandidate(iceCandidate);
+            if (offerId.Equals(receivedConnAttemptId))
+                peerConnection.AddIceCandidate(ice.media, ice.index, ice.name);
         };
 
-        var receivedIceCandidates = signaling.receivedIceCandidates.GetValueOrDefault(offerId);
+        // Handle ice candidates before
+        var receivedIceCandidates = signaling.Client.receivedIceCandidates.GetValueOrDefault(offerId);
         foreach (var ic in receivedIceCandidates ?? []) peerConnection.AddIceCandidate(ic);
-        signaling.receivedIceCandidates.Remove(offerId);
+        signaling.Client.receivedIceCandidates.Remove(offerId);
 
         // Send
-        peerConnection.IceCandidateCreated += ic => _ = signaling.SendIceCandidate(offerId, ic);
-        foreach (var ic in peerConnection.createdIceCandidates) _ = signaling.SendIceCandidate(offerId, ic);
+        peerConnection.IceCandidateCreated += ic => _ = signaling.Hub.SendIceCandidate(offerId, ic);
+        foreach (var ic in peerConnection.createdIceCandidates) _ = signaling.Hub.SendIceCandidate(offerId, ic);
     }
 
-    public WebRtcPeerConnection GetConnection() => peerConnection.GetPeerConnection();
+    public WebRtcPeerConnection GetConnection() => peerConnection;
 }
 
 /// <summary>
 /// <para>This class manage a WebRTC peer connection.</para>
-/// <para>It fetches offer, publishes answer and exchanges ice candidates.</para>
+/// <para>It fetches connection attempt's offer, publishes answer and exchanges ice candidates.</para>
 /// </summary>
-class AnswerPeerConnector(Signaling signaling, OfferId offerId) : PeerConnector(signaling)
+class AnswerPeerConnector(Signaling signaling, ConnAttemptId connAttemptId) : PeerConnector(signaling)
 {
-    private readonly OfferId offerId = offerId;
+    private readonly ConnAttemptId connAttemptId = connAttemptId;
 
     /// <summary>
     /// Connect the underlying RTC peer.
     /// </summary>
     /// <remarks>This method is awaitable.</remarks>
-    public async Task Connect()
+    public async Task<Result<Unit, string>> Connect()
     {
-        // Fetch offer
-        var offer = await signaling.GetOffer(offerId);
+        // Get connection attempt offer
+        var offerRes = await signaling.Hub.JoinConnectionAttempt(connAttemptId);
+        if (offerRes.IsError)
+        {
+            return offerRes.ErrorValue.ToLocalizedString();
+        }
 
-        // Await local sdp
+        var offer = offerRes.ResultValue;
+
+        // Await local sdp answer
+        var sendAnswerResTcs = new TaskCompletionSource<Option<Errors.SendAnswerError>>();
         peerConnection.SessionDescriptionCreated += async sdp =>
         {
-            await signaling.SendAnswer(offerId, sdp);
-            ExchangeIceCandidates(offerId);
+            // Answer generated. Send it to the other peer
+            var res = await signaling.Hub.SendAnswer(connAttemptId, sdp);
+
+            if (res.IsError)
+                sendAnswerResTcs.TrySetResult(Option.Some(res.ErrorValue));
+            else
+            {
+                sendAnswerResTcs.TrySetResult(Option.None<Errors.SendAnswerError>());
+                ExchangeIceCandidates(connAttemptId);
+            }
         };
 
         // Inject offer into local peer
         peerConnection.SetRemoteSdpDescription(offer);
 
+        // Await local sdp answer to be sent
+        var sendAnswerError = await sendAnswerResTcs.Task;
+        if (sendAnswerError.HasValue(out var error))
+        {
+            return error.ToLocalizedString();
+        }
+
+        // Await connection
         await GDTask.WaitUntil(peerConnection.IsConnected);
-        await signaling.EndConnectionAttempt(offerId);
+        return Unit.Value;
     }
 }
 
@@ -150,33 +163,48 @@ class AnswerPeerConnector(Signaling signaling, OfferId offerId) : PeerConnector(
 class OfferPeerConnector(Signaling signaling) : PeerConnector(signaling)
 {
     /// <summary>
-    /// Publish an offer and handle connection
+    /// Create a connection attempt
+    /// Publish an offer
+    /// and handle connection
     /// </summary>
     /// <returns>Return the ID of the offer published on the signaling server</returns>
-    public async Task<OfferId> CreateOffer()
+    public async Task<Result<ConnAttemptId, string>> CreateConnectionAttempt()
     {
-        var offerIdTcs = new TaskCompletionSource<OfferId>();
+        var createConnAttemptResTcs = new TaskCompletionSource<Result<ConnAttemptId, Errors.StartConnectionAttemptError>>();
 
-        // SDP offer created => Publish offer
+        // SDP offer created => Create a connection attempt by publishing the offer
         peerConnection.SessionDescriptionCreated += async sdp =>
         {
-            var offerId = await signaling.AddOffer(sdp);
-            offerIdTcs.TrySetResult(offerId);
+            var res = await signaling.Hub.StartConnectionAttempt(sdp);
+            createConnAttemptResTcs.TrySetResult(res.ToResult());
         };
+
+        peerConnection.CreateOffer(); // Create offer and trigger the event
+
+
+        // Await the creation of the connection attempt
+        var createConnAttemptRes = await createConnAttemptResTcs.Task;
+        if (createConnAttemptRes.HasError(out var error))
+        {
+            return error.ToLocalizedString();
+        }
+        var connAttemptId = createConnAttemptRes.Value;
 
         // Handle answer
-        signaling.SdpAnswerReceived += async (offerId, answer) =>
+        signaling.Client.SdpAnswerReceived_ += async (receivedConnAttemptId, answer) =>
         {
-            if (!offerId.Equals(await offerIdTcs.Task)) return;
+            if (!receivedConnAttemptId.Equals(connAttemptId)) return;
 
             peerConnection.SetRemoteSdpDescription(answer);
-            ExchangeIceCandidates(await offerIdTcs.Task);
+            ExchangeIceCandidates(connAttemptId);
 
             await GDTask.WaitUntil(peerConnection.IsConnected);
-            await signaling.EndConnectionAttempt(offerId);
+
+            var endConnAttemptRes = await signaling.Hub.EndConnectionAttempt(connAttemptId);
+            if (endConnAttemptRes.HasError(out var error))
+                GD.PrintErr(error.ToLocalizedString());
         };
 
-        peerConnection.CreateOffer();
-        return await offerIdTcs.Task;
+        return connAttemptId;
     }
 }
