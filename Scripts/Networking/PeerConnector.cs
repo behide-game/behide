@@ -9,6 +9,7 @@ using Behide.Types;
 using Behide.OnlineServices.Signaling;
 using Behide.OnlineServices.Client;
 using Behide.I18n.BOS.Errors;
+using Serilog;
 
 
 
@@ -202,7 +203,7 @@ class OfferPeerConnector(Signaling signaling) : PeerConnector(signaling)
 
             var endConnAttemptRes = await signaling.Hub.EndConnectionAttempt(connAttemptId);
             if (endConnAttemptRes.HasError(out var error))
-                GD.PrintErr(error.ToLocalizedString());
+                Log.Error(error.ToLocalizedString());
         };
 
         return connAttemptId;
