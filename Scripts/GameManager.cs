@@ -27,11 +27,22 @@ public partial class GameManager : Node3D
         if (instance != null) return;
         instance = this;
 
+        GetTree().AutoAcceptQuit = false;
+
         Logging.ConfigureLogger();
         Log = Serilog.Log.ForContext("Tag", "GameManager");
 
         Room = GetNode<RoomManager>("/root/RoomManager");
         Network = GetNode<NetworkManager>("/root/NetworkManager");
+    }
+
+    public override void _Notification(int what)
+    {
+        if (what == NotificationWMCloseRequest)
+        {
+            Serilog.Log.CloseAndFlush();
+            GetTree().Quit();
+        }
     }
 
 
