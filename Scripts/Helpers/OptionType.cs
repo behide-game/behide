@@ -66,7 +66,15 @@ public static class FSharpOptionExtension
 
     static public bool HasValue<T>(this FSharpOption<T> opt, out T value)
     {
-        value = opt.Value; // TODO: Check if it works
-        return FSharpOption<T>.get_IsSome(opt);
+        if (opt.IsSome())
+        {
+            value = opt.Value;
+            return true;
+        }
+        else
+        {
+            value = default!;
+            return false;
+        }
     }
 }

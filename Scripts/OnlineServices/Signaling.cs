@@ -8,17 +8,13 @@ using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 
 using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FSharp.Core;
 using TypedSignalR.Client;
 
-using Behide.GodotInterop;
 using Behide.Types;
 using Behide.OnlineServices.Signaling;
-
-
-
+using Serilog;
 
 public class SignalingHubClient : ISignalingClient
 {
@@ -57,7 +53,6 @@ public class SignalingHubClient : ISignalingClient
 
         return Task.CompletedTask;
     }
-
 }
 
 public partial class Signaling : Node
@@ -66,25 +61,34 @@ public partial class Signaling : Node
     public ISignalingHub Hub { get; private set; } = null!;
     public SignalingHubClient Client { get; private set; } = null!;
 
+    /// <summary>
+    /// Get the SignalR connection state
+    /// </summary>
+    public HubConnectionState GetConnectionState() => connection.State;
+
+    private ILogger Log = null!;
+
     public override async void _EnterTree()
     {
+        Log = Serilog.Log.ForContext("Tag", "Signaling");
+
         connection = new HubConnectionBuilder()
             .WithUrl(Secrets.SignalingHubUrl)
             .WithAutomaticReconnect()
-            .ConfigureLogging(options =>
+            .ConfigureLogging(loggingBuilder =>
             {
-                options.AddProvider(new GodotLoggerProvider());
-                options.SetMinimumLevel(LogLevel.Warning);
+                loggingBuilder.AddSerilog(Log);
             })
             .AddJsonProtocol(options =>
             {
+                // Enable F# types serialization
                 JsonFSharpOptions
                     .Default()
                     .AddToJsonSerializerOptions(options.PayloadSerializerOptions);
             })
             .Build();
 
-        connection.Closed += error => Task.Run(() => GD.PrintErr("SignalR connection closed"));
+        connection.Closed += error => Task.Run(() => Log.Error("SignalR connection closed"));
 
         // Creating typed hub
         Hub = connection.CreateHubProxy<ISignalingHub>();
@@ -97,11 +101,11 @@ public partial class Signaling : Node
         try
         {
             await connection.StartAsync();
-            GD.Print("SignalR connected !");
+            Log.Information("SignalR connected !");
         }
         catch (Exception exn)
         {
-            GD.PrintErr($"Failed to connect to signaling hub: {exn.Message}");
+            Log.Error($"Failed to connect to signaling hub: {exn.Message}");
         }
     }
 }
