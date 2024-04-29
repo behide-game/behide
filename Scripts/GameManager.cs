@@ -2,14 +2,14 @@
 namespace Behide;
 
 using Godot;
+using Behide.Log;
 using Behide.Networking;
-using Behide.Game.UI;
+using Serilog;
 
 public partial class GameManager : Node3D
 {
     public static GameManager instance = null!;
 
-    public static UIManager Ui { get; private set; }
     public static RoomManager Room { get; private set; }
     public static NetworkManager Network { get; private set; }
 
@@ -20,14 +20,29 @@ public partial class GameManager : Node3D
     private static readonly PackedScene lobbyScene = GD.Load<PackedScene>("res://Scenes/Lobby/Lobby.tscn");
     private static readonly PackedScene gameScene = GD.Load<PackedScene>("res://Scenes/Game/Game.tscn");
 
+    private ILogger Log = null!;
+
     public override void _EnterTree()
     {
         if (instance != null) return;
         instance = this;
 
+        GetTree().AutoAcceptQuit = false;
+
+        Logging.ConfigureLogger();
+        Log = Serilog.Log.ForContext("Tag", "GameManager");
+
         Room = GetNode<RoomManager>("/root/RoomManager");
         Network = GetNode<NetworkManager>("/root/NetworkManager");
-        // Ui = GetNode<UIManager>("/root/multiplayer/Managers/UIManager");
+    }
+
+    public override void _Notification(int what)
+    {
+        if (what == NotificationWMCloseRequest)
+        {
+            Serilog.Log.CloseAndFlush();
+            GetTree().Quit();
+        }
     }
 
 
@@ -43,5 +58,6 @@ public partial class GameManager : Node3D
 
         State = state;
         GetTree().ChangeSceneToPacked(sceneToLoad);
+        Log.Verbose("Changed game state to {state}", state);
     }
 }
