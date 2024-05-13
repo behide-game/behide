@@ -23,7 +23,7 @@ public class SignalingHubClient : ISignalingClient
     public event Action<ConnAttemptId, IceCandidate>? IceCandidateReceived_;
     public Dictionary<ConnAttemptId, IceCandidate[]> receivedIceCandidates = [];
 
-    public async Task<FSharpOption<ConnAttemptId>> CreateOffer(int askingPeerId)
+    public async Task<FSharpOption<ConnAttemptId>> CreateConnAttempt(int askingPeerId)
     {
         return ConnAttemptIdCreationRequested is null
             ? Option.None<ConnAttemptId>()

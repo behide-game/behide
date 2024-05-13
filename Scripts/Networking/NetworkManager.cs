@@ -18,8 +18,11 @@ public partial class NetworkManager : Node3D
     private Signaling signaling = null!;
     private WebRtcMultiplayerPeer multiplayer = new();
 
+    private Serilog.ILogger log = null!;
+
     public override void _EnterTree()
     {
+        log = Serilog.Log.ForContext("Tag", "Network");
         signaling = GetNode<Signaling>("/root/WebRtcSignaling");
     }
 
@@ -54,15 +57,21 @@ public partial class NetworkManager : Node3D
     {
         // Retrieve connection attempts and peer ids
         var joinRoomRes = await signaling.Hub.JoinRoom(roomId);
-        if (joinRoomRes.HasError(out var error))
+        if (joinRoomRes.HasError(out var joinRoomError))
         {
-            return error.ToLocalizedString();
+            return joinRoomError.ToLocalizedString();
         }
 
+        var peerId = joinRoomRes.ResultValue;
 
-        var joinRoomInfo = joinRoomRes.ResultValue;
+        var playersConnectionInfoRes = await signaling.Hub.ConnectToRoomPlayers();
+        if (playersConnectionInfoRes.HasError(out var connectToRoomPlayersError))
+        {
+            return connectToRoomPlayersError.ToLocalizedString();
+        }
+        var playersConnectionInfo = playersConnectionInfoRes.ResultValue;
 
-        multiplayer.CreateMesh(joinRoomInfo.PeerId);
+        multiplayer.CreateMesh(peerId);
         Multiplayer.MultiplayerPeer = multiplayer;
 
         // Handle following players connection
@@ -75,7 +84,7 @@ public partial class NetworkManager : Node3D
         };
 
         // Connect to other players
-        var tasks = joinRoomInfo.PlayersConnectionInfo.Select(async connInfo =>
+        var tasks = playersConnectionInfo.PlayersConnInfo.Select(async connInfo =>
         {
             // GameManager.Ui.Log($"Connecting to {connInfo.PeerId}");
             var peer = new AnswerPeerConnector(signaling, connInfo.ConnAttemptId);
@@ -83,6 +92,11 @@ public partial class NetworkManager : Node3D
 
             await peer.Connect();
         });
+
+        if (playersConnectionInfo.FailedCreations.Length > 0)
+        {
+            log.Error("Failed to create connection info for some players: {Error}", playersConnectionInfo.FailedCreations);
+        }
 
         await Task.WhenAll(tasks);
         return Unit.Value;
