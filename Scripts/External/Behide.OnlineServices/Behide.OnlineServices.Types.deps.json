@@ -18,7 +18,7 @@
         "runtime": {
           "lib/netstandard2.1/FSharp.Core.dll": {
             "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.2.24.6203"
+            "fileVersion": "8.2.24.10803"
           }
         },
         "resources": {

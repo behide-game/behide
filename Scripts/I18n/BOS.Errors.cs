@@ -8,7 +8,7 @@ public static class ErrorsExtensions {
         error switch
         {
             Errors.StartConnectionAttemptError.PlayerConnectionNotFound => "Failed to start a connection attempt: Player connection not found",
-            Errors.StartConnectionAttemptError.FailedToCreateOffer => "Failed to start a connection attempt: Failed to create offer",
+            Errors.StartConnectionAttemptError.FailedToCreateConnAttempt => "Failed to start a connection attempt: Failed to create a connection attempt",
             Errors.StartConnectionAttemptError.FailedToUpdatePlayerConnection => "Failed to start a connection attempt: Failed to update player connection",
             _ => "Failed to start a connection attempt: Unknown error"
         };
@@ -48,7 +48,6 @@ public static class ErrorsExtensions {
         {
             Errors.EndConnectionAttemptError.PlayerConnectionNotFound => "Failed to end a connection attempt: Player connection not found",
             Errors.EndConnectionAttemptError.OfferNotFound => "Failed to end a connection attempt: Offer not found",
-            Errors.EndConnectionAttemptError.AnswererNotFound => "Failed to end a connection attempt: Answerer not found",
             Errors.EndConnectionAttemptError.NotParticipant => "Failed to end a connection attempt: Not participant",
             Errors.EndConnectionAttemptError.FailedToRemoveOffer => "Failed to end a connection attempt: Failed to remove offer",
             _ => "Failed to end a connection attempt: Unknown error"
@@ -74,5 +73,25 @@ public static class ErrorsExtensions {
             Errors.JoinRoomError.FailedToUpdateRoom => "Failed to join a room: Failed to update room",
             Errors.JoinRoomError.FailedToUpdatePlayerConnection => "Failed to join a room: Failed to update player connection",
             _ => "Failed to join a room: Unknown error"
+        };
+
+    public static string ToLocalizedString(this Errors.ConnectToRoomPlayersError error) =>
+        error switch
+        {
+            Errors.ConnectToRoomPlayersError.PlayerConnectionNotFound => "Failed to connect to room players: Player connection not found",
+            Errors.ConnectToRoomPlayersError.NotInARoom => "Failed to connect to room players: Room not found",
+            Errors.ConnectToRoomPlayersError.PlayerNotInRoomPlayers => "Failed to connect to room players: Player not in room players",
+            Errors.ConnectToRoomPlayersError.FailedToUpdateRoom => "Failed to connect to room players: Failed to update room",
+            _ => "Failed to connect to room players: Unknown error"
+        };
+
+    public static string ToLocalizedString(this Errors.LeaveRoomError error) =>
+        error switch
+        {
+            Errors.LeaveRoomError.PlayerConnectionNotFound => "Failed to leave a room: Player connection not found",
+            Errors.LeaveRoomError.NotInARoom => "Failed to leave a room: Room not found",
+            Errors.LeaveRoomError.FailedToUpdateRoom => "Failed to leave a room: Failed to update room",
+            Errors.LeaveRoomError.FailedToUpdatePlayerConnection => "Failed to leave a room: Failed to update player connection",
+            _ => "Failed to leave a room: Unknown error"
         };
 }
