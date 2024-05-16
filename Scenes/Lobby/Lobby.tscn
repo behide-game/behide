@@ -19,6 +19,7 @@ grow_vertical = 2
 script = ExtResource("1_vmtcs")
 
 [node name="ChooseMode" type="VBoxContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -74,7 +75,6 @@ text = "Join
 "
 
 [node name="Lobby" type="VBoxContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -107,6 +107,12 @@ text = "Behide"
 label_settings = SubResource("LabelSettings_285fj")
 vertical_alignment = 1
 uppercase = true
+
+[node name="Countdown" type="Label" parent="Lobby/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Not ready"
+horizontal_alignment = 1
 
 [node name="Code" type="HBoxContainer" parent="Lobby/Header"]
 layout_mode = 2
@@ -168,10 +174,10 @@ custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Start" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer"]
+[node name="Ready" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Start"
+text = "Not ready"
 
 [node name="Quit" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -180,5 +186,5 @@ text = "Quit"
 
 [connection signal="pressed" from="ChooseMode/Buttons/Host" to="." method="HostButtonPressed"]
 [connection signal="pressed" from="ChooseMode/Buttons/Join/Validate" to="." method="JoinButtonPressed"]
-[connection signal="pressed" from="Lobby/Boxes/VBoxContainer/HBoxContainer/Start" to="." method="OnStartButtonPressed"]
+[connection signal="pressed" from="Lobby/Boxes/VBoxContainer/HBoxContainer/Ready" to="." method="OnReadyButtonPressed"]
 [connection signal="pressed" from="Lobby/Boxes/VBoxContainer/HBoxContainer/Quit" to="." method="OnQuitButtonPressed"]
