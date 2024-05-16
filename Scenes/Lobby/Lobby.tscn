@@ -180,3 +180,5 @@ text = "Quit"
 
 [connection signal="pressed" from="ChooseMode/Buttons/Host" to="." method="HostButtonPressed"]
 [connection signal="pressed" from="ChooseMode/Buttons/Join/Validate" to="." method="JoinButtonPressed"]
+[connection signal="pressed" from="Lobby/Boxes/VBoxContainer/HBoxContainer/Start" to="." method="OnStartButtonPressed"]
+[connection signal="pressed" from="Lobby/Boxes/VBoxContainer/HBoxContainer/Quit" to="." method="OnQuitButtonPressed"]
