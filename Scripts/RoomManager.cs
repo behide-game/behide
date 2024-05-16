@@ -2,21 +2,49 @@ namespace Behide;
 
 using Godot;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Behide.Types;
 using Behide.Networking;
 using Behide.OnlineServices.Signaling;
 
-public record Player(int PeerId, string Username);
+public class Player(int peerId, string username)
+{
+    /// <summary>
+    /// The peer id of the player to identify him on the network
+    /// </summary>
+    public readonly int PeerId = peerId;
+
+    /// <summary>
+    /// The username of the player
+    /// </summary>
+    public readonly string Username = username;
+
+    /// <summary>
+    /// True if the player is ready to start the game
+    /// </summary>
+    public bool Ready = false;
+}
 
 public partial class RoomManager : Node3D
 {
     private NetworkManager network = null!;
 
+    /// <summary>
+    /// The local player
+    /// It's null if the player is not in a room
+    /// </summary>
+    public Player? localPlayer;
+
+    /// <summary>
+    /// The list of players in the room / of the peers connected
+    /// </summary>
     public readonly List<Player> players = [];
+
     public event Action<Player>? PlayerRegistered;
     public event Action<Player>? PlayerLeft;
+    public event Action<Player, bool>? PlayerReady;
 
     private Serilog.ILogger Log = null!;
 
@@ -46,7 +74,11 @@ public partial class RoomManager : Node3D
         if (res.HasValue(out var value))
         {
             // Register local player
-            RegisterPlayer($"Player: {Multiplayer.GetUniqueId()}");
+            var playerId = Multiplayer.GetUniqueId();
+            var username = $"Player: {playerId}"; // TODO: Ask the player for his username
+
+            localPlayer = new Player(playerId, username);
+            RegisterPlayer(username);
         }
 
         return res.MapError(error => $"Failed to create a room: {error}");
@@ -59,10 +91,29 @@ public partial class RoomManager : Node3D
         if (res.IsOk)
         {
             Log.Debug("Joined room: {Players}", players);
-            RegisterPlayer($"Player: {Multiplayer.GetUniqueId()}");
+
+            var playerId = Multiplayer.GetUniqueId();
+            var username = $"Player: {playerId}";
+
+            localPlayer = new Player(playerId, username);
+            RegisterPlayer(username);
         }
 
         return res.MapError(error => $"Failed to join the room: {error}");
+    }
+
+    public async void LeaveRoom()
+    {
+        Log.Debug("Leaving room");
+
+        // Clear players list
+        players.Clear();
+        localPlayer = null;
+
+        (await network.LeaveRoom()).Match(
+            success: _ => Log.Information("Left room"),
+            failure: error => Log.Error($"Failed to leave the room: {error}")
+        );
     }
 
 
@@ -90,7 +141,7 @@ public partial class RoomManager : Node3D
 
     [Rpc(
         MultiplayerApi.RpcMode.AnyPeer, // Any peer can call this method
-        CallLocal = true,               // Local peer can call this method
+        CallLocal = true,               // This method is also called locally
         TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
     )]
     private void RegisterPlayerRpc(string username)
@@ -103,18 +154,42 @@ public partial class RoomManager : Node3D
     }
 
 
-    public async void LeaveRoom()
+    public void ToggleReady()
     {
-        Log.Debug("Leaving room");
+        if (localPlayer is null)
+        {
+            Log.Warning("Not connected to a room, can't toggle ready");
+            return;
+        }
 
-        // Clear players list
-        players.Clear();
+        localPlayer.Ready = !localPlayer.Ready;
+        Rpc(nameof(SetReadyRpc), localPlayer.Ready);
 
-        (await network.LeaveRoom()).Match(
-            success: _ => Log.Information("Left room"),
-            failure: error => Log.Error($"Failed to leave the room: {error}")
-        );
+        Log.Information("Toggled ready: {Ready}", localPlayer.Ready);
     }
+
+    [Rpc(
+        MultiplayerApi.RpcMode.AnyPeer, // Any peer can call this method
+        CallLocal = true,               // This method is also called locally
+        TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+    )]
+    private void SetReadyRpc(bool ready)
+    {
+        Log.Information("Player {PlayerId} is ready: {Ready}", Multiplayer.GetRemoteSenderId(), ready);
+        var playerId = Multiplayer.GetRemoteSenderId();
+        var player = players.Find(p => p.PeerId == playerId);
+
+        if (player is not null)
+        {
+            player.Ready = ready;
+            PlayerReady?.Invoke(player, ready);
+        }
+        else
+            Log.Warning("[SetReadyRpc]: Player {PlayerId} not found", playerId);
+
+    }
+
+
 
 
     // public void SpawnPlayer(long playerId)
