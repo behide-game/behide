@@ -4,7 +4,6 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Fractural.Tasks;
 using Behide.Types;
 using Behide.OnlineServices.Signaling;
 using Behide.OnlineServices.Client;
@@ -152,7 +151,7 @@ class AnswerPeerConnector(Signaling signaling, ConnAttemptId connAttemptId) : Pe
         }
 
         // Await connection
-        await GDTask.WaitUntil(peerConnection.IsConnected);
+        await TaskEx.WaitUntil(peerConnection.IsConnected);
         return Unit.Value;
     }
 }
@@ -199,7 +198,7 @@ class OfferPeerConnector(Signaling signaling) : PeerConnector(signaling)
             peerConnection.SetRemoteSdpDescription(answer);
             ExchangeIceCandidates(connAttemptId);
 
-            await GDTask.WaitUntil(peerConnection.IsConnected);
+            await TaskEx.WaitUntil(peerConnection.IsConnected);
 
             var endConnAttemptRes = await signaling.Hub.EndConnectionAttempt(connAttemptId);
             if (endConnAttemptRes.HasError(out var error))
