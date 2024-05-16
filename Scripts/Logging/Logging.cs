@@ -4,6 +4,7 @@ using Godot;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
+using System.Linq;
 
 public static class Logging
 {
@@ -12,16 +13,26 @@ public static class Logging
 
     public static void ConfigureLogger()
     {
+        var logDirectlyToConsole = OS.GetCmdlineUserArgs().Contains("--log-directly-to-console");
+
         var now = System.DateTimeOffset.Now.ToString("yyyy-MM-dd_HH-mm-ss");
         var logFilePath = ProjectSettings.GlobalizePath($"user://logs/log-{now}.txt");
         var jsonLogFilePath = ProjectSettings.GlobalizePath($"user://logs/log-json-{now}.txt");
 
         Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Verbose() // Todo: change for production
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // Minimum level for SignalR logs
-            .WriteTo.Logger(cl => cl // Console logger
-                .MinimumLevel.Verbose()
-                .WriteTo.Godot(consoleOutputFormat)
-            )
+
+            // Console logger
+            .WriteTo.Logger(cl =>
+            {
+                if (logDirectlyToConsole)
+                    cl.WriteTo.Console(outputTemplate: consoleOutputFormat + "\n");
+                else
+                    cl
+                    .MinimumLevel.Information()
+                    .WriteTo.Godot(consoleOutputFormat);
+            })
             .WriteTo.Logger(cl => cl // File logger
                 .WriteTo.File(logFilePath, outputTemplate: logFileOutputFormat)
                 .WriteTo.File(new JsonFormatter(), jsonLogFilePath)
