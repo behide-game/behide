@@ -29,9 +29,10 @@ public partial class NetworkManager : Node3D
     /// <summary>
     /// Create a room and set the handler for the players who join
     /// </summary>
-    public async Task<Result<RoomId, string>> StartHost()
+    public async Task<Result<RoomId, string>> CreateRoom()
     {
         // Instantiate the multiplayer peer
+        multiplayer = new WebRtcMultiplayerPeer();
         multiplayer.CreateMesh(1);
         Multiplayer.MultiplayerPeer = multiplayer;
 
@@ -53,7 +54,7 @@ public partial class NetworkManager : Node3D
     /// <summary>
     /// Join a room and connect to the other players
     /// </summary>
-    public async Task<Result<Unit, string>> StartClient(RoomId roomId)
+    public async Task<Result<Unit, string>> JoinRoom(RoomId roomId)
     {
         // Retrieve connection attempts and peer ids
         var joinRoomRes = await signaling.Hub.JoinRoom(roomId);
@@ -71,6 +72,7 @@ public partial class NetworkManager : Node3D
         }
         var playersConnectionInfo = playersConnectionInfoRes.ResultValue;
 
+        multiplayer = new WebRtcMultiplayerPeer();
         multiplayer.CreateMesh(peerId);
         Multiplayer.MultiplayerPeer = multiplayer;
 
@@ -100,5 +102,25 @@ public partial class NetworkManager : Node3D
 
         await Task.WhenAll(tasks);
         return Unit.Value;
+    }
+
+    /// <summary>
+    /// Disconnect from the room peers and leave the room
+    /// </summary>
+    public async Task<Result<Unit, string>> LeaveRoom()
+    {
+        // Disconnect from peers
+        foreach (var peer in multiplayer.GetPeers())
+        {
+            multiplayer.DisconnectPeer(peer.Key.As<int>());
+        }
+
+        Multiplayer.MultiplayerPeer = null;
+
+        // Leave room
+        return (await signaling.Hub.LeaveRoom())
+            .ToResult()
+            .Map(_ => Unit.Value)
+            .MapError(err => err.ToLocalizedString());
     }
 }

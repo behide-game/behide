@@ -16,16 +16,32 @@ public partial class RoomManager : Node3D
 
     public readonly List<Player> players = [];
     public event Action<Player>? PlayerRegistered;
+    public event Action<Player>? PlayerLeft;
+
+    private Serilog.ILogger Log = null!;
 
     public override void _EnterTree()
     {
         network = GameManager.Network;
+        Log = Serilog.Log.ForContext("Tag", "RoomManager");
+        Multiplayer.PeerDisconnected += peerId =>
+        {
+            Log.Debug($"Player {peerId} left the room");
+
+            var player = players.Find(p => p.PeerId == peerId);
+
+            if (player is not null)
+            {
+                players.Remove(player);
+                PlayerLeft?.Invoke(player);
+            }
+        };
     }
 
 
     public async Task<Result<RoomId, string>> CreateRoom()
     {
-        var res = await network.StartHost();
+        var res = await network.CreateRoom();
 
         if (res.HasValue(out var value))
         {
@@ -38,10 +54,13 @@ public partial class RoomManager : Node3D
 
     public async Task<Result<Unit, string>> JoinRoom(RoomId roomId)
     {
-        // GameManager.Ui.Log($"Connecting...");
-        var res = await network.StartClient(roomId);
+        var res = await network.JoinRoom(roomId);
 
-        if (res.IsOk) RegisterPlayer($"Player: {Multiplayer.GetUniqueId()}");
+        if (res.IsOk)
+        {
+            Log.Debug("Joined room: {Players}", players);
+            RegisterPlayer($"Player: {Multiplayer.GetUniqueId()}");
+        }
 
         return res.MapError(error => $"Failed to join the room: {error}");
     }
@@ -55,8 +74,18 @@ public partial class RoomManager : Node3D
     {
         // Register local player on already connected peers
         Rpc(nameof(RegisterPlayerRpc), username);
+        foreach (var peerId in Multiplayer.GetPeers())
+        {
+            Log.Debug("Registering us with already connected peer: {Username}", username);
+        }
+
         // Register local player on futur peers
-        Multiplayer.PeerConnected += peerId => RpcId(peerId, nameof(RegisterPlayerRpc), username);
+        // Use Multiplayer.MultiplayerPeer to don't have to unsubscribe from the event
+        Multiplayer.MultiplayerPeer.PeerConnected += peerId =>
+        {
+            Log.Debug("New peer connected, registering us with him: {Username}", username);
+            RpcId(peerId, nameof(RegisterPlayerRpc), username);
+        };
     }
 
     [Rpc(
@@ -71,6 +100,20 @@ public partial class RoomManager : Node3D
 
         players.Add(player);
         PlayerRegistered?.Invoke(player);
+    }
+
+
+    public async void LeaveRoom()
+    {
+        Log.Debug("Leaving room");
+
+        // Clear players list
+        players.Clear();
+
+        (await network.LeaveRoom()).Match(
+            success: _ => Log.Information("Left room"),
+            failure: error => Log.Error($"Failed to leave the room: {error}")
+        );
     }
 
 
