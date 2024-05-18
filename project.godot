@@ -26,6 +26,7 @@ RoomManager="*res://Scripts/RoomManager.cs"
 
 window/size/initial_position_type=2
 window/vsync/vsync_mode=0
+window/transparent_background=false
 
 [dotnet]
 

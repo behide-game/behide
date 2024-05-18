@@ -2,7 +2,6 @@ namespace Behide;
 
 using Godot;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Behide.Types;
@@ -44,7 +43,7 @@ public partial class RoomManager : Node3D
 
     public event Action<Player>? PlayerRegistered;
     public event Action<Player>? PlayerLeft;
-    public event Action<Player, bool>? PlayerReady;
+    public event Action<Player>? PlayerReady;
 
     private Serilog.ILogger Log = null!;
 
@@ -182,7 +181,7 @@ public partial class RoomManager : Node3D
         if (player is not null)
         {
             player.Ready = ready;
-            PlayerReady?.Invoke(player, ready);
+            PlayerReady?.Invoke(player);
         }
         else
             Log.Warning("[SetReadyRpc]: Player {PlayerId} not found", playerId);
