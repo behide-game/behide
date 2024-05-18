@@ -1,35 +1,65 @@
-[gd_scene load_steps=5 format=3 uid="uid://ch26lr3yfn732"]
+[gd_scene load_steps=15 format=3 uid="uid://ch26lr3yfn732"]
 
 [ext_resource type="Script" path="res://Scenes/Lobby/Lobby.cs" id="1_vmtcs"]
 [ext_resource type="Texture2D" uid="uid://b3lgwbn2cu3ao" path="res://Assets/Images/Behide-logo.svg" id="2_2svve"]
+[ext_resource type="PackedScene" uid="uid://do5karhuhkwaw" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.tscn" id="2_3qdhv"]
+[ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="4_da1ys"]
+[ext_resource type="Texture2D" uid="uid://c2nm1vd6ey7c4" path="res://Assets/Images/Behide-logo-blue.svg" id="5_b4as8"]
+[ext_resource type="Script" path="res://Scenes/Controls/BezelContainer.cs" id="5_ew8go"]
+[ext_resource type="FontFile" uid="uid://26b4v0rh3143" path="res://Assets/Fonts/Space Mono/SpaceMono-Bold.ttf" id="7_rk5ct"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jn132"]
+content_margin_left = 60.0
+content_margin_top = 60.0
+content_margin_right = 60.0
+content_margin_bottom = 60.0
+bg_color = Color(0.894118, 0.945098, 0.968627, 1)
+corner_detail = 1
 
 [sub_resource type="LabelSettings" id="LabelSettings_285fj"]
+font = ExtResource("4_da1ys")
+font_size = 30
+font_color = Color(0.0980392, 0.109804, 0.117647, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_vwysm"]
+font = ExtResource("4_da1ys")
+font_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_k17q5"]
+font = ExtResource("4_da1ys")
 font_size = 24
+font_color = Color(0.0196078, 0.105882, 0.207843, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_8edeb"]
+font = ExtResource("7_rk5ct")
+font_size = 30
+font_color = Color(0.0196078, 0.105882, 0.207843, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_f4vnb"]
+font = ExtResource("4_da1ys")
+font_size = 24
+font_color = Color(0, 0.117647, 0.176471, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_fpqc4"]
+font = ExtResource("4_da1ys")
 font_size = 24
 
-[node name="Lobby" type="Control"]
-layout_mode = 3
+[node name="Lobby" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jn132")
 script = ExtResource("1_vmtcs")
+playerListItemScene = ExtResource("2_3qdhv")
+playerListPath = "Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer/Players"
+countdownPath = "Lobby/Header/MarginContainer/Countdown"
+readyButtonTextPath = "Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center/Label"
 
 [node name="ChooseMode" type="VBoxContainer" parent="."]
 visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 60.0
-offset_top = 60.0
-offset_right = -60.0
-offset_bottom = -60.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 theme_override_constants/separation = 40
 
 [node name="CenterContainer" type="CenterContainer" parent="ChooseMode"]
@@ -75,16 +105,7 @@ text = "Join
 "
 
 [node name="Lobby" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 60.0
-offset_top = 60.0
-offset_right = -60.0
-offset_bottom = -60.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 theme_override_constants/separation = 40
 
 [node name="Header" type="HBoxContainer" parent="Lobby"]
@@ -98,7 +119,7 @@ size_flags_horizontal = 3
 [node name="TextureRect" type="TextureRect" parent="Lobby/Header/Logo"]
 layout_mode = 2
 size_flags_horizontal = 0
-texture = ExtResource("2_2svve")
+texture = ExtResource("5_b4as8")
 expand_mode = 3
 
 [node name="Label" type="Label" parent="Lobby/Header/Logo"]
@@ -108,21 +129,46 @@ label_settings = SubResource("LabelSettings_285fj")
 vertical_alignment = 1
 uppercase = true
 
-[node name="Countdown" type="Label" parent="Lobby/Header"]
+[node name="MarginContainer" type="MarginContainer" parent="Lobby/Header"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+script = ExtResource("5_ew8go")
+BezelSize = 12
+BorderRadius = 0
+Color = Color(1, 0, 0.458824, 1)
+
+[node name="Countdown" type="Label" parent="Lobby/Header/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Not ready"
+label_settings = SubResource("LabelSettings_vwysm")
 horizontal_alignment = 1
+uppercase = true
 
 [node name="Code" type="HBoxContainer" parent="Lobby/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 10
 alignment = 2
 
-[node name="Label" type="Label" parent="Lobby/Header/Code"]
+[node name="Container" type="MarginContainer" parent="Lobby/Header/Code"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+script = ExtResource("5_ew8go")
+BezelSize = 12
+BorderRadius = 0
+Color = Color(0.878431, 0.878431, 0, 1)
+
+[node name="Label" type="Label" parent="Lobby/Header/Code/Container"]
 layout_mode = 2
 text = "Code"
-label_settings = SubResource("LabelSettings_8edeb")
+label_settings = SubResource("LabelSettings_k17q5")
 vertical_alignment = 1
 uppercase = true
 
@@ -133,32 +179,54 @@ label_settings = SubResource("LabelSettings_8edeb")
 vertical_alignment = 1
 uppercase = true
 
+[node name="CenterContainer" type="CenterContainer" parent="Lobby/Header"]
+layout_mode = 2
+
 [node name="Boxes" type="HBoxContainer" parent="Lobby"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="Players" type="PanelContainer" parent="Lobby/Boxes"]
+[node name="Players" type="Control" parent="Lobby/Boxes"]
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
+script = ExtResource("5_ew8go")
+BezelSize = 30
+BorderRadius = 0
+Color = Color(0.792157, 0.878431, 0.898039, 1)
 
-[node name="VerticalAligner" type="VBoxContainer" parent="Lobby/Boxes/Players"]
+[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/Players"]
 layout_mode = 2
+offset_right = 350.0
+offset_bottom = 445.0
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
 
-[node name="Label" type="CenterContainer" parent="Lobby/Boxes/Players/VerticalAligner"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Lobby/Boxes/Players/MarginContainer"]
+clip_children = 2
 layout_mode = 2
+theme_override_constants/separation = 15
+script = ExtResource("5_ew8go")
+BezelSize = 20
+BorderRadius = 0
+Color = Color(0.792157, 0.878431, 0.898039, 1)
 
-[node name="Label" type="Label" parent="Lobby/Boxes/Players/VerticalAligner/Label"]
+[node name="Label" type="Label" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer"]
 layout_mode = 2
 text = "Players"
+label_settings = SubResource("LabelSettings_f4vnb")
+horizontal_alignment = 1
 uppercase = true
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Lobby/Boxes/Players/VerticalAligner"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 follow_focus = true
 
-[node name="Players" type="VBoxContainer" parent="Lobby/Boxes/Players/VerticalAligner/ScrollContainer"]
+[node name="Players" type="VBoxContainer" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -177,12 +245,53 @@ theme_override_constants/separation = 20
 [node name="Ready" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+flat = true
+script = ExtResource("5_ew8go")
+BezelSize = 30
+BorderRadius = 0
+Color = Color(0, 0.396078, 0.552941, 1)
+
+[node name="Center" type="CenterContainer" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Ready"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center"]
+layout_mode = 2
 text = "Not ready"
+label_settings = SubResource("LabelSettings_fpqc4")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
 
 [node name="Quit" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+flat = true
+script = ExtResource("5_ew8go")
+BezelSize = 30
+BorderRadius = 0
+Color = Color(0.729412, 0.101961, 0.101961, 1)
+InvertOrientation = true
+
+[node name="Center" type="CenterContainer" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Quit"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Quit/Center"]
+layout_mode = 2
 text = "Quit"
+label_settings = SubResource("LabelSettings_fpqc4")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
 
 [connection signal="pressed" from="ChooseMode/Buttons/Host" to="." method="HostButtonPressed"]
 [connection signal="pressed" from="ChooseMode/Buttons/Join/Validate" to="." method="JoinButtonPressed"]
