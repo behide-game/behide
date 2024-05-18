@@ -3,12 +3,12 @@ namespace Behide.Game.UI.Lobby;
 using Godot;
 using Behide.Types;
 using Behide.OnlineServices.Signaling;
+using Behide.UI.Controls;
 using Serilog;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
 
 public class Countdown(int durationInSec)
 {
@@ -33,7 +33,7 @@ public class Countdown(int durationInSec)
         while (timeLeft > 0 && !cts.Token.IsCancellationRequested)
         {
             Tick?.Invoke(timeLeft);
-            await Task.Delay(1000, cts.Token);
+            await Task.Delay(1000).WaitAsync(cts.Token);
             timeLeft--;
         }
 
@@ -53,6 +53,11 @@ public class Countdown(int durationInSec)
 
 public partial class Lobby : Control
 {
+    [Export] private PackedScene playerListItemScene = null!;
+    [Export] private string playerListPath = "";
+    [Export] private string countdownPath = "";
+    [Export] private string readyButtonTextPath = "";
+
     private Control chooseModeControl = null!;
     private Control lobbyControl = null!;
 
@@ -71,7 +76,7 @@ public partial class Lobby : Control
         chooseModeControl.Visible = true;
         lobbyControl.Visible = false;
 
-        var countdownLabel = GetNode<Label>("Lobby/Header/Countdown");
+        var countdownLabel = GetNode<Label>(countdownPath);
         var countdownDefaultText = countdownLabel.Text;
 
         countdown.Tick += timeLeft => countdownLabel.Text = $"Starting in {timeLeft}s";
@@ -102,8 +107,11 @@ public partial class Lobby : Control
 
         countdown.Stop();
 
-        var playerControls = GetNode<VBoxContainer>("Lobby/Boxes/Players/VerticalAligner/ScrollContainer/Players").GetChildren();
+        var playerControls = GetNode<VBoxContainer>(playerListPath).GetChildren();
         foreach (var playerControl in playerControls) playerControl.QueueFree();
+
+        var readyControl = GetNode<Button>(readyButtonTextPath);
+        readyControl.Text = "Not ready";
     }
 
 
@@ -145,36 +153,44 @@ public partial class Lobby : Control
 
     private void OnPlayerRegistered(Behide.Player player)
     {
-        var playerList = GetNode<VBoxContainer>("Lobby/Boxes/Players/VerticalAligner/ScrollContainer/Players"); // TODO: Put this kind of thing in a variable editable in the Godot editor
-        var playerLabel = new Label { Name = player.Username.Replace(":", "_"), Text = $"{player.Username}: Not ready" }; // TODO: Find a solution for Replace(":", "_")
-        GD.Print(player.Username);
-        playerList.AddChild(playerLabel);
+        var playerList = GetNode<VBoxContainer>(playerListPath);
+        var playerItem = playerListItemScene.Instantiate<PlayerListItem>();
+
+        playerItem.SetPlayer(player);
+        playerList.AddChild(playerItem);
+        GD.Print(playerList.GetChildren());
     }
 
     private void OnPlayerLeft(Behide.Player player)
     {
-        var playerList = GetNode<VBoxContainer>("Lobby/Boxes/Players/VerticalAligner/ScrollContainer/Players");
-        var playerLabel = playerList.GetChildren().FirstOrDefault(child => ((Label)child).Text == player.Username);
+        var playerList = GetNode<VBoxContainer>(playerListPath);
+        var playerLabel = playerList
+            .GetChildren()
+            .Cast<PlayerListItem>()
+            .FirstOrDefault(p => p.GetUsername() == player.Username);
+
         playerList.RemoveChild(playerLabel);
     }
 
-    private void OnPlayerReady(Behide.Player player, bool ready)
+    private void OnPlayerReady(Behide.Player player)
     {
-        var playerList = GetNode<VBoxContainer>("Lobby/Boxes/Players/VerticalAligner/ScrollContainer/Players").GetChildren();
-        var playerLabel = (Label?)playerList.FirstOrDefault(child => {
-            GD.Print(child.Name);
-            return child.Name == player.Username.Replace(":", "_");
-        });
+        // Update player ready status in the UI
+        var playerList = GetNode<VBoxContainer>(playerListPath);
+        var playerItem = playerList
+            .GetChildren()
+            .Cast<PlayerListItem>()
+            .FirstOrDefault(p => p.GetUsername() == player.Username);
 
-        if (playerLabel is null)
+        if (playerItem is null)
         {
             Log.Error("Player {Username} not found", player.Username);
             return;
         }
 
-        playerLabel.Text = $"{player.Username}: {(ready ? "Ready" : "Not ready")}";
+        playerItem.SetPlayer(player);
 
-        if (ready == true)
+        // Start countdown if all players are ready
+        if (player.Ready == true)
         {
             var allReady = GameManager.Room.players.All(player => player.Ready);
             if (allReady)
@@ -189,7 +205,7 @@ public partial class Lobby : Control
     {
         GameManager.Room.ToggleReady();
 
-        var readyControl = GetNode<Button>("Lobby/Boxes/VBoxContainer/HBoxContainer/Ready");
+        var readyControl = GetNode<Label>(readyButtonTextPath);
         readyControl.Text = GameManager.Room.localPlayer?.Ready ?? false ? "Ready" : "Not ready";
     }
 
