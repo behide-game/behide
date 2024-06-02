@@ -158,7 +158,6 @@ public partial class Lobby : Control
 
         playerItem.SetPlayer(player);
         playerList.AddChild(playerItem);
-        GD.Print(playerList.GetChildren());
     }
 
     private void OnPlayerLeft(Behide.Player player)

@@ -1,7 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://do5karhuhkwaw"]
+[gd_scene load_steps=6 format=3 uid="uid://do5karhuhkwaw"]
 
 [ext_resource type="Script" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.cs" id="1_e7184"]
 [ext_resource type="Script" path="res://Scenes/Controls/BezelContainer.cs" id="2_418vq"]
+[ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="3_37cwf"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_mt0eq"]
+font = ExtResource("3_37cwf")
+
+[sub_resource type="LabelSettings" id="LabelSettings_url6u"]
+font = ExtResource("3_37cwf")
 
 [node name="PlayerListItem" type="MarginContainer"]
 size_flags_horizontal = 3
@@ -26,6 +33,7 @@ theme_override_constants/margin_bottom = 10
 [node name="Username" type="Label" parent="Container/MarginUsername"]
 layout_mode = 2
 text = "username"
+label_settings = SubResource("LabelSettings_mt0eq")
 
 [node name="MarginReady" type="MarginContainer" parent="Container"]
 layout_mode = 2
@@ -37,9 +45,9 @@ theme_override_constants/margin_bottom = 10
 [node name="Ready" type="MarginContainer" parent="Container/MarginReady"]
 layout_mode = 2
 theme_override_constants/margin_left = 9
-theme_override_constants/margin_top = 15
+theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 9
-theme_override_constants/margin_bottom = 15
+theme_override_constants/margin_bottom = 10
 script = ExtResource("2_418vq")
 BezelSize = 10
 BorderRadius = 0
@@ -48,3 +56,4 @@ Color = Color(0.74902, 0.0901961, 0.419608, 1)
 [node name="Label" type="Label" parent="Container/MarginReady/Ready"]
 layout_mode = 2
 text = "Not ready"
+label_settings = SubResource("LabelSettings_url6u")

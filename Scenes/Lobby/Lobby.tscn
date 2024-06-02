@@ -1,12 +1,13 @@
-[gd_scene load_steps=15 format=3 uid="uid://ch26lr3yfn732"]
+[gd_scene load_steps=18 format=3 uid="uid://ch26lr3yfn732"]
 
 [ext_resource type="Script" path="res://Scenes/Lobby/Lobby.cs" id="1_vmtcs"]
-[ext_resource type="Texture2D" uid="uid://b3lgwbn2cu3ao" path="res://Assets/Images/Behide-logo.svg" id="2_2svve"]
 [ext_resource type="PackedScene" uid="uid://do5karhuhkwaw" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.tscn" id="2_3qdhv"]
-[ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="4_da1ys"]
-[ext_resource type="Texture2D" uid="uid://c2nm1vd6ey7c4" path="res://Assets/Images/Behide-logo-blue.svg" id="5_b4as8"]
+[ext_resource type="PackedScene" uid="uid://dxmrf533plg67" path="res://Scenes/Controls/Logo.tscn" id="5_ah4j3"]
 [ext_resource type="Script" path="res://Scenes/Controls/BezelContainer.cs" id="5_ew8go"]
+[ext_resource type="Script" path="res://Scenes/Controls/ShapePattern.cs" id="5_vnyn6"]
+[ext_resource type="Texture2D" uid="uid://bkpfu1nji6wq8" path="res://Assets/Images/Behide-logo-rotated.svg" id="6_nkp3a"]
 [ext_resource type="FontFile" uid="uid://26b4v0rh3143" path="res://Assets/Fonts/Space Mono/SpaceMono-Bold.ttf" id="7_rk5ct"]
+[ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="7_xxjlh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jn132"]
 content_margin_left = 60.0
@@ -16,32 +17,40 @@ content_margin_bottom = 60.0
 bg_color = Color(0.894118, 0.945098, 0.968627, 1)
 corner_detail = 1
 
-[sub_resource type="LabelSettings" id="LabelSettings_285fj"]
-font = ExtResource("4_da1ys")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cmklm"]
+content_margin_left = 0.0
+content_margin_top = 10.0
+content_margin_right = 0.0
+content_margin_bottom = 10.0
+bg_color = Color(0.0392157, 0.337255, 0.611765, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_adnue"]
+font = ExtResource("7_xxjlh")
 font_size = 30
-font_color = Color(0.0980392, 0.109804, 0.117647, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_vwysm"]
-font = ExtResource("4_da1ys")
-font_size = 20
+font = ExtResource("7_xxjlh")
+font_size = 18
 
 [sub_resource type="LabelSettings" id="LabelSettings_k17q5"]
-font = ExtResource("4_da1ys")
-font_size = 24
+font = ExtResource("7_xxjlh")
+font_size = 18
 font_color = Color(0.0196078, 0.105882, 0.207843, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_8edeb"]
 font = ExtResource("7_rk5ct")
-font_size = 30
+font_size = 23
 font_color = Color(0.0196078, 0.105882, 0.207843, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_f4vnb"]
-font = ExtResource("4_da1ys")
+font = ExtResource("7_xxjlh")
 font_size = 24
 font_color = Color(0, 0.117647, 0.176471, 1)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jtf8b"]
+
 [sub_resource type="LabelSettings" id="LabelSettings_fpqc4"]
-font = ExtResource("4_da1ys")
+font = ExtResource("7_xxjlh")
 font_size = 24
 
 [node name="Lobby" type="PanelContainer"]
@@ -58,37 +67,73 @@ countdownPath = "Lobby/Header/MarginContainer/Countdown"
 readyButtonTextPath = "Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center/Label"
 
 [node name="ChooseMode" type="VBoxContainer" parent="."]
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 40
 
 [node name="CenterContainer" type="CenterContainer" parent="ChooseMode"]
 layout_mode = 2
 
-[node name="Logo" type="HBoxContainer" parent="ChooseMode/CenterContainer"]
+[node name="Logo" parent="ChooseMode/CenterContainer" instance=ExtResource("5_ah4j3")]
 layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="ChooseMode/CenterContainer/Logo"]
-layout_mode = 2
-size_flags_horizontal = 0
-texture = ExtResource("2_2svve")
-expand_mode = 3
-
-[node name="Label" type="Label" parent="ChooseMode/CenterContainer/Logo"]
-layout_mode = 2
-text = "Behide"
-label_settings = SubResource("LabelSettings_285fj")
-vertical_alignment = 1
-uppercase = true
 
 [node name="Buttons" type="HBoxContainer" parent="ChooseMode"]
 layout_mode = 2
 size_flags_vertical = 3
 
 [node name="Host" type="Button" parent="ChooseMode/Buttons"]
+clip_children = 2
+custom_minimum_size = Vector2(350, 400)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 10
+size_flags_vertical = 4
+flat = true
+script = ExtResource("5_ew8go")
+BezelSize = 40
+BorderRadius = 0
+Color = Color(0.0392157, 0.337255, 0.611765, 1)
+BorderWidth = 8
+BackgroundColor = Color(0.894118, 0.945098, 0.968627, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="ChooseMode/Buttons/Host"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Control" type="Control" parent="ChooseMode/Buttons/Host/MarginContainer"]
+layout_mode = 2
+script = ExtResource("5_vnyn6")
+Shape = ExtResource("6_nkp3a")
+ShapeSize = 35.0
+Gap = Vector2(40, 30)
+Rotation = -45.0
+Offset = Vector2(0, -45)
+
+[node name="PanelContainer" type="PanelContainer" parent="ChooseMode/Buttons/Host"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -21.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_cmklm")
+
+[node name="Label" type="Label" parent="ChooseMode/Buttons/Host/PanelContainer"]
+layout_mode = 2
 text = "Host"
+label_settings = SubResource("LabelSettings_adnue")
+horizontal_alignment = 1
+uppercase = true
 
 [node name="Join" type="VBoxContainer" parent="ChooseMode/Buttons"]
 layout_mode = 2
@@ -96,7 +141,7 @@ size_flags_horizontal = 3
 
 [node name="LineEdit" type="LineEdit" parent="ChooseMode/Buttons/Join"]
 layout_mode = 2
-placeholder_text = "Code: ABC01"
+placeholder_text = "Code: ABC0"
 
 [node name="Validate" type="Button" parent="ChooseMode/Buttons/Join"]
 layout_mode = 2
@@ -105,6 +150,7 @@ text = "Join
 "
 
 [node name="Lobby" type="VBoxContainer" parent="."]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 40
 
@@ -112,22 +158,8 @@ theme_override_constants/separation = 40
 layout_mode = 2
 alignment = 1
 
-[node name="Logo" type="HBoxContainer" parent="Lobby/Header"]
+[node name="Logo" parent="Lobby/Header" instance=ExtResource("5_ah4j3")]
 layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="TextureRect" type="TextureRect" parent="Lobby/Header/Logo"]
-layout_mode = 2
-size_flags_horizontal = 0
-texture = ExtResource("5_b4as8")
-expand_mode = 3
-
-[node name="Label" type="Label" parent="Lobby/Header/Logo"]
-layout_mode = 2
-text = "Behide"
-label_settings = SubResource("LabelSettings_285fj")
-vertical_alignment = 1
-uppercase = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Lobby/Header"]
 layout_mode = 2
@@ -245,6 +277,7 @@ theme_override_constants/separation = 20
 [node name="Ready" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_jtf8b")
 flat = true
 script = ExtResource("5_ew8go")
 BezelSize = 30
