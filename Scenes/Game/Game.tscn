@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://bq63a6mdt3w4"]
 
-[ext_resource type="Script" uid="uid://dri3tm4qsomr7" path="res://Scripts/Networking/NetworkManager.cs" id="1_sutpi"]
-[ext_resource type="Script" uid="uid://b4bamaxmtj2kn" path="res://Scripts/RoomManager.cs" id="3_i6hkt"]
+[ext_resource type="Script" path="res://Scenes/Game/Game.cs" id="1_1h0eo"]
+[ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/player.tscn" id="2_g0jbk"]
 [ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Shaders/chromatic_aberration.tres" id="4_32cbu"]
 [ext_resource type="Environment" uid="uid://c8ttkksgix01d" path="res://Scenes/Game/environment.tres" id="4_tyqxg"]
 [ext_resource type="PackedScene" uid="uid://cuuh5753pn6hj" path="res://Prefabs/behide_object.tscn" id="6_s06yr"]
@@ -17,6 +17,9 @@
 size = Vector3(2, 0.4, 2)
 
 [node name="multiplayer" type="Node3D"]
+script = ExtResource("1_1h0eo")
+playerPrefab = ExtResource("2_g0jbk")
+playersNodePath = NodePath("Players")
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -131,17 +134,12 @@ resource = ExtResource("10_wgnhc")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -6)
 resource = ExtResource("10_wgnhc")
 
-[node name="Managers" type="Node3D" parent="."]
-
-[node name="NetworkManager" type="Node3D" parent="Managers"]
-script = ExtResource("1_sutpi")
-
-[node name="RoomManager" type="Node3D" parent="Managers"]
-script = ExtResource("3_i6hkt")
-
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(0.825015, -0.249057, 0.507268, 0, 0.897643, 0.440723, -0.565111, -0.363603, 0.740569, 3, 3, 3)
 fov = 90.0
 
-[connection signal="pressed" from="UI/Buttons/Client" to="Managers/RoomManager" method="JoinRoom"]
-[connection signal="pressed" from="UI/Buttons/Server" to="Managers/RoomManager" method="CreateRoom"]
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://Prefabs/player.tscn")
+spawn_path = NodePath("../Players")
+
+[node name="Players" type="Node3D" parent="."]

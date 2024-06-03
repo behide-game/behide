@@ -70,9 +70,10 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_jn132")
 script = ExtResource("1_vmtcs")
 playerListItemScene = ExtResource("2_3qdhv")
-playerListPath = "Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer/Players"
-countdownPath = "Lobby/Header/MarginContainer/Countdown"
-readyButtonTextPath = "Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center/Label"
+codeInputPath = NodePath("ChooseMode/Buttons/VBoxContainer/Code/LineEdit")
+playerListPath = NodePath("Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer/Players")
+countdownPath = NodePath("Lobby/Header/MarginContainer/Countdown")
+readyButtonTextPath = NodePath("Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center/Label")
 
 [node name="ChooseMode" type="VBoxContainer" parent="."]
 layout_mode = 2

@@ -54,10 +54,10 @@ public class Countdown(int durationInSec)
 public partial class Lobby : Control
 {
     [Export] private PackedScene playerListItemScene = null!;
-    [Export] private string codeInputPath = "";
-    [Export] private string playerListPath = "";
-    [Export] private string countdownPath = "";
-    [Export] private string readyButtonTextPath = "";
+    [Export] private NodePath codeInputPath = "";
+    [Export] private NodePath playerListPath = "";
+    [Export] private NodePath countdownPath = "";
+    [Export] private NodePath readyButtonTextPath = "";
 
     private Control chooseModeControl = null!;
     private Control lobbyControl = null!;
@@ -82,7 +82,10 @@ public partial class Lobby : Control
 
         countdown.Tick += timeLeft => countdownLabel.Text = $"Starting in {timeLeft}s";
         countdown.Canceled += () => countdownLabel.Text = countdownDefaultText;
-        countdown.Finished += () => countdownLabel.Text = "Finished";
+        countdown.Finished += () => {
+            countdownLabel.Text = "Starting game...";
+            GameManager.instance.SetGameState(GameManager.GameState.Game);
+        };
     }
 
     private void ShowLobby(RoomId roomId)
