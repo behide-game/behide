@@ -54,6 +54,7 @@ public class Countdown(int durationInSec)
 public partial class Lobby : Control
 {
     [Export] private PackedScene playerListItemScene = null!;
+    [Export] private string codeInputPath = "";
     [Export] private string playerListPath = "";
     [Export] private string countdownPath = "";
     [Export] private string readyButtonTextPath = "";
@@ -130,8 +131,11 @@ public partial class Lobby : Control
 
     private async void JoinButtonPressed()
     {
-        var rawCode = GetNode<LineEdit>("ChooseMode/Buttons/Join/LineEdit").Text;
+        var rawCode = GetNode<LineEdit>(codeInputPath).Text;
         var codeOpt = RoomId.tryParse(rawCode);
+
+        Log.Debug("Join button pressed with code {Code}", rawCode);
+        GD.Print("Join button pressed with code {Code}", rawCode);
 
         if (codeOpt.HasValue(out var code) == false)
         {
@@ -158,7 +162,6 @@ public partial class Lobby : Control
 
         playerItem.SetPlayer(player);
         playerList.AddChild(playerItem);
-        GD.Print(playerList.GetChildren());
     }
 
     private void OnPlayerLeft(Behide.Player player)
