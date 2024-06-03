@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c2nm1vd6ey7c4"
-path="res://.godot/imported/Behide-logo-blue.svg-1418d2bba8dabd58a848e347d410e570.ctex"
+uid="uid://b7hopap8ojrdp"
+path="res://.godot/imported/Behide-logo-rotated-blue.svg-a826f856597d46ffe10b4bc099fa5698.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Images/Behide-logo-blue.svg"
-dest_files=["res://.godot/imported/Behide-logo-blue.svg-1418d2bba8dabd58a848e347d410e570.ctex"]
+source_file="res://Assets/Images/Behide-logo-rotated-blue.svg"
+dest_files=["res://.godot/imported/Behide-logo-rotated-blue.svg-a826f856597d46ffe10b4bc099fa5698.ctex"]
 
 [params]
 

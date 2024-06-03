@@ -1,0 +1,14 @@
+[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://b1y8ysso5wmg7"]
+
+[ext_resource type="FontFile" uid="uid://cl6gjjopg1e7m" path="res://Assets/Fonts/Roboto Flex/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf" id="1_6gxwq"]
+
+[resource]
+base_font = ExtResource("1_6gxwq")
+variation_opentype = {
+1196572996: null,
+1869640570: 68,
+1936486004: null,
+2003072104: 151,
+2003265652: 1000
+}
+spacing_bottom = -2
