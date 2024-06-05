@@ -33,7 +33,12 @@ public class Countdown(int durationInSec)
         while (timeLeft > 0 && !cts.Token.IsCancellationRequested)
         {
             Tick?.Invoke(timeLeft);
-            await Task.Delay(1000).WaitAsync(cts.Token);
+            try {
+                await Task.Delay(1000).WaitAsync(cts.Token);
+            }
+            catch (TaskCanceledException) {
+                break; // Use a try-catch block to hide errors in the console
+            }
             timeLeft--;
         }
 
@@ -85,6 +90,7 @@ public partial class Lobby : Control
         countdown.Finished += () => {
             countdownLabel.Text = "Starting game...";
             GameManager.instance.SetGameState(GameManager.GameState.Game);
+            GameManager.Room.SetPlayerState(new PlayerStateInGame());
         };
     }
 
@@ -97,7 +103,7 @@ public partial class Lobby : Control
         GameManager.Room.players.ForEach(OnPlayerRegistered);
         GameManager.Room.PlayerRegistered += OnPlayerRegistered;
         GameManager.Room.PlayerLeft += OnPlayerLeft;
-        GameManager.Room.PlayerReady += OnPlayerReady;
+        GameManager.Room.PlayerStateChanged += OnPlayerStateChanged;
     }
 
     private void HideLobby()
@@ -107,7 +113,7 @@ public partial class Lobby : Control
 
         GameManager.Room.PlayerRegistered -= OnPlayerRegistered;
         GameManager.Room.PlayerLeft -= OnPlayerLeft;
-        GameManager.Room.PlayerReady -= OnPlayerReady;
+        GameManager.Room.PlayerStateChanged -= OnPlayerStateChanged;
 
         countdown.Stop();
 
@@ -158,7 +164,7 @@ public partial class Lobby : Control
     }
 
 
-    private void OnPlayerRegistered(Behide.Player player)
+    private void OnPlayerRegistered(Player player)
     {
         var playerList = GetNode<VBoxContainer>(playerListPath);
         var playerItem = playerListItemScene.Instantiate<PlayerListItem>();
@@ -167,7 +173,7 @@ public partial class Lobby : Control
         playerList.AddChild(playerItem);
     }
 
-    private void OnPlayerLeft(Behide.Player player)
+    private void OnPlayerLeft(Player player)
     {
         var playerList = GetNode<VBoxContainer>(playerListPath);
         var playerLabel = playerList
@@ -178,8 +184,14 @@ public partial class Lobby : Control
         playerList.RemoveChild(playerLabel);
     }
 
-    private void OnPlayerReady(Behide.Player player)
+    private void OnPlayerStateChanged(Player player)
     {
+        if (player.State is not PlayerStateInLobby playerState)
+        {
+            Log.Error("Player state changed to not in lobby");
+            return;
+        }
+
         // Update player ready status in the UI
         var playerList = GetNode<VBoxContainer>(playerListPath);
         var playerItem = playerList
@@ -196,9 +208,9 @@ public partial class Lobby : Control
         playerItem.SetPlayer(player);
 
         // Start countdown if all players are ready
-        if (player.Ready == true)
+        if (playerState.IsReady == true)
         {
-            var allReady = GameManager.Room.players.All(player => player.Ready);
+            var allReady = GameManager.Room.players.All(player => playerState.IsReady);
             if (allReady)
                 countdown.Start();
         }
@@ -209,10 +221,18 @@ public partial class Lobby : Control
 
     private void OnReadyButtonPressed()
     {
-        GameManager.Room.ToggleReady();
+        var player = GameManager.Room.localPlayer;
+        if (player?.State is not PlayerStateInLobby playerState)
+        {
+            Log.Error("Player state is not in lobby");
+            return;
+        }
+
+        var newState = playerState with { IsReady = !playerState.IsReady };
+        GameManager.Room.SetPlayerState(newState);
 
         var readyControl = GetNode<Label>(readyButtonTextPath);
-        readyControl.Text = GameManager.Room.localPlayer?.Ready ?? false ? "Ready" : "Not ready";
+        readyControl.Text = newState.IsReady ? "Ready" : "Not ready";
     }
 
     private void OnQuitButtonPressed()

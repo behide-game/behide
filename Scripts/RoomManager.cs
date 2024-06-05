@@ -8,24 +8,6 @@ using Behide.Types;
 using Behide.Networking;
 using Behide.OnlineServices.Signaling;
 
-public class Player(int peerId, string username)
-{
-    /// <summary>
-    /// The peer id of the player to identify him on the network
-    /// </summary>
-    public readonly int PeerId = peerId;
-
-    /// <summary>
-    /// The username of the player
-    /// </summary>
-    public readonly string Username = username;
-
-    /// <summary>
-    /// True if the player is ready to start the game
-    /// </summary>
-    public bool Ready = false;
-}
-
 public partial class RoomManager : Node3D
 {
     private NetworkManager network = null!;
@@ -43,7 +25,7 @@ public partial class RoomManager : Node3D
 
     public event Action<Player>? PlayerRegistered;
     public event Action<Player>? PlayerLeft;
-    public event Action<Player>? PlayerReady;
+    public event Action<Player>? PlayerStateChanged;
 
     private Serilog.ILogger Log = null!;
 
@@ -51,6 +33,8 @@ public partial class RoomManager : Node3D
     {
         network = GameManager.Network;
         Log = Serilog.Log.ForContext("Tag", "RoomManager");
+
+        Log.Debug("{}", Multiplayer.GetUniqueId());
         Multiplayer.PeerDisconnected += peerId =>
         {
             Log.Debug($"Player {peerId} left the room");
@@ -76,8 +60,8 @@ public partial class RoomManager : Node3D
             var playerId = Multiplayer.GetUniqueId();
             var username = $"Player: {playerId}"; // TODO: Ask the player for his username
 
-            localPlayer = new Player(playerId, username);
-            RegisterPlayer(username);
+            localPlayer = new Player(playerId, username, new PlayerStateInLobby(false));
+            RegisterPlayer(localPlayer);
         }
 
         return res.MapError(error => $"Failed to create a room: {error}");
@@ -94,8 +78,8 @@ public partial class RoomManager : Node3D
             var playerId = Multiplayer.GetUniqueId();
             var username = $"Player: {playerId}";
 
-            localPlayer = new Player(playerId, username);
-            RegisterPlayer(username);
+            localPlayer = new Player(playerId, username, new PlayerStateInLobby(false));
+            RegisterPlayer(localPlayer);
         }
 
         return res.MapError(error => $"Failed to join the room: {error}");
@@ -120,21 +104,27 @@ public partial class RoomManager : Node3D
     /// Send the player's info to the other players in the room
     /// </summary>
     /// <param name="username">The username of the player</param>
-    public void RegisterPlayer(string username)
+    public void RegisterPlayer(Player _player) // Todo: remove the parameter and register localPlayer
     {
+        if (localPlayer is null)
+        {
+            Log.Warning("Not connected to a room, can't register the player");
+            return;
+        }
+
         // Register local player on already connected peers
-        Rpc(nameof(RegisterPlayerRpc), username);
+        Rpc(nameof(RegisterPlayerRpc), localPlayer);
         foreach (var peerId in Multiplayer.GetPeers())
         {
-            Log.Debug("Registering us with already connected peer: {Username}", username);
+            Log.Debug("Registering us with already connected peer: {Username}", localPlayer.Username);
         }
 
         // Register local player on futur peers
-        // Use Multiplayer.MultiplayerPeer to don't have to unsubscribe from the event
+        // Use Multiplayer.MultiplayerPeer to don't have to unsubscribe from the event when leaving the room
         Multiplayer.MultiplayerPeer.PeerConnected += peerId =>
         {
-            Log.Debug("New peer connected, registering us with him: {Username}", username);
-            RpcId(peerId, nameof(RegisterPlayerRpc), username);
+            Log.Debug("New peer connected, registering us with him: {Username}", localPlayer.Username);
+            RpcId(peerId, nameof(RegisterPlayerRpc), localPlayer);
         };
     }
 
@@ -143,52 +133,57 @@ public partial class RoomManager : Node3D
         CallLocal = true,               // This method is also called locally
         TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
     )]
-    private void RegisterPlayerRpc(string username)
+    private void RegisterPlayerRpc(Variant playerVariant)
     {
+        Player player = playerVariant;
         var playerId = Multiplayer.GetRemoteSenderId();
-        var player = new Player(playerId, username);
 
         players.Add(player);
         PlayerRegistered?.Invoke(player);
     }
 
 
-    public void ToggleReady()
+    public void SetPlayerState(PlayerState newState)
     {
         if (localPlayer is null)
         {
-            Log.Warning("Not connected to a room, can't toggle ready");
+            Log.Warning("Not connected to a room, can't set player state");
             return;
         }
 
-        localPlayer.Ready = !localPlayer.Ready;
-        Rpc(nameof(SetReadyRpc), localPlayer.Ready);
-
-        Log.Information("Toggled ready: {Ready}", localPlayer.Ready);
+        // Update the player state locally and on the other peers
+        Rpc(nameof(SetPlayerStateRpc), newState);
     }
 
     [Rpc(
         MultiplayerApi.RpcMode.AnyPeer, // Any peer can call this method
-        CallLocal = true,               // This method is also called locally
+        CallLocal = true,                 // This method can be called locally (and must because the local player is the authority)
         TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
     )]
-    private void SetReadyRpc(bool ready)
+    /// <summary>
+    /// Set a player state (the state of the caller)
+    /// </summary>
+    private void SetPlayerStateRpc(Variant newStateVariant)
     {
-        Log.Information("Player {PlayerId} is ready: {Ready}", Multiplayer.GetRemoteSenderId(), ready);
+        PlayerState newState = newStateVariant;
+        Log.Information("[RPC] Player {PlayerId} is now in state {State}", Multiplayer.GetRemoteSenderId(), newState);
+
         var playerId = Multiplayer.GetRemoteSenderId();
         var player = players.Find(p => p.PeerId == playerId);
 
-        if (player is not null)
+        if (player is null)
         {
-            player.Ready = ready;
-            PlayerReady?.Invoke(player);
+            Log.Warning("[SetPlayerStateRpc]: Player {PlayerId} not found", playerId);
+            return;
         }
-        else
-            Log.Warning("[SetReadyRpc]: Player {PlayerId} not found", playerId);
 
+        player.State = newState;
+
+        if (playerId == localPlayer?.PeerId)
+            localPlayer = player;
+
+        PlayerStateChanged?.Invoke(player);
     }
-
-
 
 
     // public void SpawnPlayer(long playerId)
