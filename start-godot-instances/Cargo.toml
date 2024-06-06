@@ -1,0 +1,8 @@
+[package]
+name = "start-godot-instances"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fd-lock = "4.0.2"
+sysinfo = "0.30.12"

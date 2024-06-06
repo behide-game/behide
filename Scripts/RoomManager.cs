@@ -34,7 +34,6 @@ public partial class RoomManager : Node3D
         network = GameManager.Network;
         Log = Serilog.Log.ForContext("Tag", "RoomManager");
 
-        Log.Debug("{}", Multiplayer.GetUniqueId());
         Multiplayer.PeerDisconnected += peerId =>
         {
             Log.Debug($"Player {peerId} left the room");
@@ -61,7 +60,7 @@ public partial class RoomManager : Node3D
             var username = $"Player: {playerId}"; // TODO: Ask the player for his username
 
             localPlayer = new Player(playerId, username, new PlayerStateInLobby(false));
-            RegisterPlayer(localPlayer);
+            RegisterLocalPlayer();
         }
 
         return res.MapError(error => $"Failed to create a room: {error}");
@@ -79,7 +78,7 @@ public partial class RoomManager : Node3D
             var username = $"Player: {playerId}";
 
             localPlayer = new Player(playerId, username, new PlayerStateInLobby(false));
-            RegisterPlayer(localPlayer);
+            RegisterLocalPlayer();
         }
 
         return res.MapError(error => $"Failed to join the room: {error}");
@@ -104,7 +103,7 @@ public partial class RoomManager : Node3D
     /// Send the player's info to the other players in the room
     /// </summary>
     /// <param name="username">The username of the player</param>
-    public void RegisterPlayer(Player _player) // Todo: remove the parameter and register localPlayer
+    public void RegisterLocalPlayer() // Todo: remove the parameter and register localPlayer
     {
         if (localPlayer is null)
         {
@@ -157,7 +156,7 @@ public partial class RoomManager : Node3D
 
     [Rpc(
         MultiplayerApi.RpcMode.AnyPeer, // Any peer can call this method
-        CallLocal = true,                 // This method can be called locally (and must because the local player is the authority)
+        CallLocal = true,               // This method can be called locally (and must because the local player is the authority)
         TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
     )]
     /// <summary>
