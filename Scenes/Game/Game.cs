@@ -2,6 +2,7 @@ namespace Behide.UI.Game;
 
 using Godot;
 using Serilog;
+using Behide.Types;
 
 
 public partial class Game : Node3D
@@ -14,20 +15,26 @@ public partial class Game : Node3D
     public override void _EnterTree()
     {
         Log = Serilog.Log.ForContext("Tag", "Game");
+
+        // Spawn players
+        GameManager.Room.PlayerStateChanged += SpawnPlayer;
+        foreach (var player in GameManager.Room.players)
+        {
+            if (player.State is not PlayerStateInGame)
+                continue;
+            SpawnPlayer(player);
+        }
     }
 
-    public override void _Ready()
+    private void SpawnPlayer(Player player)
     {
-        // Spawn player
-        var playerId = Multiplayer.GetUniqueId();
-
-        Log.Debug($"Spawning {playerId}");
+        Log.Debug($"Spawning {player.PeerId}");
 
         // Create node and set his name
         var playerNode = playerPrefab.Instantiate<Node3D>();
-        playerNode.Name = playerId.ToString();
+        playerNode.Name = player.PeerId.ToString();
 
-        // Put node in the world
+        // Put node in the world / the scene / the tree
         var playersNode = GetNode<Node3D>(playersNodePath);
         playersNode.AddChild(playerNode, true);
     }
