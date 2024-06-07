@@ -33,10 +33,12 @@ public class Countdown(int durationInSec)
         while (timeLeft > 0 && !cts.Token.IsCancellationRequested)
         {
             Tick?.Invoke(timeLeft);
-            try {
+            try
+            {
                 await Task.Delay(1000).WaitAsync(cts.Token);
             }
-            catch (TaskCanceledException) {
+            catch (TaskCanceledException)
+            {
                 break; // Use a try-catch block to hide errors in the console
             }
             timeLeft--;
@@ -87,7 +89,8 @@ public partial class Lobby : Control
 
         countdown.Tick += timeLeft => countdownLabel.Text = $"Starting in {timeLeft}s";
         countdown.Canceled += () => countdownLabel.Text = countdownDefaultText;
-        countdown.Finished += () => {
+        countdown.Finished += () =>
+        {
             countdownLabel.Text = "Starting game...";
             GameManager.instance.SetGameState(GameManager.GameState.Game);
             GameManager.Room.SetPlayerState(new PlayerStateInGame());
@@ -130,7 +133,8 @@ public partial class Lobby : Control
         var res = await GameManager.Room.CreateRoom();
 
         res.Match(
-            success: roomId => {
+            success: roomId =>
+            {
                 Log.Information("Room created with code {RoomId}", RoomId.raw(roomId));
                 ShowLobby(roomId);
             },
@@ -155,7 +159,8 @@ public partial class Lobby : Control
         var res = await GameManager.Room.JoinRoom(code);
 
         res.Match(
-            success: _ => {
+            success: _ =>
+            {
                 Log.Information("Joined room"); // Todo: Move logs to RoomManager
                 ShowLobby(code);
             },
@@ -210,7 +215,9 @@ public partial class Lobby : Control
         // Start countdown if all players are ready
         if (playerState.IsReady == true)
         {
-            var allReady = GameManager.Room.players.All(player => playerState.IsReady);
+            var allReady = GameManager.Room.players.All(player =>
+                player.State is PlayerStateInLobby playerState && playerState.IsReady
+            );
             if (allReady)
                 countdown.Start();
         }
