@@ -1,9 +1,9 @@
 namespace Behide.UI.Game;
 
+using System;
 using Godot;
 using Serilog;
 using Behide.Types;
-
 
 public partial class Game : Node3D
 {
@@ -17,7 +17,7 @@ public partial class Game : Node3D
         Log = Serilog.Log.ForContext("Tag", "Game");
 
         // Spawn players
-        GameManager.Room.PlayerStateChanged += SpawnPlayer;
+        GameManager.Room.PlayerStateChanged.Subscribe(SpawnPlayer);
         foreach (var player in GameManager.Room.players)
         {
             if (player.State is not PlayerStateInGame)

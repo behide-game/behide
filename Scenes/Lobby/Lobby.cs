@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+
 public class Countdown(int durationInSec)
 {
     private readonly int initialDuration = durationInSec;
@@ -71,7 +72,8 @@ public partial class Lobby : Control
 
     private ILogger Log = null!;
 
-    private readonly Countdown countdown = new(5);
+    private readonly Countdown countdown = new(5); // TODO: Finish implementation (ex: cancel when quitting the room)
+    private CancellationTokenSource eventsCts = new();
 
 
     public override void _EnterTree()
@@ -97,6 +99,13 @@ public partial class Lobby : Control
         };
     }
 
+    public override void _ExitTree()
+    {
+        eventsCts.Cancel();
+        eventsCts.Dispose();
+        eventsCts = new CancellationTokenSource();
+    }
+
     private void ShowLobby(RoomId roomId)
     {
         chooseModeControl.Visible = false;
@@ -104,9 +113,10 @@ public partial class Lobby : Control
         GetNode<Label>("Lobby/Header/Code/Value").Text = RoomId.raw(roomId);
 
         GameManager.Room.players.ForEach(OnPlayerRegistered);
-        GameManager.Room.PlayerRegistered += OnPlayerRegistered;
-        GameManager.Room.PlayerLeft += OnPlayerLeft;
-        GameManager.Room.PlayerStateChanged += OnPlayerStateChanged;
+        GameManager.Room.PlayerRegistered.Subscribe(OnPlayerRegistered, eventsCts.Token);
+        GameManager.Room.PlayerLeft.Subscribe(OnPlayerLeft, eventsCts.Token);
+        GameManager.Room.PlayerStateChanged.Subscribe(OnPlayerStateChanged, eventsCts.Token);
+        eventsCts.Token.Register(countdown.Stop);
     }
 
     private void HideLobby()
@@ -114,11 +124,7 @@ public partial class Lobby : Control
         lobbyControl.Visible = false;
         chooseModeControl.Visible = true;
 
-        GameManager.Room.PlayerRegistered -= OnPlayerRegistered;
-        GameManager.Room.PlayerLeft -= OnPlayerLeft;
-        GameManager.Room.PlayerStateChanged -= OnPlayerStateChanged;
-
-        countdown.Stop();
+        _ExitTree(); // Unsubscribe from events and stop countdown
 
         var playerControls = GetNode<VBoxContainer>(playerListPath).GetChildren();
         foreach (var playerControl in playerControls) playerControl.QueueFree();
@@ -189,6 +195,10 @@ public partial class Lobby : Control
         playerList.RemoveChild(playerLabel);
     }
 
+    /// <summary>
+    /// When player's state change, apply the changes to the UI
+    /// </summary>
+    /// <param name="player"></param>
     private void OnPlayerStateChanged(Player player)
     {
         if (player.State is not PlayerStateInLobby playerState)

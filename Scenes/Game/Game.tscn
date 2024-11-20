@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bq63a6mdt3w4"]
+[gd_scene load_steps=14 format=3 uid="uid://bq63a6mdt3w4"]
 
 [ext_resource type="Script" path="res://Scenes/Game/Game.cs" id="1_1h0eo"]
 [ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/player.tscn" id="2_g0jbk"]
@@ -10,6 +10,7 @@
 [ext_resource type="Resource" uid="uid://dwlhlbsva836h" path="res://Prefabs/BehideObjects/purple_cube/purple_cube.tres" id="9_k3vrc"]
 [ext_resource type="Resource" uid="uid://chra8ec3wkom4" path="res://Prefabs/BehideObjects/yellow_cube/yellow_cube.tres" id="10_rnlv5"]
 [ext_resource type="Resource" uid="uid://bocjeygw1lfar" path="res://Prefabs/BehideObjects/mirror_ball/mirror_ball.tres" id="10_wgnhc"]
+[ext_resource type="VoxelGIData" uid="uid://cf5qpep0o4out" path="res://Scenes/Game/Game.VoxelGI_data.res" id="11_i4ga0"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4a32d"]
 
@@ -133,6 +134,12 @@ resource = ExtResource("10_wgnhc")
 [node name="Ball8" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -6)
 resource = ExtResource("10_wgnhc")
+
+[node name="VoxelGI" type="VoxelGI" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.52718, 0)
+subdiv = 0
+size = Vector3(39.4668, 5.65015, 39.7712)
+data = ExtResource("11_i4ga0")
 
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(0.825015, -0.249057, 0.507268, 0, 0.897643, 0.440723, -0.565111, -0.363603, 0.740569, 3, 3, 3)

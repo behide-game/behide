@@ -7,6 +7,5 @@ trim_trailing_whitespace = true
 [*.csproj]
 indent_size = 2
 
-
 [*.gd]
 indent_style = tab

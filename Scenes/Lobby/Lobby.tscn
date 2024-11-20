@@ -173,9 +173,9 @@ BackgroundColor = Color(0.894118, 0.945098, 0.968627, 1)
 
 [node name="LineEdit" type="LineEdit" parent="ChooseMode/Buttons/VBoxContainer/Code"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_placeholder_color = Color(0.309385, 0.309385, 0.309385, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_placeholder_color = Color(0.309385, 0.309385, 0.309385, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("7_rk5ct")
 theme_override_font_sizes/font_size = 24
 placeholder_text = "AB01"

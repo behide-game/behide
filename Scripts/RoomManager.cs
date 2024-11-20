@@ -4,6 +4,8 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Behide.Types;
 using Behide.Networking;
 using Behide.OnlineServices.Signaling;
@@ -23,9 +25,12 @@ public partial class RoomManager : Node3D
     /// </summary>
     public readonly List<Player> players = [];
 
-    public event Action<Player>? PlayerRegistered;
-    public event Action<Player>? PlayerLeft;
-    public event Action<Player>? PlayerStateChanged;
+    public Subject<Player> playerRegistered = new();
+    public Subject<Player> playerLeft = new();
+    public Subject<Player> playerStateChanged = new();
+    public IObservable<Player> PlayerRegistered => playerRegistered.AsObservable();
+    public IObservable<Player> PlayerLeft => playerLeft.AsObservable();
+    public IObservable<Player> PlayerStateChanged => playerStateChanged.AsObservable();
 
     private Serilog.ILogger Log = null!;
 
@@ -43,7 +48,7 @@ public partial class RoomManager : Node3D
             if (player is not null)
             {
                 players.Remove(player);
-                PlayerLeft?.Invoke(player);
+                playerLeft.OnNext(player);
             }
         };
     }
@@ -135,10 +140,10 @@ public partial class RoomManager : Node3D
     private void RegisterPlayerRpc(Variant playerVariant)
     {
         Player player = playerVariant;
-        var playerId = Multiplayer.GetRemoteSenderId();
+        var playerId = Multiplayer.GetRemoteSenderId(); // TODO: Why isn't it used?
 
         players.Add(player);
-        PlayerRegistered?.Invoke(player);
+        playerRegistered.OnNext(player);
     }
 
 
@@ -181,7 +186,7 @@ public partial class RoomManager : Node3D
         if (playerId == localPlayer?.PeerId)
             localPlayer = player;
 
-        PlayerStateChanged?.Invoke(player);
+        playerStateChanged.OnNext(player);
     }
 
 
