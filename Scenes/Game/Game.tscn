@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bq63a6mdt3w4"]
+[gd_scene load_steps=15 format=3 uid="uid://bq63a6mdt3w4"]
 
 [ext_resource type="Script" path="res://Scenes/Game/Game.cs" id="1_1h0eo"]
 [ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/player.tscn" id="2_g0jbk"]
@@ -17,56 +17,17 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_ch3tv"]
 size = Vector3(2, 0.4, 2)
 
+[sub_resource type="QuadMesh" id="QuadMesh_u24f7"]
+material = ExtResource("4_32cbu")
+flip_faces = true
+size = Vector2(2, 2)
+
 [node name="multiplayer" type="Node3D"]
 script = ExtResource("1_1h0eo")
 playerPrefab = ExtResource("2_g0jbk")
 playersNodePath = NodePath("Players")
 
-[node name="UI" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Buttons" type="HBoxContainer" parent="UI"]
-layout_mode = 0
-offset_right = 196.0
-offset_bottom = 40.0
-
-[node name="Client" type="Button" parent="UI/Buttons"]
-layout_mode = 2
-text = "Start client"
-
-[node name="Server" type="Button" parent="UI/Buttons"]
-layout_mode = 2
-text = "Start server"
-
-[node name="RoomIdField" type="TextEdit" parent="UI"]
-layout_mode = 0
-offset_top = 50.0
-offset_right = 189.0
-offset_bottom = 92.0
-size_flags_vertical = 3
-placeholder_text = "Room ID"
-
-[node name="Post processing" type="ColorRect" parent="UI"]
-show_behind_parent = true
-material = ExtResource("4_32cbu")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
 [node name="World" type="Node3D" parent="."]
-
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="World"]
-_spawnable_scenes = PackedStringArray("uid://iwqa8xgo1ip3")
-spawn_path = NodePath("../..")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="World"]
 environment = ExtResource("4_tyqxg")
@@ -137,6 +98,7 @@ resource = ExtResource("10_wgnhc")
 
 [node name="VoxelGI" type="VoxelGI" parent="World"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.52718, 0)
+visible = false
 subdiv = 0
 size = Vector3(39.4668, 5.65015, 39.7712)
 data = ExtResource("11_i4ga0")
@@ -144,6 +106,10 @@ data = ExtResource("11_i4ga0")
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(0.825015, -0.249057, 0.507268, 0, 0.897643, 0.440723, -0.565111, -0.363603, 0.740569, 3, 3, 3)
 fov = 90.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera"]
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_u24f7")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://Prefabs/player.tscn")

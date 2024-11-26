@@ -28,7 +28,7 @@ public partial class Game : Node3D
 
     private void SpawnPlayer(Player player)
     {
-        Log.Debug($"Spawning {player.PeerId}");
+        Log.Debug("Spawning {PeerId}", player.PeerId);
 
         // Create node and set his name
         var playerNode = playerPrefab.Instantiate<Node3D>();

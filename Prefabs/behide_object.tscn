@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cuuh5753pn6hj"]
 
-[ext_resource type="Script" uid="uid://uvtxqkpigyno" path="res://Scripts/BehideObject.cs" id="1_1t4dg"]
+[ext_resource type="Script" path="res://Scripts/BehideObject.cs" id="1_3i8qj"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_8l30g"]
 
@@ -13,9 +13,15 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
 [node name="BehideObject" type="RigidBody3D"]
-script = ExtResource("1_1t4dg")
+script = ExtResource("1_3i8qj")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 gi_mode = 2

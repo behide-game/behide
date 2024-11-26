@@ -41,7 +41,7 @@ public partial class RoomManager : Node3D
 
         Multiplayer.PeerDisconnected += peerId =>
         {
-            Log.Debug($"Player {peerId} left the room");
+            Log.Debug("Player {PeerId} left the room", peerId);
 
             var player = players.Find(p => p.PeerId == peerId);
 
