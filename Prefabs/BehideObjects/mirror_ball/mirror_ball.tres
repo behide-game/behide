@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=5 format=3 uid="uid://bocjeygw1lfar"]
+[gd_resource type="Resource" script_class="BehideObjectData" load_steps=5 format=3 uid="uid://bocjeygw1lfar"]
 
 [ext_resource type="Material" uid="uid://buhde0n3ewcfp" path="res://Prefabs/BehideObjects/mirror_ball/mirror_mat.tres" id="1_bfy7m"]
 [ext_resource type="Script" uid="uid://jnkp0bh3kwtq" path="res://Scripts/BehideObjectData.cs" id="2_p6jlh"]

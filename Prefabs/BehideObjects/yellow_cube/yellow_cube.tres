@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=5 format=3 uid="uid://chra8ec3wkom4"]
+[gd_resource type="Resource" script_class="BehideObjectData" load_steps=5 format=3 uid="uid://chra8ec3wkom4"]
 
 [ext_resource type="Material" uid="uid://bkjqm002m5sap" path="res://Prefabs/BehideObjects/yellow_cube/yellow_mat.tres" id="1_5pfql"]
 [ext_resource type="Script" uid="uid://jnkp0bh3kwtq" path="res://Scripts/BehideObjectData.cs" id="1_jh730"]

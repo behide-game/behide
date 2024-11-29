@@ -32,6 +32,10 @@ window/transparent_background=false
 
 project/assembly_name="Behide"
 
+[editor]
+
+run/main_run_args="--log-to-godot-sink"
+
 [input]
 
 move_forward={

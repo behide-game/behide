@@ -13,27 +13,28 @@ public static class Logging
 
     public static void ConfigureLogger()
     {
-        var logDirectlyToConsole = OS.GetCmdlineUserArgs().Contains("--log-directly-to-console");
+        var logToGodotSink = OS.GetCmdlineArgs().Contains("--log-to-godot-sink");
 
         var now = System.DateTimeOffset.Now.ToString("yyyy-MM-dd_HH-mm-ss");
         var logFilePath = ProjectSettings.GlobalizePath($"user://logs/log-{now}.txt");
         var jsonLogFilePath = ProjectSettings.GlobalizePath($"user://logs/log-json-{now}.txt");
 
         Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Verbose() // Todo: change for production
+            .MinimumLevel.Verbose() // TODO: change for production
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // Minimum level for SignalR logs
 
             // Console logger
             .WriteTo.Logger(cl =>
             {
-                if (logDirectlyToConsole)
-                    cl.WriteTo.Console(outputTemplate: consoleOutputFormat + "\n");
-                else
+                if (logToGodotSink)
                     cl
-                    .MinimumLevel.Information()
+                    .MinimumLevel.Debug()
                     .WriteTo.Godot(consoleOutputFormat);
+                else
+                    cl.WriteTo.Console(outputTemplate: consoleOutputFormat + "\n");
             })
-            .WriteTo.Logger(cl => cl // File logger
+            // File logger
+            .WriteTo.Logger(cl => cl
                 .WriteTo.File(logFilePath, outputTemplate: logFileOutputFormat)
                 .WriteTo.File(new JsonFormatter(), jsonLogFilePath)
             )

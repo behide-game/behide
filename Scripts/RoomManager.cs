@@ -77,10 +77,9 @@ public partial class RoomManager : Node3D
 
         if (res.IsOk)
         {
-            Log.Debug("Joined room: {Players}", players);
-
             var playerId = Multiplayer.GetUniqueId();
             var username = $"Player: {playerId}";
+            Log.Debug("Joined room as {PlayerId}. Room's players: {Players}", playerId, players);
 
             localPlayer = new Player(playerId, username, new PlayerStateInLobby(false));
             RegisterLocalPlayer();
@@ -107,8 +106,7 @@ public partial class RoomManager : Node3D
     /// <summary>
     /// Send the player's info to the other players in the room
     /// </summary>
-    /// <param name="username">The username of the player</param>
-    public void RegisterLocalPlayer() // Todo: remove the parameter and register localPlayer
+    public void RegisterLocalPlayer()
     {
         if (localPlayer is null)
         {
@@ -116,15 +114,16 @@ public partial class RoomManager : Node3D
             return;
         }
 
-        // Register local player on already connected peers
+        // -- Register local player on already connected peers
         Rpc(nameof(RegisterPlayerRpc), localPlayer);
         foreach (var peerId in Multiplayer.GetPeers())
         {
             Log.Debug("Registering us with already connected peer: {Username}", localPlayer.Username);
         }
 
-        // Register local player on futur peers
-        // Use Multiplayer.MultiplayerPeer to don't have to unsubscribe from the event when leaving the room
+        // -- Register local player on future peers
+        // Use Multiplayer.MultiplayerPeer instead of to avoid having
+        // to unsubscribe from the event when leaving the room
         Multiplayer.MultiplayerPeer.PeerConnected += peerId =>
         {
             Log.Debug("New peer connected, registering us with him: {Username}", localPlayer.Username);
@@ -140,7 +139,6 @@ public partial class RoomManager : Node3D
     private void RegisterPlayerRpc(Variant playerVariant)
     {
         Player player = playerVariant;
-        var playerId = Multiplayer.GetRemoteSenderId(); // TODO: Why isn't it used?
 
         players.Add(player);
         playerRegistered.OnNext(player);
@@ -161,7 +159,7 @@ public partial class RoomManager : Node3D
 
     [Rpc(
         MultiplayerApi.RpcMode.AnyPeer, // Any peer can call this method
-        CallLocal = true,               // This method can be called locally (and must because the local player is the authority)
+        CallLocal = true,               // This method can be called locally
         TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
     )]
     /// <summary>
@@ -170,7 +168,7 @@ public partial class RoomManager : Node3D
     private void SetPlayerStateRpc(Variant newStateVariant)
     {
         PlayerState newState = newStateVariant;
-        Log.Information("[RPC] Player {PlayerId} is now in state {State}", Multiplayer.GetRemoteSenderId(), newState);
+        Log.Debug("[RPC] Player {PlayerId} is now in state {State}", Multiplayer.GetRemoteSenderId(), newState);
 
         var playerId = Multiplayer.GetRemoteSenderId();
         var player = players.Find(p => p.PeerId == playerId);
@@ -183,24 +181,7 @@ public partial class RoomManager : Node3D
 
         player.State = newState;
 
-        if (playerId == localPlayer?.PeerId)
-            localPlayer = player;
-
+        if (playerId == localPlayer?.PeerId) localPlayer = player;
         playerStateChanged.OnNext(player);
     }
-
-
-    // public void SpawnPlayer(long playerId)
-    // {
-    //     GD.Print($"Spawning {playerId}");
-    //     var mainNode = GetNode("/root/multiplayer");
-
-    //     // Create node and set his name
-    //     var playerPrefab = GD.Load<PackedScene>("res://Prefabs/player.tscn");
-    //     var playerNode = playerPrefab.Instantiate<Node3D>();
-    //     playerNode.Name = playerId.ToString();
-
-    //     // Put node in the world
-    //     mainNode.AddChild(playerNode, true);
-    // }
 }

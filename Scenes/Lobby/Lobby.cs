@@ -72,7 +72,7 @@ public partial class Lobby : Control
 
     private ILogger Log = null!;
 
-    private readonly Countdown countdown = new(5); // TODO: Finish implementation (ex: cancel when quitting the room)
+    private readonly Countdown countdown = new(5);
     private CancellationTokenSource eventsCts = new();
 
 
@@ -98,7 +98,6 @@ public partial class Lobby : Control
             GameManager.Room.SetPlayerState(new PlayerStateInGame());
         };
     }
-
     public override void _ExitTree()
     {
         eventsCts.Cancel();
@@ -118,7 +117,6 @@ public partial class Lobby : Control
         GameManager.Room.PlayerStateChanged.Subscribe(OnPlayerStateChanged, eventsCts.Token);
         eventsCts.Token.Register(countdown.Stop);
     }
-
     private void HideLobby()
     {
         lobbyControl.Visible = false;
@@ -129,10 +127,9 @@ public partial class Lobby : Control
         var playerControls = GetNode<VBoxContainer>(playerListPath).GetChildren();
         foreach (var playerControl in playerControls) playerControl.QueueFree();
 
-        var readyControl = GetNode<Button>(readyButtonTextPath);
+        var readyControl = GetNode<Label>(readyButtonTextPath);
         readyControl.Text = "Not ready";
     }
-
 
     private async void HostButtonPressed()
     {
@@ -147,14 +144,12 @@ public partial class Lobby : Control
             failure: Log.Error
         );
     }
-
     private async void JoinButtonPressed()
     {
         var rawCode = GetNode<LineEdit>(codeInputPath).Text;
         var codeOpt = RoomId.tryParse(rawCode);
 
         Log.Debug("Join button pressed with code {Code}", rawCode);
-        GD.Print("Join button pressed with code {Code}", rawCode);
 
         if (codeOpt.HasValue(out var code) == false)
         {
@@ -167,14 +162,23 @@ public partial class Lobby : Control
         res.Match(
             success: _ =>
             {
-                Log.Information("Joined room"); // Todo: Move logs to RoomManager
+                // TODO: Move logs to RoomManager
                 ShowLobby(code);
             },
             failure: Log.Error
         );
     }
 
+    private void StartCountdownIfAllReady()
+    {
+        var allReady = GameManager.Room.players.All(player =>
+            player.State is PlayerStateInLobby playerState && playerState.IsReady
+        );
+        if (allReady) countdown.Start();
+        else countdown.Stop();
+    }
 
+    // Apply the player state to the UI
     private void OnPlayerRegistered(Player player)
     {
         var playerList = GetNode<VBoxContainer>(playerListPath);
@@ -182,23 +186,24 @@ public partial class Lobby : Control
 
         playerItem.SetPlayer(player);
         playerList.AddChild(playerItem);
-    }
 
+        countdown.Stop(); // Stop countdown because the new player is, by default, not ready
+    }
     private void OnPlayerLeft(Player player)
     {
         var playerList = GetNode<VBoxContainer>(playerListPath);
         var playerLabel = playerList
             .GetChildren()
             .Cast<PlayerListItem>()
-            .FirstOrDefault(p => p.GetUsername() == player.Username);
+            .FirstOrDefault(p => p.GetPeerId() == player.PeerId);
+
+        if (playerLabel is null) return;
 
         playerList.RemoveChild(playerLabel);
-    }
+        playerLabel.QueueFree();
 
-    /// <summary>
-    /// When player's state change, apply the changes to the UI
-    /// </summary>
-    /// <param name="player"></param>
+        StartCountdownIfAllReady();
+    }
     private void OnPlayerStateChanged(Player player)
     {
         if (player.State is not PlayerStateInLobby playerState)
@@ -212,7 +217,7 @@ public partial class Lobby : Control
         var playerItem = playerList
             .GetChildren()
             .Cast<PlayerListItem>()
-            .FirstOrDefault(p => p.GetUsername() == player.Username);
+            .FirstOrDefault(p => p.GetPeerId() == player.PeerId);
 
         if (playerItem is null)
         {
@@ -223,19 +228,10 @@ public partial class Lobby : Control
         playerItem.SetPlayer(player);
 
         // Start countdown if all players are ready
-        if (playerState.IsReady == true)
-        {
-            var allReady = GameManager.Room.players.All(player =>
-                player.State is PlayerStateInLobby playerState && playerState.IsReady
-            );
-            if (allReady)
-                countdown.Start();
-        }
-        else
-            countdown.Stop();
+        StartCountdownIfAllReady();
     }
 
-
+    // Handle UI button presses
     private void OnReadyButtonPressed()
     {
         var player = GameManager.Room.localPlayer;
@@ -251,7 +247,6 @@ public partial class Lobby : Control
         var readyControl = GetNode<Label>(readyButtonTextPath);
         readyControl.Text = newState.IsReady ? "Ready" : "Not ready";
     }
-
     private void OnQuitButtonPressed()
     {
         GameManager.Room.LeaveRoom();

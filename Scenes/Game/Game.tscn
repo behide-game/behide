@@ -50,51 +50,51 @@ shape = SubResource("BoxShape3D_ch3tv")
 
 [node name="Blue cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 3)
-resource = ExtResource("7_yfvw8")
+Resource = ExtResource("7_yfvw8")
 
 [node name="Green cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 0)
-resource = ExtResource("8_yyqxy")
+Resource = ExtResource("8_yyqxy")
 
 [node name="Purple cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -3)
-resource = ExtResource("9_k3vrc")
+Resource = ExtResource("9_k3vrc")
 
 [node name="Yellow cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, 0)
-resource = ExtResource("10_rnlv5")
+Resource = ExtResource("10_rnlv5")
 
 [node name="Ball" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, 3)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball2" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 3)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball3" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, -3)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball4" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, -3)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball5" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.5, 0)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball6" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.5, 0)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball7" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 6)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball8" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -6)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="VoxelGI" type="VoxelGI" parent="World"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.52718, 0)

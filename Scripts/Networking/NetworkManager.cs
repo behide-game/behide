@@ -18,11 +18,11 @@ public partial class NetworkManager : Node3D
     private Signaling signaling = null!;
     private WebRtcMultiplayerPeer multiplayer = new();
 
-    private Serilog.ILogger log = null!;
+    private Serilog.ILogger Log = null!;
 
     public override void _EnterTree()
     {
-        log = Serilog.Log.ForContext("Tag", "Network");
+        Log = Serilog.Log.ForContext("Tag", "Network");
         signaling = GetNode<Signaling>("/root/WebRtcSignaling");
     }
 
@@ -33,7 +33,7 @@ public partial class NetworkManager : Node3D
     {
         // Instantiate the multiplayer peer
         multiplayer = new WebRtcMultiplayerPeer();
-        multiplayer.CreateMesh(1);
+        multiplayer.CreateMesh(1); // The room creator has always the peer id 1
         Multiplayer.MultiplayerPeer = multiplayer;
 
         // Handle new connection
@@ -76,7 +76,7 @@ public partial class NetworkManager : Node3D
         multiplayer.CreateMesh(peerId);
         Multiplayer.MultiplayerPeer = multiplayer;
 
-        // Handle following players connection
+        // Handle future players connection
         signaling.Client.ConnAttemptIdCreationRequested += async askingPeerId =>
         {
             var peer = new OfferPeerConnector(signaling);
@@ -97,7 +97,7 @@ public partial class NetworkManager : Node3D
 
         if (playersConnectionInfo.FailedCreations.Length > 0)
         {
-            log.Error("Failed to create connection info for some players: {Error}", playersConnectionInfo.FailedCreations);
+            Log.Error("Failed to create connection info for some players: {Error}", playersConnectionInfo.FailedCreations);
         }
 
         await Task.WhenAll(tasks);
@@ -109,12 +109,15 @@ public partial class NetworkManager : Node3D
     /// </summary>
     public async Task<Result<Unit, string>> LeaveRoom()
     {
-        // Disconnect from peers
+        // Disconnect from all peers
         foreach (var peer in multiplayer.GetPeers())
         {
-            multiplayer.DisconnectPeer(peer.Key.As<int>());
+            var peerId = peer.Key.As<int>();
+            multiplayer.DisconnectPeer(peerId);
         }
 
+        // Close the multiplayer
+        multiplayer.Close();
         Multiplayer.MultiplayerPeer = null;
 
         // Leave room

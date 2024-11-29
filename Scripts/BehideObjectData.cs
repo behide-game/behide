@@ -4,6 +4,7 @@ namespace Behide.Game;
 
 using Godot;
 
+[GlobalClass, Tool]
 public partial class BehideObjectData : Resource
 {
     [Export] public Mesh Mesh = new BoxMesh();

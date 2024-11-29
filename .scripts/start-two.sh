@@ -17,9 +17,9 @@ if [[ $* == *--pane* ]] then
 
     service="$(qdbus | grep -B1 konsole | grep -v -- -- | sort -t"." -k2 -n | tail -n 1)"
 
-    qdbus $service /Sessions/1 org.kde.konsole.Session.runCommand "godot -d -- --log-directly-to-console"
-    qdbus $service /Sessions/2 org.kde.konsole.Session.runCommand "godot -d -- --log-directly-to-console"
+    qdbus $service /Sessions/1 org.kde.konsole.Session.runCommand "godot -d"
+    qdbus $service /Sessions/2 org.kde.konsole.Session.runCommand "godot -d"
 else
-    konsole --new-tab -e godot -d -- --log-directly-to-console
-    konsole --new-tab -e godot -d -- --log-directly-to-console
+    konsole --new-tab -e godot -d
+    konsole --new-tab -e godot -d
 fi

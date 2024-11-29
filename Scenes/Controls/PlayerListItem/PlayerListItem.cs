@@ -41,5 +41,5 @@ public partial class PlayerListItem : Control
         GetNode<Label>(readyLabelPath).Text = playerState.IsReady ? "Ready" : "Not ready";
     }
 
-    public string? GetUsername() => Player?.Username;
+    public int? GetPeerId() => Player?.PeerId;
 }

@@ -5,8 +5,8 @@ using Godot;
 [Tool]
 public partial class BehideObject : RigidBody3D
 {
-    private Resource? _resource;
-    [Export] public Resource? resource
+    private BehideObjectData? _resource;
+    [Export] public BehideObjectData? Resource
     {
         get => _resource;
         set
@@ -23,17 +23,13 @@ public partial class BehideObject : RigidBody3D
     public override void _EnterTree()
     {
         if (Engine.IsEditorHint()) return;
-        ReloadResource(resource!);
+        ReloadResource(Resource!);
     }
 
-    public void ReloadResource(Resource behideObject)
+    public void ReloadResource(BehideObjectData behideObject)
     {
-        var mass = behideObject.Get("Mass").As<float>();
-        var mesh = behideObject.Get("Mesh").As<Mesh>();
-        var shape = behideObject.Get("Shape").As<Shape3D>();
-
-        Mass = mass;
-        GetNode<MeshInstance3D>("./MeshInstance3D").Mesh = mesh;
-        GetNode<CollisionShape3D>("./CollisionShape3D").Shape = shape;
+        Mass = behideObject.Mass;
+        GetNode<MeshInstance3D>("./MeshInstance3D").Mesh = behideObject.Mesh;
+        GetNode<CollisionShape3D>("./CollisionShape3D").Shape = behideObject.Shape;
     }
 }

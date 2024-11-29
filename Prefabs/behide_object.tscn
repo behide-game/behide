@@ -1,10 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://cuuh5753pn6hj"]
+[gd_scene load_steps=6 format=3 uid="uid://cuuh5753pn6hj"]
 
 [ext_resource type="Script" path="res://Scripts/BehideObject.cs" id="1_3i8qj"]
+[ext_resource type="Resource" uid="uid://c0t5da7h0bdw8" path="res://Prefabs/BehideObjects/BehideObjectEmpty.tres" id="2_x2by2"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_8l30g"]
+[sub_resource type="BoxMesh" id="BoxMesh_ec0f6"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_7ges4"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_myumj"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_u7gt2"]
 properties/0/path = NodePath(".:position")
@@ -22,13 +23,14 @@ properties/3/replication_mode = 1
 
 [node name="BehideObject" type="RigidBody3D"]
 script = ExtResource("1_3i8qj")
+Resource = ExtResource("2_x2by2")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 gi_mode = 2
-mesh = SubResource("BoxMesh_8l30g")
+mesh = SubResource("BoxMesh_ec0f6")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_7ges4")
+shape = SubResource("BoxShape3D_myumj")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_u7gt2")
