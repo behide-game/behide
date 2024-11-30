@@ -1,8 +1,9 @@
 namespace Behide.Networking;
 
 using Godot;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Reactive;
+using System.Threading.Tasks;
 
 using Behide.Types;
 using Behide.OnlineServices.Client;
@@ -101,7 +102,7 @@ public partial class NetworkManager : Node3D
         }
 
         await Task.WhenAll(tasks);
-        return Unit.Value;
+        return Unit.Default;
     }
 
     /// <summary>
@@ -123,7 +124,7 @@ public partial class NetworkManager : Node3D
         // Leave room
         return (await signaling.Hub.LeaveRoom())
             .ToResult()
-            .Map(_ => Unit.Value)
+            .Map(_ => Unit.Default)
             .MapError(err => err.ToLocalizedString());
     }
 }

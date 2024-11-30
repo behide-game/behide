@@ -8,56 +8,6 @@ using Serilog;
 using System;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
-
-
-public class Countdown(int durationInSec)
-{
-    private readonly int initialDuration = durationInSec;
-    private int timeLeft = 0;
-    private bool isRunning = false;
-    private CancellationTokenSource? cts;
-
-    public event Action<int>? Tick;
-    public event Action? Canceled;
-    public event Action? Finished;
-
-    public async void Start()
-    {
-        if (isRunning) return;
-
-        timeLeft = initialDuration;
-        isRunning = true;
-        cts = new CancellationTokenSource();
-        cts.Token.Register(() => Canceled?.Invoke());
-
-        while (timeLeft > 0 && !cts.Token.IsCancellationRequested)
-        {
-            Tick?.Invoke(timeLeft);
-            try
-            {
-                await Task.Delay(1000).WaitAsync(cts.Token);
-            }
-            catch (TaskCanceledException)
-            {
-                break; // Use a try-catch block to hide errors in the console
-            }
-            timeLeft--;
-        }
-
-        if (!cts.Token.IsCancellationRequested)
-            Finished?.Invoke();
-    }
-
-    public void Stop()
-    {
-        if (!isRunning) return;
-
-        cts?.Cancel();
-        isRunning = false;
-        timeLeft = initialDuration;
-    }
-}
 
 public partial class Lobby : Control
 {
@@ -72,7 +22,7 @@ public partial class Lobby : Control
 
     private ILogger Log = null!;
 
-    private readonly Countdown countdown = new(5);
+    private readonly Countdown countdown = new(TimeSpan.FromSeconds(5));
     private CancellationTokenSource eventsCts = new();
 
 
@@ -83,13 +33,13 @@ public partial class Lobby : Control
         chooseModeControl = GetNode<Control>("ChooseMode");
         lobbyControl = GetNode<Control>("Lobby");
 
-        chooseModeControl.Visible = true;
-        lobbyControl.Visible = false;
+        chooseModeControl.Show();
+        lobbyControl.Hide();
 
         var countdownLabel = GetNode<Label>(countdownPath);
         var countdownDefaultText = countdownLabel.Text;
 
-        countdown.Tick += timeLeft => countdownLabel.Text = $"Starting in {timeLeft}s";
+        countdown.Tick += timeLeft => countdownLabel.Text = $"Starting in {timeLeft.TotalSeconds}s";
         countdown.Canceled += () => countdownLabel.Text = countdownDefaultText;
         countdown.Finished += () =>
         {
@@ -107,20 +57,20 @@ public partial class Lobby : Control
 
     private void ShowLobby(RoomId roomId)
     {
-        chooseModeControl.Visible = false;
-        lobbyControl.Visible = true;
+        chooseModeControl.Hide();
+        lobbyControl.Show();
         GetNode<Label>("Lobby/Header/Code/Value").Text = RoomId.raw(roomId);
 
         GameManager.Room.players.ForEach(OnPlayerRegistered);
         GameManager.Room.PlayerRegistered.Subscribe(OnPlayerRegistered, eventsCts.Token);
         GameManager.Room.PlayerLeft.Subscribe(OnPlayerLeft, eventsCts.Token);
         GameManager.Room.PlayerStateChanged.Subscribe(OnPlayerStateChanged, eventsCts.Token);
-        eventsCts.Token.Register(countdown.Stop);
+        eventsCts.Token.Register(countdown.Cancel);
     }
     private void HideLobby()
     {
-        lobbyControl.Visible = false;
-        chooseModeControl.Visible = true;
+        lobbyControl.Hide();
+        chooseModeControl.Show();
 
         _ExitTree(); // Unsubscribe from events and stop countdown
 
@@ -175,7 +125,7 @@ public partial class Lobby : Control
             player.State is PlayerStateInLobby playerState && playerState.IsReady
         );
         if (allReady) countdown.Start();
-        else countdown.Stop();
+        else countdown.Cancel();
     }
 
     // Apply the player state to the UI
@@ -187,7 +137,7 @@ public partial class Lobby : Control
         playerItem.SetPlayer(player);
         playerList.AddChild(playerItem);
 
-        countdown.Stop(); // Stop countdown because the new player is, by default, not ready
+        countdown.Cancel(); // Stop countdown because the new player is, by default, not ready
     }
     private void OnPlayerLeft(Player player)
     {

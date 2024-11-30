@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=3 uid="uid://bq63a6mdt3w4"]
 
-[ext_resource type="Script" path="res://Scenes/Game/Game.cs" id="1_1h0eo"]
 [ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/player.tscn" id="2_g0jbk"]
+[ext_resource type="Script" path="res://Scripts/Supervisors/PropHuntSupervisor.cs" id="3_lmxa7"]
 [ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Shaders/chromatic_aberration.tres" id="4_32cbu"]
 [ext_resource type="Environment" uid="uid://c8ttkksgix01d" path="res://Scenes/Game/environment.tres" id="4_tyqxg"]
 [ext_resource type="PackedScene" uid="uid://cuuh5753pn6hj" path="res://Prefabs/behide_object.tscn" id="6_s06yr"]
@@ -23,9 +23,44 @@ flip_faces = true
 size = Vector2(2, 2)
 
 [node name="multiplayer" type="Node3D"]
-script = ExtResource("1_1h0eo")
+script = ExtResource("3_lmxa7")
 playerPrefab = ExtResource("2_g0jbk")
 playersNodePath = NodePath("Players")
+countdownLabelNodePath = NodePath("UI/Countdown")
+isHunterLabelNodePath = NodePath("UI/IsHunter")
+isPropLabelNodePath = NodePath("UI/IsProp")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="IsProp" type="Label" parent="UI"]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "You are a prop"
+
+[node name="IsHunter" type="Label" parent="UI"]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "You are the hunter"
+
+[node name="Countdown" type="Label" parent="UI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
 
 [node name="World" type="Node3D" parent="."]
 
@@ -110,9 +145,5 @@ fov = 90.0
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Camera"]
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_u24f7")
-
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://Prefabs/player.tscn")
-spawn_path = NodePath("../Players")
 
 [node name="Players" type="Node3D" parent="."]

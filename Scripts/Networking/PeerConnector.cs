@@ -2,8 +2,9 @@ namespace Behide.Networking;
 
 using Godot;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Reactive;
 using Behide.Types;
 using Behide.OnlineServices.Signaling;
 using Behide.OnlineServices.Client;
@@ -152,7 +153,7 @@ class AnswerPeerConnector(Signaling signaling, ConnAttemptId connAttemptId) : Pe
 
         // Await connection
         await TaskEx.WaitUntil(peerConnection.IsConnected);
-        return Unit.Value;
+        return Unit.Default;
     }
 }
 

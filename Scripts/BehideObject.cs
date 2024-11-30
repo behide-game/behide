@@ -15,6 +15,7 @@ public partial class BehideObject : RigidBody3D
             if (Engine.IsEditorHint())
             {
                 if (value is null) return;
+                if (!IsNodeReady()) return;
                 ReloadResource(value);
             }
         }
@@ -22,7 +23,6 @@ public partial class BehideObject : RigidBody3D
 
     public override void _EnterTree()
     {
-        if (Engine.IsEditorHint()) return;
         ReloadResource(Resource!);
     }
 

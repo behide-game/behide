@@ -3,9 +3,9 @@
 [ext_resource type="Script" path="res://Scripts/BehideObject.cs" id="1_3i8qj"]
 [ext_resource type="Resource" uid="uid://c0t5da7h0bdw8" path="res://Prefabs/BehideObjects/BehideObjectEmpty.tres" id="2_x2by2"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_ec0f6"]
+[sub_resource type="BoxMesh" id="BoxMesh_8nk6c"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_myumj"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_egeyw"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_u7gt2"]
 properties/0/path = NodePath(".:position")
@@ -27,10 +27,10 @@ Resource = ExtResource("2_x2by2")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 gi_mode = 2
-mesh = SubResource("BoxMesh_ec0f6")
+mesh = SubResource("BoxMesh_8nk6c")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_myumj")
+shape = SubResource("BoxShape3D_egeyw")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_u7gt2")

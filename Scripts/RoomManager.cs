@@ -4,6 +4,7 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Behide.Types;
@@ -25,9 +26,9 @@ public partial class RoomManager : Node3D
     /// </summary>
     public readonly List<Player> players = [];
 
-    public Subject<Player> playerRegistered = new();
-    public Subject<Player> playerLeft = new();
-    public Subject<Player> playerStateChanged = new();
+    private readonly Subject<Player> playerRegistered = new();
+    private readonly Subject<Player> playerLeft = new();
+    private readonly Subject<Player> playerStateChanged = new();
     public IObservable<Player> PlayerRegistered => playerRegistered.AsObservable();
     public IObservable<Player> PlayerLeft => playerLeft.AsObservable();
     public IObservable<Player> PlayerStateChanged => playerStateChanged.AsObservable();
