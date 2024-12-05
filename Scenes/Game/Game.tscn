@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=3 uid="uid://bq63a6mdt3w4"]
 
 [ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/player.tscn" id="2_g0jbk"]
-[ext_resource type="Script" path="res://Scripts/Supervisors/PropHuntSupervisor.cs" id="3_lmxa7"]
+[ext_resource type="Script" path="res://Scripts/Supervisors/BasicSupervisor.cs" id="3_lmxa7"]
 [ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Shaders/chromatic_aberration.tres" id="4_32cbu"]
 [ext_resource type="Environment" uid="uid://c8ttkksgix01d" path="res://Scenes/Game/environment.tres" id="4_tyqxg"]
 [ext_resource type="PackedScene" uid="uid://cuuh5753pn6hj" path="res://Prefabs/behide_object.tscn" id="6_s06yr"]
@@ -23,12 +23,6 @@ flip_faces = true
 size = Vector2(2, 2)
 
 [node name="multiplayer" type="Node3D"]
-script = ExtResource("3_lmxa7")
-playerPrefab = ExtResource("2_g0jbk")
-playersNodePath = NodePath("Players")
-countdownLabelNodePath = NodePath("UI/Countdown")
-isHunterLabelNodePath = NodePath("UI/IsHunter")
-isPropLabelNodePath = NodePath("UI/IsProp")
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -84,7 +78,7 @@ shape = SubResource("BoxShape3D_ch3tv")
 [node name="BehideObjects" type="Node3D" parent="World"]
 
 [node name="Blue cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 11)
 Resource = ExtResource("7_yfvw8")
 
 [node name="Green cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
@@ -124,7 +118,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.5, 0)
 Resource = ExtResource("10_wgnhc")
 
 [node name="Ball7" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 14)
 Resource = ExtResource("10_wgnhc")
 
 [node name="Ball8" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
@@ -147,3 +141,10 @@ extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_u24f7")
 
 [node name="Players" type="Node3D" parent="."]
+
+[node name="Supervisor" type="Node3D" parent="."]
+script = ExtResource("3_lmxa7")
+playerPrefab = ExtResource("2_g0jbk")
+playersNodePath = NodePath("../Players")
+
+[connection signal="pressed" from="UI/Button" to="Supervisor" method="SpawnPlayers"]

@@ -34,3 +34,4 @@ keep_aspect = 0
 
 [node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_n61o8")
+public_visibility = false

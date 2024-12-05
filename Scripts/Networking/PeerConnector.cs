@@ -30,22 +30,22 @@ partial class PeerConnection : WebRtcPeerConnection
                     { "urls", "stun:stun.relay.metered.ca:80" }
                 },
                 new Godot.Collections.Dictionary {
-                    { "urls", "turn:a.relay.metered.ca:80" },
+                    { "urls", "turn:standard.relay.metered.ca:80" },
                     { "username", Secrets.RelayUsername },
                     { "credential", Secrets.RelayPassword }
                 },
                 new Godot.Collections.Dictionary {
-                    { "urls", "turn:a.relay.metered.ca:80?transport=tcp" },
+                    { "urls", "turn:standard.relay.metered.ca:80?transport=tcp" },
                     { "username", Secrets.RelayUsername },
                     { "credential", Secrets.RelayPassword }
                 },
                 new Godot.Collections.Dictionary {
-                    { "urls", "turn:a.relay.metered.ca:443" },
+                    { "urls", "turn:standard.relay.metered.ca:443" },
                     { "username", Secrets.RelayUsername },
                     { "credential", Secrets.RelayPassword }
                 },
                 new Godot.Collections.Dictionary {
-                    { "urls", "turn:a.relay.metered.ca:443?transport=tcp" },
+                    { "urls", "turn:standard.relay.metered.ca:443?transport=tcp" },
                     { "username", Secrets.RelayUsername },
                     { "credential", Secrets.RelayPassword }
                 }

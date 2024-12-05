@@ -45,7 +45,6 @@ public partial class Lobby : Control
         {
             countdownLabel.Text = "Starting game...";
             GameManager.instance.SetGameState(GameManager.GameState.Game);
-            GameManager.Room.SetPlayerState(new PlayerStateInGame());
         };
     }
     public override void _ExitTree()
@@ -156,11 +155,7 @@ public partial class Lobby : Control
     }
     private void OnPlayerStateChanged(Player player)
     {
-        if (player.State is not PlayerStateInLobby playerState)
-        {
-            Log.Error("Player state changed to not in lobby");
-            return;
-        }
+        if (player.State is not PlayerStateInLobby playerState) return;
 
         // Update player ready status in the UI
         var playerList = GetNode<VBoxContainer>(playerListPath);
