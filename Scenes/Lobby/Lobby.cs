@@ -8,6 +8,7 @@ using Serilog;
 using System;
 using System.Linq;
 using System.Threading;
+using System.Reactive.Subjects;
 
 public partial class Lobby : Control
 {
@@ -60,10 +61,10 @@ public partial class Lobby : Control
         lobbyControl.Show();
         GetNode<Label>("Lobby/Header/Code/Value").Text = RoomId.raw(roomId);
 
-        GameManager.Room.players.ForEach(OnPlayerRegistered);
-        GameManager.Room.PlayerRegistered.Subscribe(OnPlayerRegistered, eventsCts.Token);
-        GameManager.Room.PlayerLeft.Subscribe(OnPlayerLeft, eventsCts.Token);
-        GameManager.Room.PlayerStateChanged.Subscribe(OnPlayerStateChanged, eventsCts.Token);
+        // Add players to UI
+        foreach (var player in GameManager.Room.players.Values) AddPlayerToUi(player);
+        GameManager.Room.PlayerRegistered.Subscribe(AddPlayerToUi, eventsCts.Token);
+
         eventsCts.Token.Register(countdown.Cancel);
     }
     private void HideLobby()
@@ -120,31 +121,38 @@ public partial class Lobby : Control
 
     private void StartCountdownIfAllReady()
     {
-        var allReady = GameManager.Room.players.All(player =>
-            player.State is PlayerStateInLobby playerState && playerState.IsReady
+        var allReady = GameManager.Room.players.Values.All(player =>
+            player.Value.State is PlayerStateInLobby playerState && playerState.IsReady
         );
         if (allReady) countdown.Start();
         else countdown.Cancel();
     }
 
     // Apply the player state to the UI
-    private void OnPlayerRegistered(Player player)
+    private void AddPlayerToUi(BehaviorSubject<Player> player)
     {
         var playerList = GetNode<VBoxContainer>(playerListPath);
         var playerItem = playerListItemScene.Instantiate<PlayerListItem>();
 
-        playerItem.SetPlayer(player);
+        playerItem.SetPlayer(player.Value);
         playerList.AddChild(playerItem);
+
+        // Update the UI accordingly to the player's state
+        player.Subscribe(
+            UpdatePlayerUi,                                // Update UI when it's state changes
+            () => RemovePlayerFromUI(player.Value.PeerId), // Remove player from UI when he leaves
+            eventsCts.Token
+        );
 
         countdown.Cancel(); // Stop countdown because the new player is, by default, not ready
     }
-    private void OnPlayerLeft(Player player)
+    private void RemovePlayerFromUI(int playerId)
     {
         var playerList = GetNode<VBoxContainer>(playerListPath);
         var playerLabel = playerList
             .GetChildren()
             .Cast<PlayerListItem>()
-            .FirstOrDefault(p => p.GetPeerId() == player.PeerId);
+            .FirstOrDefault(p => p.GetPeerId() == playerId);
 
         if (playerLabel is null) return;
 
@@ -153,7 +161,7 @@ public partial class Lobby : Control
 
         StartCountdownIfAllReady();
     }
-    private void OnPlayerStateChanged(Player player)
+    private void UpdatePlayerUi(Player player)
     {
         if (player.State is not PlayerStateInLobby playerState) return;
 
@@ -180,7 +188,7 @@ public partial class Lobby : Control
     private void OnReadyButtonPressed()
     {
         var player = GameManager.Room.localPlayer;
-        if (player?.State is not PlayerStateInLobby playerState)
+        if (player?.Value.State is not PlayerStateInLobby playerState)
         {
             Log.Error("Player state is not in lobby");
             return;

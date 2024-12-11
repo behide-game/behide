@@ -7,9 +7,9 @@ namespace Behide.Types;
 [MemoryPackable]
 public partial record Player
 {
-    public required int PeerId;
-    public required string Username;
-    public required PlayerState State;
+    public required int PeerId { get; init; }
+    public required string Username { get; init; }
+    public required PlayerState State { get; init; }
 
     [SetsRequiredMembers]
     public Player(int peerId, string username, PlayerState state)

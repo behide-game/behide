@@ -19,19 +19,17 @@ public partial class RoomManager : Node3D
     /// The local player
     /// It's null if the player is not in a room
     /// </summary>
-    public Player? localPlayer;
+    public BehaviorSubject<Player>? localPlayer;
 
     /// <summary>
     /// The list of players in the room / of the peers connected
     /// </summary>
-    public readonly List<Player> players = [];
+    public readonly Dictionary<int, BehaviorSubject<Player>> players = [];
 
-    private readonly Subject<Player> playerRegistered = new();
+    private readonly Subject<BehaviorSubject<Player>> playerRegistered = new();
     private readonly Subject<Player> playerLeft = new();
-    private readonly Subject<Player> playerStateChanged = new();
-    public IObservable<Player> PlayerRegistered => playerRegistered.AsObservable();
-    public IObservable<Player> PlayerLeft => playerLeft.AsObservable();
-    public IObservable<Player> PlayerStateChanged => playerStateChanged.AsObservable();
+    public IObservable<BehaviorSubject<Player>> PlayerRegistered => playerRegistered.AsObservable();
+    public IObservable<Player> PlayerStateChanged => players.Values.Merge();
 
     private Serilog.ILogger Log = null!;
 
@@ -43,13 +41,12 @@ public partial class RoomManager : Node3D
         Multiplayer.PeerDisconnected += peerId =>
         {
             Log.Debug("Player {PeerId} left the room", peerId);
-
-            var player = players.Find(p => p.PeerId == peerId);
+            var player = players.GetValueOrDefault((int)peerId);
 
             if (player is not null)
             {
-                players.Remove(player);
-                playerLeft.OnNext(player);
+                players.Remove((int)peerId);
+                player.OnCompleted();
             }
         };
     }
@@ -65,7 +62,8 @@ public partial class RoomManager : Node3D
             var playerId = Multiplayer.GetUniqueId();
             var username = $"Player: {playerId}"; // TODO: Ask the player for his username
 
-            localPlayer = new Player(playerId, username, new PlayerStateInLobby(false));
+            var player = new Player(playerId, username, new PlayerStateInLobby(false));
+            localPlayer = new BehaviorSubject<Player>(player);
             RegisterLocalPlayer();
         }
 
@@ -82,7 +80,8 @@ public partial class RoomManager : Node3D
             var username = $"Player: {playerId}";
             Log.Debug("Joined room as {PlayerId}. Room's players: {Players}", playerId, players);
 
-            localPlayer = new Player(playerId, username, new PlayerStateInLobby(false));
+            var player = new Player(playerId, username, new PlayerStateInLobby(false));
+            localPlayer = new BehaviorSubject<Player>(player);
             RegisterLocalPlayer();
         }
 
@@ -116,10 +115,10 @@ public partial class RoomManager : Node3D
         }
 
         // -- Register local player on already connected peers
-        Rpc(nameof(RegisterPlayerRpc), localPlayer);
+        Rpc(nameof(RegisterPlayerRpc), localPlayer.Value);
         foreach (var peerId in Multiplayer.GetPeers())
         {
-            Log.Debug("Registering us with already connected peer: {Username}", localPlayer.Username);
+            Log.Debug("Registering us with already connected peer: {Username}", localPlayer.Value.Username);
         }
 
         // -- Register local player on future peers
@@ -127,8 +126,8 @@ public partial class RoomManager : Node3D
         // to unsubscribe from the event when leaving the room
         Multiplayer.MultiplayerPeer.PeerConnected += peerId =>
         {
-            Log.Debug("New peer connected, registering us with him: {Username}", localPlayer.Username);
-            RpcId(peerId, nameof(RegisterPlayerRpc), localPlayer);
+            Log.Debug("New peer connected, registering us with him: {Username}", localPlayer.Value.Username);
+            RpcId(peerId, nameof(RegisterPlayerRpc), localPlayer.Value);
         };
     }
 
@@ -140,9 +139,10 @@ public partial class RoomManager : Node3D
     private void RegisterPlayerRpc(Variant playerVariant)
     {
         Player player = playerVariant;
+        var obs = new BehaviorSubject<Player>(player);
 
-        players.Add(player);
-        playerRegistered.OnNext(player);
+        players.Add(player.PeerId, obs);
+        playerRegistered.OnNext(obs);
     }
 
 
@@ -172,7 +172,7 @@ public partial class RoomManager : Node3D
         Log.Debug("[RPC] Player {PlayerId} is now in state {State}", Multiplayer.GetRemoteSenderId(), newState);
 
         var playerId = Multiplayer.GetRemoteSenderId();
-        var player = players.Find(p => p.PeerId == playerId);
+        var player = players.GetValueOrDefault(playerId);
 
         if (player is null)
         {
@@ -180,9 +180,8 @@ public partial class RoomManager : Node3D
             return;
         }
 
-        player.State = newState;
-
-        if (playerId == localPlayer?.PeerId) localPlayer = player;
-        playerStateChanged.OnNext(player);
+        var newPlayer = player.Value with { State = newState };
+        player.OnNext(newPlayer);
+        if (playerId == localPlayer?.Value.PeerId) localPlayer.OnNext(newPlayer);
     }
 }

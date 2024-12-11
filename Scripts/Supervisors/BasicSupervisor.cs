@@ -3,44 +3,49 @@ namespace Behide.Game.Supervisors;
 using Godot;
 using Behide.Types;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Reactive.Subjects;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 /// <summary>
-/// TODO: Write a description
+/// It just spawns players
 /// </summary>
 public partial class BasicSupervisor : Node
 {
     private Serilog.ILogger Log = null!;
+    public const string tag = "Supervisor/Basic";
 
     [Export] private PackedScene playerPrefab = null!;
     [Export] private NodePath playersNodePath = null!;
 
-    private readonly List<Player> players = GameManager.Room.players;
+    private readonly Dictionary<int, BehaviorSubject<Player>> players = GameManager.Room.players;
 
-    #region Initialization
+    private MultiplayerSynchronizer? positionSynchronizer = null;
+
     public override void _EnterTree()
     {
-        Log = Serilog.Log.ForContext("Tag", "Supervisor/Basic");
+        Log = Serilog.Log.ForContext("Tag", tag);
 
         // Set authority to the last player to join
         // The authority is the player who spawns players and choose randomly the hunter
-        var lastPlayerToJoin = players.MaxBy(player => player.PeerId);
+        int? lastPlayerToJoin = players.Max(kv => kv.Key);
         if (lastPlayerToJoin is null)
         {
             Log.Error("No player found. This means that the room is empty. Strange...");
             return;
         }
 
-        SetMultiplayerAuthority(lastPlayerToJoin.PeerId);
+        SetMultiplayerAuthority(lastPlayerToJoin.Value);
     }
 
     public override async void _Ready()
     {
         // Spawn all players
         var playersNode = GetNode<Node3D>(playersNodePath);
-        foreach (var player in players)
+        foreach (var kv in players)
         {
+            var player = kv.Value.Value;
             var playerNode = playerPrefab.Instantiate<Node3D>();
             playerNode.Name = player.PeerId.ToString();
             playerNode.Position = new Vector3(0, 0, player.PeerId * 4);
@@ -48,28 +53,36 @@ public partial class BasicSupervisor : Node
             playersNode.AddChild(playerNode);
         }
 
-        // Set in game
-        CallDeferred(nameof(SetInGameState));
-
-        // Wait for all players to be in game
-        await Task.Run(() =>
-        {
-            while (!players.TrueForAll(player => player.State is PlayerStateInGame))
-            {
-                Log.Debug("Waiting for players to be in game...");
-            }
-        });
-        Log.Debug("Players are all ready ! Showing them...");
-
-        // Showing us
-        var synchronizer =
+        // Retrieve our position synchronizer
+        positionSynchronizer =
             playersNode
                 .GetNode(Multiplayer.GetUniqueId().ToString())
                 .GetNode<MultiplayerSynchronizer>("PositionSynchronizer");
-        synchronizer.SetVisibilityFor(0, true);
-        Log.Debug("Showed up");
+
+        // Set in game
+        // Warning: Info cannot be exchanged with RPC from this object
+        //          because it may not be instantiated on all peers
+        GameManager.Room.SetPlayerState(new PlayerStateInGame());
+
+        // Show us to the players when they are ready
+        var tasksList = GameManager.Room.players.Values.Select(obs =>
+            Task.Run(async () =>
+            {
+                // Wait player to be ready
+                var player = await obs
+                    .Where(player => player.State is PlayerStateInGame)
+                    .Take(1);
+
+                CallDeferred(nameof(SetVisibleFor), player.PeerId);
+                Log.Debug("Set visible for {PeerId}", player.PeerId);
+            })
+        );
+
+        await Task.WhenAll(tasksList);
+        AllPlayersSpawned();
     }
 
-    private static void SetInGameState() => GameManager.Room.SetPlayerState(new PlayerStateInGame());
-    #endregion
+    private void SetVisibleFor(int peerId) => positionSynchronizer?.SetVisibilityFor(peerId, true);
+
+    public virtual void AllPlayersSpawned() { }
 }

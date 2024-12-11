@@ -5,6 +5,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
 using System.Linq;
+using Behide.Game.Supervisors;
 
 public static class Logging
 {
@@ -22,6 +23,15 @@ public static class Logging
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Verbose() // TODO: change for production
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // Minimum level for SignalR logs
+            .Filter.ByExcluding(logEvent => {
+                if (logEvent.Properties.TryGetValue("Tag", out var tag))
+                {
+                    if (tag.ToString() == $"\"{BasicSupervisor.tag}\"") return true;
+                    else return false;
+                }
+
+                return false;
+            })
 
             // Console logger
             .WriteTo.Logger(cl =>

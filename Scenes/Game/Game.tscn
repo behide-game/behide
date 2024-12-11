@@ -1,13 +1,13 @@
 [gd_scene load_steps=15 format=3 uid="uid://bq63a6mdt3w4"]
 
 [ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/player.tscn" id="2_g0jbk"]
-[ext_resource type="Script" path="res://Scripts/Supervisors/BasicSupervisor.cs" id="3_lmxa7"]
 [ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Shaders/chromatic_aberration.tres" id="4_32cbu"]
 [ext_resource type="Environment" uid="uid://c8ttkksgix01d" path="res://Scenes/Game/environment.tres" id="4_tyqxg"]
 [ext_resource type="PackedScene" uid="uid://cuuh5753pn6hj" path="res://Prefabs/behide_object.tscn" id="6_s06yr"]
 [ext_resource type="Resource" uid="uid://c7xkht1loifw3" path="res://Prefabs/BehideObjects/blue_cube/blue_cube.tres" id="7_yfvw8"]
 [ext_resource type="Resource" uid="uid://s6ycpy75saj2" path="res://Prefabs/BehideObjects/green_cube/green_cube.tres" id="8_yyqxy"]
 [ext_resource type="Resource" uid="uid://dwlhlbsva836h" path="res://Prefabs/BehideObjects/purple_cube/purple_cube.tres" id="9_k3vrc"]
+[ext_resource type="Script" path="res://Scripts/Supervisors/PropHuntSupervisor.cs" id="10_1pecj"]
 [ext_resource type="Resource" uid="uid://chra8ec3wkom4" path="res://Prefabs/BehideObjects/yellow_cube/yellow_cube.tres" id="10_rnlv5"]
 [ext_resource type="Resource" uid="uid://bocjeygw1lfar" path="res://Prefabs/BehideObjects/mirror_ball/mirror_ball.tres" id="10_wgnhc"]
 [ext_resource type="VoxelGIData" uid="uid://cf5qpep0o4out" path="res://Scenes/Game/Game.VoxelGI_data.res" id="11_i4ga0"]
@@ -143,8 +143,9 @@ mesh = SubResource("QuadMesh_u24f7")
 [node name="Players" type="Node3D" parent="."]
 
 [node name="Supervisor" type="Node3D" parent="."]
-script = ExtResource("3_lmxa7")
+script = ExtResource("10_1pecj")
+countdownLabelNodePath = NodePath("../UI/Countdown")
+isHunterLabelNodePath = NodePath("../UI/IsHunter")
+isPropLabelNodePath = NodePath("../UI/IsProp")
 playerPrefab = ExtResource("2_g0jbk")
 playersNodePath = NodePath("../Players")
-
-[connection signal="pressed" from="UI/Button" to="Supervisor" method="SpawnPlayers"]
