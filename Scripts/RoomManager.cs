@@ -11,6 +11,7 @@ using Behide.Types;
 using Behide.Networking;
 using Behide.OnlineServices.Signaling;
 using System.Linq;
+using System.Threading;
 
 public partial class RoomManager : Node3D
 {
@@ -66,7 +67,7 @@ public partial class RoomManager : Node3D
             var player = new Player(playerId, username, new PlayerStateInLobby(false));
             localPlayer = new BehaviorSubject<Player>(player);
             RegisterLocalPlayer();
-            CallDeferred(nameof(SyncTime), 10);
+            StartTimeSynchronization(1, localPlayer); // Take him self as clock reference
         }
 
         return res.MapError(error => $"Failed to create a room: {error}");
@@ -80,15 +81,25 @@ public partial class RoomManager : Node3D
         {
             var playerId = Multiplayer.GetUniqueId();
             var username = $"Player: {playerId}";
-            Log.Debug("Joined room as {PlayerId}. Room's players: {Players}", playerId, players);
+            Log.Debug("Joined room as {PlayerId}. Already connected player count: {Players}", playerId, players.Count);
 
             var player = new Player(playerId, username, new PlayerStateInLobby(false));
             localPlayer = new BehaviorSubject<Player>(player);
             RegisterLocalPlayer();
-            CallDeferred(nameof(SyncTime), 10);
+
+            // Wait for all players to be registered
+            // The purpose is to ensure `SyncTime` take the correct peer as clock reference
+            await Task.Run(() =>
+            {
+                var expectedPlayerCount = res.Value + 1; // +1 because res.Value is number of players to connect to
+                while (players.Count < expectedPlayerCount) { }
+                StartTimeSynchronization(5, localPlayer);
+            });
         }
 
-        return res.MapError(error => $"Failed to join the room: {error}");
+        return res
+            .Map(_ => Unit.Default)
+            .MapError(error => $"Failed to join the room: {error}");
     }
 
     public async void LeaveRoom()
@@ -97,6 +108,7 @@ public partial class RoomManager : Node3D
 
         // Clear players list
         players.Clear();
+        localPlayer?.OnCompleted();
         localPlayer = null;
 
         (await network.LeaveRoom()).Match(
@@ -134,90 +146,6 @@ public partial class RoomManager : Node3D
         };
     }
 
-    public void SetPlayerState(PlayerState newState)
-    {
-        if (localPlayer is null)
-        {
-            Log.Warning("Not connected to a room, can't set player state");
-            return;
-        }
-
-        // Update the player state locally and on the other peers
-        Rpc(nameof(SetPlayerStateRpc), newState);
-    }
-
-    #region Time Synchronization
-    // See https://en.wikipedia.org/wiki/Network_Time_Protocol#Clock_synchronization_algorithm
-    private readonly List<long> clockDeltas = [];
-    public TimeSpan? clockDelta = null;
-
-    private async void SyncTime(int sampleCount)
-    {
-        var hostPlayerId = players.Min(player => player.Key);
-        for (int i = 0; i < sampleCount; i++)
-        {
-            var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-            RpcId(hostPlayerId, nameof(SyncTimeRpc), time);
-            await Task.Delay(1000);
-        }
-
-        Log.Debug("[Time Sync] Waiting clock deltas...");
-        while (true) // Wait for requests to complete
-        {
-            if (clockDeltas.Count >= sampleCount) break;
-        }
-        Log.Debug("[Time Sync] Clock delta received !");
-
-        // Calculating standard deviation
-        var average = clockDeltas.Average();
-        var variance = clockDeltas
-            .Select(delta => Math.Pow(delta - average, 2))
-            .Average();
-        Log.Debug("[Time Sync] Clock delta average: {Average}", average);
-        Log.Debug("[Time Sync] Clock delta variance: {Variance}", variance);
-
-        var standardDeviation = Math.Sqrt(variance);
-        Log.Debug("[Time Sync] Clock delta standard deviation: {StandardDeviation}", standardDeviation);
-
-        // Finding median
-        clockDeltas.Sort();
-        var (q, r) = Math.DivRem(clockDeltas.Count, 2);
-        var median =
-            r == 1
-            ? clockDeltas[q]
-            : (clockDeltas[q] + clockDeltas[q - 1]) / 2;
-        Log.Debug("[Time Sync] Clock delta median: {Median}", median);
-
-        // Filtering deltas
-        var min = median - standardDeviation;
-        var max = median + standardDeviation;
-        var clockDeltaFloat = clockDeltas
-            .Where(delta => min <= delta && delta <= max)
-            .Average();
-
-        var clockDeltaMs = (int)Math.Round(clockDeltaFloat);
-        clockDelta = TimeSpan.FromMilliseconds(clockDeltaMs);
-
-        Log.Debug("[Time Sync] Clock delta: {Delta} | {DeltaF}", clockDeltaMs, clockDeltaFloat);
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SyncTimeRpc(long requestTime)
-    {
-        var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-        RpcId(Multiplayer.GetRemoteSenderId(), nameof(SyncTime2Rpc), requestTime, time);
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SyncTime2Rpc(long requestTime, long receivedTime)
-    {
-        var currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-        var clockDelta = (receivedTime-requestTime + receivedTime-currentTime) / 2;
-        clockDeltas.Add(clockDelta);
-        Log.Debug("[Time Sync] Add clock delta: {Delta}", clockDelta);
-    }
-    #endregion
-
     [Rpc(
         MultiplayerApi.RpcMode.AnyPeer, // Any peer can call this method
         CallLocal = true,               // This method is also called locally
@@ -230,6 +158,18 @@ public partial class RoomManager : Node3D
 
         players.Add(player.PeerId, obs);
         playerRegistered.OnNext(obs);
+    }
+
+    public void SetPlayerState(PlayerState newState)
+    {
+        if (localPlayer is null)
+        {
+            Log.Warning("Not connected to a room, can't set player state");
+            return;
+        }
+
+        // Update the player state locally and on the other peers
+        Rpc(nameof(SetPlayerStateRpc), newState);
     }
 
     [Rpc(
@@ -258,4 +198,109 @@ public partial class RoomManager : Node3D
         player.OnNext(newPlayer);
         if (playerId == localPlayer?.Value.PeerId) localPlayer.OnNext(newPlayer);
     }
+
+
+    #region Time Synchronization
+    // See https://en.wikipedia.org/wiki/Network_Time_Protocol#Clock_synchronization_algorithm
+    private CancellationToken? timeSyncCancellationToken = null;
+    private Subject<long> clockDeltaMeasurements = new();
+
+    /// <summary>
+    /// The difference of time between local clock and reference clock
+    /// </summary>
+    public BehaviorSubject<TimeSpan?> clockDelta = new(null);
+
+    private void StartTimeSynchronization(int sampleCount, BehaviorSubject<Player> localPlayer)
+    {
+        // Cancel time synchronization when we quit the room
+        var cts = new CancellationTokenSource();
+        localPlayer.Subscribe(_ => { }, cts.Cancel);
+        timeSyncCancellationToken = cts.Token;
+
+        CallDeferred(nameof(SyncTime), sampleCount);
+    }
+
+    private async void SyncTime(int sampleCount)
+    {
+        if (timeSyncCancellationToken is null)
+        {
+            Log.Error("Time synchronization should have a cancellation token set.");
+            return;
+        }
+        var ct = (CancellationToken)timeSyncCancellationToken;
+        // Reset observables
+        clockDeltaMeasurements = new();
+        clockDelta = new(null);
+
+        // Log when clock delta is updated
+        clockDelta.Subscribe(
+            delta => Log.Debug("[Time Sync] Clock delta changed: {Delta}", delta),
+            ct
+        );
+
+        var hostPlayerId = players.Min(player => player.Key);
+
+        // `clockDeltas` are the duration measured. They are independent
+        // When a new delta is emitted we determine the average clock delta with the server.
+        // We discard the deltas that differ by more than 1 standard deviation from the median.
+        // The purpose is to eliminate the packets that were retransmitted by tcp.
+        clockDeltaMeasurements.Scan(
+            ([], TimeSpan.Zero),
+            ((List<long> prevDeltas, TimeSpan _) acc, long newDelta) =>
+            {
+                List<long> deltas = [.. acc.prevDeltas, newDelta];
+
+                // Calculating standard deviation
+                var average = deltas.Average();
+                var variance = deltas
+                    .Select(delta => Math.Pow(delta - average, 2))
+                    .Average();
+                var standardDeviation = Math.Sqrt(variance);
+
+                // Finding median
+                deltas.Sort();
+                var (q, r) = Math.DivRem(deltas.Count, 2);
+                var median =
+                    r == 1
+                    ? deltas[q]
+                    : (deltas[q] + deltas[q - 1]) / 2;
+
+                // Filtering deltas
+                var min = median - standardDeviation;
+                var max = median + standardDeviation;
+                var averageDelta = deltas
+                    .Where(delta => min <= delta && delta <= max)
+                    .Average();
+
+                return (deltas, TimeSpan.FromMilliseconds(averageDelta));
+            }
+        )
+        .Subscribe(acc => clockDelta.OnNext(acc.Item2), ct);
+
+        for (int i = 0; i < sampleCount; i++)
+        {
+            var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            if (ct.IsCancellationRequested) break;
+
+            RpcId(hostPlayerId, nameof(SyncTimeRpc), time);
+            try { await Task.Delay(1000, ct); } catch { }
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncTimeRpc(long requestTime)
+    {
+        var now = DateTimeOffset.Now + (clockDelta.Value ?? TimeSpan.Zero);
+        var nowMs = now.ToUnixTimeMilliseconds();
+        RpcId(Multiplayer.GetRemoteSenderId(), nameof(SyncTime2Rpc), requestTime, nowMs);
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncTime2Rpc(long requestTime, long receivedTime)
+    {
+        var currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        var clockDelta = (receivedTime - requestTime + receivedTime - currentTime) / 2;
+        clockDeltaMeasurements.OnNext(clockDelta);
+    }
+    #endregion
 }

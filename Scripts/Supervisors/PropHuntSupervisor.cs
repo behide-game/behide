@@ -17,7 +17,7 @@ public partial class PropHuntSupervisor : BasicSupervisor
     [Export] private NodePath isPropLabelNodePath = null!;
 
     private const int countdownDurationInMin = 5;
-    private readonly Countdown countdown = new(TimeSpan.FromMinutes(countdownDurationInMin));
+    // private readonly Countdown countdown = new(TimeSpan.FromMinutes(countdownDurationInMin));
 
     private readonly TaskCompletionSource<int> hunterPeerIdTcs = new();
     private Task<int> HunterPeerId => hunterPeerIdTcs.Task;
@@ -43,7 +43,7 @@ public partial class PropHuntSupervisor : BasicSupervisor
     {
         // Set up the countdown
         var label = GetNode<Label>(countdownLabelNodePath);
-        countdown.Tick += timeLeft => label.Text = timeLeft.ToString(@"mm\:ss");
+        // countdown.Tick += timeLeft => label.Text = timeLeft.ToString(@"mm\:ss");
 
         // Show if we are the hunter
         GetNode<Control>(

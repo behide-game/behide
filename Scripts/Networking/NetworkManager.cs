@@ -55,7 +55,7 @@ public partial class NetworkManager : Node3D
     /// <summary>
     /// Join a room and connect to the other players
     /// </summary>
-    public async Task<Result<Unit, string>> JoinRoom(RoomId roomId)
+    public async Task<Result<int, string>> JoinRoom(RoomId roomId)
     {
         // Retrieve connection attempts and peer ids
         var joinRoomRes = await signaling.Hub.JoinRoom(roomId);
@@ -89,11 +89,10 @@ public partial class NetworkManager : Node3D
         // Connect to other players
         var tasks = playersConnectionInfo.PlayersConnInfo.Select(async connInfo =>
         {
-            // GameManager.Ui.Log($"Connecting to {connInfo.PeerId}");
             var peer = new AnswerPeerConnector(signaling, connInfo.ConnAttemptId);
             multiplayer.AddPeer(peer.GetConnection(), connInfo.PeerId);
 
-            await peer.Connect();
+            await peer.Connect(); // This return only when peer is actually connected
         });
 
         if (playersConnectionInfo.FailedCreations.Length > 0)
@@ -102,7 +101,7 @@ public partial class NetworkManager : Node3D
         }
 
         await Task.WhenAll(tasks);
-        return Unit.Default;
+        return playersConnectionInfo.PlayersConnInfo.Length;
     }
 
     /// <summary>

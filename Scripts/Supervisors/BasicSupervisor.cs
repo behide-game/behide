@@ -65,11 +65,11 @@ public partial class BasicSupervisor : Node
         GameManager.Room.SetPlayerState(new PlayerStateInGame());
 
         // Show us to the players when they are ready
-        var tasksList = GameManager.Room.players.Values.Select(obs =>
+        var tasksList = GameManager.Room.players.Values.Select(playerObs =>
             Task.Run(async () =>
             {
                 // Wait player to be ready
-                var player = await obs
+                var player = await playerObs
                     .Where(player => player.State is PlayerStateInGame)
                     .Take(1);
 
