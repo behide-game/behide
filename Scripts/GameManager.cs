@@ -4,7 +4,6 @@ namespace Behide;
 using Godot;
 using Behide.Log;
 using Behide.Networking;
-using Serilog;
 
 public partial class GameManager : Node3D
 {
@@ -20,7 +19,7 @@ public partial class GameManager : Node3D
     private static readonly PackedScene lobbyScene = GD.Load<PackedScene>("res://Scenes/Lobby/Lobby.tscn");
     private static readonly PackedScene gameScene = GD.Load<PackedScene>("res://Scenes/Game/Game.tscn");
 
-    private ILogger Log = null!;
+    private Serilog.ILogger Log = null!;
 
     public override void _EnterTree()
     {

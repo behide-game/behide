@@ -1,20 +1,26 @@
 [gd_scene load_steps=15 format=3 uid="uid://bq63a6mdt3w4"]
 
-[ext_resource type="Script" path="res://Scripts/Networking/NetworkManager.cs" id="1_sutpi"]
-[ext_resource type="Script" path="res://Scripts/RoomManager.cs" id="3_i6hkt"]
+[ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/player.tscn" id="2_g0jbk"]
 [ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Shaders/chromatic_aberration.tres" id="4_32cbu"]
 [ext_resource type="Environment" uid="uid://c8ttkksgix01d" path="res://Scenes/Game/environment.tres" id="4_tyqxg"]
 [ext_resource type="PackedScene" uid="uid://cuuh5753pn6hj" path="res://Prefabs/behide_object.tscn" id="6_s06yr"]
 [ext_resource type="Resource" uid="uid://c7xkht1loifw3" path="res://Prefabs/BehideObjects/blue_cube/blue_cube.tres" id="7_yfvw8"]
 [ext_resource type="Resource" uid="uid://s6ycpy75saj2" path="res://Prefabs/BehideObjects/green_cube/green_cube.tres" id="8_yyqxy"]
 [ext_resource type="Resource" uid="uid://dwlhlbsva836h" path="res://Prefabs/BehideObjects/purple_cube/purple_cube.tres" id="9_k3vrc"]
+[ext_resource type="Script" path="res://Scripts/Supervisors/PropHuntSupervisor.cs" id="10_1pecj"]
 [ext_resource type="Resource" uid="uid://chra8ec3wkom4" path="res://Prefabs/BehideObjects/yellow_cube/yellow_cube.tres" id="10_rnlv5"]
 [ext_resource type="Resource" uid="uid://bocjeygw1lfar" path="res://Prefabs/BehideObjects/mirror_ball/mirror_ball.tres" id="10_wgnhc"]
+[ext_resource type="VoxelGIData" uid="uid://cf5qpep0o4out" path="res://Scenes/Game/Game.VoxelGI_data.res" id="11_i4ga0"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4a32d"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ch3tv"]
 size = Vector3(2, 0.4, 2)
+
+[sub_resource type="QuadMesh" id="QuadMesh_u24f7"]
+material = ExtResource("4_32cbu")
+flip_faces = true
+size = Vector2(2, 2)
 
 [node name="multiplayer" type="Node3D"]
 
@@ -26,43 +32,31 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Buttons" type="HBoxContainer" parent="UI"]
+[node name="IsProp" type="Label" parent="UI"]
+visible = false
 layout_mode = 0
-offset_right = 196.0
-offset_bottom = 40.0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "You are a prop"
 
-[node name="Client" type="Button" parent="UI/Buttons"]
-layout_mode = 2
-text = "Start client"
-
-[node name="Server" type="Button" parent="UI/Buttons"]
-layout_mode = 2
-text = "Start server"
-
-[node name="RoomIdField" type="TextEdit" parent="UI"]
+[node name="IsHunter" type="Label" parent="UI"]
+visible = false
 layout_mode = 0
-offset_top = 50.0
-offset_right = 189.0
-offset_bottom = 92.0
-size_flags_vertical = 3
-placeholder_text = "Room ID"
+offset_right = 40.0
+offset_bottom = 23.0
+text = "You are the hunter"
 
-[node name="Post processing" type="ColorRect" parent="UI"]
-show_behind_parent = true
-material = ExtResource("4_32cbu")
+[node name="Countdown" type="Label" parent="UI"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
 grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="World" type="Node3D" parent="."]
-
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="World"]
-_spawnable_scenes = PackedStringArray("res://Prefabs/player.tscn")
-spawn_path = NodePath("../..")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="World"]
 environment = ExtResource("4_tyqxg")
@@ -84,64 +78,74 @@ shape = SubResource("BoxShape3D_ch3tv")
 [node name="BehideObjects" type="Node3D" parent="World"]
 
 [node name="Blue cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 3)
-resource = ExtResource("7_yfvw8")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 11)
+Resource = ExtResource("7_yfvw8")
 
 [node name="Green cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 0)
-resource = ExtResource("8_yyqxy")
+Resource = ExtResource("8_yyqxy")
 
 [node name="Purple cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -3)
-resource = ExtResource("9_k3vrc")
+Resource = ExtResource("9_k3vrc")
 
 [node name="Yellow cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, 0)
-resource = ExtResource("10_rnlv5")
+Resource = ExtResource("10_rnlv5")
 
 [node name="Ball" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, 3)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball2" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 3)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball3" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, -3)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball4" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, -3)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball5" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.5, 0)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball6" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.5, 0)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball7" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 6)
-resource = ExtResource("10_wgnhc")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 14)
+Resource = ExtResource("10_wgnhc")
 
 [node name="Ball8" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -6)
-resource = ExtResource("10_wgnhc")
+Resource = ExtResource("10_wgnhc")
 
-[node name="Managers" type="Node3D" parent="."]
-
-[node name="NetworkManager" type="Node3D" parent="Managers"]
-script = ExtResource("1_sutpi")
-
-[node name="RoomManager" type="Node3D" parent="Managers"]
-script = ExtResource("3_i6hkt")
+[node name="VoxelGI" type="VoxelGI" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.52718, 0)
+visible = false
+subdiv = 0
+size = Vector3(39.4668, 5.65015, 39.7712)
+data = ExtResource("11_i4ga0")
 
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(0.825015, -0.249057, 0.507268, 0, 0.897643, 0.440723, -0.565111, -0.363603, 0.740569, 3, 3, 3)
 fov = 90.0
 
-[connection signal="pressed" from="UI/Buttons/Client" to="Managers/RoomManager" method="JoinRoom"]
-[connection signal="pressed" from="UI/Buttons/Server" to="Managers/RoomManager" method="CreateRoom"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera"]
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_u24f7")
+
+[node name="Players" type="Node3D" parent="."]
+
+[node name="Supervisor" type="Node3D" parent="."]
+script = ExtResource("10_1pecj")
+countdownLabelNodePath = NodePath("../UI/Countdown")
+isHunterLabelNodePath = NodePath("../UI/IsHunter")
+isPropLabelNodePath = NodePath("../UI/IsProp")
+playerPrefab = ExtResource("2_g0jbk")
+playersNodePath = NodePath("../Players")

@@ -1,15 +1,15 @@
-[gd_resource type="Resource" load_steps=5 format=3 uid="uid://s6ycpy75saj2"]
+[gd_resource type="Resource" script_class="BehideObjectData" load_steps=5 format=3 uid="uid://s6ycpy75saj2"]
 
 [ext_resource type="Material" uid="uid://bm1c8w8ixqwvm" path="res://Prefabs/BehideObjects/green_cube/green_mat.tres" id="1_imq13"]
 [ext_resource type="Script" path="res://Scripts/BehideObjectData.cs" id="1_o2jo3"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_ec0f6"]
+[sub_resource type="BoxMesh" id="BoxMesh_0engf"]
 material = ExtResource("1_imq13")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_xgq7v"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_egeyw"]
 
 [resource]
 script = ExtResource("1_o2jo3")
-Mesh = SubResource("BoxMesh_ec0f6")
-Shape = SubResource("BoxShape3D_xgq7v")
+Mesh = SubResource("BoxMesh_0engf")
+Shape = SubResource("BoxShape3D_egeyw")
 Mass = 1.0

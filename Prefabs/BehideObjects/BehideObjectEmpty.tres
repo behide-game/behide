@@ -1,13 +1,13 @@
-[gd_resource type="Resource" load_steps=4 format=3 uid="uid://c0t5da7h0bdw8"]
+[gd_resource type="Resource" script_class="BehideObjectData" load_steps=4 format=3 uid="uid://c0t5da7h0bdw8"]
 
 [ext_resource type="Script" path="res://Scripts/BehideObjectData.cs" id="1_86m6m"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_ec0f6"]
+[sub_resource type="BoxMesh" id="BoxMesh_8nk6c"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_myumj"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_egeyw"]
 
 [resource]
 script = ExtResource("1_86m6m")
-Mesh = SubResource("BoxMesh_ec0f6")
-Shape = SubResource("BoxShape3D_myumj")
+Mesh = SubResource("BoxMesh_8nk6c")
+Shape = SubResource("BoxShape3D_egeyw")
 Mass = 1.0

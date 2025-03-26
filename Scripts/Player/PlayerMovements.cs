@@ -2,10 +2,9 @@ namespace Behide.Game.Player;
 
 using Godot;
 
-// This script run on every peers.
+// This script run on authority peer.
 public partial class PlayerMovements : CharacterBody3D
 {
-    private InputSynchronizer input = null!;
     private Node3D cameraDisk = null!;
 
     // Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -20,11 +19,15 @@ public partial class PlayerMovements : CharacterBody3D
     // Move speed in m/s
     [Export] private float PushForce = 0.1f;
 
+    private Serilog.ILogger Log = null!;
+
 
     // --- Initialization ---
 
     public override void _EnterTree()
     {
+        Log = Serilog.Log.ForContext("Tag", "Player/Movements");
+
         // Set authority
         var ownerPeerId = int.Parse(Name);
         SetMultiplayerAuthority(ownerPeerId);
@@ -35,7 +38,6 @@ public partial class PlayerMovements : CharacterBody3D
         Transform = transform;
 
         // Retrieve child node
-        input = GetNode<InputSynchronizer>("./InputSynchronizer");
         cameraDisk = GetNode<Node3D>("./CameraDisk");
 
         // Only when we are the authority
@@ -54,13 +56,15 @@ public partial class PlayerMovements : CharacterBody3D
 
     public override void _PhysicsProcess(double delta)
     {
+        if (!IsMultiplayerAuthority()) return;
         Vector3 velocity = Velocity;
 
         // Add the gravity.
         if (!IsOnFloor()) velocity.Y -= gravity * (float)delta;
 
         // Add movements
-        Vector3 direction = (Transform.Basis * new Vector3(input.direction.X, 0, input.direction.Y)).Normalized();
+        Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
+        Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
         if (direction != Vector3.Zero)
         {
             velocity.X = direction.X * MoveSpeed;
@@ -80,23 +84,25 @@ public partial class PlayerMovements : CharacterBody3D
         for (var i = 0; i < GetSlideCollisionCount(); i++)
         {
             var collision = GetSlideCollision(i);
-            var collider = collision.GetCollider();
-
-            if (collider is RigidBody3D rb)
-                RpcId(
-                    rb.GetMultiplayerAuthority(),
-                    nameof(PushRigidbody),
-                    rb.GetPath(),
+            if (collision.GetCollider() is RigidBody3D rb)
+            {
+                if (!rb.IsMultiplayerAuthority()) {
+                    Rpc(nameof(SetObjectAuthority), rb.GetPath());
+                }
+                rb.ApplyImpulse(
                     collision.GetNormal() * -PushForce,
                     collision.GetPosition() - rb.GlobalPosition
                 );
+            }
         }
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    private void PushRigidbody(string rbNodePath, Vector3 impulse, Vector3 pos)
+    private void SetObjectAuthority(string nodePath)
     {
-        GetNode<RigidBody3D>(rbNodePath).ApplyImpulse(impulse, pos);
+        var remoteId = Multiplayer.GetRemoteSenderId();
+        GetNode<RigidBody3D>(nodePath).SetMultiplayerAuthority(remoteId);
+        Log.Debug("Set authority of {NodePath} to {RemoteId}", nodePath, remoteId);
     }
 
 
@@ -107,6 +113,7 @@ public partial class PlayerMovements : CharacterBody3D
     {
         if (!IsMultiplayerAuthority()) return;
 
+        // Escape
         if (rawEvent.IsActionPressed("ui_cancel"))
             Input.MouseMode = Input.MouseMode switch
             {
@@ -114,6 +121,7 @@ public partial class PlayerMovements : CharacterBody3D
                 _ => Input.MouseModeEnum.Captured,
             };
 
+        // Rotation
         if (rawEvent is InputEventMouseMotion mouseMotion
             && Input.MouseMode == Input.MouseModeEnum.Captured)
             ProcessRotation(mouseMotion);

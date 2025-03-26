@@ -1,16 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://iwqa8xgo1ip3"]
+[gd_scene load_steps=5 format=3 uid="uid://iwqa8xgo1ip3"]
 
-[ext_resource type="Script" path="res://Scripts/Player/InputSynchronizer.cs" id="1_374yw"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerMovements.cs" id="1_mu3dd"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_x40yu"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rr4v2"]
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_84s30"]
-properties/0/path = NodePath(".:direction")
-properties/0/spawn = true
-properties/0/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_n61o8"]
 properties/0/path = NodePath(".:position")
@@ -38,10 +32,6 @@ shape = SubResource("BoxShape3D_rr4v2")
 transform = Transform3D(0.998434, -0.000875793, 0.0559366, -0.00350298, 0.996937, 0.0781348, -0.0558337, -0.0782084, 0.995372, 1.6, 1.6, 5)
 keep_aspect = 0
 
-[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="."]
-root_path = NodePath(".")
-replication_config = SubResource("SceneReplicationConfig_84s30")
-script = ExtResource("1_374yw")
-
 [node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_n61o8")
+public_visibility = false

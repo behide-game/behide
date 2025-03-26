@@ -1,9 +1,10 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cyh1wuis74osj"]
 
-[ext_resource type="Shader" path="res://Shaders/chromatic_aberration.gdshader" id="1_u38u3"]
+[ext_resource type="Shader" path="res://Shaders/chromatic_aberration.gdshader" id="1_pc8tu"]
 
 [resource]
-shader = ExtResource("1_u38u3")
+render_priority = 0
+shader = ExtResource("1_pc8tu")
 shader_parameter/offsetR = 3.0
 shader_parameter/offsetG = 6.0
 shader_parameter/offsetB = 9.0

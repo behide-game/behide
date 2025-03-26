@@ -48,7 +48,7 @@ public class SignalingHubClient : ISignalingClient
         if (!succeed)
         {
             receivedIceCandidates.Remove(offerId, out var prevIceCandidates);
-            receivedIceCandidates.Add(offerId, [..prevIceCandidates, iceCandidate]);
+            receivedIceCandidates.Add(offerId, [..prevIceCandidates ?? [], iceCandidate]);
         }
 
         return Task.CompletedTask;
@@ -70,7 +70,7 @@ public partial class Signaling : Node
 
     public override async void _EnterTree()
     {
-        Log = Serilog.Log.ForContext("Tag", "Signaling");
+        Log = Serilog.Log.ForContext("Tag", "Signaling/SignalR");
 
         connection = new HubConnectionBuilder()
             .WithUrl(Secrets.SignalingHubUrl)

@@ -70,9 +70,10 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_jn132")
 script = ExtResource("1_vmtcs")
 playerListItemScene = ExtResource("2_3qdhv")
-playerListPath = "Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer/Players"
-countdownPath = "Lobby/Header/MarginContainer/Countdown"
-readyButtonTextPath = "Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center/Label"
+codeInputPath = NodePath("ChooseMode/Buttons/VBoxContainer/Code/LineEdit")
+playerListPath = NodePath("Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer/Players")
+countdownPath = NodePath("Lobby/Header/MarginContainer/Countdown")
+readyButtonTextPath = NodePath("Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center/Label")
 
 [node name="ChooseMode" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -172,9 +173,9 @@ BackgroundColor = Color(0.894118, 0.945098, 0.968627, 1)
 
 [node name="LineEdit" type="LineEdit" parent="ChooseMode/Buttons/VBoxContainer/Code"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_placeholder_color = Color(0.309385, 0.309385, 0.309385, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_placeholder_color = Color(0.309385, 0.309385, 0.309385, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("7_rk5ct")
 theme_override_font_sizes/font_size = 24
 placeholder_text = "AB01"

@@ -1,15 +1,15 @@
-[gd_resource type="Resource" load_steps=5 format=3 uid="uid://bocjeygw1lfar"]
+[gd_resource type="Resource" script_class="BehideObjectData" load_steps=5 format=3 uid="uid://bocjeygw1lfar"]
 
 [ext_resource type="Material" uid="uid://buhde0n3ewcfp" path="res://Prefabs/BehideObjects/mirror_ball/mirror_mat.tres" id="1_bfy7m"]
 [ext_resource type="Script" path="res://Scripts/BehideObjectData.cs" id="2_p6jlh"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_wcjq1"]
+[sub_resource type="SphereMesh" id="SphereMesh_wkdj5"]
 material = ExtResource("1_bfy7m")
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_chj31"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_y8pl1"]
 
 [resource]
 script = ExtResource("2_p6jlh")
-Mesh = SubResource("SphereMesh_wcjq1")
-Shape = SubResource("SphereShape3D_chj31")
+Mesh = SubResource("SphereMesh_wkdj5")
+Shape = SubResource("SphereShape3D_y8pl1")
 Mass = 1.0

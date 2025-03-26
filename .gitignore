@@ -10,3 +10,4 @@ Builds/
 webrtc/
 
 *.VoxelGI_data.res
+target/

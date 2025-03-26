@@ -4,27 +4,14 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Behide.Types;
 using Behide.Networking;
 using Behide.OnlineServices.Signaling;
-
-public class Player(int peerId, string username)
-{
-    /// <summary>
-    /// The peer id of the player to identify him on the network
-    /// </summary>
-    public readonly int PeerId = peerId;
-
-    /// <summary>
-    /// The username of the player
-    /// </summary>
-    public readonly string Username = username;
-
-    /// <summary>
-    /// True if the player is ready to start the game
-    /// </summary>
-    public bool Ready = false;
-}
+using System.Linq;
+using System.Threading;
 
 public partial class RoomManager : Node3D
 {
@@ -34,16 +21,17 @@ public partial class RoomManager : Node3D
     /// The local player
     /// It's null if the player is not in a room
     /// </summary>
-    public Player? localPlayer;
+    public BehaviorSubject<Player>? localPlayer;
 
     /// <summary>
     /// The list of players in the room / of the peers connected
     /// </summary>
-    public readonly List<Player> players = [];
+    public readonly Dictionary<int, BehaviorSubject<Player>> players = [];
 
-    public event Action<Player>? PlayerRegistered;
-    public event Action<Player>? PlayerLeft;
-    public event Action<Player>? PlayerReady;
+    private readonly Subject<BehaviorSubject<Player>> playerRegistered = new();
+    private readonly Subject<Player> playerLeft = new();
+    public IObservable<BehaviorSubject<Player>> PlayerRegistered => playerRegistered.AsObservable();
+    public IObservable<Player> PlayerStateChanged => players.Values.Merge();
 
     private Serilog.ILogger Log = null!;
 
@@ -51,16 +39,16 @@ public partial class RoomManager : Node3D
     {
         network = GameManager.Network;
         Log = Serilog.Log.ForContext("Tag", "RoomManager");
+
         Multiplayer.PeerDisconnected += peerId =>
         {
-            Log.Debug($"Player {peerId} left the room");
-
-            var player = players.Find(p => p.PeerId == peerId);
+            Log.Debug("Player {PeerId} left the room", peerId);
+            var player = players.GetValueOrDefault((int)peerId);
 
             if (player is not null)
             {
-                players.Remove(player);
-                PlayerLeft?.Invoke(player);
+                players.Remove((int)peerId);
+                player.OnCompleted();
             }
         };
     }
@@ -76,8 +64,10 @@ public partial class RoomManager : Node3D
             var playerId = Multiplayer.GetUniqueId();
             var username = $"Player: {playerId}"; // TODO: Ask the player for his username
 
-            localPlayer = new Player(playerId, username);
-            RegisterPlayer(username);
+            var player = new Player(playerId, username, new PlayerStateInLobby(false));
+            localPlayer = new BehaviorSubject<Player>(player);
+            RegisterLocalPlayer();
+            StartTimeSynchronization(1, localPlayer); // Take him self as clock reference
         }
 
         return res.MapError(error => $"Failed to create a room: {error}");
@@ -89,16 +79,27 @@ public partial class RoomManager : Node3D
 
         if (res.IsOk)
         {
-            Log.Debug("Joined room: {Players}", players);
-
             var playerId = Multiplayer.GetUniqueId();
             var username = $"Player: {playerId}";
+            Log.Debug("Joined room as {PlayerId}. Already connected player count: {Players}", playerId, players.Count);
 
-            localPlayer = new Player(playerId, username);
-            RegisterPlayer(username);
+            var player = new Player(playerId, username, new PlayerStateInLobby(false));
+            localPlayer = new BehaviorSubject<Player>(player);
+            RegisterLocalPlayer();
+
+            // Wait for all players to be registered
+            // The purpose is to ensure `SyncTime` take the correct peer as clock reference
+            await Task.Run(() =>
+            {
+                var expectedPlayerCount = res.Value + 1; // +1 because res.Value is number of players to connect to
+                while (players.Count < expectedPlayerCount) { }
+                StartTimeSynchronization(5, localPlayer);
+            });
         }
 
-        return res.MapError(error => $"Failed to join the room: {error}");
+        return res
+            .Map(_ => Unit.Default)
+            .MapError(error => $"Failed to join the room: {error}");
     }
 
     public async void LeaveRoom()
@@ -107,6 +108,7 @@ public partial class RoomManager : Node3D
 
         // Clear players list
         players.Clear();
+        localPlayer?.OnCompleted();
         localPlayer = null;
 
         (await network.LeaveRoom()).Match(
@@ -119,22 +121,28 @@ public partial class RoomManager : Node3D
     /// <summary>
     /// Send the player's info to the other players in the room
     /// </summary>
-    /// <param name="username">The username of the player</param>
-    public void RegisterPlayer(string username)
+    public void RegisterLocalPlayer()
     {
-        // Register local player on already connected peers
-        Rpc(nameof(RegisterPlayerRpc), username);
-        foreach (var peerId in Multiplayer.GetPeers())
+        if (localPlayer is null)
         {
-            Log.Debug("Registering us with already connected peer: {Username}", username);
+            Log.Warning("Not connected to a room, can't register the player");
+            return;
         }
 
-        // Register local player on futur peers
-        // Use Multiplayer.MultiplayerPeer to don't have to unsubscribe from the event
+        // -- Register local player on already connected peers
+        Rpc(nameof(RegisterPlayerRpc), localPlayer.Value);
+        foreach (var peerId in Multiplayer.GetPeers())
+        {
+            Log.Debug("Registering us with already connected peer: {Username}", localPlayer.Value.Username);
+        }
+
+        // -- Register local player on future peers
+        // Use Multiplayer.MultiplayerPeer instead of to avoid having
+        // to unsubscribe from the event when leaving the room
         Multiplayer.MultiplayerPeer.PeerConnected += peerId =>
         {
-            Log.Debug("New peer connected, registering us with him: {Username}", username);
-            RpcId(peerId, nameof(RegisterPlayerRpc), username);
+            Log.Debug("New peer connected, registering us with him: {Username}", localPlayer.Value.Username);
+            RpcId(peerId, nameof(RegisterPlayerRpc), localPlayer.Value);
         };
     }
 
@@ -143,65 +151,156 @@ public partial class RoomManager : Node3D
         CallLocal = true,               // This method is also called locally
         TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
     )]
-    private void RegisterPlayerRpc(string username)
+    private void RegisterPlayerRpc(Variant playerVariant)
     {
-        var playerId = Multiplayer.GetRemoteSenderId();
-        var player = new Player(playerId, username);
+        Player player = playerVariant;
+        var obs = new BehaviorSubject<Player>(player);
 
-        players.Add(player);
-        PlayerRegistered?.Invoke(player);
+        players.Add(player.PeerId, obs);
+        playerRegistered.OnNext(obs);
     }
 
-
-    public void ToggleReady()
+    public void SetPlayerState(PlayerState newState)
     {
         if (localPlayer is null)
         {
-            Log.Warning("Not connected to a room, can't toggle ready");
+            Log.Warning("Not connected to a room, can't set player state");
             return;
         }
 
-        localPlayer.Ready = !localPlayer.Ready;
-        Rpc(nameof(SetReadyRpc), localPlayer.Ready);
-
-        Log.Information("Toggled ready: {Ready}", localPlayer.Ready);
+        // Update the player state locally and on the other peers
+        Rpc(nameof(SetPlayerStateRpc), newState);
     }
 
     [Rpc(
         MultiplayerApi.RpcMode.AnyPeer, // Any peer can call this method
-        CallLocal = true,               // This method is also called locally
+        CallLocal = true,               // This method can be called locally
         TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
     )]
-    private void SetReadyRpc(bool ready)
+    /// <summary>
+    /// Set a player state (the state of the caller)
+    /// </summary>
+    private void SetPlayerStateRpc(Variant newStateVariant)
     {
-        Log.Information("Player {PlayerId} is ready: {Ready}", Multiplayer.GetRemoteSenderId(), ready);
+        PlayerState newState = newStateVariant;
+        Log.Debug("[RPC] Player {PlayerId} is now in state {State}", Multiplayer.GetRemoteSenderId(), newState);
+
         var playerId = Multiplayer.GetRemoteSenderId();
-        var player = players.Find(p => p.PeerId == playerId);
+        var player = players.GetValueOrDefault(playerId);
 
-        if (player is not null)
+        if (player is null)
         {
-            player.Ready = ready;
-            PlayerReady?.Invoke(player);
+            Log.Warning("[SetPlayerStateRpc]: Player {PlayerId} not found", playerId);
+            return;
         }
-        else
-            Log.Warning("[SetReadyRpc]: Player {PlayerId} not found", playerId);
 
+        var newPlayer = player.Value with { State = newState };
+        player.OnNext(newPlayer);
+        if (playerId == localPlayer?.Value.PeerId) localPlayer.OnNext(newPlayer);
     }
 
 
+    #region Time Synchronization
+    // See https://en.wikipedia.org/wiki/Network_Time_Protocol#Clock_synchronization_algorithm
+    private CancellationToken? timeSyncCancellationToken = null;
+    private Subject<long> clockDeltaMeasurements = new();
 
+    /// <summary>
+    /// The difference of time between local clock and reference clock
+    /// </summary>
+    public BehaviorSubject<TimeSpan?> clockDelta = new(null);
 
-    // public void SpawnPlayer(long playerId)
-    // {
-    //     GD.Print($"Spawning {playerId}");
-    //     var mainNode = GetNode("/root/multiplayer");
+    private void StartTimeSynchronization(int sampleCount, BehaviorSubject<Player> localPlayer)
+    {
+        // Cancel time synchronization when we quit the room
+        var cts = new CancellationTokenSource();
+        localPlayer.Subscribe(_ => { }, cts.Cancel);
+        timeSyncCancellationToken = cts.Token;
 
-    //     // Create node and set his name
-    //     var playerPrefab = GD.Load<PackedScene>("res://Prefabs/player.tscn");
-    //     var playerNode = playerPrefab.Instantiate<Node3D>();
-    //     playerNode.Name = playerId.ToString();
+        CallDeferred(nameof(SyncTime), sampleCount);
+    }
 
-    //     // Put node in the world
-    //     mainNode.AddChild(playerNode, true);
-    // }
+    private async void SyncTime(int sampleCount)
+    {
+        if (timeSyncCancellationToken is null)
+        {
+            Log.Error("Time synchronization should have a cancellation token set.");
+            return;
+        }
+        var ct = (CancellationToken)timeSyncCancellationToken;
+        // Reset observables
+        clockDeltaMeasurements = new();
+        clockDelta = new(null);
+
+        // Log when clock delta is updated
+        clockDelta.Subscribe(
+            delta => Log.Debug("[Time Sync] Clock delta changed: {Delta}", delta),
+            ct
+        );
+
+        var hostPlayerId = players.Min(player => player.Key);
+
+        // `clockDeltas` are the duration measured. They are independent
+        // When a new delta is emitted we determine the average clock delta with the server.
+        // We discard the deltas that differ by more than 1 standard deviation from the median.
+        // The purpose is to eliminate the packets that were retransmitted by tcp.
+        clockDeltaMeasurements.Scan(
+            ([], TimeSpan.Zero),
+            ((List<long> prevDeltas, TimeSpan _) acc, long newDelta) =>
+            {
+                List<long> deltas = [.. acc.prevDeltas, newDelta];
+
+                // Calculating standard deviation
+                var average = deltas.Average();
+                var variance = deltas
+                    .Select(delta => Math.Pow(delta - average, 2))
+                    .Average();
+                var standardDeviation = Math.Sqrt(variance);
+
+                // Finding median
+                deltas.Sort();
+                var (q, r) = Math.DivRem(deltas.Count, 2);
+                var median =
+                    r == 1
+                    ? deltas[q]
+                    : (deltas[q] + deltas[q - 1]) / 2;
+
+                // Filtering deltas
+                var min = median - standardDeviation;
+                var max = median + standardDeviation;
+                var averageDelta = deltas
+                    .Where(delta => min <= delta && delta <= max)
+                    .Average();
+
+                return (deltas, TimeSpan.FromMilliseconds(averageDelta));
+            }
+        )
+        .Subscribe(acc => clockDelta.OnNext(acc.Item2), ct);
+
+        for (int i = 0; i < sampleCount; i++)
+        {
+            var time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            if (ct.IsCancellationRequested) break;
+
+            RpcId(hostPlayerId, nameof(SyncTimeRpc), time);
+            try { await Task.Delay(1000, ct); } catch { }
+        }
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncTimeRpc(long requestTime)
+    {
+        var now = DateTimeOffset.Now + (clockDelta.Value ?? TimeSpan.Zero);
+        var nowMs = now.ToUnixTimeMilliseconds();
+        RpcId(Multiplayer.GetRemoteSenderId(), nameof(SyncTime2Rpc), requestTime, nowMs);
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void SyncTime2Rpc(long requestTime, long receivedTime)
+    {
+        var currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        var clockDelta = (receivedTime - requestTime + receivedTime - currentTime) / 2;
+        clockDeltaMeasurements.OnNext(clockDelta);
+    }
+    #endregion
 }

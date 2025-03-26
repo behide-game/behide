@@ -2,8 +2,9 @@ namespace Behide.Networking;
 
 using Godot;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Reactive;
 using Behide.Types;
 using Behide.OnlineServices.Signaling;
 using Behide.OnlineServices.Client;
@@ -29,22 +30,22 @@ partial class PeerConnection : WebRtcPeerConnection
                     { "urls", "stun:stun.relay.metered.ca:80" }
                 },
                 new Godot.Collections.Dictionary {
-                    { "urls", "turn:a.relay.metered.ca:80" },
+                    { "urls", "turn:standard.relay.metered.ca:80" },
                     { "username", Secrets.RelayUsername },
                     { "credential", Secrets.RelayPassword }
                 },
                 new Godot.Collections.Dictionary {
-                    { "urls", "turn:a.relay.metered.ca:80?transport=tcp" },
+                    { "urls", "turn:standard.relay.metered.ca:80?transport=tcp" },
                     { "username", Secrets.RelayUsername },
                     { "credential", Secrets.RelayPassword }
                 },
                 new Godot.Collections.Dictionary {
-                    { "urls", "turn:a.relay.metered.ca:443" },
+                    { "urls", "turn:standard.relay.metered.ca:443" },
                     { "username", Secrets.RelayUsername },
                     { "credential", Secrets.RelayPassword }
                 },
                 new Godot.Collections.Dictionary {
-                    { "urls", "turn:a.relay.metered.ca:443?transport=tcp" },
+                    { "urls", "turn:standard.relay.metered.ca:443?transport=tcp" },
                     { "username", Secrets.RelayUsername },
                     { "credential", Secrets.RelayPassword }
                 }
@@ -152,7 +153,7 @@ class AnswerPeerConnector(Signaling signaling, ConnAttemptId connAttemptId) : Pe
 
         // Await connection
         await TaskEx.WaitUntil(peerConnection.IsConnected);
-        return Unit.Value;
+        return Unit.Default;
     }
 }
 

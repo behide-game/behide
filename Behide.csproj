@@ -1,4 +1,4 @@
-<Project Sdk="Godot.NET.Sdk/4.2.2">
+<Project Sdk="Godot.NET.Sdk/4.3.0">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
@@ -8,7 +8,9 @@
     <Reference Include="Scripts\External\**\*.dll" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
     <PackageReference Include="FSharp.SystemTextJson" Version="1.2.42" />
+    <PackageReference Include="MemoryPack" Version="1.21.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.4" />
     <PackageReference Include="Serilog" Version="3.1.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />

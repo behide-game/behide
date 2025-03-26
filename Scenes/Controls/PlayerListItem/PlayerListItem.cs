@@ -1,6 +1,9 @@
 namespace Behide.UI.Controls;
 
 using Godot;
+using Behide.Types;
+using Serilog;
+
 
 [Tool]
 public partial class PlayerListItem : Control
@@ -11,15 +14,32 @@ public partial class PlayerListItem : Control
     [Export] private string usernameLabelPath = "";
     [Export] private string readyLabelPath = "";
 
-    public void SetPlayer(Player player) => Player = player;
+    private ILogger Log = null!;
+    public override void _EnterTree() => Log = Serilog.Log.ForContext("Tag", "UI/Lobby/PlayerListItem");
+
+    public void SetPlayer(Player player)
+    {
+        if (player.State is not PlayerStateInLobby)
+        {
+            Log.Error("Player state is not in lobby");
+            return;
+        }
+        Player = player;
+    }
 
     private void Compute()
     {
         if (Player is null) return;
 
+        if (Player.State is not PlayerStateInLobby playerState)
+        {
+            Log.Error("Player state is not in lobby");
+            return;
+        }
+
         GetNode<Label>(usernameLabelPath).Text = Player.Username;
-        GetNode<Label>(readyLabelPath).Text = Player.Ready ? "Ready" : "Not ready";
+        GetNode<Label>(readyLabelPath).Text = playerState.IsReady ? "Ready" : "Not ready";
     }
 
-    public string? GetUsername() => Player?.Username;
+    public int? GetPeerId() => Player?.PeerId;
 }
