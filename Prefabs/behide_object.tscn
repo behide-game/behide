@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cuuh5753pn6hj"]
 
-[ext_resource type="Script" path="res://Scripts/BehideObject.cs" id="1_1t4dg"]
+[ext_resource type="Script" uid="uid://uvtxqkpigyno" path="res://Scripts/BehideObject.cs" id="1_1t4dg"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_8l30g"]
 

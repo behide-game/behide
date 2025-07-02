@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cva4wcyi4gv27"]
 
-[ext_resource type="Script" path="res://Scenes/Home/Home.cs" id="1_6ww0f"]
+[ext_resource type="Script" uid="uid://bmo0r6hfqqrpt" path="res://Scenes/Home/Home.cs" id="1_6ww0f"]
 [ext_resource type="Texture2D" uid="uid://b3lgwbn2cu3ao" path="res://Assets/Images/Behide-logo.svg" id="1_scmxo"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_aao6d"]
