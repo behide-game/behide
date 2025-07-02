@@ -1,10 +1,10 @@
 [gd_scene load_steps=20 format=3 uid="uid://ch26lr3yfn732"]
 
-[ext_resource type="Script" uid="uid://f5imehoqex" path="res://Scenes/Lobby/Lobby.cs" id="1_vmtcs"]
+[ext_resource type="Script" uid="uid://dm7h4qmja7uar" path="res://Scenes/Lobby/Lobby.cs" id="1_vmtcs"]
 [ext_resource type="PackedScene" uid="uid://do5karhuhkwaw" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.tscn" id="2_3qdhv"]
 [ext_resource type="PackedScene" uid="uid://dxmrf533plg67" path="res://Scenes/Controls/Logo.tscn" id="5_ah4j3"]
-[ext_resource type="Script" uid="uid://cid068andq3s6" path="res://Scenes/Controls/BezelContainer.cs" id="5_ew8go"]
-[ext_resource type="Script" uid="uid://d2etmapov8k6t" path="res://Scenes/Controls/ShapePattern.cs" id="5_vnyn6"]
+[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="5_ew8go"]
+[ext_resource type="Script" uid="uid://c7dblouqmfhpy" path="res://Scenes/Controls/ShapePattern.cs" id="5_vnyn6"]
 [ext_resource type="Texture2D" uid="uid://b7hopap8ojrdp" path="res://Assets/Images/Behide-logo-rotated-blue.svg" id="6_uepy8"]
 [ext_resource type="FontFile" uid="uid://26b4v0rh3143" path="res://Assets/Fonts/Space Mono/SpaceMono-Bold.ttf" id="7_rk5ct"]
 [ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="7_xxjlh"]
