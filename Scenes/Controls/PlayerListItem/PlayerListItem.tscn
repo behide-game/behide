@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://do5karhuhkwaw"]
 
-[ext_resource type="Script" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.cs" id="1_e7184"]
-[ext_resource type="Script" path="res://Scenes/Controls/BezelContainer.cs" id="2_418vq"]
+[ext_resource type="Script" uid="uid://btn3idpnw5mtf" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.cs" id="1_e7184"]
+[ext_resource type="Script" uid="uid://cid068andq3s6" path="res://Scenes/Controls/BezelContainer.cs" id="2_418vq"]
 [ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="3_37cwf"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_mt0eq"]

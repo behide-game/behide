@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://iwqa8xgo1ip3"]
 
-[ext_resource type="Script" path="res://Scripts/Player/InputSynchronizer.cs" id="1_374yw"]
-[ext_resource type="Script" path="res://Scripts/Player/PlayerMovements.cs" id="1_mu3dd"]
+[ext_resource type="Script" uid="uid://dfaa5eo3ddo6k" path="res://Scripts/Player/InputSynchronizer.cs" id="1_374yw"]
+[ext_resource type="Script" uid="uid://fnentlck6x4m" path="res://Scripts/Player/PlayerMovements.cs" id="1_mu3dd"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_x40yu"]
 
