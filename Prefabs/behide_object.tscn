@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://cuuh5753pn6hj"]
 
-[ext_resource type="Script" path="res://Scripts/BehideObject.cs" id="1_3i8qj"]
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Scripts/BehideObject.cs" id="1_3i8qj"]
 [ext_resource type="Resource" uid="uid://c0t5da7h0bdw8" path="res://Prefabs/BehideObjects/BehideObjectEmpty.tres" id="2_x2by2"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_8nk6c"]
