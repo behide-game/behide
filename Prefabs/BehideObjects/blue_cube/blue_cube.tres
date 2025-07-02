@@ -1,6 +1,6 @@
 [gd_resource type="Resource" load_steps=5 format=3 uid="uid://c7xkht1loifw3"]
 
-[ext_resource type="Script" path="res://Scripts/BehideObjectData.cs" id="1_c4eum"]
+[ext_resource type="Script" uid="uid://jnkp0bh3kwtq" path="res://Scripts/BehideObjectData.cs" id="1_c4eum"]
 [ext_resource type="Material" uid="uid://dmhr7hi4kwswq" path="res://Prefabs/BehideObjects/blue_cube/blue_mat.tres" id="1_m87py"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_ec0f6"]
