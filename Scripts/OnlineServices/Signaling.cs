@@ -1,4 +1,4 @@
-namespace Behide.OnlineServices.Client;
+namespace Behide.OnlineServices.Signaling;
 
 using Godot;
 
@@ -12,8 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FSharp.Core;
 using TypedSignalR.Client;
 
-using Behide.Types;
-using Behide.OnlineServices.Signaling;
+using Types;
 using Serilog;
 
 public class SignalingHubClient : ISignalingClient
@@ -95,7 +94,7 @@ public partial class Signaling : Node
 
         // Connecting the client (the class that handle hub requests) to the hub
         Client = new SignalingHubClient();
-        connection.Register(Client as ISignalingClient);
+        connection.Register<ISignalingClient>(Client);
 
         // Starting the connection
         try

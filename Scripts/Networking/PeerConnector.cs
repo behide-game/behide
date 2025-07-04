@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 using System.Reactive;
 using Behide.Types;
 using Behide.OnlineServices.Signaling;
-using Behide.OnlineServices.Client;
 using Behide.I18n.BOS.Errors;
 using Serilog;
-
 
 
 /// <summary>

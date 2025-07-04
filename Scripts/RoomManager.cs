@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Behide.Types;
-using Behide.Networking;
-using Behide.OnlineServices.Signaling;
+using Types;
+using Networking;
+using OnlineServices.Signaling;
 using System.Linq;
 using System.Threading;
 

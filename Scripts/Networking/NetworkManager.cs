@@ -6,7 +6,6 @@ using System.Reactive;
 using System.Threading.Tasks;
 
 using Behide.Types;
-using Behide.OnlineServices.Client;
 using Behide.OnlineServices.Signaling;
 using Behide.I18n.BOS.Errors;
 

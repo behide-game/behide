@@ -5,6 +5,7 @@ bin/
 obj/
 .vs/
 .idea/
+*.DotSettings.user
 
 Builds/
 .env
