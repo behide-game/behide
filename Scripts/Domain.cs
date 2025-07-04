@@ -27,8 +27,6 @@ public partial record Player
     private static Player? FromVariant(Godot.Variant variant)
     {
         var bytes = variant.AsByteArray();
-        if (bytes is null) return null;
-
         return FromBytes(bytes);
     }
 
@@ -50,8 +48,6 @@ public abstract partial record PlayerState
     private static PlayerState? FromVariant(Godot.Variant variant)
     {
         var bytes = variant.AsByteArray();
-        if (bytes is null) return null;
-
         return FromBytes(bytes);
     }
 
@@ -63,4 +59,4 @@ public abstract partial record PlayerState
 [MemoryPackable]
 public partial record PlayerStateInLobby(bool IsReady) : PlayerState;
 [MemoryPackable]
-public partial record PlayerStateInGame() : PlayerState;
+public partial record PlayerStateInGame : PlayerState;
