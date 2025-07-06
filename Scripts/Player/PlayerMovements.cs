@@ -16,8 +16,9 @@ public partial class PlayerMovements : CharacterBody3D
     [Export] private float maxRotation = Mathf.DegToRad(90);
     [Export] private float verticalSensitivity = 0.005f;
     [Export] private float horizontalSensitivity = 0.005f;
-    // Move speed in m/s
+    // Forces in m/s^2
     [Export] private float pushForce = 0.1f;
+    [Export] private float jumpForce = 300f;
 
     private Serilog.ILogger log = null!;
 
@@ -60,6 +61,7 @@ public partial class PlayerMovements : CharacterBody3D
 
         // Add the gravity.
         if (!IsOnFloor()) velocity.Y -= gravity * (float)delta;
+        else if (Input.IsActionJustPressed("jump")) velocity.Y += jumpForce * (float)delta;
 
         // Add movements
         var inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
