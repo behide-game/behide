@@ -2,7 +2,6 @@
 namespace Behide;
 
 using Godot;
-using Log;
 using Networking;
 
 public partial class GameManager : Node3D
@@ -28,7 +27,7 @@ public partial class GameManager : Node3D
 
         GetTree().AutoAcceptQuit = false;
 
-        Logging.ConfigureLogger();
+        Logging.Logging.ConfigureLogger();
         log = Serilog.Log.ForContext("Tag", "GameManager");
 
         Room = GetNode<RoomManager>("/root/RoomManager");

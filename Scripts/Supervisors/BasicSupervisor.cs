@@ -1,42 +1,47 @@
-namespace Behide.Game.Supervisors;
-
+using System;
 using Godot;
-using Behide.Types;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
+namespace Behide.Game.Supervisors;
+using Types;
+
 /// <summary>
 /// It just spawns players
 /// </summary>
 public partial class BasicSupervisor : Node
 {
-    private Serilog.ILogger Log = null!;
-    public const string tag = "Supervisor/Basic";
+    private Serilog.ILogger log = null!;
+    public const string Tag = "Supervisor/Basic";
 
     [Export] private PackedScene playerPrefab = null!;
     [Export] private NodePath playersNodePath = null!;
 
-    private readonly Dictionary<int, BehaviorSubject<Player>> players = GameManager.Room.players;
+    private readonly Dictionary<int, BehaviorSubject<Player>> players = GameManager.Room.Players;
 
-    private MultiplayerSynchronizer? positionSynchronizer = null;
+    private MultiplayerSynchronizer? positionSynchronizer;
 
     public override void _EnterTree()
     {
-        Log = Serilog.Log.ForContext("Tag", tag);
+        log = Serilog.Log.ForContext("Tag", Tag);
 
         // Set authority to the last player to join
         // The authority is the player who spawns players and choose randomly the hunter
-        int? lastPlayerToJoin = players.Max(kv => kv.Key);
-        if (lastPlayerToJoin is null)
+        int lastPlayerToJoin;
+        try
         {
-            Log.Error("No player found. This means that the room is empty. Strange...");
+            lastPlayerToJoin = players.Max(kv => kv.Key);
+        }
+        catch (Exception)
+        {
+            log.Error("No player found. This means that the room is empty. Strange...");
             return;
         }
 
-        SetMultiplayerAuthority(lastPlayerToJoin.Value);
+        SetMultiplayerAuthority(lastPlayerToJoin);
     }
 
     public override async void _Ready()
@@ -65,7 +70,7 @@ public partial class BasicSupervisor : Node
         GameManager.Room.SetPlayerState(new PlayerStateInGame());
 
         // Show us to the players when they are ready
-        var tasksList = GameManager.Room.players.Values.Select(playerObs =>
+        var tasksList = GameManager.Room.Players.Values.Select(playerObs =>
             Task.Run(async () =>
             {
                 // Wait player to be ready
@@ -74,7 +79,7 @@ public partial class BasicSupervisor : Node
                     .Take(1);
 
                 CallDeferred(nameof(SetVisibleFor), player.PeerId);
-                Log.Debug("Set visible for {PeerId}", player.PeerId);
+                log.Debug("Set visible for {PeerId}", player.PeerId);
             })
         );
 
@@ -84,5 +89,5 @@ public partial class BasicSupervisor : Node
 
     private void SetVisibleFor(int peerId) => positionSynchronizer?.SetVisibilityFor(peerId, true);
 
-    public virtual void AllPlayersSpawned() { }
+    protected virtual void AllPlayersSpawned() { }
 }

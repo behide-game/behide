@@ -30,7 +30,7 @@ public partial class PropHuntSupervisor : BasicSupervisor
         SetUpUI();
     }
 
-    public override void AllPlayersSpawned()
+    protected override void AllPlayersSpawned()
     {
         ChooseHunter(); // Need all players to be ready because it uses a RPC
     }
@@ -61,7 +61,7 @@ public partial class PropHuntSupervisor : BasicSupervisor
         // Block if the current player does not have the authority to choose the hunter
         if (GetMultiplayerAuthority() != Multiplayer.GetUniqueId()) return;
 
-        var players = GameManager.Room.players;
+        var players = GameManager.Room.Players;
 
         // Choose the hunter
         var idx = new Random().Next(players.Count);

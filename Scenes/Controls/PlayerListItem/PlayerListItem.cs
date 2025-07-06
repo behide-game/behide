@@ -1,9 +1,8 @@
-namespace Behide.UI.Controls;
-
 using Godot;
 using Behide.Types;
-using Serilog;
+// ReSharper disable InconsistentNaming
 
+namespace Behide.UI.Controls;
 
 [Tool]
 public partial class PlayerListItem : Control
@@ -14,14 +13,14 @@ public partial class PlayerListItem : Control
     [Export] private string usernameLabelPath = "";
     [Export] private string readyLabelPath = "";
 
-    private ILogger Log = null!;
-    public override void _EnterTree() => Log = Serilog.Log.ForContext("Tag", "UI/Lobby/PlayerListItem");
+    private Serilog.ILogger log = null!;
+    public override void _EnterTree() => log = Serilog.Log.ForContext("Tag", "UI/Lobby/PlayerListItem");
 
     public void SetPlayer(Player player)
     {
         if (player.State is not PlayerStateInLobby)
         {
-            Log.Error("Player state is not in lobby");
+            log.Error("Player state is not in lobby");
             return;
         }
         Player = player;
@@ -33,7 +32,7 @@ public partial class PlayerListItem : Control
 
         if (Player.State is not PlayerStateInLobby playerState)
         {
-            Log.Error("Player state is not in lobby");
+            log.Error("Player state is not in lobby");
             return;
         }
 
