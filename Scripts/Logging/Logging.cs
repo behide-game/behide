@@ -1,16 +1,16 @@
-namespace Behide.Log;
-
+using System.Linq;
+using Behide.Game.Supervisors;
 using Godot;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
-using System.Linq;
-using Behide.Game.Supervisors;
+
+namespace Behide.Logging;
 
 public static class Logging
 {
-    private static readonly string consoleOutputFormat = "[{Timestamp:HH:mm:ss} {Level:u3}] [{Tag:u3}] {Message:lj}";
-    private static readonly string logFileOutputFormat = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] [{Tag}] {Message:lj}{NewLine}{Exception}";
+    private const string ConsoleOutputFormat = "[{Timestamp:HH:mm:ss} {Level:u3}] [{Tag:u3}] {Message:lj}";
+    private const string LogFileOutputFormat = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] [{Tag}] {Message:lj}{NewLine}{Exception}";
 
     public static void ConfigureLogger()
     {
@@ -25,11 +25,7 @@ public static class Logging
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // Minimum level for SignalR logs
             .Filter.ByExcluding(logEvent => {
                 if (logEvent.Properties.TryGetValue("Tag", out var tag))
-                {
-                    if (tag.ToString() == $"\"{BasicSupervisor.tag}\"") return true;
-                    else return false;
-                }
-
+                    return tag.ToString() == $"\"{BasicSupervisor.Tag}\"";
                 return false;
             })
 
@@ -39,13 +35,13 @@ public static class Logging
                 if (logToGodotSink)
                     cl
                     .MinimumLevel.Debug()
-                    .WriteTo.Godot(consoleOutputFormat);
+                    .WriteTo.Godot(ConsoleOutputFormat);
                 else
-                    cl.WriteTo.Console(outputTemplate: consoleOutputFormat + "\n");
+                    cl.WriteTo.Console(outputTemplate: ConsoleOutputFormat + System.Environment.NewLine);
             })
             // File logger
             .WriteTo.Logger(cl => cl
-                .WriteTo.File(logFilePath, outputTemplate: logFileOutputFormat)
+                .WriteTo.File(logFilePath, outputTemplate: LogFileOutputFormat)
                 .WriteTo.File(new JsonFormatter(), jsonLogFilePath)
             )
             .CreateLogger();

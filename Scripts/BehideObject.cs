@@ -5,13 +5,13 @@ using Godot;
 [Tool]
 public partial class BehideObject : RigidBody3D
 {
-    private BehideObjectData? _resource;
+    private BehideObjectData? resource;
     [Export] public BehideObjectData? Resource
     {
-        get => _resource;
+        get => resource;
         set
         {
-            _resource = value;
+            resource = value;
             if (Engine.IsEditorHint())
             {
                 if (value is null) return;
@@ -26,7 +26,7 @@ public partial class BehideObject : RigidBody3D
         ReloadResource(Resource!);
     }
 
-    public void ReloadResource(BehideObjectData behideObject)
+    private void ReloadResource(BehideObjectData behideObject)
     {
         Mass = behideObject.Mass;
         GetNode<MeshInstance3D>("./MeshInstance3D").Mesh = behideObject.Mesh;

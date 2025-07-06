@@ -5,19 +5,12 @@ using MemoryPack;
 namespace Behide.Types;
 
 [MemoryPackable]
-public partial record Player
+[method: SetsRequiredMembers]
+public partial record Player(int PeerId, string Username, PlayerState State)
 {
-    public required int PeerId { get; init; }
-    public required string Username { get; init; }
-    public required PlayerState State { get; init; }
-
-    [SetsRequiredMembers]
-    public Player(int peerId, string username, PlayerState state)
-    {
-        PeerId = peerId;
-        Username = username;
-        State = state;
-    }
+    public required int PeerId { get; init; } = PeerId;
+    public required string Username { get; init; } = Username;
+    public required PlayerState State { get; init; } = State;
 
     private byte[] ToBytes() => MemoryPackSerializer.Serialize(this);
     private static Player? FromBytes(byte[] bytes) => MemoryPackSerializer.Deserialize<Player>(bytes);
