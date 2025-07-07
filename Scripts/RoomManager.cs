@@ -203,7 +203,7 @@ public partial class RoomManager : Node3D
         CallDeferred(nameof(SyncTime), sampleCount);
     }
 
-    private async Task SyncTime(int sampleCount)
+    private async void SyncTime(int sampleCount)
     {
         if (timeSyncCancellationToken is null)
         {
