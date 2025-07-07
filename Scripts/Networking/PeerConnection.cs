@@ -80,11 +80,14 @@ public partial class PeerConnection : WebRtcPeerConnection
             SetRemoteSdpDescription(answer);
 
             // Exchange ice candidates
-            connAttempt.Candidates.Subscribe(AddIceCandidate);
-            iceCandidates.Subscribe(connAttempt.SendIceCandidate);
+            var sub1 = connAttempt.Candidates.Subscribe(AddIceCandidate);
+            var sub2 = iceCandidates.Subscribe(connAttempt.SendIceCandidate);
             log.Debug("Exchanging ice candidates");
 
             await TaskEx.WaitUntil(IsConnected);
+            sub1.Dispose();
+            sub2.Dispose();
+
             log.Information("Connection established, signaling the server");
             connAttempt.End();
         };
@@ -100,28 +103,33 @@ public partial class PeerConnection : WebRtcPeerConnection
     /// <remarks>Returns only when connection is established</remarks>
     public async Task AnswerConnectionOffer(Signaling signaling, ConnAttemptId connAttemptId)
     {
-        log.Debug("Joining connection attempt {ConnectionAttemptId}", connAttemptId);
+        var tcs = new TaskCompletionSource();
+
         // Retrieve offer
+        log.Debug("Joining connection attempt {ConnectionAttemptId}", connAttemptId);
         var connAttempt = await signaling.JoinConnectionAttempt(connAttemptId);
 
         // Send answer when created
-        SessionDescriptionCreated += (type, sdp) =>
+        SessionDescriptionCreated += async (type, sdp) =>
         {
             var answer = new SdpDescription(type, sdp);
             connAttempt.SendAnswer(answer);
             log.Debug("Answer sent");
 
             // Exchange ice candidates
-            connAttempt.Candidates.Subscribe(AddIceCandidate);
-            iceCandidates.Subscribe(connAttempt.SendIceCandidate);
+            var sub1 = connAttempt.Candidates.Subscribe(AddIceCandidate);
+            var sub2 = iceCandidates.Subscribe(connAttempt.SendIceCandidate);
             log.Debug("Exchanging ice candidates");
+
+            // Await connection
+            await TaskEx.WaitUntil(IsConnected);
+            sub1.Dispose();
+            sub2.Dispose();
+            tcs.SetResult();
         };
 
         SetRemoteSdpDescription(connAttempt.Offer);
-
-        // Await connection
-        log.Debug("Waiting for connection to be established");
-        await TaskEx.WaitUntil(IsConnected);
+        await tcs.Task;
         log.Information("Connection established");
     }
 }

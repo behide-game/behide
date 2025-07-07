@@ -26,7 +26,7 @@ public abstract class ConnectionAttempt(ConnAttemptId id, ISignalingHub hub)
         Task.Run(async () =>
         {
             var res = await Hub.SendIceCandidate(Id, candidate);
-            if (res.HasError(out var error)) Log.Warning("{error}", error.ToLocalizedString());
+            if (res.HasError(out var error)) Log.Error("{error}", error.ToLocalizedString());
         });
     }
 
