@@ -1,7 +1,8 @@
-[gd_scene load_steps=20 format=3 uid="uid://ch26lr3yfn732"]
+[gd_scene load_steps=21 format=3 uid="uid://ch26lr3yfn732"]
 
 [ext_resource type="Script" uid="uid://dm7h4qmja7uar" path="res://Scenes/Lobby/Lobby.cs" id="1_vmtcs"]
 [ext_resource type="PackedScene" uid="uid://do5karhuhkwaw" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.tscn" id="2_3qdhv"]
+[ext_resource type="Script" uid="uid://d5711da0fkld" path="res://Prefabs/Countdown/Countdown.cs" id="3_lj1ok"]
 [ext_resource type="PackedScene" uid="uid://dxmrf533plg67" path="res://Scenes/Controls/Logo.tscn" id="5_ah4j3"]
 [ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="5_ew8go"]
 [ext_resource type="Script" uid="uid://c7dblouqmfhpy" path="res://Scenes/Controls/ShapePattern.cs" id="5_vnyn6"]
@@ -72,8 +73,16 @@ script = ExtResource("1_vmtcs")
 playerListItemScene = ExtResource("2_3qdhv")
 codeInputPath = NodePath("ChooseMode/Buttons/VBoxContainer/Code/LineEdit")
 playerListPath = NodePath("Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer/Players")
-countdownPath = NodePath("Lobby/Header/MarginContainer/Countdown")
 readyButtonTextPath = NodePath("Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center/Label")
+countdownPath = NodePath("Countdown")
+
+[node name="Countdown" type="Node" parent="."]
+script = ExtResource("3_lj1ok")
+labelNodePath = NodePath("../Lobby/Header/MarginContainer/Countdown")
+runningTextFormat = "Start in {0:s\\.ff}s"
+beforeRunningText = "Not ready"
+afterRunningText = "Starting game..."
+metadata/_custom_type_script = "uid://d5711da0fkld"
 
 [node name="ChooseMode" type="VBoxContainer" parent="."]
 layout_mode = 2

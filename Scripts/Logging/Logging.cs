@@ -23,12 +23,6 @@ public static class Logging
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Verbose() // TODO: change for production
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // Minimum level for SignalR logs
-            .Filter.ByExcluding(logEvent => {
-                if (logEvent.Properties.TryGetValue("Tag", out var tag))
-                    return tag.ToString() == $"\"{BasicSupervisor.Tag}\"";
-                return false;
-            })
-
             // Console logger
             .WriteTo.Logger(cl =>
             {

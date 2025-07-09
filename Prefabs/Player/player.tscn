@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://iwqa8xgo1ip3"]
 
-[ext_resource type="Script" uid="uid://oo4kpemcc80a" path="res://Scripts/Player/PlayerMovements.cs" id="1_mu3dd"]
+[ext_resource type="Script" uid="uid://oo4kpemcc80a" path="res://Prefabs/Player/PlayerMovements.cs" id="1_mu3dd"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_x40yu"]
 
@@ -17,7 +17,6 @@ properties/1/replication_mode = 1
 [node name="Player" type="CharacterBody3D"]
 slide_on_ceiling = false
 script = ExtResource("1_mu3dd")
-PushForce = 0.2
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 gi_mode = 2
@@ -29,7 +28,7 @@ shape = SubResource("BoxShape3D_rr4v2")
 [node name="CameraDisk" type="Node3D" parent="."]
 
 [node name="Camera" type="Camera3D" parent="CameraDisk"]
-transform = Transform3D(0.998434, -0.000875793, 0.0559366, -0.00350298, 0.996937, 0.0781348, -0.0558337, -0.0782084, 0.995372, 0, 1.2, 4)
+transform = Transform3D(1, 0, 0, 0, 0.996918, 0.0784591, 0, -0.0784591, 0.996917, 0, 1.2, 4)
 keep_aspect = 0
 fov = 90.0
 

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="BehideObjectData" load_steps=5 format=3 uid="uid://dwlhlbsva836h"]
 
 [ext_resource type="Material" uid="uid://g1vx3vwbppq3" path="res://Prefabs/BehideObjects/purple_cube/purple_mat.tres" id="1_csg3u"]
-[ext_resource type="Script" uid="uid://bhax725ekj5oc" path="res://Scripts/BehideObjectData.cs" id="1_nwnk5"]
+[ext_resource type="Script" uid="uid://bhax725ekj5oc" path="res://Prefabs/BehideObject/BehideObjectData.cs" id="1_nwnk5"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_mo3e3"]
 material = ExtResource("1_csg3u")
