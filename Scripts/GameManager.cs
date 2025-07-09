@@ -1,4 +1,3 @@
-#nullable disable
 namespace Behide;
 
 using Godot;
@@ -8,21 +7,22 @@ public partial class GameManager : Node3D
 {
     public static GameManager instance = null!;
 
-    public static RoomManager Room { get; private set; }
-    public static NetworkManager Network { get; private set; }
+    public static RoomManager Room { get; private set; } = null!;
+    public static NetworkManager Network { get; private set; } = null!;
 
     public enum GameState { Home, Lobby, Game }
     public static GameState State { get; private set; } = GameState.Home;
 
-    private static readonly PackedScene HomeScene = GD.Load<PackedScene>("res://Scenes/Home/Home.tscn");
-    private static readonly PackedScene LobbyScene = GD.Load<PackedScene>("res://Scenes/Lobby/Lobby.tscn");
-    private static readonly PackedScene GameScene = GD.Load<PackedScene>("res://Scenes/Game/Game.tscn");
+    private static readonly PackedScene HomeScene = ResourceLoader.Load<PackedScene>("res://Scenes/Home/Home.tscn");
+    private static readonly PackedScene LobbyScene = ResourceLoader.Load<PackedScene>("res://Scenes/Lobby/Lobby.tscn");
+    private static readonly PackedScene GameScene = ResourceLoader.Load<PackedScene>("res://Scenes/Game/Game.tscn");
 
     private Serilog.ILogger log = null!;
 
     public override void _EnterTree()
     {
-        if (instance != null) return;
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (instance is not null) return;
         instance = this;
 
         GetTree().AutoAcceptQuit = false;
