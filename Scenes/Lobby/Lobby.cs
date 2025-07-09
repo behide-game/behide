@@ -4,8 +4,10 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using Behide.OnlineServices.Signaling;
 using Behide.UI.Controls;
+
 // ReSharper disable WithExpressionModifiesAllMembers
 
 namespace Behide.Game.UI.Lobby;
@@ -17,38 +19,46 @@ public partial class Lobby : Control
     [Export] private PackedScene playerListItemScene = null!;
     [Export] private NodePath codeInputPath = "";
     [Export] private NodePath playerListPath = "";
-    [Export] private NodePath countdownPath = "";
     [Export] private NodePath readyButtonTextPath = "";
+    [Export] private NodePath countdownPath = "";
 
+    private Countdown countdown = null!;
     private Control chooseModeControl = null!;
     private Control lobbyControl = null!;
 
     private ILogger log = null!;
-
-    private DateTimeOffset? gameStartTime;
     private CancellationTokenSource eventsCts = new();
-
-    /// <summary>
-    /// Return true if the local player is the one who connected the
-    /// first to the lobby among the remaining lobby players.
-    /// </summary>
-    /// <returns></returns>
-    private bool IsLobbyAuthority() => GameManager.Room.Players.Min(p => p.Key) == Multiplayer.GetUniqueId();
 
     public override void _EnterTree()
     {
         log = Log.ForContext("Tag", "UI/Lobby");
 
         chooseModeControl = GetNode<Control>("ChooseMode");
-        lobbyControl = GetNode<Control>("Lobby");
-
         chooseModeControl.Show();
+
+        lobbyControl = GetNode<Control>("Lobby");
         lobbyControl.Hide();
 
-        // Init properties for countdown
-        countdownLabel = GetNode<Label>(countdownPath);
-        countdownDefaultText = countdownLabel.Text;
+        // Set authority
+        GameManager.Room.PlayerLeft.Subscribe(
+            _ =>
+            {
+                var minPeerId = GameManager.Room.Players.Min(p => p.Key);
+                if (minPeerId == GetMultiplayerAuthority()) return;
+                SetMultiplayerAuthority(minPeerId);
+            },
+            eventsCts.Token
+        );
+
+        // Subscribe to countdown
+        countdown = GetNode<Countdown>(countdownPath);
+        countdown.TimeElapsed += () =>
+        {
+            if (!IsMultiplayerAuthority() || eventsCts.Token.IsCancellationRequested) return;
+            CallDeferred(Node.MethodName.Rpc, nameof(StartGameRpc));
+        };
     }
+
     public override void _ExitTree()
     {
         eventsCts.Cancel();
@@ -56,73 +66,33 @@ public partial class Lobby : Control
         eventsCts = new CancellationTokenSource();
     }
 
-    #region Countdown and game launch management
-    private Label countdownLabel = null!;
-    private string countdownDefaultText = null!;
-
-    public override void _Process(double delta)
-    {
-        if (gameStartTime is null && countdownLabel.Text != countdownDefaultText)
-        {
-            countdownLabel.Text = countdownDefaultText;
-        }
-
-        if (gameStartTime is not { } startTime) return;
-        var now = DateTimeOffset.Now + (GameManager.Room.ClockDelta.Value ?? TimeSpan.Zero);
-        var remainingTime = startTime - now;
-        var timeElapsed = remainingTime < TimeSpan.Zero;
-        countdownLabel.Text =
-            timeElapsed
-                ? "Starting game..."
-                : $"Starting in {remainingTime:s\\.ff}s";
-
-        if (timeElapsed && IsLobbyAuthority())
-        {
-            Rpc(nameof(StartGameRpc));
-            gameStartTime = null;
-        }
-    }
-
-    /// <summary>
-    /// Set or disable the countdown based on the player states
-    /// </summary>
     private void RefreshCountdownState()
     {
-        // Only the lobby authority can start the countdown
-        if (!IsLobbyAuthority()) return;
+        if (!IsMultiplayerAuthority()) return; // Only the lobby authority can start the countdown
 
         var allReady = GameManager.Room.Players.Values.All(player =>
-            player.Value.State is PlayerStateInLobby playerState && playerState.IsReady
+            player.Value.State is PlayerStateInLobby { IsReady: true }
         );
 
         if (allReady)
-            Rpc(
-                nameof(SetCountdownRpc),
-                (DateTimeOffset.Now + TimeSpan.FromSeconds(5)).ToUnixTimeMilliseconds()
-            );
-        else Rpc(nameof(ResetCountdownRpc));
+        {
+            // No clock delta needed as the time is based on the first player to have joined the room
+            var startTime = DateTimeOffset.Now + TimeSpan.FromSeconds(5);
+            countdown.StartCountdown(startTime);
+            log.Debug("Game start planned for {Start}", startTime);
+        }
+        else
+        {
+            countdown.ResetCountdown();
+            log.Debug("Game start cancelled");
+        }
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void SetCountdownRpc(long startTime)
-    {
-        log.Debug("Game start set at {Start}", DateTimeOffset.FromUnixTimeMilliseconds(startTime));
-        gameStartTime = DateTimeOffset.FromUnixTimeMilliseconds(startTime);
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void ResetCountdownRpc()
-    {
-        log.Debug("Game start reset");
-        gameStartTime = null;
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void StartGameRpc()
     {
         GameManager.instance.SetGameState(GameManager.GameState.Game);
     }
-    #endregion
 
     private void ShowLobby(RoomId roomId)
     {
@@ -143,7 +113,7 @@ public partial class Lobby : Control
         lobbyControl.Hide();
         chooseModeControl.Show();
 
-        _ExitTree(); // Unsubscribe from events and stop countdown // TODO
+        _ExitTree(); // Unsubscribe from events (including countdown) // TODO
 
         var playerControls = GetNode<VBoxContainer>(playerListPath).GetChildren();
         foreach (var playerControl in playerControls) playerControl.QueueFree();
@@ -154,25 +124,30 @@ public partial class Lobby : Control
 
     public async void HostButtonPressed()
     {
-        var roomId = await GameManager.Room.CreateRoom();
-        log.Information("Room created with code {RoomId}", RoomId.raw(roomId));
-        ShowLobby(roomId);
+        try
+        {
+            var roomId = await GameManager.Room.CreateRoom();
+            log.Information("Room created with code {RoomId}", roomId);
+            ShowLobby(roomId);
+        }
+        catch (Exception) { /* ignore */ }
     }
     public async void JoinButtonPressed()
     {
-        var rawCode = GetNode<LineEdit>(codeInputPath).Text;
-        var code = RoomId.tryParse(rawCode).ToNullable();
-
-        log.Debug("Join button pressed with code {Code}", rawCode);
-
-        if (code is null)
+        try
         {
-            log.Error("Invalid room code");
-            return;
-        }
+            var rawCode = GetNode<LineEdit>(codeInputPath).Text;
+            var code = RoomId.tryParse(rawCode).ToNullable();
+            if (code is null)
+            {
+                log.Error("Invalid room code");
+                return;
+            }
 
-        await GameManager.Room.JoinRoom(code);
-        ShowLobby(code);
+            await GameManager.Room.JoinRoom(code);
+            ShowLobby(code);
+        }
+        catch (Exception) { /* ignore */ }
     }
 
     // Apply the player state to the UI
@@ -186,13 +161,11 @@ public partial class Lobby : Control
 
         // Update the UI accordingly to the player's state
         player.Subscribe(
-            UpdatePlayerUi,                                // Update UI when it's state changes
+            UpdatePlayerUi, // Update UI when it's state changes
             () => RemovePlayerFromUi(player.Value.PeerId), // Remove player from UI when he leaves
             eventsCts.Token
         );
 
-        // Stop countdown if needed
-        // because the new player is, by default, not ready
         RefreshCountdownState();
     }
     private void RemovePlayerFromUi(int playerId)
@@ -210,11 +183,11 @@ public partial class Lobby : Control
 
         RefreshCountdownState();
     }
+
     private void UpdatePlayerUi(Player player)
     {
         if (player.State is not PlayerStateInLobby) return;
 
-        // Update player ready status in the UI
         var playerList = GetNode<VBoxContainer>(playerListPath);
         var playerItem = playerList
             .GetChildren()
@@ -228,8 +201,6 @@ public partial class Lobby : Control
         }
 
         playerItem.SetPlayer(player);
-
-        // Start countdown if all players are ready
         RefreshCountdownState();
     }
 
@@ -247,7 +218,7 @@ public partial class Lobby : Control
         GameManager.Room.SetPlayerState(newState);
 
         var readyControl = GetNode<Label>(readyButtonTextPath);
-        readyControl.Text = newState.IsReady ? "Ready" : "Not ready";
+        readyControl.Text = newState.IsReady ? "Set not ready" : "Set ready";
     }
     private void OnQuitButtonPressed()
     {

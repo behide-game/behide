@@ -27,10 +27,13 @@ public partial class RoomManager : Node3D
     /// </summary>
     public readonly Dictionary<int, BehaviorSubject<Player>> Players = [];
 
+    // Private fields
     private readonly Subject<BehaviorSubject<Player>> playerRegistered = new();
-    // private readonly Subject<Player> playerLeft = new(); // TODO: Needed ?
+    private readonly Subject<Player> playerLeft = new();
+
+    // Public fields
     public IObservable<BehaviorSubject<Player>> PlayerRegistered => playerRegistered.AsObservable();
-    public IObservable<Player> PlayerStateChanged => Players.Values.Merge();
+    public IObservable<Player> PlayerLeft => playerLeft.AsObservable();
 
     private Serilog.ILogger log = null!;
 
@@ -42,13 +45,12 @@ public partial class RoomManager : Node3D
         Multiplayer.PeerDisconnected += peerId =>
         {
             log.Debug("Player {PeerId} left the room", peerId);
-            var player = Players.GetValueOrDefault((int)peerId);
+            var playerObservable = Players.GetValueOrDefault((int)peerId);
+            if (playerObservable is null) return;
 
-            if (player is not null)
-            {
-                Players.Remove((int)peerId);
-                player.OnCompleted();
-            }
+            playerObservable.OnCompleted();
+            Players.Remove((int)peerId);
+            playerLeft.OnNext(playerObservable.Value);
         };
     }
 

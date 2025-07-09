@@ -18,10 +18,12 @@ public partial class BasicSupervisor : Node
     private const string Tag = "Supervisor/Basic";
     private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", Tag);
 
-    [Export] private InputEventAction openMenuAction = null!;
+    [Export] private string openMenuAction = null!;
     [Export] private PackedScene playerPrefab = null!;
     [Export] private NodePath playersNodePath = null!;
-    [Export] private NodePath behideObjectNodePath = null!;
+    [Export] private NodePath behideObjectsNodePath = null!;
+    private Node behideObjects = null!;
+    private Node behideObjectsParent = null!;
 
     private BehaviorSubject<Player> localPlayer = null!;
     private readonly Dictionary<int, BehaviorSubject<Player>> players = GameManager.Room.Players;
@@ -53,24 +55,31 @@ public partial class BasicSupervisor : Node
         SetMultiplayerAuthority(firstPlayerToJoin);
     }
 
+    public override void _Ready()
+    {
+        // Hide behide objects
+        behideObjects = GetNode(behideObjectsNodePath);
+        behideObjectsParent = behideObjects.GetParent();
+        behideObjectsParent.RemoveChild(behideObjects);
+
+        _ = SpawnPlayers();
+    }
+
     public override void _Input(InputEvent @event)
     {
-        if (!@event.IsAction(openMenuAction.Action)) return;
+        if (!@event.IsAction(openMenuAction)) return;
         _ = GameManager.Room.LeaveRoom();
-        GameManager.instance.SetGameState(GameManager.GameState.Home);
+        GameManager.instance.SetGameState(GameManager.GameState.Lobby);
     }
 
     protected async Task SpawnPlayers()
     {
-        var behideObjects = GetTree().Root.GetNode<Node3D>(behideObjectNodePath);
-        var behideObjectParent = behideObjects.GetParent();
-        behideObjectParent.RemoveChild(behideObjects);
-
         var visibleToAllPlayers = SpawnPlayerNodes();
         SetReadyWhenSceneLoaded();
 
+        // Show behide objects
         await visibleToAllPlayers;
-        behideObjectParent.AddChild(behideObjects);
+        behideObjectsParent.AddChild(behideObjects);
     }
 
     private Task SpawnPlayerNodes()
