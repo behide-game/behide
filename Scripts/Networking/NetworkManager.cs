@@ -57,18 +57,18 @@ public partial class NetworkManager : Node3D
 
         // Connect to other players
         var tasks =
-            playersConnectionInfo.PlayersConnInfo
+            playersConnectionInfo.PlayersConnectionInfo
                 .Select(async connInfo =>
                 {
                     var peer = new PeerConnection();
                     multiplayer.AddPeer(peer, connInfo.PeerId);
-                    await peer.AnswerConnectionOffer(signaling, connInfo.ConnAttemptId); // This return only when peer is actually connected
+                    await peer.AnswerConnectionOffer(signaling, connInfo.ConnectionAttemptId); // This return only when peer is actually connected
                 })
                 .ToArray();
 
         await Task.WhenAll(tasks);
         log.Debug("Initiated connections");
-        return (peerId, playersConnectionInfo.PlayersConnInfo.Length);
+        return (peerId, playersConnectionInfo.PlayersConnectionInfo.Length);
     }
 
     /// <summary>

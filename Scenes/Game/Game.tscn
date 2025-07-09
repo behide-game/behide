@@ -127,7 +127,7 @@ Resource = ExtResource("10_wgnhc")
 [node name="VoxelGI" type="VoxelGI" parent="World"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.52718, 0)
 visible = false
-subdiv = 0
+subdiv = 2
 size = Vector3(39.4668, 5.65015, 39.7712)
 
 [node name="Camera" type="Camera3D" parent="."]

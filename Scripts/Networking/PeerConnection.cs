@@ -64,16 +64,16 @@ public partial class PeerConnection : WebRtcPeerConnection
     /// Publish an offer on the signaling server, create a connection attempt and handle connection.
     /// </summary>
     /// <returns>Return a connection attempt id</returns>
-    public Task<ConnAttemptId> PublishOffer(Signaling signaling)
+    public Task<ConnectionAttemptId> PublishOffer(Signaling signaling)
     {
-        var tcs = new TaskCompletionSource<ConnAttemptId>();
+        var tcs = new TaskCompletionSource<ConnectionAttemptId>();
 
         // SDP offer created => Create a connection attempt by publishing the offer
         SessionDescriptionCreated += async (type, sdp) =>
         {
             var connAttempt = await signaling.StartConnectionAttempt(new SdpDescription(type, sdp));
             tcs.TrySetResult(connAttempt.Id);
-            log.Debug("Connection attempt created: {ConnAttemptId}", connAttempt);
+            log.Debug("Connection attempt created: {ConnectionAttemptId}", connAttempt);
 
             var answer = await connAttempt.WaitAnswer();
             log.Debug("Answer received");
@@ -101,13 +101,13 @@ public partial class PeerConnection : WebRtcPeerConnection
     /// Join connection attempt, send answer and handle ice candidate exchange
     /// </summary>
     /// <remarks>Returns only when connection is established</remarks>
-    public async Task AnswerConnectionOffer(Signaling signaling, ConnAttemptId connAttemptId)
+    public async Task AnswerConnectionOffer(Signaling signaling, ConnectionAttemptId connectionAttemptId)
     {
         var tcs = new TaskCompletionSource();
 
         // Retrieve offer
-        log.Debug("Joining connection attempt {ConnectionAttemptId}", connAttemptId);
-        var connAttempt = await signaling.JoinConnectionAttempt(connAttemptId);
+        log.Debug("Joining connection attempt {ConnectionAttemptId}", connectionAttemptId);
+        var connAttempt = await signaling.JoinConnectionAttempt(connectionAttemptId);
 
         // Send answer when created
         SessionDescriptionCreated += async (type, sdp) =>
