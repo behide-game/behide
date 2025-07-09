@@ -14,9 +14,9 @@ using Serilog;
 // ReSharper disable once CheckNamespace
 namespace Behide.OnlineServices.Signaling;
 
-public abstract class ConnectionAttempt(ConnAttemptId id, ISignalingHub hub)
+public abstract class ConnectionAttempt(ConnectionAttemptId id, ISignalingHub hub)
 {
-    public readonly ConnAttemptId Id = id;
+    public readonly ConnectionAttemptId Id = id;
     protected readonly ISignalingHub Hub = hub;
     protected readonly ILogger Log = Serilog.Log.ForContext("Tag", $"Signaling/ConnectionAttempt({id})");
     public readonly ReplaySubject<IceCandidate> Candidates = new();
@@ -40,13 +40,13 @@ public abstract class ConnectionAttempt(ConnAttemptId id, ISignalingHub hub)
     }
 }
 
-public class OffererConnectionAttempt(ConnAttemptId id, ISignalingHub hub) : ConnectionAttempt(id, hub)
+public class OffererConnectionAttempt(ConnectionAttemptId id, ISignalingHub hub) : ConnectionAttempt(id, hub)
 {
     public readonly TaskCompletionSource<SdpDescription> Answer = new();
     public Task<SdpDescription> WaitAnswer() => Answer.Task;
 }
 
-public class AnswererConnectionAttempt(ConnAttemptId id, ISignalingHub hub, SdpDescription offer) : ConnectionAttempt(id, hub)
+public class AnswererConnectionAttempt(ConnectionAttemptId id, ISignalingHub hub, SdpDescription offer) : ConnectionAttempt(id, hub)
 {
     public readonly SdpDescription Offer = offer;
     public void SendAnswer(SdpDescription answer)
@@ -75,9 +75,9 @@ public partial class Signaling : Node
     /// </summary>
     private class HubReceiver(MultiplayerApi multiplayer, Signaling signaling) : ISignalingClient
     {
-        public readonly Dictionary<ConnAttemptId, ConnectionAttempt> ConnectionAttempts = [];
+        public readonly Dictionary<ConnectionAttemptId, ConnectionAttempt> ConnectionAttempts = [];
 
-        public async Task<ConnAttemptId?> ConnectionRequested(int askingPeerId)
+        public async Task<ConnectionAttemptId?> ConnectionRequested(int askingPeerId)
         {
             var peer = new Networking.PeerConnection();
             var multiplayerPeer = (WebRtcMultiplayerPeer)multiplayer.MultiplayerPeer;
@@ -86,13 +86,13 @@ public partial class Signaling : Node
             return await peer.PublishOffer(signaling);
         }
 
-        public Task SdpAnswerReceived(ConnAttemptId offerId, SdpDescription answer)
+        public Task SdpAnswerReceived(ConnectionAttemptId offerId, SdpDescription answer)
         {
             if (ConnectionAttempts[offerId] is OffererConnectionAttempt o) o.Answer.TrySetResult(answer);
             return Task.CompletedTask;
         }
 
-        public Task IceCandidateReceived(ConnAttemptId offerId, IceCandidate iceCandidate)
+        public Task IceCandidateReceived(ConnectionAttemptId offerId, IceCandidate iceCandidate)
         {
             ConnectionAttempts[offerId].Candidates.OnNext(iceCandidate);
             return Task.CompletedTask;
@@ -155,22 +155,22 @@ public partial class Signaling : Node
         return connAttempt;
     }
 
-    public async Task<AnswererConnectionAttempt> JoinConnectionAttempt(ConnAttemptId connAttemptId)
+    public async Task<AnswererConnectionAttempt> JoinConnectionAttempt(ConnectionAttemptId connectionAttemptId)
     {
-        var res = (await hub.JoinConnectionAttempt(connAttemptId));
+        var res = (await hub.JoinConnectionAttempt(connectionAttemptId));
         if (res.HasError(out var error))
         {
             log.Error("{error}", error.ToLocalizedString());
             throw new Exception(error.ToLocalizedString());
         }
 
-        var connAttempt = new AnswererConnectionAttempt(connAttemptId, hub, res.ResultValue);
+        var connAttempt = new AnswererConnectionAttempt(connectionAttemptId, hub, res.ResultValue);
         receiver.ConnectionAttempts.Add(connAttempt.Id, connAttempt);
 
         return connAttempt;
     }
 
-    public async Task<RoomId> CreateRoom()
+    public async Task<RoomId> CreateRoom() // TODO: Add try catch
     {
         var res = await hub.CreateRoom();
         if (!res.HasError(out var error)) return res.ResultValue;
