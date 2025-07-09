@@ -7,14 +7,14 @@
 [ext_resource type="Resource" uid="uid://c7xkht1loifw3" path="res://Prefabs/BehideObjects/blue_cube/blue_cube.tres" id="7_yfvw8"]
 [ext_resource type="Resource" uid="uid://s6ycpy75saj2" path="res://Prefabs/BehideObjects/green_cube/green_cube.tres" id="8_yyqxy"]
 [ext_resource type="Resource" uid="uid://dwlhlbsva836h" path="res://Prefabs/BehideObjects/purple_cube/purple_cube.tres" id="9_k3vrc"]
-[ext_resource type="Script" uid="uid://38mycbkkwpw4" path="res://Scripts/Supervisors/PropHuntSupervisor.cs" id="10_1pecj"]
+[ext_resource type="Script" uid="uid://dxlngfobrgiml" path="res://Scripts/Supervisors/BasicSupervisor.cs" id="10_10ki7"]
 [ext_resource type="Resource" uid="uid://chra8ec3wkom4" path="res://Prefabs/BehideObjects/yellow_cube/yellow_cube.tres" id="10_rnlv5"]
 [ext_resource type="Resource" uid="uid://bocjeygw1lfar" path="res://Prefabs/BehideObjects/mirror_ball/mirror_ball.tres" id="10_wgnhc"]
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_4a32d"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_10ki7"]
+size = Vector2(1, 1)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ch3tv"]
-size = Vector3(2, 0.4, 2)
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_edkrd"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_u24f7"]
 material = ExtResource("4_32cbu")
@@ -64,15 +64,20 @@ environment = ExtResource("4_tyqxg")
 transform = Transform3D(0.979768, -0.0894539, 0.179033, 0, 0.894552, 0.446963, -0.200137, -0.43792, 0.876454, 0, 4.47552, 0)
 shadow_enabled = true
 
+[node name="VoxelGI" type="VoxelGI" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.499, 0)
+visible = false
+size = Vector3(40, 5, 40)
+data = ExtResource("11_i4ga0")
+
 [node name="Ground" type="StaticBody3D" parent="World"]
-transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+transform = Transform3D(40, 0, 0, 0, 40, 0, 0, 0, 40, 0, 0, 0)
 
 [node name="Plane" type="MeshInstance3D" parent="World/Ground"]
-mesh = SubResource("PlaneMesh_4a32d")
+mesh = SubResource("PlaneMesh_10ki7")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="World/Ground"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
-shape = SubResource("BoxShape3D_ch3tv")
+shape = SubResource("WorldBoundaryShape3D_edkrd")
 
 [node name="BehideObjects" type="Node3D" parent="World"]
 
@@ -124,12 +129,6 @@ Resource = ExtResource("10_wgnhc")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -6)
 Resource = ExtResource("10_wgnhc")
 
-[node name="VoxelGI" type="VoxelGI" parent="World"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.52718, 0)
-visible = false
-subdiv = 2
-size = Vector3(39.4668, 5.65015, 39.7712)
-
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(0.825015, -0.249057, 0.507268, 0, 0.897643, 0.440723, -0.565111, -0.363603, 0.740569, 3, 3, 3)
 fov = 90.0
@@ -141,9 +140,6 @@ mesh = SubResource("QuadMesh_u24f7")
 [node name="Players" type="Node3D" parent="."]
 
 [node name="Supervisor" type="Node3D" parent="."]
-script = ExtResource("10_1pecj")
-countdownLabelNodePath = NodePath("../UI/Countdown")
-isHunterLabelNodePath = NodePath("../UI/IsHunter")
-isPropLabelNodePath = NodePath("../UI/IsProp")
+script = ExtResource("10_10ki7")
 playerPrefab = ExtResource("2_g0jbk")
 playersNodePath = NodePath("../Players")

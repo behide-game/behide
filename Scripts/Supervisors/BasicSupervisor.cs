@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 
 namespace Behide.Game.Supervisors;
@@ -14,80 +15,119 @@ using Types;
 /// </summary>
 public partial class BasicSupervisor : Node
 {
-    private Serilog.ILogger log = null!;
-    public const string Tag = "Supervisor/Basic";
+    private const string Tag = "Supervisor/Basic";
+    private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", Tag);
 
+    [Export] private InputEventAction openMenuAction = null!;
     [Export] private PackedScene playerPrefab = null!;
     [Export] private NodePath playersNodePath = null!;
+    [Export] private NodePath behideObjectNodePath = null!;
 
+    private BehaviorSubject<Player> localPlayer = null!;
     private readonly Dictionary<int, BehaviorSubject<Player>> players = GameManager.Room.Players;
 
-    private MultiplayerSynchronizer? positionSynchronizer;
+    private MultiplayerSynchronizer localPositionSynchronizer = null!;
 
     public override void _EnterTree()
     {
-        log = Serilog.Log.ForContext("Tag", Tag);
+        if (GameManager.Room.LocalPlayer is null)
+        {
+            log.Error("No local player found. It means we are not connected to a room...");
+            return;
+        }
+        localPlayer = GameManager.Room.LocalPlayer;
 
-        // Set authority to the last player to join
-        // The authority is the player who spawns players and choose randomly the hunter
-        int lastPlayerToJoin;
+        // Set authority to first player to join
+        int firstPlayerToJoin;
         try
         {
-            lastPlayerToJoin = players.Max(kv => kv.Key);
+            firstPlayerToJoin = players.Min(kv => kv.Key);
         }
         catch (Exception)
         {
             log.Error("No player found. This means that the room is empty. Strange...");
+            _ = GameManager.Room.LeaveRoom();
+            GameManager.instance.SetGameState(GameManager.GameState.Home);
             return;
         }
-
-        SetMultiplayerAuthority(lastPlayerToJoin);
+        SetMultiplayerAuthority(firstPlayerToJoin);
     }
 
-    public override async void _Ready()
+    public override void _Input(InputEvent @event)
     {
-        // Spawn all players
+        if (!@event.IsAction(openMenuAction.Action)) return;
+        _ = GameManager.Room.LeaveRoom();
+        GameManager.instance.SetGameState(GameManager.GameState.Home);
+    }
+
+    protected async Task SpawnPlayers()
+    {
+        var behideObjects = GetTree().Root.GetNode<Node3D>(behideObjectNodePath);
+        var behideObjectParent = behideObjects.GetParent();
+        behideObjectParent.RemoveChild(behideObjects);
+
+        var visibleToAllPlayers = SpawnPlayerNodes();
+        SetReadyWhenSceneLoaded();
+
+        await visibleToAllPlayers;
+        behideObjectParent.AddChild(behideObjects);
+    }
+
+    private Task SpawnPlayerNodes()
+    {
+        var tcs = new TaskCompletionSource();
+        var numberOfPlayersWeAreVisibleFor = 0;
         var playersNode = GetNode<Node3D>(playersNodePath);
-        foreach (var kv in players)
+
+        foreach (var playerObservable in players.Values)
         {
-            var player = kv.Value.Value;
+            var player = playerObservable.Value;
+
+            // Create node
             var playerNode = playerPrefab.Instantiate<Node3D>();
             playerNode.Name = player.PeerId.ToString();
             playerNode.Position = new Vector3(0, 0, player.PeerId * 4);
 
-            playersNode.AddChild(playerNode);
-        }
+            // Disable visibility
+            if (player.PeerId == localPlayer.Value.PeerId)
+            {
+                var synchronizer = playerNode.GetNode<MultiplayerSynchronizer>("PositionSynchronizer");
+                localPositionSynchronizer = synchronizer;
+                synchronizer.SetVisibilityPublic(false);
+                synchronizer.VisibilityChanged += _ =>
+                {
+                    log.Debug("Now visible for {x}/{y}", numberOfPlayersWeAreVisibleFor, players.Count);
+                    numberOfPlayersWeAreVisibleFor += 1;
+                    if (numberOfPlayersWeAreVisibleFor == players.Count) tcs.SetResult();
+                };
+            }
 
-        // Retrieve our position synchronizer
-        positionSynchronizer =
-            playersNode
-                .GetNode(Multiplayer.GetUniqueId().ToString())
-                .GetNode<MultiplayerSynchronizer>("PositionSynchronizer");
+            // Add node to the scene
+            playersNode.AddChild(playerNode, true);
 
-        // Set in game
-        // Warning: Info cannot be exchanged with RPC from this object
-        //          because it may not be instantiated on all peers
-        GameManager.Room.SetPlayerState(new PlayerStateInGame());
-
-        // Show us to the players when they are ready
-        var tasksList = GameManager.Room.Players.Values.Select(playerObs =>
+            // Enable communications when it is ready (to prevent MultiplayerSynchronizer bugs)
             Task.Run(async () =>
             {
-                // Wait player to be ready
-                var player = await playerObs
-                    .Where(player => player.State is PlayerStateInGame)
-                    .Take(1);
+                var p = await playerObservable
+                    .Where(p => p.State is PlayerStateInGame)
+                    .Take(1)
+                    .ToTask();
 
-                CallDeferred(nameof(SetVisibleFor), player.PeerId);
-                log.Debug("Set visible for {PeerId}", player.PeerId);
-            })
-        );
+                localPositionSynchronizer.CallDeferred(
+                    MultiplayerSynchronizer.MethodName.SetVisibilityFor,
+                    p.PeerId,
+                    true
+                );
+            });
+        }
 
-        await Task.WhenAll(tasksList);
-        AllPlayersSpawned();
+        return tcs.Task;
     }
 
-    private void SetVisibleFor(int peerId) => positionSynchronizer?.SetVisibilityFor(peerId, true);
-
-    protected virtual void AllPlayersSpawned() { }
+    private void SetReadyWhenSceneLoaded()
+    {
+        var sceneNode = GetTree().CurrentScene;
+        if (sceneNode.IsNodeReady()) GameManager.Room.SetPlayerState(new PlayerStateInGame());
+        else sceneNode.Ready += () => GameManager.Room.SetPlayerState(new PlayerStateInGame());
+    }
 }
