@@ -396,7 +396,7 @@ grow_vertical = 2
 
 [node name="Label" type="Label" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center"]
 layout_mode = 2
-text = "Not ready"
+text = "Set ready"
 label_settings = SubResource("LabelSettings_fpqc4")
 horizontal_alignment = 1
 vertical_alignment = 1
