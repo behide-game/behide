@@ -53,21 +53,23 @@ public partial class BasicSupervisor : Node
             return;
         }
         SetMultiplayerAuthority(firstPlayerToJoin);
-    }
 
-    public override void _Ready()
-    {
-        // Hide behide objects
+        // Hide behide objects on the authority to prevent bugs
         behideObjects = GetNode(behideObjectsNodePath);
-        behideObjectsParent = behideObjects.GetParent();
-        behideObjectsParent.RemoveChild(behideObjects);
+        behideObjects.SetMultiplayerAuthority(firstPlayerToJoin);
+        if (IsMultiplayerAuthority())
+        {
+            behideObjectsParent = behideObjects.GetParent();
+            behideObjectsParent.RemoveChild(behideObjects);
+        }
 
         _ = SpawnPlayers();
     }
 
     public override void _Input(InputEvent @event)
     {
-        if (!@event.IsAction(openMenuAction)) return;
+        if (!@event.IsAction(openMenuAction, true)) return;
+        log.Debug("{0}", @event);
         _ = GameManager.Room.LeaveRoom();
         GameManager.instance.SetGameState(GameManager.GameState.Lobby);
     }
@@ -79,7 +81,7 @@ public partial class BasicSupervisor : Node
 
         // Show behide objects
         await visibleToAllPlayers;
-        behideObjectsParent.AddChild(behideObjects);
+        if (IsMultiplayerAuthority()) behideObjectsParent.AddChild(behideObjects);
     }
 
     private Task SpawnPlayerNodes()
@@ -105,7 +107,6 @@ public partial class BasicSupervisor : Node
                 synchronizer.SetVisibilityPublic(false);
                 synchronizer.VisibilityChanged += _ =>
                 {
-                    log.Debug("Now visible for {x}/{y}", numberOfPlayersWeAreVisibleFor, players.Count);
                     numberOfPlayersWeAreVisibleFor += 1;
                     if (numberOfPlayersWeAreVisibleFor == players.Count) tcs.SetResult();
                 };
