@@ -2,6 +2,7 @@ using Godot;
 using Serilog;
 using System;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
@@ -40,15 +41,15 @@ public partial class Lobby : Control
         lobbyControl.Hide();
 
         // Set authority
-        GameManager.Room.PlayerLeft.Subscribe(
-            _ =>
-            {
-                var minPeerId = GameManager.Room.Players.Min(p => p.Key);
-                if (minPeerId == GetMultiplayerAuthority()) return;
-                SetMultiplayerAuthority(minPeerId);
-            },
-            eventsCts.Token
-        );
+        GameManager.Room.PlayerLeft.Subscribe(_ => OnPlayersChanged());
+        GameManager.Room.PlayerRegistered.Subscribe(_ => OnPlayersChanged());
+        void OnPlayersChanged()
+        {
+            GD.Print(GameManager.Room.Players.Keys.ToArray());
+            var minPeerId = GameManager.Room.Players.Min(p => p.Key);
+            if (minPeerId == GetMultiplayerAuthority()) return;
+            SetMultiplayerAuthority(minPeerId);
+        }
 
         // Subscribe to countdown
         countdown = GetNode<Countdown>(countdownPath);
