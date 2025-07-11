@@ -28,7 +28,8 @@ public partial class Lobby : Control
     private Control lobbyControl = null!;
 
     private ILogger log = null!;
-    private CancellationTokenSource eventsCts = new();
+    private CancellationTokenSource inRoomEventsCts = new();
+    private readonly CancellationTokenSource nodeAliveCts = new();
 
     public override void _EnterTree()
     {
@@ -41,11 +42,10 @@ public partial class Lobby : Control
         lobbyControl.Hide();
 
         // Set authority
-        GameManager.Room.PlayerLeft.Subscribe(_ => OnPlayersChanged());
-        GameManager.Room.PlayerRegistered.Subscribe(_ => OnPlayersChanged());
+        GameManager.Room.PlayerLeft.Subscribe(_ => OnPlayersChanged(), nodeAliveCts.Token);
+        GameManager.Room.PlayerRegistered.Subscribe(_ => OnPlayersChanged(), nodeAliveCts.Token);
         void OnPlayersChanged()
         {
-            GD.Print(GameManager.Room.Players.Keys.ToArray());
             var minPeerId = GameManager.Room.Players.Min(p => p.Key);
             if (minPeerId == GetMultiplayerAuthority()) return;
             SetMultiplayerAuthority(minPeerId);
@@ -55,16 +55,24 @@ public partial class Lobby : Control
         countdown = GetNode<Countdown>(countdownPath);
         countdown.TimeElapsed += () =>
         {
-            if (!IsMultiplayerAuthority() || eventsCts.Token.IsCancellationRequested) return;
+            if (!IsMultiplayerAuthority() || inRoomEventsCts.Token.IsCancellationRequested) return;
             CallDeferred(Node.MethodName.Rpc, nameof(StartGameRpc));
         };
     }
 
+    private void CancelRoomEvents()
+    {
+        inRoomEventsCts.Cancel();
+        inRoomEventsCts.Dispose();
+        inRoomEventsCts = new CancellationTokenSource();
+    }
+
     public override void _ExitTree()
     {
-        eventsCts.Cancel();
-        eventsCts.Dispose();
-        eventsCts = new CancellationTokenSource();
+        inRoomEventsCts.Cancel();
+        inRoomEventsCts.Dispose();
+        nodeAliveCts.Cancel();
+        nodeAliveCts.Dispose();
     }
 
     private void RefreshCountdownState()
@@ -103,7 +111,7 @@ public partial class Lobby : Control
 
         // Add players to UI
         foreach (var player in GameManager.Room.Players.Values) AddPlayerToUi(player);
-        GameManager.Room.PlayerRegistered.Subscribe(AddPlayerToUi, eventsCts.Token);
+        GameManager.Room.PlayerRegistered.Subscribe(AddPlayerToUi, inRoomEventsCts.Token);
 
         // eventsCts.Token.Register(countdown.Cancel);
         // TODO: Check if it break something
@@ -114,7 +122,7 @@ public partial class Lobby : Control
         lobbyControl.Hide();
         chooseModeControl.Show();
 
-        _ExitTree(); // Unsubscribe from events (including countdown) // TODO
+        CancelRoomEvents(); // Unsubscribe from room events
 
         var playerControls = GetNode<VBoxContainer>(playerListPath).GetChildren();
         foreach (var playerControl in playerControls) playerControl.QueueFree();
@@ -164,7 +172,7 @@ public partial class Lobby : Control
         player.Subscribe(
             UpdatePlayerUi, // Update UI when it's state changes
             () => RemovePlayerFromUi(player.Value.PeerId), // Remove player from UI when he leaves
-            eventsCts.Token
+            inRoomEventsCts.Token
         );
 
         RefreshCountdownState();

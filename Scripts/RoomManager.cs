@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace Behide;
 
-public partial class RoomManager : Node3D
+public partial class RoomManager : Node
 {
     private NetworkManager network = null!;
 

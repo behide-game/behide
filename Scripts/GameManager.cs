@@ -3,7 +3,7 @@ namespace Behide;
 using Godot;
 using Networking;
 
-public partial class GameManager : Node3D
+public partial class GameManager : Node
 {
     public static GameManager instance = null!;
 
