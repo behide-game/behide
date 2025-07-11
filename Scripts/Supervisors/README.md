@@ -2,24 +2,39 @@
 A supervisor is a script that manages the game, it spawns players and manages the game state according to its rules.
 Indeed, it defines the game rules and the game state.
 
-## Basic Supervisor (made to be inherited)
-It does nothing. But it has useful methods like SpawnPlayers for spawning players correctly.
-### Authority
-The authority is the first player that joined the game.
-### Players spawning process
-1. Prevent all behide objects from sending network messages (by removing them from the scene)
-2. Each player spawns all player nodes with their synchronizer's visibility set to false.
-3. Each player
-   1. Wait every player to be ready (to have loaded the scene and to have spawned the players)
-   2. Then set visible to them.
-4. Allow behide objects to communicate
+## Basic Supervisor (intended to be inherited)
+The `BasicSupervisor` is an abstract base with no game-specific logic.
+It provides utility methods such as `SpawnPlayer` to help spawn players correctly across the network.
 
-> ⚠️ Subtlety\
-> We spawn the players that way to prevent MultiplayerSynchronizer errors.\
-> See this related issues on
-> [Godot's forum](https://forum.godotengine.org/t/multiplayersynchronizer-refusing-to-sync-node-not-found-on-valid-path/82944)
-> or
-> [GitHub](https://github.com/godotengine/godot/issues/91342)
+### Authority
+The **authority** is the first player to have joined the game.\
+This peer is responsible for managing certain tasks like spawning players or distributing the roles.
+
+### Players spawning process
+To avoid [`MultiplayerSynchronizer`](https://docs.godotengine.org/en/stable/classes/class_multiplayersynchronizer.html) errors
+when spawning a new player, the `BasicSupervisor` coordinates the spawn using the following steps:
+1. **Each peer instantiates the player node locally**.\
+    This ensures the node exists on all peers before synchronization begins.
+2. **On the authoritative peer for that player node**
+   1. It waits until the **non-authoritative peers** have finished spawning the player node.
+   2. Once a peer is ready, it **enables visibility** on the `MultiplayerSynchronizer`, allowing it the synchronization.
+
+> 💡️ Note: The visibility is intentionally disabled at first to prevent synchronization errors
+> when peers receive updates for nodes that haven't been added to their scene yet.
+
+> ⚠️ Warning: Spawning the same player **multiple times** can lead to unexpected behavior or bugs.
+
+> 🪲️ Godot Quirk/Bug:
+> This spawning process is necessary due to limitations in
+> [`MultiplayerSynchronizer`](https://docs.godotengine.org/en/stable/classes/class_multiplayersynchronizer.html),
+> which can throw errors like “Node not found on valid path” if synchronization starts
+> before the node is added to the scene tree of a remote peer.
+> Here is a similar issue on this [Godot forum discussion](https://forum.godotengine.org/t/multiplayersynchronizer-refusing-to-sync-node-not-found-on-valid-path/82944)
+
+### Behide objects spawning process
+To avoid [`MultiplayerSynchronizer`](https://docs.godotengine.org/en/stable/classes/class_multiplayersynchronizer.html) errors
+when loading the game scene, the authoritative peer **removes all the behide objects from its scene** during initial loading.
+Once all peers have fully loaded the scene, those objects are added back.
 
 ## PropHunt Supervisor
 ### Rules
