@@ -133,8 +133,7 @@ public partial class RoomManager : Node3D
 
     [Rpc(
         MultiplayerApi.RpcMode.AnyPeer, // Any peer can call this method
-        CallLocal = true,               // This method is also called locally
-        TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+        CallLocal = true                // This method is also called locally
     )]
     private void RegisterPlayerRpc(Variant playerVariant)
     {
@@ -162,8 +161,7 @@ public partial class RoomManager : Node3D
     /// </summary>
     [Rpc(
         MultiplayerApi.RpcMode.AnyPeer, // Any peer can call this method
-        CallLocal = true,               // This method can be called locally
-        TransferMode = MultiplayerPeer.TransferModeEnum.Reliable
+        CallLocal = true                // This method can be called locally
     )]
     private void SetPlayerStateRpc(Variant newStateVariant)
     {
@@ -276,7 +274,7 @@ public partial class RoomManager : Node3D
         }
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void SyncTimeRpc(long requestTime)
     {
         var now = DateTimeOffset.Now + (ClockDelta.Value ?? TimeSpan.Zero);
@@ -284,7 +282,7 @@ public partial class RoomManager : Node3D
         RpcId(Multiplayer.GetRemoteSenderId(), nameof(SyncTime2Rpc), requestTime, nowMs);
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void SyncTime2Rpc(long requestTime, long receivedTime)
     {
         var currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
