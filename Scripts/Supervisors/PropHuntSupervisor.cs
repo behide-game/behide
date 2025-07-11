@@ -27,6 +27,14 @@ public partial class PropHuntSupervisor : BasicSupervisor
         // SetUpUI();
     }
 
+    protected override void PlayersReady()
+    {
+        foreach (var player in GameManager.Room.Players)
+        {
+            SpawnPlayer(player.Key);
+        }
+    }
+
     // private async void SetUpUI()
     // {
     //     // Show if we are the hunter

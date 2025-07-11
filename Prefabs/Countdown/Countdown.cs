@@ -50,11 +50,11 @@ public partial class Countdown : Node
         Rpc(nameof(ResetCountdownRpc));
     }
 
-    [Rpc(CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(CallLocal = true)]
     private void StartCountdownRpc(long endTimestamp) =>
         endDate = DateTimeOffset.FromUnixTimeMilliseconds(endTimestamp);
 
-    [Rpc(CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(CallLocal = true)]
     private void ResetCountdownRpc()
     {
         timeElapsed = false;

@@ -88,7 +88,7 @@ public partial class Lobby : Control
         }
     }
 
-    [Rpc(CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(CallLocal = true)]
     private void StartGameRpc()
     {
         GameManager.instance.SetGameState(GameManager.GameState.Game);
