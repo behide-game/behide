@@ -9,7 +9,7 @@ namespace Behide.Networking;
 /// <summary>
 /// Create or join a room and handle the connection between the players.
 /// </summary>
-public partial class NetworkManager : Node3D
+public partial class NetworkManager : Node
 {
     private Signaling signaling = null!;
     private WebRtcMultiplayerPeer multiplayer = new();
