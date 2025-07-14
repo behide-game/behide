@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-uniform sampler2D screen_texture : hint_screen_texture, filter_linear_mipmap;
+uniform sampler2D screen_texture : hint_screen_texture, filter_nearest_mipmap, repeat_disable;
 uniform float offsetR = 3;
 uniform float offsetG = 6;
 uniform float offsetB = 9;
@@ -11,7 +11,7 @@ void fragment(){
 
 	// Distance from the center of the screen
 	// It's a gradient: 1 in the window corner, 0 at the center
-	float d = smoothstep(1, 1.3, length(uv));
+	float d = smoothstep(0.8, 1.3, length(uv));
 
 	if (d == 0.) COLOR.rgb = texture(screen_texture, SCREEN_UV, 0).rgb;
 	else {

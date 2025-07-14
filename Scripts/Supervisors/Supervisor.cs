@@ -15,15 +15,14 @@ using Types;
 /// </summary>
 public partial class Supervisor : Node
 {
-    private const string Tag = "Supervisor/Basic";
-    private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", Tag);
+    private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "Supervisor/Base");
 
     [Export] private string openMenuAction = null!;
     [Export] private Node behideObjects = null!;
     private Node behideObjectsParent = null!;
     [Export] protected PlayerSpawner Spawner = null!;
 
-    private readonly Dictionary<int, BehaviorSubject<Player>> players = GameManager.Room.Players;
+    protected readonly Dictionary<int, BehaviorSubject<Player>> Players = GameManager.Room.Players;
 
     public override void _EnterTree()
     {
@@ -31,7 +30,7 @@ public partial class Supervisor : Node
         int firstPlayerToJoin;
         try
         {
-            firstPlayerToJoin = players.Min(kv => kv.Key);
+            firstPlayerToJoin = Players.Min(kv => kv.Key);
         }
         catch (Exception)
         {
@@ -53,7 +52,7 @@ public partial class Supervisor : Node
         // Wait players to be ready
         Task.Run(async () =>
         {
-            var tasks = players.Select(kv => kv.Value
+            var tasks = Players.Select(kv => kv.Value
                 .Where(p => p.State is PlayerStateInGame)
                 .Take(1)
                 .ToTask()
@@ -61,7 +60,6 @@ public partial class Supervisor : Node
 
             await Task.WhenAll(tasks);
             CallDeferred(nameof(PlayersReady));
-            behideObjectsParent.CallDeferred(Node.MethodName.AddChild, behideObjects);
         });
 
         SetReadyWhenSceneLoaded();
@@ -74,7 +72,10 @@ public partial class Supervisor : Node
         else sceneNode.Ready += () => GameManager.Room.SetPlayerState(new PlayerStateInGame());
     }
 
-    protected virtual void PlayersReady() {}
+    protected virtual void PlayersReady()
+    {
+        if (IsMultiplayerAuthority()) behideObjectsParent.AddChild(behideObjects);
+    }
 
     public override void _Input(InputEvent @event)
     {

@@ -36,11 +36,14 @@ public partial class Countdown : Node
         else label.SetText(string.Format(runningTextFormat, remainingTime));
     }
 
-    public void StartCountdown(DateTimeOffset endDate)
+    public void StartCountdown(long endDate)
     {
         if (!IsMultiplayerAuthority()) return;
-        Rpc(nameof(StartCountdownRpc), endDate.ToUnixTimeMilliseconds());
+        Rpc(nameof(StartCountdownRpc), endDate);
     }
+
+    public void StartCountdown(DateTimeOffset endDate) => StartCountdown(endDate.ToUnixTimeMilliseconds());
+    public void StartCountdownDeferred(DateTimeOffset endDate) => CallDeferred(nameof(StartCountdown), endDate.ToUnixTimeMilliseconds());
 
     public void ResetCountdown()
     {
