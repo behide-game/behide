@@ -2,10 +2,8 @@ using Godot;
 using Serilog;
 using System;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Threading;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 using Behide.OnlineServices.Signaling;
 using Behide.UI.Controls;
 
@@ -17,15 +15,17 @@ using Types;
 
 public partial class Lobby : Control
 {
-    [Export] private PackedScene playerListItemScene = null!;
-    [Export] private NodePath codeInputPath = "";
-    [Export] private NodePath playerListPath = "";
-    [Export] private NodePath readyButtonTextPath = "";
-    [Export] private NodePath countdownPath = "";
+    [Export] private Control chooseModeControl = null!;
+    [Export] private Control lobbyControl = null!;
 
-    private Countdown countdown = null!;
-    private Control chooseModeControl = null!;
-    private Control lobbyControl = null!;
+    [ExportGroup("Choose mode")]
+    [Export] private LineEdit codeInput = null!;
+
+    [ExportGroup("Lobby")]
+    [Export] private VBoxContainer playerListNode = null!;
+    [Export] private PackedScene playerListItemScene = null!;
+    [Export] private Label readyButtonLabel = null!;
+    [Export] private Countdown countdown = null!;
 
     private ILogger log = null!;
     private CancellationTokenSource inRoomEventsCts = new();
@@ -52,7 +52,6 @@ public partial class Lobby : Control
         }
 
         // Subscribe to countdown
-        countdown = GetNode<Countdown>(countdownPath);
         countdown.TimeElapsed += () =>
         {
             if (!IsMultiplayerAuthority() || inRoomEventsCts.Token.IsCancellationRequested) return;
@@ -124,11 +123,8 @@ public partial class Lobby : Control
 
         CancelRoomEvents(); // Unsubscribe from room events
 
-        var playerControls = GetNode<VBoxContainer>(playerListPath).GetChildren();
-        foreach (var playerControl in playerControls) playerControl.QueueFree();
-
-        var readyControl = GetNode<Label>(readyButtonTextPath);
-        readyControl.Text = "Not ready";
+        foreach (var playerControl in playerListNode.GetChildren()) playerControl.QueueFree();
+        readyButtonLabel.Text = "Not ready";
     }
 
     public async void HostButtonPressed()
@@ -139,13 +135,16 @@ public partial class Lobby : Control
             log.Information("Room created with code {RoomId}", roomId);
             ShowLobby(roomId);
         }
-        catch (Exception) { /* ignore */ }
+        catch (Exception e)
+        {
+            log.Warning("Trying to host game failed: {error}", e.Message); // TODO: Show error to user
+        }
     }
     public async void JoinButtonPressed()
     {
         try
         {
-            var rawCode = GetNode<LineEdit>(codeInputPath).Text;
+            var rawCode = codeInput.Text;
             var code = RoomId.tryParse(rawCode).ToNullable();
             if (code is null)
             {
@@ -156,17 +155,18 @@ public partial class Lobby : Control
             await GameManager.Room.JoinRoom(code);
             ShowLobby(code);
         }
-        catch (Exception) { /* ignore */ }
+        catch (Exception e)
+        {
+            log.Warning("Trying to join room failed: {error}", e.Message); // TODO: Show error to user
+        }
     }
 
     // Apply the player state to the UI
     private void AddPlayerToUi(BehaviorSubject<Player> player)
     {
-        var playerList = GetNode<VBoxContainer>(playerListPath);
         var playerItem = playerListItemScene.Instantiate<PlayerListItem>();
-
         playerItem.SetPlayer(player.Value);
-        playerList.AddChild(playerItem);
+        playerListNode.AddChild(playerItem);
 
         // Update the UI accordingly to the player's state
         player.Subscribe(
@@ -179,15 +179,14 @@ public partial class Lobby : Control
     }
     private void RemovePlayerFromUi(int playerId)
     {
-        var playerList = GetNode<VBoxContainer>(playerListPath);
-        var playerLabel = playerList
+        var playerLabel = playerListNode
             .GetChildren()
             .Cast<PlayerListItem>()
             .FirstOrDefault(p => p.GetPeerId() == playerId);
 
         if (playerLabel is null) return;
 
-        playerList.RemoveChild(playerLabel);
+        playerListNode.RemoveChild(playerLabel);
         playerLabel.QueueFree();
 
         RefreshCountdownState();
@@ -196,9 +195,7 @@ public partial class Lobby : Control
     private void UpdatePlayerUi(Player player)
     {
         if (player.State is not PlayerStateInLobby) return;
-
-        var playerList = GetNode<VBoxContainer>(playerListPath);
-        var playerItem = playerList
+        var playerItem = playerListNode
             .GetChildren()
             .Cast<PlayerListItem>()
             .FirstOrDefault(p => p.GetPeerId() == player.PeerId);
@@ -226,8 +223,7 @@ public partial class Lobby : Control
         var newState = playerState with { IsReady = !playerState.IsReady };
         GameManager.Room.SetPlayerState(newState);
 
-        var readyControl = GetNode<Label>(readyButtonTextPath);
-        readyControl.Text = newState.IsReady ? "Set not ready" : "Set ready";
+        readyButtonLabel.Text = newState.IsReady ? "Set not ready" : "Set ready";
     }
     private void OnQuitButtonPressed()
     {

@@ -21,11 +21,9 @@ public partial class BasicSupervisor : Node
 
     [Export] private string openMenuAction = null!;
     [Export] private PackedScene playerPrefab = null!;
-    [Export] private NodePath playersNodePath = null!;
-    [Export] private NodePath behideObjectsNodePath = null!;
-    private Node behideObjects = null!;
+    [Export] private Node playersNode = null!;
+    [Export] private Node behideObjects = null!;
     private Node behideObjectsParent = null!;
-    private Node playersNode = null!;
 
     private BehaviorSubject<Player> localPlayer = null!;
     private readonly Dictionary<int, BehaviorSubject<Player>> players = GameManager.Room.Players;
@@ -43,7 +41,6 @@ public partial class BasicSupervisor : Node
 
         // Initialize properties
         localPlayer = GameManager.Room.LocalPlayer;
-        playersNode = GetNode(playersNodePath);
         foreach (var peerId in GameManager.Room.Players.Keys)
             onPlayerSpawned.Add(peerId, new ReplaySubject<Unit>());
 
@@ -63,7 +60,6 @@ public partial class BasicSupervisor : Node
         SetMultiplayerAuthority(firstPlayerToJoin);
 
         // Hide behide objects on the authority to prevent bugs
-        behideObjects = GetNode(behideObjectsNodePath);
         behideObjects.SetMultiplayerAuthority(firstPlayerToJoin);
         if (IsMultiplayerAuthority())
         {

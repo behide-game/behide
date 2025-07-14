@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bq63a6mdt3w4"]
+[gd_scene load_steps=15 format=3 uid="uid://bq63a6mdt3w4"]
 
 [ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/Player/player.tscn" id="2_g0jbk"]
 [ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Shaders/chromatic_aberration.tres" id="4_32cbu"]
@@ -17,11 +17,6 @@
 size = Vector2(1, 1)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_edkrd"]
-
-[sub_resource type="QuadMesh" id="QuadMesh_u24f7"]
-material = ExtResource("4_32cbu")
-flip_faces = true
-size = Vector2(2, 2)
 
 [node name="multiplayer" type="Node3D"]
 
@@ -135,25 +130,30 @@ Resource = ExtResource("10_wgnhc")
 transform = Transform3D(0.825015, -0.249057, 0.507268, 0, 0.897643, 0.440723, -0.565111, -0.363603, 0.740569, 3, 3, 3)
 fov = 90.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera"]
-extra_cull_margin = 16384.0
-mesh = SubResource("QuadMesh_u24f7")
+[node name="CanvasLayer" type="CanvasLayer" parent="Camera"]
+
+[node name="ColorRect" type="ColorRect" parent="Camera/CanvasLayer"]
+material = ExtResource("4_32cbu")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="Players" type="Node3D" parent="."]
 
-[node name="Supervisor" type="Node3D" parent="."]
+[node name="Supervisor" type="Node3D" parent="." node_paths=PackedStringArray("countdown", "playersNode", "behideObjects")]
 script = ExtResource("10_ti1oi")
-isHunterLabelNodePath = NodePath("../UI/IsHunter")
-isPropLabelNodePath = NodePath("../UI/IsProp")
-countdownPath = NodePath("Countdown")
+countdown = NodePath("Countdown")
 openMenuAction = "open_menu"
 playerPrefab = ExtResource("2_g0jbk")
-playersNodePath = NodePath("../Players")
-behideObjectsNodePath = NodePath("../World/BehideObjects")
+playersNode = NodePath("../Players")
+behideObjects = NodePath("../World/BehideObjects")
 
-[node name="Countdown" type="Node" parent="Supervisor"]
+[node name="Countdown" type="Node" parent="Supervisor" node_paths=PackedStringArray("label")]
 script = ExtResource("12_edkrd")
-labelNodePath = NodePath("../../UI/Countdown")
+label = NodePath("../../UI/Countdown")
 runningTextFormat = "Remaining time: {0:s\\.ff}s"
 beforeRunningText = "Spawning players..."
 afterRunningText = "Game finished"

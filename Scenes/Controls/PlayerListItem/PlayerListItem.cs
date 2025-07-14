@@ -10,8 +10,8 @@ public partial class PlayerListItem : Control
     private Player? _player;
     private Player? Player { get => _player; set { _player = value; Compute(); } }
 
-    [Export] private string usernameLabelPath = "";
-    [Export] private string readyLabelPath = "";
+    [Export] private Label usernameLabel = null!;
+    [Export] private Label readyLabel = null!;
 
     private Serilog.ILogger log = null!;
     public override void _EnterTree() => log = Serilog.Log.ForContext("Tag", "UI/Lobby/PlayerListItem");
@@ -36,8 +36,8 @@ public partial class PlayerListItem : Control
             return;
         }
 
-        GetNode<Label>(usernameLabelPath).Text = Player.Username;
-        GetNode<Label>(readyLabelPath).Text = playerState.IsReady ? "Ready" : "Not ready";
+        usernameLabel.Text = Player.Username;
+        readyLabel.Text = playerState.IsReady ? "Ready" : "Not ready";
     }
 
     public int? GetPeerId() => Player?.PeerId;

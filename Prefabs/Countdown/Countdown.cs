@@ -5,12 +5,11 @@ using Behide;
 [GlobalClass]
 public partial class Countdown : Node
 {
-    [Export] private NodePath labelNodePath = null!;
+    [Export] private Label label = null!;
     [Export] private string runningTextFormat = null!;
     [Export] private string beforeRunningText = null!;
     [Export] private string afterRunningText = null!;
 
-    private Label label = null!;
     private DateTimeOffset? endDate;
     private bool timeElapsed;
 
@@ -18,7 +17,6 @@ public partial class Countdown : Node
 
     public override void _EnterTree()
     {
-        label = GetNode<Label>(labelNodePath);
         label.SetText(beforeRunningText);
     }
 

@@ -7,11 +7,7 @@ using System.Threading.Tasks;
 public partial class PropHuntSupervisor : BasicSupervisor
 {
     private Serilog.ILogger log = null!;
-
-    [Export] private NodePath isHunterLabelNodePath = null!;
-    [Export] private NodePath isPropLabelNodePath = null!;
-    [Export] private NodePath countdownPath = null!;
-    private Countdown countdown = null!;
+    [Export] private Countdown countdown = null!;
 
     private static readonly TimeSpan countdownDuration = TimeSpan.FromMinutes(5);
 
@@ -23,7 +19,6 @@ public partial class PropHuntSupervisor : BasicSupervisor
     {
         base._EnterTree();
         log = Serilog.Log.ForContext("Tag", "Supervisor/PropHunt");
-        countdown = GetNode<Countdown>(countdownPath);
         // SetUpUI();
     }
 

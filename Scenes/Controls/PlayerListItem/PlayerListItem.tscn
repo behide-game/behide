@@ -10,11 +10,11 @@ font = ExtResource("3_37cwf")
 [sub_resource type="LabelSettings" id="LabelSettings_url6u"]
 font = ExtResource("3_37cwf")
 
-[node name="PlayerListItem" type="MarginContainer"]
+[node name="PlayerListItem" type="MarginContainer" node_paths=PackedStringArray("usernameLabel", "readyLabel")]
 size_flags_horizontal = 3
 script = ExtResource("1_e7184")
-usernameLabelPath = "Container/MarginUsername/Username"
-readyLabelPath = "Container/MarginReady/Ready/Label"
+usernameLabel = NodePath("Container/MarginUsername/Username")
+readyLabel = NodePath("Container/MarginReady/Ready/Label")
 
 [node name="Container" type="SplitContainer" parent="."]
 layout_mode = 2
