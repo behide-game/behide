@@ -4,7 +4,7 @@ using System;
 using Godot;
 using System.Threading.Tasks;
 
-public partial class PropHuntSupervisor : BasicSupervisor
+public partial class PropHuntSupervisor : Supervisor
 {
     private Serilog.ILogger log = null!;
     [Export] private Countdown countdown = null!;
@@ -26,7 +26,7 @@ public partial class PropHuntSupervisor : BasicSupervisor
     {
         foreach (var player in GameManager.Room.Players)
         {
-            SpawnPlayer(player.Key);
+            Spawner.SpawnPlayer(player.Key);
         }
     }
 

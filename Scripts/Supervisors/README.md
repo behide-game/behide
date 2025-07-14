@@ -2,9 +2,9 @@
 A supervisor is a script that manages the game, it spawns players and manages the game state according to its rules.
 Indeed, it defines the game rules and the game state.
 
-## Basic Supervisor (intended to be inherited)
-The `BasicSupervisor` is an abstract base with no game-specific logic.
-It provides utility methods such as `SpawnPlayer` to help spawn players correctly across the network.
+## Base Supervisor (intended to be inherited)
+The `Supervisor` class doesn't contain game-specific logic.
+It only provides utility methods and features such as hiding the behide objects on the authority to prevent bugs.
 
 ### Authority
 The **authority** is the first player to have joined the game.\

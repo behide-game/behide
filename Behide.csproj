@@ -24,4 +24,8 @@
       <CompilerGeneratedFilesOutputPath>DesiredPathForGeneratedStuff</CompilerGeneratedFilesOutputPath>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="README.md" CopyToOutputDirectory="Never" />
+    <Content Include="Scripts\Supervisors\README.md" CopyToOutputDirectory="Never" />
+  </ItemGroup>
 </Project>

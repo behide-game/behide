@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bq63a6mdt3w4"]
+[gd_scene load_steps=16 format=3 uid="uid://bq63a6mdt3w4"]
 
 [ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/Player/player.tscn" id="2_g0jbk"]
 [ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Shaders/chromatic_aberration.tres" id="4_32cbu"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://38mycbkkwpw4" path="res://Scripts/Supervisors/PropHuntSupervisor.cs" id="10_ti1oi"]
 [ext_resource type="Resource" uid="uid://bocjeygw1lfar" path="res://Prefabs/BehideObjects/mirror_ball/mirror_ball.tres" id="10_wgnhc"]
 [ext_resource type="VoxelGIData" uid="uid://cf5qpep0o4out" path="res://Scenes/Game/Game.VoxelGI_data.res" id="11_i4ga0"]
+[ext_resource type="Script" uid="uid://dlbrls7b4x0kx" path="res://Scripts/Supervisors/PlayerSpawner.cs" id="12_bsqcq"]
 [ext_resource type="Script" uid="uid://d5711da0fkld" path="res://Prefabs/Countdown/Countdown.cs" id="12_edkrd"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_10ki7"]
@@ -143,12 +144,10 @@ mouse_filter = 2
 
 [node name="Players" type="Node3D" parent="."]
 
-[node name="Supervisor" type="Node3D" parent="." node_paths=PackedStringArray("countdown", "playersNode", "behideObjects")]
+[node name="Supervisor" type="Node3D" parent="." node_paths=PackedStringArray("countdown", "behideObjects")]
 script = ExtResource("10_ti1oi")
 countdown = NodePath("Countdown")
 openMenuAction = "open_menu"
-playerPrefab = ExtResource("2_g0jbk")
-playersNode = NodePath("../Players")
 behideObjects = NodePath("../World/BehideObjects")
 
 [node name="Countdown" type="Node" parent="Supervisor" node_paths=PackedStringArray("label")]
@@ -158,3 +157,9 @@ runningTextFormat = "Remaining time: {0:s\\.ff}s"
 beforeRunningText = "Spawning players..."
 afterRunningText = "Game finished"
 metadata/_custom_type_script = "uid://d5711da0fkld"
+
+[node name="PlayerSpawner" type="Node" parent="Supervisor" node_paths=PackedStringArray("playersNode")]
+script = ExtResource("12_bsqcq")
+playersNode = NodePath("../../Players")
+playerPrefab = ExtResource("2_g0jbk")
+metadata/_custom_type_script = "uid://dlbrls7b4x0kx"
