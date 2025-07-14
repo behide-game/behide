@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=4 format=3 uid="uid://c0t5da7h0bdw8"]
+[gd_resource type="Resource" script_class="BehideObjectData" load_steps=4 format=3 uid="uid://c0t5da7h0bdw8"]
 
 [ext_resource type="Script" uid="uid://bhax725ekj5oc" path="res://Prefabs/BehideObject/BehideObjectData.cs" id="1_86m6m"]
 

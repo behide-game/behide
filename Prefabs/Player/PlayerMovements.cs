@@ -1,6 +1,3 @@
-namespace Behide.Game.Player;
-
-using System;
 using Godot;
 
 namespace Behide.Game.Player;
@@ -11,19 +8,17 @@ public partial class PlayerMovements : CharacterBody3D
     private Node3D cameraDisk = null!;
 
     // Get the gravity from the project settings to be synced with RigidBody nodes.
-    public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
-    
-    // Move speed in m/s
-    [Export] private int MoveSpeed = 5;
-    // Jump force in m/s^2
-    [Export] private float JumpForce = 300f;
+    private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
     // Rotation sensitivities
     [Export] private float maxRotation = Mathf.DegToRad(90);
     [Export] private float verticalSensitivity = 0.005f;
     [Export] private float horizontalSensitivity = 0.005f;
-    // Move speed in m/s
+    // Forces m/s^2
     [Export] private float pushForce = 0.1f;
+    [Export] private float jumpForce = 300f;
+    // Move speed in m/s
+    [Export] private int moveSpeed = 5;
 
     private Serilog.ILogger log = null!;
 
@@ -66,7 +61,7 @@ public partial class PlayerMovements : CharacterBody3D
 
         // Add the gravity.
         if (!IsOnFloor()) velocity.Y -= gravity * (float)delta;
-        else if (Input.IsActionJustPressed("jump")) velocity.Y += JumpForce * (float)delta;
+        else if (Input.IsActionJustPressed("jump")) velocity.Y += jumpForce * (float)delta;
 
         // Add movements
         var inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
