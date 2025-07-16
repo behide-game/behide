@@ -9,6 +9,7 @@ public partial class GameManager : Node
 
     public static RoomManager Room { get; private set; } = null!;
     public static NetworkManager Network { get; private set; } = null!;
+    public static TimeSynchronizer TimeSync { get; private set; } = null!;
 
     public enum GameState { Home, Lobby, Game }
     public static GameState State { get; private set; } = GameState.Home;
@@ -32,6 +33,7 @@ public partial class GameManager : Node
 
         Room = GetNode<RoomManager>("/root/RoomManager");
         Network = GetNode<NetworkManager>("/root/NetworkManager");
+        TimeSync = GetNode<TimeSynchronizer>("/root/TimeSynchronizer");
     }
 
     public override void _Notification(int what)

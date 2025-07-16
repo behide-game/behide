@@ -21,6 +21,7 @@ GameManager="*res://Scripts/GameManager.cs"
 WebRtcSignaling="*res://Scripts/OnlineServices/Signaling.cs"
 NetworkManager="*res://Scripts/Networking/NetworkManager.cs"
 RoomManager="*res://Scripts/RoomManager.cs"
+TimeSynchronizer="*res://Scripts/TimeSynchronizer.cs"
 
 [display]
 

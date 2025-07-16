@@ -24,7 +24,7 @@ public partial class Countdown : Node
     {
         if (!endDate.HasValue || timeElapsed) return;
 
-        var now = DateTimeOffset.Now + (GameManager.Room.ClockDelta.Value ?? TimeSpan.Zero);
+        var now = DateTimeOffset.Now + (GameManager.TimeSync.ClockDelta.Value ?? TimeSpan.Zero);
         var remainingTime = endDate - now;
         timeElapsed = remainingTime < TimeSpan.Zero;
 
