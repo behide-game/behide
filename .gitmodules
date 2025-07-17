@@ -1,0 +1,3 @@
+[submodule "Scripts/External/Behide.OnlineServices"]
+	path = Scripts/External/Behide.OnlineServices
+	url = https://github.com/behide-game/behide-online-services.git

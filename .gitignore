@@ -5,9 +5,11 @@ bin/
 obj/
 .vs/
 .idea/
+*.DotSettings.user
 
 Builds/
 .env
 webrtc/
 
 *.VoxelGI_data.res
+target/
