@@ -12,7 +12,7 @@ using Types;
 [GlobalClass]
 public partial class PlayerSpawner : Node
 {
-    [Export] private Node playersNode = null!;
+    [Export] public Node PlayersNode = null!;
     [Export] private PackedScene playerPrefab = null!;
 
     private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "PlayerSpawner");
@@ -54,7 +54,7 @@ public partial class PlayerSpawner : Node
         playerNode.Position = new Vector3(0, 0, playerToSpawn.PeerId * 4);
 
         // Add node to the scene
-        playersNode.AddChild(playerNode, true);
+        PlayersNode.AddChild(playerNode, true);
 
         // Disable visibility if authority
         if (playerToSpawn.PeerId != localPlayer.Value.PeerId) RpcId(playerToSpawn.PeerId, nameof(SpawnedPlayerRpc));

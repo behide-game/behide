@@ -25,7 +25,7 @@ public partial class Lobby : Control
     [Export] private VBoxContainer playerListNode = null!;
     [Export] private PackedScene playerListItemScene = null!;
     [Export] private Label readyButtonLabel = null!;
-    [Export] private Countdown countdown = null!;
+    [Export] private LabelCountdown countdown = null!;
 
     private ILogger log = null!;
     private CancellationTokenSource inRoomEventsCts = new();
@@ -85,9 +85,8 @@ public partial class Lobby : Control
         if (allReady)
         {
             // No clock delta needed as the time is based on the first player to have joined the room
-            var startTime = DateTimeOffset.Now + TimeSpan.FromSeconds(5);
-            countdown.StartCountdown(startTime);
-            log.Debug("Game start planned for {Start}", startTime);
+            countdown.StartCountdown(TimeSpan.FromSeconds(5));
+            log.Debug("Game start planned for {Start}", DateTimeOffset.Now + TimeSpan.FromSeconds(5));
         }
         else
         {

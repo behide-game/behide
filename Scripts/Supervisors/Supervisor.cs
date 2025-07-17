@@ -17,9 +17,9 @@ public partial class Supervisor : Node
 {
     private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "Supervisor/Base");
 
-    [Export] private string openMenuAction = null!;
     [Export] private Node behideObjects = null!;
     private Node behideObjectsParent = null!;
+    [Export] private string openMenuAction = null!;
     [Export] protected PlayerSpawner Spawner = null!;
 
     protected readonly Dictionary<int, BehaviorSubject<Player>> Players = GameManager.Room.Players;
