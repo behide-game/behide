@@ -1,30 +1,33 @@
-namespace Behide.Game.Player;
-
 using Godot;
 
-// This script run on every peers.
+namespace Behide.Game.Player;
+
+// This script run on authority peer.
 public partial class PlayerMovements : CharacterBody3D
 {
-    private InputSynchronizer input = null!;
     private Node3D cameraDisk = null!;
 
     // Get the gravity from the project settings to be synced with RigidBody nodes.
-    public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+    private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
-    // Move speed in m/s
-    [Export] private int MoveSpeed = 5;
     // Rotation sensitivities
-    [Export] private float MaxRotation = Mathf.DegToRad(90);
-    [Export] private float VerticalSensitivity = 0.005f;
-    [Export] private float HorizontalSensitivity = 0.005f;
+    [Export] private float maxRotation = Mathf.DegToRad(90);
+    [Export] private float verticalSensitivity = 0.005f;
+    [Export] private float horizontalSensitivity = 0.005f;
+    // Forces m/s^2
+    [Export] private float pushForce = 0.1f;
+    [Export] private float jumpForce = 300f;
     // Move speed in m/s
-    [Export] private float PushForce = 0.1f;
+    [Export] private int moveSpeed = 5;
 
+    private Serilog.ILogger log = null!;
 
     // --- Initialization ---
 
     public override void _EnterTree()
     {
+        log = Serilog.Log.ForContext("Tag", "Player/Movements");
+
         // Set authority
         var ownerPeerId = int.Parse(Name);
         SetMultiplayerAuthority(ownerPeerId);
@@ -35,7 +38,6 @@ public partial class PlayerMovements : CharacterBody3D
         Transform = transform;
 
         // Retrieve child node
-        input = GetNode<InputSynchronizer>("./InputSynchronizer");
         cameraDisk = GetNode<Node3D>("./CameraDisk");
 
         // Only when we are the authority
@@ -54,22 +56,25 @@ public partial class PlayerMovements : CharacterBody3D
 
     public override void _PhysicsProcess(double delta)
     {
-        Vector3 velocity = Velocity;
+        if (!IsMultiplayerAuthority()) return;
+        var velocity = Velocity;
 
         // Add the gravity.
         if (!IsOnFloor()) velocity.Y -= gravity * (float)delta;
+        else if (Input.IsActionJustPressed("jump")) velocity.Y += jumpForce * (float)delta;
 
         // Add movements
-        Vector3 direction = (Transform.Basis * new Vector3(input.direction.X, 0, input.direction.Y)).Normalized();
+        var inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
+        var direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
         if (direction != Vector3.Zero)
         {
-            velocity.X = direction.X * MoveSpeed;
-            velocity.Z = direction.Z * MoveSpeed;
+            velocity.X = direction.X * moveSpeed;
+            velocity.Z = direction.Z * moveSpeed;
         }
         else
         {
-            velocity.X = Mathf.MoveToward(Velocity.X, 0, MoveSpeed);
-            velocity.Z = Mathf.MoveToward(Velocity.Z, 0, MoveSpeed);
+            velocity.X = Mathf.MoveToward(Velocity.X, 0, moveSpeed);
+            velocity.Z = Mathf.MoveToward(Velocity.Z, 0, moveSpeed);
         }
 
         // Apply new velocity
@@ -80,23 +85,25 @@ public partial class PlayerMovements : CharacterBody3D
         for (var i = 0; i < GetSlideCollisionCount(); i++)
         {
             var collision = GetSlideCollision(i);
-            var collider = collision.GetCollider();
-
-            if (collider is RigidBody3D rb)
-                RpcId(
-                    rb.GetMultiplayerAuthority(),
-                    nameof(PushRigidbody),
-                    rb.GetPath(),
-                    collision.GetNormal() * -PushForce,
+            if (collision.GetCollider() is RigidBody3D rb)
+            {
+                if (!rb.IsMultiplayerAuthority()) {
+                    Rpc(nameof(SetObjectAuthority), rb.GetPath());
+                }
+                rb.ApplyImpulse(
+                    collision.GetNormal() * -pushForce,
                     collision.GetPosition() - rb.GlobalPosition
                 );
+            }
         }
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    private void PushRigidbody(string rbNodePath, Vector3 impulse, Vector3 pos)
+    private void SetObjectAuthority(string nodePath)
     {
-        GetNode<RigidBody3D>(rbNodePath).ApplyImpulse(impulse, pos);
+        var remoteId = Multiplayer.GetRemoteSenderId();
+        GetNode<RigidBody3D>(nodePath).SetMultiplayerAuthority(remoteId);
+        log.Debug("Set authority of {NodePath} to {RemoteId}", nodePath, remoteId);
     }
 
 
@@ -107,6 +114,7 @@ public partial class PlayerMovements : CharacterBody3D
     {
         if (!IsMultiplayerAuthority()) return;
 
+        // Escape
         if (rawEvent.IsActionPressed("ui_cancel"))
             Input.MouseMode = Input.MouseMode switch
             {
@@ -114,20 +122,21 @@ public partial class PlayerMovements : CharacterBody3D
                 _ => Input.MouseModeEnum.Captured,
             };
 
+        // Rotation
         if (rawEvent is InputEventMouseMotion mouseMotion
             && Input.MouseMode == Input.MouseModeEnum.Captured)
             ProcessRotation(mouseMotion);
     }
 
     // Rotation accumulators
-    private float rotationX = 0f;
-    private float rotationY = 0f;
+    private float rotationX;
+    private float rotationY;
 
     private void ProcessRotation(InputEventMouseMotion mouseMotion)
     {
-        rotationY -= mouseMotion.Relative.X * VerticalSensitivity;
-        rotationX -= mouseMotion.Relative.Y * HorizontalSensitivity;
-        rotationX = System.Math.Clamp(rotationX, -MaxRotation, MaxRotation);
+        rotationY -= mouseMotion.Relative.X * verticalSensitivity;
+        rotationX -= mouseMotion.Relative.Y * horizontalSensitivity;
+        rotationX = System.Math.Clamp(rotationX, -maxRotation, maxRotation);
 
         // Left / Right (rotate the whole player)
         var transform = Transform;

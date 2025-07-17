@@ -1,13 +1,13 @@
-namespace Behide.Log;
-
+using System;
+using System.IO;
 using Godot;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting.Display;
-using System;
-using System.IO;
+
+namespace Behide.Logging;
 
 public class GodotSink(string outputTemplate, IFormatProvider? formatProvider) : ILogEventSink
 {
