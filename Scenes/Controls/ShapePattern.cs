@@ -1,8 +1,7 @@
-namespace Behide.UI.Controls;
-
-using System;
-using System.Collections.Generic;
 using Godot;
+// ReSharper disable InconsistentNaming
+
+namespace Behide.UI.Controls;
 
 [Tool]
 public partial class ShapePattern : Control
@@ -16,7 +15,7 @@ public partial class ShapePattern : Control
     private Vector2 _gap = Vector2.Zero;
     [Export] private Vector2 Gap { get => _gap; set { _gap = value; QueueRedraw(); } }
 
-    private float _rotation = 0;
+    private float _rotation;
     [Export(PropertyHint.Range, "-360, 360")] private new float Rotation { get => _rotation; set { _rotation = value; QueueRedraw(); } }
 
     private Vector2 _offset = Vector2.Zero;
@@ -24,11 +23,6 @@ public partial class ShapePattern : Control
 
     public override void _Draw()
     {
-        if (Shape == null)
-        {
-            return;
-        }
-
         // Calculate the size of the shape
         var rectSize = new Vector2(
             ShapeSize,

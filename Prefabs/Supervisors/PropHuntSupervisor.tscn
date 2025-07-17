@@ -1,0 +1,201 @@
+[gd_scene load_steps=11 format=3 uid="uid://cehw1sq4q5yu8"]
+
+[ext_resource type="Script" uid="uid://38mycbkkwpw4" path="res://Scripts/Supervisors/PropHuntSupervisor.cs" id="1_0pdhf"]
+[ext_resource type="Script" uid="uid://dlbrls7b4x0kx" path="res://Scripts/Supervisors/PlayerSpawner.cs" id="3_l302j"]
+[ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/Player/player.tscn" id="4_nsml5"]
+[ext_resource type="Script" uid="uid://sggdi83gahf1" path="res://Scenes/Controls/Countdown/AdvancedLabelCountdown.cs" id="5_7hsgi"]
+[ext_resource type="Theme" uid="uid://cdr520krk72wo" path="res://Scenes/theme.tres" id="5_sfeev"]
+[ext_resource type="Script" uid="uid://djqbwwelecick" path="res://Scenes/Controls/Countdown/LabelCountdown.cs" id="6_w7xx4"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6mxck"]
+font_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_w7xx4"]
+font_size = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w7xx4"]
+bg_color = Color(0.894118, 0.945098, 0.968627, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_8yh7x"]
+font_size = 20
+font_color = Color(0.0980392, 0.109804, 0.117647, 1)
+
+[node name="Supervisor" type="Node3D" node_paths=PackedStringArray("preGameCountdown", "inGameCountdown", "preGameProp", "preGameHunter", "inGame", "endGame", "isPropLabel", "isHunterLabel", "propsWonLabel", "hunterWonLabel", "Spawner")]
+script = ExtResource("1_0pdhf")
+preGameCountdown = NodePath("UI/AdvancedLabelCountdown")
+inGameCountdown = NodePath("UI/In-game/LabelCountdown")
+preGameProp = NodePath("UI/Pre-game Prop")
+preGameHunter = NodePath("UI/Pre-game Hunter")
+inGame = NodePath("UI/In-game")
+endGame = NodePath("UI/End-game")
+isPropLabel = NodePath("UI/In-game/IsProp")
+isHunterLabel = NodePath("UI/In-game/IsHunter")
+propsWonLabel = NodePath("UI/End-game/PropsWin")
+hunterWonLabel = NodePath("UI/End-game/HunterWins")
+openMenuAction = "open_menu"
+Spawner = NodePath("PlayerSpawner")
+
+[node name="PlayerSpawner" type="Node" parent="."]
+script = ExtResource("3_l302j")
+playerPrefab = ExtResource("4_nsml5")
+metadata/_custom_type_script = "uid://dlbrls7b4x0kx"
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_sfeev")
+
+[node name="AdvancedLabelCountdown" type="Node" parent="UI" node_paths=PackedStringArray("labels")]
+script = ExtResource("5_7hsgi")
+labels = [NodePath("../Pre-game Prop/HBoxContainer/CountdownLabel"), NodePath("../Pre-game Hunter/BoxContainer/CountdownLabel")]
+runningTextFormats = PackedStringArray("Time to hide: {0:mm\\:ss}", "The hunt begins in {0:mm\\:ss}")
+beforeRunningTexts = PackedStringArray("", "")
+afterRunningTexts = PackedStringArray("", "")
+metadata/_custom_type_script = "uid://sggdi83gahf1"
+
+[node name="Pre-game Prop" type="Control" parent="UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="VBoxContainer" parent="UI/Pre-game Prop"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -102.0
+offset_right = 102.0
+offset_bottom = 56.0
+grow_horizontal = 2
+
+[node name="CountdownLabel" type="Label" parent="UI/Pre-game Prop/HBoxContainer"]
+layout_mode = 2
+text = "Time to hide: 5:00"
+label_settings = SubResource("LabelSettings_6mxck")
+horizontal_alignment = 1
+
+[node name="Label" type="Label" parent="UI/Pre-game Prop/HBoxContainer"]
+layout_mode = 2
+text = "Hide!"
+label_settings = SubResource("LabelSettings_w7xx4")
+horizontal_alignment = 1
+
+[node name="Pre-game Hunter" type="PanelContainer" parent="UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_w7xx4")
+
+[node name="BoxContainer" type="BoxContainer" parent="UI/Pre-game Hunter"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+vertical = true
+
+[node name="Label" type="Label" parent="UI/Pre-game Hunter/BoxContainer"]
+layout_mode = 2
+text = "You are the hunter!"
+label_settings = SubResource("LabelSettings_8yh7x")
+horizontal_alignment = 1
+
+[node name="CountdownLabel" type="Label" parent="UI/Pre-game Hunter/BoxContainer"]
+layout_mode = 2
+text = "The hunt begins in 5:00"
+label_settings = SubResource("LabelSettings_8yh7x")
+horizontal_alignment = 1
+
+[node name="In-game" type="Control" parent="UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="IsProp" type="Label" parent="UI/In-game"]
+visible = false
+layout_mode = 0
+offset_right = 114.0
+offset_bottom = 23.0
+text = "You are a prop"
+
+[node name="IsHunter" type="Label" parent="UI/In-game"]
+visible = false
+layout_mode = 0
+offset_right = 146.0
+offset_bottom = 23.0
+text = "You are the hunter"
+
+[node name="CountdownLabel" type="Label" parent="UI/In-game"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Time remaining: 5:00"
+
+[node name="LabelCountdown" type="Node" parent="UI/In-game" node_paths=PackedStringArray("label")]
+script = ExtResource("6_w7xx4")
+label = NodePath("../CountdownLabel")
+runningTextFormat = "Remaining time: {0:mm\\:ss}"
+beforeRunningText = "Spawning players..."
+afterRunningText = "Game finished"
+metadata/_custom_type_script = "uid://djqbwwelecick"
+
+[node name="End-game" type="Control" parent="UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PropsWin" type="Label" parent="UI/End-game"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -10.5
+offset_right = 20.0
+offset_bottom = 10.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Props won !"
+
+[node name="HunterWins" type="Label" parent="UI/End-game"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -10.5
+offset_right = 20.0
+offset_bottom = 10.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Hunter wins !"

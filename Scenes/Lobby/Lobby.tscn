@@ -1,10 +1,11 @@
-[gd_scene load_steps=20 format=3 uid="uid://ch26lr3yfn732"]
+[gd_scene load_steps=21 format=3 uid="uid://ch26lr3yfn732"]
 
-[ext_resource type="Script" uid="uid://f5imehoqex" path="res://Scenes/Lobby/Lobby.cs" id="1_vmtcs"]
+[ext_resource type="Script" uid="uid://dm7h4qmja7uar" path="res://Scenes/Lobby/Lobby.cs" id="1_vmtcs"]
 [ext_resource type="PackedScene" uid="uid://do5karhuhkwaw" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.tscn" id="2_3qdhv"]
+[ext_resource type="Script" uid="uid://djqbwwelecick" path="res://Scenes/Controls/Countdown/LabelCountdown.cs" id="3_lj1ok"]
 [ext_resource type="PackedScene" uid="uid://dxmrf533plg67" path="res://Scenes/Controls/Logo.tscn" id="5_ah4j3"]
-[ext_resource type="Script" uid="uid://cid068andq3s6" path="res://Scenes/Controls/BezelContainer.cs" id="5_ew8go"]
-[ext_resource type="Script" uid="uid://d2etmapov8k6t" path="res://Scenes/Controls/ShapePattern.cs" id="5_vnyn6"]
+[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="5_ew8go"]
+[ext_resource type="Script" uid="uid://c7dblouqmfhpy" path="res://Scenes/Controls/ShapePattern.cs" id="5_vnyn6"]
 [ext_resource type="Texture2D" uid="uid://b7hopap8ojrdp" path="res://Assets/Images/Behide-logo-rotated-blue.svg" id="6_uepy8"]
 [ext_resource type="FontFile" uid="uid://26b4v0rh3143" path="res://Assets/Fonts/Space Mono/SpaceMono-Bold.ttf" id="7_rk5ct"]
 [ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="7_xxjlh"]
@@ -61,7 +62,7 @@ font_color = Color(0, 0.117647, 0.176471, 1)
 font = ExtResource("7_xxjlh")
 font_size = 24
 
-[node name="Lobby" type="PanelContainer"]
+[node name="Lobby" type="PanelContainer" node_paths=PackedStringArray("chooseModeControl", "lobbyControl", "codeInput", "playerListNode", "readyButtonLabel", "countdown")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -69,10 +70,21 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_jn132")
 script = ExtResource("1_vmtcs")
+chooseModeControl = NodePath("ChooseMode")
+lobbyControl = NodePath("Lobby")
+codeInput = NodePath("ChooseMode/Buttons/VBoxContainer/Code/LineEdit")
+playerListNode = NodePath("Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer/Players")
 playerListItemScene = ExtResource("2_3qdhv")
-playerListPath = "Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer/Players"
-countdownPath = "Lobby/Header/MarginContainer/Countdown"
-readyButtonTextPath = "Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center/Label"
+readyButtonLabel = NodePath("Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center/Label")
+countdown = NodePath("Countdown")
+
+[node name="Countdown" type="Node" parent="." node_paths=PackedStringArray("label")]
+script = ExtResource("3_lj1ok")
+label = NodePath("../Lobby/Header/MarginContainer/Countdown")
+runningTextFormat = "Start in {0:s\\.ff}s"
+beforeRunningText = "Not ready"
+afterRunningText = "Starting game..."
+metadata/_custom_type_script = "uid://d5711da0fkld"
 
 [node name="ChooseMode" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -172,9 +184,9 @@ BackgroundColor = Color(0.894118, 0.945098, 0.968627, 1)
 
 [node name="LineEdit" type="LineEdit" parent="ChooseMode/Buttons/VBoxContainer/Code"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_placeholder_color = Color(0.309385, 0.309385, 0.309385, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_colors/font_placeholder_color = Color(0.309385, 0.309385, 0.309385, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("7_rk5ct")
 theme_override_font_sizes/font_size = 24
 placeholder_text = "AB01"
@@ -386,7 +398,7 @@ grow_vertical = 2
 
 [node name="Label" type="Label" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center"]
 layout_mode = 2
-text = "Not ready"
+text = "Set ready"
 label_settings = SubResource("LabelSettings_fpqc4")
 horizontal_alignment = 1
 vertical_alignment = 1
