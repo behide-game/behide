@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dvuwb0yce4sb7"
-path="res://.godot/imported/shooting_star_sampler.png-41b9395da81c38481d39af230f819d54.ctex"
+path="res://.godot/imported/shooting_star_sampler.png-42e9d70e72594745b3ff47b6457290ae.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sky/assets/shooting_star_sampler.png"
-dest_files=["res://.godot/imported/shooting_star_sampler.png-41b9395da81c38481d39af230f819d54.ctex"]
+source_file="res://Assets/Sky/assets/shooting_star_sampler.png"
+dest_files=["res://.godot/imported/shooting_star_sampler.png-42e9d70e72594745b3ff47b6457290ae.ctex"]
 
 [params]
 

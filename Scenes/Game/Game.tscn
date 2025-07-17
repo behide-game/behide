@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://bq63a6mdt3w4"]
 
-[ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Shaders/chromatic_aberration.tres" id="4_32cbu"]
+[ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Assets/Shaders/chromatic_aberration.tres" id="4_32cbu"]
 [ext_resource type="Environment" uid="uid://c8ttkksgix01d" path="res://Scenes/Game/environment.tres" id="4_tyqxg"]
 [ext_resource type="PackedScene" uid="uid://cuuh5753pn6hj" path="res://Prefabs/BehideObject/behide_object.tscn" id="6_s06yr"]
 [ext_resource type="Resource" uid="uid://c7xkht1loifw3" path="res://Prefabs/BehideObjects/blue_cube/blue_cube.tres" id="7_yfvw8"]
