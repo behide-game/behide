@@ -16,9 +16,12 @@ properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[node name="BehideObject" type="RigidBody3D"]
+[node name="BehideObject" type="RigidBody3D" node_paths=PackedStringArray("CollisionNodes")]
 script = ExtResource("1_oyu5o")
+CollisionNodes = []
 Mass = 1.0
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_oyu5o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
