@@ -1,35 +1,14 @@
-namespace Behide.Game;
-
 using Godot;
 
-[Tool]
+namespace Behide.Game;
+
 public partial class BehideObject : RigidBody3D
 {
-    private BehideObjectData? resource;
-    [Export] public BehideObjectData? Resource
+    [Export] public Node3D VisualNode = null!;
+    [Export] public CollisionShape3D[] CollisionNodes = null!;
+    [Export] public new float Mass
     {
-        get => resource;
-        set
-        {
-            resource = value;
-            if (Engine.IsEditorHint())
-            {
-                if (value is null) return;
-                if (!IsNodeReady()) return;
-                ReloadResource(value);
-            }
-        }
-    }
-
-    public override void _EnterTree()
-    {
-        ReloadResource(Resource!);
-    }
-
-    private void ReloadResource(BehideObjectData behideObject)
-    {
-        Mass = behideObject.Mass;
-        GetNode<MeshInstance3D>("./MeshInstance3D").Mesh = behideObject.Mesh;
-        GetNode<CollisionShape3D>("./CollisionShape3D").Shape = behideObject.Shape;
+        get => ((RigidBody3D)this).Mass;
+        set => ((RigidBody3D)this).Mass = value;
     }
 }
