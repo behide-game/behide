@@ -21,8 +21,9 @@ properties/3/replication_mode = 2
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hj8j7"]
 
-[node name="BehideObject" type="RigidBody3D" node_paths=PackedStringArray("CollisionNodes")]
+[node name="BehideObject" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 script = ExtResource("1_syxtw")
+VisualNode = NodePath("MeshInstance3D")
 CollisionNodes = [NodePath("CollisionShape3D")]
 Mass = 1.0
 
