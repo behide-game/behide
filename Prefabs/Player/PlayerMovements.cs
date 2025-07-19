@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace Behide.Game.Player;
@@ -5,7 +6,7 @@ namespace Behide.Game.Player;
 // This script run on authority peer.
 public partial class PlayerMovements : CharacterBody3D
 {
-    private Node3D cameraDisk = null!;
+    private Node3D cameraDisk = null!;    
 
     // Get the gravity from the project settings to be synced with RigidBody nodes.
     private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -87,7 +88,8 @@ public partial class PlayerMovements : CharacterBody3D
             var collision = GetSlideCollision(i);
             if (collision.GetCollider() is RigidBody3D rb)
             {
-                if (!rb.IsMultiplayerAuthority()) {
+                if (!rb.IsMultiplayerAuthority())
+                {
                     Rpc(nameof(SetObjectAuthority), rb.GetPath());
                 }
                 rb.ApplyImpulse(
