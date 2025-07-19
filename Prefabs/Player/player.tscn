@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://iwqa8xgo1ip3"]
 
-[ext_resource type="Script" uid="uid://oo4kpemcc80a" path="res://Prefabs/Player/PlayerMovements.cs" id="1_mu3dd"]
+[ext_resource type="Script" uid="uid://bnid2w67fk441" path="res://Prefabs/Player/PlayerProp.cs" id="1_hnwp3"]
 [ext_resource type="Texture2D" uid="uid://cbvq7gqgqsc3c" path="res://Assets/Images/Cross-visor.svg" id="2_hnwp3"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_x40yu"]
@@ -15,9 +15,12 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes", "RayCast")]
 slide_on_ceiling = false
-script = ExtResource("1_mu3dd")
+script = ExtResource("1_hnwp3")
+VisualNode = NodePath("MeshInstance3D")
+CollisionNodes = [NodePath("CollisionShape3D")]
+RayCast = NodePath("CameraDisk/Camera/RayCast3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 gi_mode = 2
