@@ -8,6 +8,7 @@ public partial class PlayerMovements : CharacterBody3D
 {
     private Node3D cameraDisk = null!;
     private RayCast3D RayCast = null!;
+    private BehideObject? focusedBehideObject;
     private MeshInstance3D Mesh3D = null!;
 
     // Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -105,22 +106,14 @@ public partial class PlayerMovements : CharacterBody3D
                 );
             }
         }
+    }
 
-
+    public override void _Process(double delta)
+    {
         // RayCast
-        var ColliderObj = RayCast.GetCollider();
-        if (ColliderObj is RigidBody3D body)
-        {
-            if (Input.IsActionJustPressed("morph"))
-            {
-                var NewMesh = body.GetNodeOrNull<MeshInstance3D>("MeshInstance3D");
-                if (NewMesh != null)
-                {
-                    Mesh3D.Mesh = NewMesh.Mesh;
-                    Mesh3D.MaterialOverride = NewMesh.MaterialOverride;
-                }
-            }
-        }
+        var ColliderObject = RayCast.GetCollider();
+        if (ColliderObject is BehideObject Object) focusedBehideObject = Object;
+        else focusedBehideObject = null;
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
@@ -151,6 +144,17 @@ public partial class PlayerMovements : CharacterBody3D
         if (rawEvent is InputEventMouseMotion mouseMotion
             && Input.MouseMode == Input.MouseModeEnum.Captured)
             ProcessRotation(mouseMotion);
+
+        // Morph
+        if (Input.IsActionJustPressed("morph") && focusedBehideObject is not null)
+        {
+            var NewMesh = focusedBehideObject.GetNodeOrNull<MeshInstance3D>("MeshInstance3D");
+            if (NewMesh != null)
+            {
+                Mesh3D.Mesh = NewMesh.Mesh;
+                Mesh3D.MaterialOverride = NewMesh.MaterialOverride;
+            }
+        }
     }
 
     // Rotation accumulators
