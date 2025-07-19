@@ -111,12 +111,14 @@ public partial class PlayerMovements : CharacterBody3D
         var ColliderObj = RayCast.GetCollider();
         if (ColliderObj is RigidBody3D body)
         {
-            GD.Print(ColliderObj);
-            var NewMesh = body.GetNodeOrNull<MeshInstance3D>("MeshInstance3D");
-            if (NewMesh != null)
+            if (Input.IsActionJustPressed("morph"))
             {
-                Mesh3D.Mesh = NewMesh.Mesh;
-                Mesh3D.MaterialOverride = NewMesh.MaterialOverride;
+                var NewMesh = body.GetNodeOrNull<MeshInstance3D>("MeshInstance3D");
+                if (NewMesh != null)
+                {
+                    Mesh3D.Mesh = NewMesh.Mesh;
+                    Mesh3D.MaterialOverride = NewMesh.MaterialOverride;
+                }
             }
         }
     }
