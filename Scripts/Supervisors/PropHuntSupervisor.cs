@@ -30,7 +30,7 @@ public partial class PropHuntSupervisor : Supervisor
     [Export] private Label hunterWonLabel = null!;
 
     private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "Supervisor/PropHunt");
-    private static readonly TimeSpan PreGameDuration = TimeSpan.FromMinutes(1);
+    private static readonly TimeSpan PreGameDuration = TimeSpan.FromMinutes(0.01);
     private static readonly TimeSpan InGameDuration = TimeSpan.FromMinutes(5);
 
     private readonly TaskCompletionSource<int> hunterPeerIdTcs = new();

@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace Behide.Game.Player;
@@ -6,6 +7,8 @@ namespace Behide.Game.Player;
 public partial class PlayerMovements : CharacterBody3D
 {
     private Node3D cameraDisk = null!;
+    private RayCast3D RayCast = null!;
+    private MeshInstance3D Mesh3D = null!;
 
     // Get the gravity from the project settings to be synced with RigidBody nodes.
     private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -45,6 +48,11 @@ public partial class PlayerMovements : CharacterBody3D
         {
             // Set new camera
             cameraDisk.GetNode<Camera3D>("./Camera").MakeCurrent();
+
+            // Get the RayCast node
+            RayCast = GetNode<RayCast3D>("./CameraDisk/Camera/RayCast3D");
+            // Get the Mesh
+            Mesh3D = GetNode<MeshInstance3D>("./MeshInstance3D");
 
             // Lock mouse
             Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -87,13 +95,28 @@ public partial class PlayerMovements : CharacterBody3D
             var collision = GetSlideCollision(i);
             if (collision.GetCollider() is RigidBody3D rb)
             {
-                if (!rb.IsMultiplayerAuthority()) {
+                if (!rb.IsMultiplayerAuthority())
+                {
                     Rpc(nameof(SetObjectAuthority), rb.GetPath());
                 }
                 rb.ApplyImpulse(
                     collision.GetNormal() * -pushForce,
                     collision.GetPosition() - rb.GlobalPosition
                 );
+            }
+        }
+
+
+        // RayCast
+        var ColliderObj = RayCast.GetCollider();
+        if (ColliderObj is RigidBody3D body)
+        {
+            GD.Print(ColliderObj);
+            var NewMesh = body.GetNodeOrNull<MeshInstance3D>("MeshInstance3D");
+            if (NewMesh != null)
+            {
+                Mesh3D.Mesh = NewMesh.Mesh;
+                Mesh3D.MaterialOverride = NewMesh.MaterialOverride;
             }
         }
     }
