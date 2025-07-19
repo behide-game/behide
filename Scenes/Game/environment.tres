@@ -1,18 +1,16 @@
 [gd_resource type="Environment" load_steps=3 format=3 uid="uid://c8ttkksgix01d"]
 
-[ext_resource type="Material" uid="uid://dh6ykun8bv60u" path="res://Assets/Sky/day_sky.tres" id="1_xtwqb"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_quf31"]
 
 [sub_resource type="Sky" id="Sky_ls2kj"]
-sky_material = ExtResource("1_xtwqb")
+sky_material = SubResource("ProceduralSkyMaterial_quf31")
 
 [resource]
 background_mode = 2
 background_color = Color(0.945098, 0, 0, 1)
 sky = SubResource("Sky_ls2kj")
+reflected_light_source = 1
 tonemap_mode = 2
-ssr_enabled = true
-ssao_enabled = true
-ssil_enabled = true
 glow_enabled = true
 glow_strength = 0.5
 glow_blend_mode = 1

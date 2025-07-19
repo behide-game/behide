@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bgglma7bynfe8"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_6ti3e"]
+[ext_resource type="PackedScene" uid="uid://djkfss7vv422b" path="res://Assets/Models/Dungeon/Props/Plate/plate_food_B.gltf" id="2_6ti3e"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_re2wg"]
+height = 0.18
+radius = 0.48
+
+[node name="plate_food_B" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+script = ExtResource("1_6ti3e")
+VisualNode = NodePath("plate_food_B2")
+CollisionNodes = [NodePath("CollisionShape3D")]
+
+[node name="plate_food_B2" parent="." instance=ExtResource("2_6ti3e")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0900001, 0)
+shape = SubResource("CylinderShape3D_re2wg")

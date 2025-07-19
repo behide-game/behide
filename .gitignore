@@ -11,5 +11,13 @@ Builds/
 .env
 webrtc/
 
-*.VoxelGI_data.res
+*.VoxelGI*_data.res
+
+# Lightmap bakes
+Scenes/**/*.exr
+Scenes/**/*.exr.import
+*.lmbake
+
 target/
+*.bin
+*.gltf

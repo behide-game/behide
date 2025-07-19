@@ -37,6 +37,10 @@ project/assembly_name="Behide"
 
 run/main_run_args="--log-to-godot-sink"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/lightmap_probe_grid/plugin.cfg")
+
 [input]
 
 move_forward={
@@ -96,3 +100,7 @@ common/physics_interpolation=true
 [rendering]
 
 textures/vram_compression/import_s3tc_bptc=true
+global_illumination/gi/use_half_resolution=true
+global_illumination/sdfgi/probe_ray_count=0
+global_illumination/sdfgi/frames_to_update_lights=4
+occlusion_culling/use_occlusion_culling=true

@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://b4l2a1fikwn4t"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_kcojd"]
+[ext_resource type="PackedScene" uid="uid://bwv0vfygu0nmi" path="res://Assets/Models/Dungeon/Props/Table/table_medium.gltf" id="2_kcojd"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_m21xm"]
+size = Vector3(1.98, 0.2, 1.98)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5ahis"]
+size = Vector3(1.66, 0.8, 0.28)
+
+[node name="table_long" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+script = ExtResource("1_kcojd")
+VisualNode = NodePath("table_medium2")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2"), NodePath("CollisionShape3D3")]
+
+[node name="table_medium2" parent="." instance=ExtResource("2_kcojd")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -2.98023e-08)
+shape = SubResource("BoxShape3D_m21xm")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0.7)
+shape = SubResource("BoxShape3D_5ahis")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -0.7)
+shape = SubResource("BoxShape3D_5ahis")

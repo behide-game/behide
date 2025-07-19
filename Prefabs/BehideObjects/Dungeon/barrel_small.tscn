@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bje1262rtrqw2"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_03fh8"]
+[ext_resource type="PackedScene" uid="uid://ck1ohytt5n1ll" path="res://Assets/Models/Dungeon/Props/Barrel/barrel_small.gltf" id="2_03fh8"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_brtb4"]
+height = 0.99876
+radius = 0.46
+
+[node name="barrel_small" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+script = ExtResource("1_03fh8")
+VisualNode = NodePath("barrel_small2")
+CollisionNodes = [NodePath("CollisionShape3D")]
+
+[node name="barrel_small2" parent="." instance=ExtResource("2_03fh8")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.49938, 0)
+shape = SubResource("CylinderShape3D_brtb4")

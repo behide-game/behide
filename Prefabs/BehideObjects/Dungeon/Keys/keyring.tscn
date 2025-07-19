@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://p0mjn7bad2ox"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_68h86"]
+[ext_resource type="PackedScene" uid="uid://xeogaitojcfg" path="res://Assets/Models/Dungeon/Props/Key/keyring.gltf" id="2_tmahi"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4pj1h"]
+size = Vector3(0.7, 0.2, 1.15)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_oyu5o"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="keyring" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+script = ExtResource("1_68h86")
+VisualNode = NodePath("keyring")
+CollisionNodes = []
+Mass = 1.0
+
+[node name="keyring" parent="." instance=ExtResource("2_tmahi")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02, 0.1, -0.075)
+shape = SubResource("BoxShape3D_4pj1h")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_oyu5o")
