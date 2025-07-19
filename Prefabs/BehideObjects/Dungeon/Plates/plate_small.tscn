@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://cygeynvrh1tbb"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_87uly"]
+[ext_resource type="PackedScene" uid="uid://ct4l1lyh27ydx" path="res://Assets/Models/Dungeon/Props/Plate/plate_small.gltf" id="2_87uly"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_re2wg"]
+height = 0.12
+radius = 0.24
+
+[node name="plate_small" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+script = ExtResource("1_87uly")
+VisualNode = NodePath("plate_small2")
+CollisionNodes = [NodePath("CollisionShape3D")]
+
+[node name="plate_small2" parent="." instance=ExtResource("2_87uly")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0600001, 0)
+shape = SubResource("CylinderShape3D_re2wg")

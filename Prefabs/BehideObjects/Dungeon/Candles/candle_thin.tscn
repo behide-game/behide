@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://iayvi6lwk3ct"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_vvso8"]
+[ext_resource type="PackedScene" uid="uid://bbeq0xwf14tsf" path="res://Assets/Models/Dungeon/Props/Candle/candle_thin.gltf" id="2_qt4x0"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_kcrxe"]
+height = 0.8
+radius = 0.1
+
+[node name="candle_thin" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 0, 0, 0)
+script = ExtResource("1_vvso8")
+VisualNode = NodePath("candle_thin")
+CollisionNodes = [NodePath("CollisionShape3D")]
+
+[node name="candle_thin" parent="." instance=ExtResource("2_qt4x0")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("CylinderShape3D_kcrxe")

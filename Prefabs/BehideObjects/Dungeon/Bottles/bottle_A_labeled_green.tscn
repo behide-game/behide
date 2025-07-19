@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://dma8ykq3fequt"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_mamxj"]
+[ext_resource type="PackedScene" uid="uid://cvyj1dd5ega4p" path="res://Assets/Models/Dungeon/Props/Bottle/bottle_A_labeled_green.gltf" id="2_w2tuk"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_aai3l"]
+height = 0.88
+radius = 0.18
+
+[node name="bottle_A_labeled_green" type="RigidBody3D" node_paths=PackedStringArray("CollisionNodes")]
+script = ExtResource("1_mamxj")
+CollisionNodes = [NodePath("CollisionShape3D")]
+
+[node name="bottle_A_labeled_green" parent="." instance=ExtResource("2_w2tuk")]
+
+[node name="bottle_A_labeled_green2" parent="." instance=ExtResource("2_w2tuk")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.44, 0)
+shape = SubResource("CylinderShape3D_aai3l")

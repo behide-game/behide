@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://bfppqj4irpec4"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_72vy4"]
+[ext_resource type="PackedScene" uid="uid://bxbnfx7fus82p" path="res://Assets/Models/Dungeon/Props/Trunk/trunk_small_B.gltf" id="2_72vy4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_m21xm"]
+size = Vector3(0.670898, 0.469238, 0.536865)
+
+[node name="trunk_medium" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+script = ExtResource("1_72vy4")
+VisualNode = NodePath("trunk_small_B2")
+CollisionNodes = [NodePath("CollisionShape3D")]
+
+[node name="trunk_small_B2" parent="." instance=ExtResource("2_72vy4")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.234619, 0)
+shape = SubResource("BoxShape3D_m21xm")
