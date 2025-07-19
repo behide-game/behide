@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cbvq7gqgqsc3c"
-path="res://.godot/imported/Cross-visor.svg-014969de8dc7c5d34b4498c84b812245.ctex"
+path="res://.godot/imported/cross-visor.svg-00ba57c13ac8beaa6b3e0195f079b92d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Images/Cross-visor.svg"
-dest_files=["res://.godot/imported/Cross-visor.svg-014969de8dc7c5d34b4498c84b812245.ctex"]
+source_file="res://Assets/Images/cross-visor.svg"
+dest_files=["res://.godot/imported/cross-visor.svg-00ba57c13ac8beaa6b3e0195f079b92d.ctex"]
 
 [params]
 

@@ -18,7 +18,7 @@ properties/3/replication_mode = 2
 
 [node name="BehideObject" type="RigidBody3D" node_paths=PackedStringArray("CollisionNodes")]
 script = ExtResource("1_oyu5o")
-CollisionNodes = []
+CollisionNodes = [NodePath("CollisionShape3D")]
 Mass = 1.0
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

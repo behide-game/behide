@@ -33,6 +33,7 @@ replication_config = SubResource("SceneReplicationConfig_oyu5o")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 material_override = ExtResource("2_hj8j7")
+gi_mode = 2
 mesh = SubResource("BoxMesh_hj8j7")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
