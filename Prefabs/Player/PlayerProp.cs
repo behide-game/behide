@@ -4,7 +4,7 @@ namespace Behide.Game.Player;
 
 public partial class PlayerProp : PlayerMovements
 {
-    [Export] public Node3D VisualNode = null!;
+    [Export] private Node3D currentVisualNode = null!;
     [Export] public CollisionShape3D[] CollisionNodes = null!;
     [Export] private RayCast3D RayCast = null!;
     private BehideObject? focusedBehideObject;
@@ -24,15 +24,18 @@ public partial class PlayerProp : PlayerMovements
         // Morph
         if (Input.IsActionJustPressed("morph") && focusedBehideObject is not null)
         {
-            Node Candidate = focusedBehideObject.VisualNode.Duplicate();
-            if (Candidate is Node3D)
+            Node candidate = focusedBehideObject.VisualNode.Duplicate();
+            if (candidate is Node3D)
             {
-                Node3D NewMesh = Candidate as Node3D;
-                VisualNode.QueueFree();
-                RemoveChild(VisualNode);
-                AddChild(NewMesh);
-                NewMesh.Position = Vector3.Zero;
-                VisualNode = NewMesh;
+                Node3D? newMesh = candidate as Node3D;
+                if (newMesh is not null)
+                {
+                    currentVisualNode.QueueFree();
+                    RemoveChild(currentVisualNode);
+                    AddChild(newMesh);
+                    newMesh.Position = Vector3.Zero;
+                    currentVisualNode = newMesh;
+                }
             }
         }
     }

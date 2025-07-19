@@ -15,10 +15,10 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes", "RayCast")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("currentVisualNode", "CollisionNodes", "RayCast")]
 slide_on_ceiling = false
 script = ExtResource("1_hnwp3")
-VisualNode = NodePath("MeshInstance3D")
+currentVisualNode = NodePath("MeshInstance3D")
 CollisionNodes = [NodePath("CollisionShape3D")]
 RayCast = NodePath("CameraDisk/Camera/RayCast3D")
 
