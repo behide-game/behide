@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://iwqa8xgo1ip3"]
+[gd_scene load_steps=6 format=3 uid="uid://iwqa8xgo1ip3"]
 
 [ext_resource type="Script" uid="uid://oo4kpemcc80a" path="res://Prefabs/Player/PlayerMovements.cs" id="1_mu3dd"]
+[ext_resource type="Texture2D" uid="uid://cbvq7gqgqsc3c" path="res://Assets/Images/cross-visor.svg" id="2_hnwp3"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_x40yu"]
 
@@ -32,5 +33,30 @@ transform = Transform3D(1, 0, 0, 0, 0.996918, 0.0784591, 0, -0.0784591, 0.996917
 keep_aspect = 0
 fov = 90.0
 
+[node name="RayCast3D" type="RayCast3D" parent="CameraDisk/Camera"]
+target_position = Vector3(0, 0, -20)
+debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
+
 [node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_n61o8")
+
+[node name="Logo" type="HBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -15.0
+offset_top = -15.0
+offset_right = 15.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TextureRect" type="TextureRect" parent="Logo"]
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("2_hnwp3")
+expand_mode = 3
