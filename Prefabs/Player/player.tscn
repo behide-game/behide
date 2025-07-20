@@ -30,6 +30,7 @@ mesh = SubResource("BoxMesh_x40yu")
 shape = SubResource("BoxShape3D_rr4v2")
 
 [node name="CameraDisk" type="Node3D" parent="."]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
 
 [node name="Camera" type="Camera3D" parent="CameraDisk"]
 transform = Transform3D(1, 0, 0, 0, 0.996918, 0.0784591, 0, -0.0784591, 0.996917, 0, 1.2, 4)

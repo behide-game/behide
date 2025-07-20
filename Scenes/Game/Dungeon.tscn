@@ -1581,9 +1581,8 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -42, 0
 [node name="coin" parent="Room/Walls" instance=ExtResource("38_bqcop")]
 transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, -41.4577, 2.2, 13.9793)
 
-[node name="coin2" parent="Room/Walls" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("38_bqcop")]
+[node name="coin2" parent="Room/Walls" instance=ExtResource("38_bqcop")]
 transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, -41.4577, 2.34, 14.0082)
-CollisionNodes = [NodePath("../coin/CollisionShape3D")]
 
 [node name="StaticProps" type="Node3D" parent="."]
 
@@ -1733,9 +1732,8 @@ shape = SubResource("BoxShape3D_f8atq")
 [node name="keg3" parent="BehideObjects" instance=ExtResource("51_2w7no")]
 transform = Transform3D(-5.96046e-08, 0, 1, 0, 1, 0, -1, 0, -5.96046e-08, -32, 0, 8)
 
-[node name="keg4" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("51_2w7no")]
+[node name="keg4" parent="BehideObjects" instance=ExtResource("51_2w7no")]
 transform = Transform3D(-5.96046e-08, 0, 1, 0, 1, 0, -1, 0, -5.96046e-08, -32, 0, 10)
-CollisionNodes = [NodePath("../keg3/CollisionShape3D"), NodePath("../keg3/CollisionShape3D2")]
 
 [node name="barrel_large" parent="BehideObjects" instance=ExtResource("51_nbq7p")]
 transform = Transform3D(-4.37114e-08, 1, 0, 0.707107, 3.09086e-08, -0.707107, -0.707107, -3.09086e-08, -0.707107, -33, 2.7, 9)
@@ -1749,9 +1747,8 @@ light_color = Color(1, 0.741769, 0.563201, 1)
 light_energy = 0.2
 omni_attenuation = 1.5
 
-[node name="candle_triple6" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("43_avh5c")]
+[node name="candle_triple6" parent="BehideObjects" instance=ExtResource("43_avh5c")]
 transform = Transform3D(-0.866026, 0, -0.5, 0, 1, 0, 0.5, 0, -0.866026, -32.8, 0, 21.1)
-CollisionNodes = [NodePath("../candle_triple5/CollisionShape3D")]
 
 [node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_triple6"]
 transform = Transform3D(1, 0, -2.98023e-08, 0, 1, 0, 0, 0, 1, 0.0223665, 0.859392, 0.038353)
@@ -1816,9 +1813,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.98, 4.05, 17.2405)
 [node name="keg" parent="BehideObjects" instance=ExtResource("51_2w7no")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -12.3964, 0, 22.1319)
 
-[node name="keg2" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("51_2w7no")]
+[node name="keg2" parent="BehideObjects" instance=ExtResource("51_2w7no")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -10.3964, 0, 22.1319)
-CollisionNodes = [NodePath("../keg/CollisionShape3D"), NodePath("../keg/CollisionShape3D2")]
 
 [node name="bottle_A_green2" parent="BehideObjects" instance=ExtResource("49_f5e6i")]
 transform = Transform3D(9.01571e-09, -0.206256, 0.978498, -1, -4.37114e-08, -1.64918e-15, 4.27715e-08, -0.978498, -0.206256, 1.47359, 6.55374, 13.0075)
@@ -1838,13 +1834,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.1, 1.5, 12.2)
 [node name="stool2" parent="BehideObjects" instance=ExtResource("42_7sqaq")]
 transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, -25.9, 0, 22.7)
 
-[node name="trunk_medium" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("39_behv8")]
+[node name="trunk_medium" parent="BehideObjects" instance=ExtResource("39_behv8")]
 transform = Transform3D(-0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, -0.258819, -27, 0, 23)
-CollisionNodes = [null, null]
 
-[node name="trunk_medium2" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("39_behv8")]
+[node name="trunk_medium2" parent="BehideObjects" instance=ExtResource("39_behv8")]
 transform = Transform3D(0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, 0.258819, -24.8, 0, 22.9)
-CollisionNodes = [null, null]
 
 [node name="table_small" parent="BehideObjects" instance=ExtResource("40_aidiq")]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -22, 0, 12)
@@ -1876,16 +1870,14 @@ transform = Transform3D(-0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, -0.965926
 [node name="plate_small" parent="BehideObjects" instance=ExtResource("65_bqcop")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.6483, 0.5, 22.8031)
 
-[node name="plate_small2" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("65_bqcop")]
+[node name="plate_small2" parent="BehideObjects" instance=ExtResource("65_bqcop")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.1007, 0.5, 22.5491)
-CollisionNodes = [NodePath("../plate_small/CollisionShape3D")]
 
 [node name="RigidBody3D6" parent="BehideObjects" instance=ExtResource("41_01r5e")]
 transform = Transform3D(-0.0382309, 0, -0.999269, 0, 1, 0, 0.999269, 0, -0.0382309, -36.3, 0, 22.4)
 
-[node name="RigidBody3D7" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("41_01r5e")]
+[node name="RigidBody3D7" parent="BehideObjects" instance=ExtResource("41_01r5e")]
 transform = Transform3D(-0.059463, 0, 0.998231, 0, 1, 0, -0.998231, 0, -0.059463, -39.6, 0, 22.4)
-CollisionNodes = [NodePath("../RigidBody3D6/CollisionShape3D")]
 
 [node name="table_small5" parent="BehideObjects" instance=ExtResource("40_aidiq")]
 transform = Transform3D(0.998022, 0, -0.0628602, 0, 1, 0, 0.0628602, 0, 0.998022, -35.2306, 0, 20.7933)
@@ -1908,29 +1900,23 @@ transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 
 [node name="plate_small3" parent="BehideObjects" instance=ExtResource("65_bqcop")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.7186, 1.2, 12.6335)
 
-[node name="plate_small4" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("65_bqcop")]
+[node name="plate_small4" parent="BehideObjects" instance=ExtResource("65_bqcop")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.1978, 1.2, 12.5968)
-CollisionNodes = [NodePath("../plate_small3/CollisionShape3D")]
 
-[node name="plate_small5" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("65_bqcop")]
+[node name="plate_small5" parent="BehideObjects" instance=ExtResource("65_bqcop")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.6929, 1.2, 12.6222)
-CollisionNodes = [NodePath("../plate_small3/CollisionShape3D")]
 
-[node name="plate_small6" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("65_bqcop")]
+[node name="plate_small6" parent="BehideObjects" instance=ExtResource("65_bqcop")]
 transform = Transform3D(0.98176, 0, 0.190124, 0, 1, 0, -0.190124, 0, 0.98176, -39.7603, 1.34, 12.6222)
-CollisionNodes = [NodePath("../plate_small3/CollisionShape3D")]
 
-[node name="plate_small7" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("65_bqcop")]
+[node name="plate_small7" parent="BehideObjects" instance=ExtResource("65_bqcop")]
 transform = Transform3D(0.98176, 0, 0.190124, 0, 1, 0, -0.190124, 0, 0.98176, -40.3603, 1.34, 12.6222)
-CollisionNodes = [NodePath("../plate_small3/CollisionShape3D")]
 
-[node name="plate_small8" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("65_bqcop")]
+[node name="plate_small8" parent="BehideObjects" instance=ExtResource("65_bqcop")]
 transform = Transform3D(0.98176, 0, 0.190124, 0, 1, 0, -0.190124, 0, 0.98176, -40.0738, 1.48, 12.6222)
-CollisionNodes = [NodePath("../plate_small3/CollisionShape3D")]
 
-[node name="plate_small9" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("65_bqcop")]
+[node name="plate_small9" parent="BehideObjects" instance=ExtResource("65_bqcop")]
 transform = Transform3D(0.994445, 0, 0.105257, 0, 1, 0, -0.105257, 0, 0.994445, -40.0902, 1.62, 12.6222)
-CollisionNodes = [NodePath("../plate_small3/CollisionShape3D")]
 
 [node name="bottle_A_green3" parent="BehideObjects" instance=ExtResource("49_f5e6i")]
 transform = Transform3D(0.95083, 0, 0.309714, 0, 1, 0, -0.309714, 0, 0.95083, -39.1604, 1.2, 12.5688)
@@ -1959,17 +1945,14 @@ omni_attenuation = 1.5
 [node name="bed_floor" parent="BehideObjects" instance=ExtResource("77_f8atq")]
 transform = Transform3D(0.0802337, 0, 0.996776, 0, 1, 0, -0.996776, 0, 0.0802337, -39.652, 0, 7.49529)
 
-[node name="bed_floor2" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("77_f8atq")]
+[node name="bed_floor2" parent="BehideObjects" instance=ExtResource("77_f8atq")]
 transform = Transform3D(-0.0202794, 0, 0.999794, 0, 1, 0, -0.999794, 0, -0.0202794, -39.774, 0, 5.53243)
-CollisionNodes = [NodePath("../bed_floor/CollisionShape3D")]
 
-[node name="bed_floor3" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("77_f8atq")]
+[node name="bed_floor3" parent="BehideObjects" instance=ExtResource("77_f8atq")]
 transform = Transform3D(-0.0215706, 0, 0.999767, 0, 1, 0, -0.999767, 0, -0.0215706, -39.772, 0, 3.64261)
-CollisionNodes = [NodePath("../bed_floor/CollisionShape3D")]
 
-[node name="bed_floor4" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("77_f8atq")]
+[node name="bed_floor4" parent="BehideObjects" instance=ExtResource("77_f8atq")]
 transform = Transform3D(0.0853647, 0, 0.99635, 0, 1, 0, -0.99635, 0, 0.0853647, -39.4513, 0, 1.81075)
-CollisionNodes = [NodePath("../bed_floor/CollisionShape3D")]
 
 [node name="keg5" parent="BehideObjects" instance=ExtResource("51_2w7no")]
 transform = Transform3D(0.999646, 0, -0.0266131, 0, 1, 0, 0.0266131, 0, 0.999646, -36.3, 0, 2)
@@ -1986,9 +1969,8 @@ light_color = Color(1, 0.741769, 0.563201, 1)
 light_energy = 0.2
 omni_attenuation = 1.5
 
-[node name="candle_thin3" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("76_kcrxe")]
+[node name="candle_thin3" parent="BehideObjects" instance=ExtResource("76_kcrxe")]
 transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -41.2852, 0.161767, 4.59899)
-CollisionNodes = [NodePath("../candle_thin2/CollisionShape3D")]
 
 [node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.866881, 0)
@@ -1996,9 +1978,8 @@ light_color = Color(1, 0.741769, 0.563201, 1)
 light_energy = 0.2
 omni_attenuation = 1.5
 
-[node name="candle_thin4" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("76_kcrxe")]
+[node name="candle_thin4" parent="BehideObjects" instance=ExtResource("76_kcrxe")]
 transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -41.2852, 0.161767, 2.62653)
-CollisionNodes = [NodePath("../candle_thin2/CollisionShape3D")]
 
 [node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.866881, 0)
@@ -2009,13 +1990,11 @@ omni_attenuation = 1.5
 [node name="barrel_small3" parent="BehideObjects" instance=ExtResource("50_8yjie")]
 transform = Transform3D(0.94398, 0, 0.330004, 0, 1, 0, -0.330004, 0, 0.94398, -35.269, 1.16415e-09, 3.62673)
 
-[node name="barrel_small4" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("50_8yjie")]
+[node name="barrel_small4" parent="BehideObjects" instance=ExtResource("50_8yjie")]
 transform = Transform3D(0.972382, 0, -0.233394, 0, 1, 0, 0.233394, 0, 0.972382, -35.0435, 1.16415e-09, 4.62009)
-CollisionNodes = [NodePath("../barrel_small3/CollisionShape3D")]
 
-[node name="barrel_small5" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("50_8yjie")]
+[node name="barrel_small5" parent="BehideObjects" instance=ExtResource("50_8yjie")]
 transform = Transform3D(0.984534, 0, -0.175195, 0, 1, 0, 0.175195, 0, 0.984534, -35.1312, 1, 4.10064)
-CollisionNodes = [NodePath("../barrel_small3/CollisionShape3D")]
 
 [node name="lander_A" parent="BehideObjects" instance=ExtResource("69_ncg7d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.5, 0, 10.5)
