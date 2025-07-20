@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 namespace Behide.Game.Player;
@@ -8,7 +9,14 @@ public partial class PlayerProp : PlayerMovements
     [Export] private Node3D currentVisualNode = null!;
     [Export] private CollisionShape3D[] collisionNodes = null!;
     [Export] private RayCast3D rayCast = null!;
+    private Vector3 initialCameraPosition = Vector3.Zero;
     private BehideObject? focusedBehideObject;
+
+    public override void _EnterTree()
+    {
+        base._EnterTree();
+        initialCameraPosition = cameraDisk.Position;
+    }
 
     public override void _Process(double delta)
     {
@@ -51,5 +59,17 @@ public partial class PlayerProp : PlayerMovements
         }
 
         collisionNodes = newCollisionNodes.ToArray();
+
+        AdjustCameraPosition();
+    }
+
+    private void AdjustCameraPosition()
+    {
+        var aabbs = currentVisualNode
+            .FindChildren("*", nameof(MeshInstance3D))
+            .Select(meshInstance3D => ((MeshInstance3D)meshInstance3D).GetAabb());
+
+        var globalAabb = aabbs.Aggregate(new Aabb(), (current, aabb) => current.Merge(aabb));
+        cameraDisk.Position = initialCameraPosition + globalAabb.GetCenter();
     }
 }
