@@ -69,7 +69,7 @@
 [ext_resource type="PackedScene" uid="uid://c4nmi7h7lh6vo" path="res://Assets/Models/Dungeon/Banner/banner_patternB_blue.gltf" id="55_2w7no"]
 [ext_resource type="PackedScene" uid="uid://dnlu33dngehr6" path="res://Prefabs/BehideObjects/Dungeon/Bottles/bottle_B_brown.tscn" id="60_jatlx"]
 [ext_resource type="PackedScene" uid="uid://cygeynvrh1tbb" path="res://Prefabs/BehideObjects/Dungeon/Plates/plate_small.tscn" id="65_bqcop"]
-[ext_resource type="PackedScene" uid="uid://baf01o6jv5x1f" path="res://Prefabs/BehideObjects/SpaceBase/Lander/Lander_A.tscn" id="69_ncg7d"]
+[ext_resource type="PackedScene" uid="uid://baf01o6jv5x1f" path="res://Prefabs/BehideObjects/SpaceBase/Lander/lander_A.tscn" id="69_ncg7d"]
 [ext_resource type="PackedScene" uid="uid://b6hfdqxspivd0" path="res://Prefabs/BehideObjects/Dungeon/Bottles/bottle_C_green.tscn" id="70_jatlx"]
 [ext_resource type="PackedScene" uid="uid://db8mhbmcal8d" path="res://Assets/Models/Dungeon/Props/Shelf/shelves.gltf" id="71_jatlx"]
 [ext_resource type="PackedScene" uid="uid://dx2s4l4xcn34j" path="res://Prefabs/BehideObjects/Dungeon/trunk_large_c.tscn" id="73_xikmb"]
@@ -1902,9 +1902,6 @@ transform = Transform3D(-0.0382309, 0, -0.999269, 0, 1, 0, 0.999269, 0, -0.03823
 transform = Transform3D(-0.059463, 0, 0.998231, 0, 1, 0, -0.998231, 0, -0.059463, -39.6, 0, 22.4)
 CollisionNodes = [NodePath("../RigidBody3D6/CollisionShape3D")]
 
-[node name="BehideObject" parent="BehideObjects" instance=ExtResource("69_ncg7d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.5, 0, 10.5)
-
 [node name="table_small5" parent="BehideObjects" instance=ExtResource("40_aidiq")]
 transform = Transform3D(0.998022, 0, -0.0628602, 0, 1, 0, 0.0628602, 0, 0.998022, -35.2306, 0, 20.7933)
 
@@ -2034,5 +2031,8 @@ CollisionNodes = [NodePath("../barrel_small3/CollisionShape3D")]
 [node name="barrel_small5" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("50_8yjie")]
 transform = Transform3D(0.984534, 0, -0.175195, 0, 1, 0, 0.175195, 0, 0.984534, -35.1312, 1, 4.10064)
 CollisionNodes = [NodePath("../barrel_small3/CollisionShape3D")]
+
+[node name="lander_A" parent="BehideObjects" instance=ExtResource("69_ncg7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.5, 0, 10.5)
 
 [editable path="Court/Little room/Walls/wall_doorway_scaffold2"]

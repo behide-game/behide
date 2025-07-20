@@ -3,7 +3,13 @@
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_oxdke"]
 [ext_resource type="PackedScene" uid="uid://f8nod5ujjayl" path="res://Assets/Models/SpaceBase/lander_B.gltf" id="2_oxdke"]
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_oyu5o"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_lb2pb"]
+height = 0.810151
+radius = 0.682617
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_oxdke"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_60aro"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
@@ -17,22 +23,13 @@ properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_lb2pb"]
-height = 0.810151
-radius = 0.682617
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_oxdke"]
-
-[node name="BehideObject" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+[node name="lander_B" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 script = ExtResource("1_oxdke")
-VisualNode = NodePath("lander_B2")
+VisualNode = NodePath("lander_B")
 CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2")]
 Mass = 1.0
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_oyu5o")
-
-[node name="lander_B2" parent="." instance=ExtResource("2_oxdke")]
+[node name="lander_B" parent="." instance=ExtResource("2_oxdke")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.400714, 0)
@@ -41,3 +38,6 @@ shape = SubResource("CylinderShape3D_lb2pb")
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.604774, 0)
 shape = SubResource("SphereShape3D_oxdke")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_60aro")

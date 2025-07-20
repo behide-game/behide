@@ -20,7 +20,7 @@ bg_color = Color(0.894118, 0.945098, 0.968627, 1)
 font_size = 20
 font_color = Color(0.0980392, 0.109804, 0.117647, 1)
 
-[node name="Supervisor" type="Node3D" node_paths=PackedStringArray("behideObjects")]
+[node name="Supervisor" type="Node3D" node_paths=PackedStringArray("preGameCountdown", "inGameCountdown", "preGameProp", "preGameHunter", "inGame", "endGame", "isPropLabel", "isHunterLabel", "propsWonLabel", "hunterWonLabel", "Spawner")]
 script = ExtResource("1_0pdhf")
 preGameCountdown = NodePath("UI/AdvancedLabelCountdown")
 inGameCountdown = NodePath("UI/In-game/LabelCountdown")
@@ -32,7 +32,6 @@ isPropLabel = NodePath("UI/In-game/IsProp")
 isHunterLabel = NodePath("UI/In-game/IsHunter")
 propsWonLabel = NodePath("UI/End-game/PropsWin")
 hunterWonLabel = NodePath("UI/End-game/HunterWins")
-behideObjects = NodePath("PlayerSpawner")
 openMenuAction = "open_menu"
 Spawner = NodePath("PlayerSpawner")
 
