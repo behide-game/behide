@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bje1262rtrqw2"]
+[gd_scene load_steps=5 format=3 uid="uid://bje1262rtrqw2"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_03fh8"]
 [ext_resource type="PackedScene" uid="uid://ck1ohytt5n1ll" path="res://Assets/Models/Dungeon/Props/Barrel/barrel_small.gltf" id="2_03fh8"]
@@ -7,13 +7,31 @@
 height = 0.99876
 radius = 0.46
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_03fh8"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
 [node name="barrel_small" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 script = ExtResource("1_03fh8")
-VisualNode = NodePath("barrel_small2")
+VisualNode = NodePath("barrel_small")
 CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
 
-[node name="barrel_small2" parent="." instance=ExtResource("2_03fh8")]
+[node name="barrel_small" parent="." instance=ExtResource("2_03fh8")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.49938, 0)
 shape = SubResource("CylinderShape3D_brtb4")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_03fh8")

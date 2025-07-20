@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bx6v646fmrhir"]
+[gd_scene load_steps=5 format=3 uid="uid://bx6v646fmrhir"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_l4jpx"]
 [ext_resource type="PackedScene" uid="uid://bfl2rostjvp8i" path="res://Assets/Models/Dungeon/Props/Candle/candle_triple.gltf" id="2_rkgqh"]
@@ -7,14 +7,32 @@
 height = 0.8
 radius = 0.25
 
-[node name="candle_triple3" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hdllg"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="candle_triple" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 0, 0, 0)
 script = ExtResource("1_l4jpx")
-VisualNode = NodePath("candle_triple2")
+VisualNode = NodePath("candle_triple")
 CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
 
-[node name="candle_triple2" parent="." instance=ExtResource("2_rkgqh")]
+[node name="candle_triple" parent="." instance=ExtResource("2_rkgqh")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0925112, 0.4, -0.00966072)
 shape = SubResource("CylinderShape3D_kcrxe")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_hdllg")

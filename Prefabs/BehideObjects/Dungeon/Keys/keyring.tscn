@@ -6,7 +6,7 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_4pj1h"]
 size = Vector3(0.7, 0.2, 1.15)
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_oyu5o"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_tmahi"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
@@ -23,7 +23,7 @@ properties/3/replication_mode = 2
 [node name="keyring" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 script = ExtResource("1_68h86")
 VisualNode = NodePath("keyring")
-CollisionNodes = []
+CollisionNodes = [NodePath("CollisionShape3D")]
 Mass = 1.0
 
 [node name="keyring" parent="." instance=ExtResource("2_tmahi")]
@@ -33,4 +33,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02, 0.1, -0.075)
 shape = SubResource("BoxShape3D_4pj1h")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_oyu5o")
+replication_config = SubResource("SceneReplicationConfig_tmahi")
