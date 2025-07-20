@@ -5,7 +5,7 @@ namespace Behide.Game.Player;
 // This script run on authority peer.
 public partial class PlayerMovements : CharacterBody3D
 {
-    protected Node3D cameraDisk = null!;
+    protected Node3D CameraDisk = null!;
 
     // Get the gravity from the project settings to be synced with RigidBody nodes.
     private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -38,13 +38,13 @@ public partial class PlayerMovements : CharacterBody3D
         Transform = transform;
 
         // Retrieve child node
-        cameraDisk = GetNode<Node3D>("./CameraDisk");
+        CameraDisk = GetNode<Node3D>("./CameraDisk");
 
         // Only when we are the authority
         if (IsMultiplayerAuthority())
         {
             // Set new camera
-            cameraDisk.GetNode<Camera3D>("./Camera").MakeCurrent();
+            CameraDisk.GetNode<Camera3D>("./Camera").MakeCurrent();
 
             // Lock mouse
             Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -147,9 +147,6 @@ public partial class PlayerMovements : CharacterBody3D
         Rotate(Vector3.Up, rotationY);
 
         // Up / Down (Rotate camera disk)
-        var cameraTransform = cameraDisk.Transform;
-        cameraTransform.Basis = Basis.Identity;
-        cameraDisk.Transform = cameraTransform;
-        cameraDisk.Rotate(Vector3.Right, rotationX);
+        CameraDisk.SetRotation(new Vector3(rotationX, 0, 0));
     }
 }

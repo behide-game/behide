@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
@@ -15,7 +16,7 @@ public partial class PlayerProp : PlayerMovements
     public override void _EnterTree()
     {
         base._EnterTree();
-        initialCameraPosition = cameraDisk.Position;
+        initialCameraPosition = CameraDisk.Position;
     }
 
     public override void _Process(double delta)
@@ -65,11 +66,16 @@ public partial class PlayerProp : PlayerMovements
 
     private void AdjustCameraPosition()
     {
-        var aabbs = currentVisualNode
-            .FindChildren("*", nameof(MeshInstance3D))
-            .Select(meshInstance3D => ((MeshInstance3D)meshInstance3D).GetAabb());
+        var globalAabb = currentVisualNode is MeshInstance3D meshInstance3d
+            ? meshInstance3d.GetAabb()
+            : currentVisualNode
+                .FindChildren("*", nameof(MeshInstance3D))
+                .Select(meshInstance3D => ((MeshInstance3D)meshInstance3D).GetAabb())
+                .Aggregate(new Aabb(), (current, aabb) => current.Merge(aabb));
 
-        var globalAabb = aabbs.Aggregate(new Aabb(), (current, aabb) => current.Merge(aabb));
-        cameraDisk.Position = initialCameraPosition + globalAabb.GetCenter();
+        CameraDisk.Position = initialCameraPosition + globalAabb.GetCenter();
+
+        var newScale = Math.Max(0.1f, Mathf.Sqrt((globalAabb.Size.X + globalAabb.Size.Y + globalAabb.Size.Z) / 3f));
+        CameraDisk.Scale = new Vector3(newScale, newScale, newScale);
     }
 }
