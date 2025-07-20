@@ -21,3 +21,4 @@ Scenes/**/*.exr.import
 target/
 *.bin
 *.gltf
+Assets/Models/**/*.png

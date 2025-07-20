@@ -27,5 +27,6 @@
   <ItemGroup>
     <Content Include="README.md" CopyToOutputDirectory="Never" />
     <Content Include="Scripts\Supervisors\README.md" CopyToOutputDirectory="Never" />
+    <Content Include="Prefabs\Supervisors\README.md" CopyToOutputDirectory="Never" />
   </ItemGroup>
 </Project>
