@@ -21,10 +21,11 @@ properties/3/spawn = true
 properties/3/replication_mode = 2
 
 [node name="trunk_large_c" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+mass = 3.0
 script = ExtResource("1_0puwy")
 VisualNode = NodePath("trunk_large_c")
 CollisionNodes = [NodePath("CollisionShape3D")]
-Mass = 1.0
+Mass = 3.0
 
 [node name="trunk_large_c" parent="." instance=ExtResource("2_0puwy")]
 

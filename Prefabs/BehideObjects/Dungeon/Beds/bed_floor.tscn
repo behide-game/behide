@@ -21,10 +21,11 @@ properties/3/spawn = true
 properties/3/replication_mode = 2
 
 [node name="bed_floor" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+mass = 5.0
 script = ExtResource("1_lupbi")
 VisualNode = NodePath("bed_floor")
 CollisionNodes = [NodePath("CollisionShape3D")]
-Mass = 1.0
+Mass = 5.0
 
 [node name="bed_floor" parent="." instance=ExtResource("2_lupbi")]
 

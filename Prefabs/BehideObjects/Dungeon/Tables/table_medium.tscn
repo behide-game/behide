@@ -24,10 +24,11 @@ properties/3/spawn = true
 properties/3/replication_mode = 2
 
 [node name="table_medium" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+mass = 6.0
 script = ExtResource("1_kcojd")
 VisualNode = NodePath("table_medium")
 CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2"), NodePath("CollisionShape3D3")]
-Mass = 1.0
+Mass = 6.0
 
 [node name="table_medium" parent="." instance=ExtResource("2_kcojd")]
 
