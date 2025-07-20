@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://cehw1sq4q5yu8"]
 
-[ext_resource type="Script" uid="uid://38mycbkkwpw4" path="res://Scripts/Supervisors/PropHuntSupervisor.cs" id="1_0pdhf"]
+[ext_resource type="Script" uid="uid://38mycbkkwpw4" path="res://Prefabs/Supervisors/PropHuntSupervisor.cs" id="1_0pdhf"]
 [ext_resource type="Script" uid="uid://dlbrls7b4x0kx" path="res://Scripts/Supervisors/PlayerSpawner.cs" id="3_l302j"]
 [ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/Player/player.tscn" id="4_nsml5"]
 [ext_resource type="Script" uid="uid://sggdi83gahf1" path="res://Scenes/Controls/Countdown/AdvancedLabelCountdown.cs" id="5_7hsgi"]
@@ -20,7 +20,7 @@ bg_color = Color(0.894118, 0.945098, 0.968627, 1)
 font_size = 20
 font_color = Color(0.0980392, 0.109804, 0.117647, 1)
 
-[node name="Supervisor" type="Node3D" node_paths=PackedStringArray("preGameCountdown", "inGameCountdown", "preGameProp", "preGameHunter", "inGame", "endGame", "isPropLabel", "isHunterLabel", "propsWonLabel", "hunterWonLabel", "Spawner")]
+[node name="Supervisor" type="Node3D" node_paths=PackedStringArray("behideObjects")]
 script = ExtResource("1_0pdhf")
 preGameCountdown = NodePath("UI/AdvancedLabelCountdown")
 inGameCountdown = NodePath("UI/In-game/LabelCountdown")
@@ -32,6 +32,7 @@ isPropLabel = NodePath("UI/In-game/IsProp")
 isHunterLabel = NodePath("UI/In-game/IsHunter")
 propsWonLabel = NodePath("UI/End-game/PropsWin")
 hunterWonLabel = NodePath("UI/End-game/HunterWins")
+behideObjects = NodePath("PlayerSpawner")
 openMenuAction = "open_menu"
 Spawner = NodePath("PlayerSpawner")
 
