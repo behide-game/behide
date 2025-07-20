@@ -5,7 +5,7 @@ using Godot;
 
 namespace Behide.Game.Player;
 
-public partial class PlayerProp : PlayerMovements
+public partial class PlayerProp : PlayerBody
 {
     [Export] private Node3D currentVisualNode = null!;
     [Export] private CollisionShape3D[] collisionNodes = null!;
@@ -63,6 +63,9 @@ public partial class PlayerProp : PlayerMovements
         }
 
         collisionNodes = newCollisionNodes.ToArray();
+
+        // Set mass
+        Mass = behideObject.Mass;
 
         AdjustCameraPosition();
     }

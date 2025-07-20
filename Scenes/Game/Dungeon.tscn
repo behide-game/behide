@@ -125,7 +125,7 @@ size = Vector3(4.65, 0.25, 4)
 size = Vector3(5.65, 0.25, 4)
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_8xxts"]
-points = PackedVector3Array(0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0, 5.5, 8, 0, 5.5, 0, 8, 5.5)
+points = PackedVector3Array(0, 0, 0, 8, 0, 0, 0, 8, 0, 0, 0, 5.75, 8, 0, 5.75, 0, 8, 5.75)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_n56fu"]
 size = Vector3(12.6, 1.1, 0.5)

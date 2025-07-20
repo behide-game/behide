@@ -3,6 +3,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using Behide.Game.Player;
 using Godot;
 
 namespace Behide.Game.Supervisors;
@@ -49,7 +50,7 @@ public partial class PlayerSpawner : Node
         var playerToSpawn = playerObservable.Value;
 
         // Create node
-        var playerNode = playerPrefab.Instantiate<Node3D>();
+        var playerNode = playerPrefab.Instantiate<PlayerBody>();
         playerNode.Name = playerToSpawn.PeerId.ToString();
         playerNode.Position = new Vector3(0, 0, playerToSpawn.PeerId * 4);
 
@@ -59,8 +60,7 @@ public partial class PlayerSpawner : Node
         // Disable visibility if authority
         if (playerToSpawn.PeerId != localPlayer.Value.PeerId) RpcId(playerToSpawn.PeerId, nameof(SpawnedPlayerRpc));
 
-        var synchronizer = playerNode.GetNode<MultiplayerSynchronizer>("PositionSynchronizer");
-        synchronizer.SetVisibilityPublic(false);
+        playerNode.PositionSynchronizer.SetVisibilityPublic(false);
 
         // Enable visibility when it is ready on others peers (to prevent MultiplayerSynchronizer bugs)
         foreach (var (spawnedOnPeerId, onNodeSpawned) in onPlayerSpawned)
@@ -69,7 +69,7 @@ public partial class PlayerSpawner : Node
                 await onNodeSpawned.Take(1); // Wait the player's node to have spawned
 
                 // Enable visibility
-                synchronizer.CallDeferred(
+                playerNode.PositionSynchronizer.CallDeferred(
                     MultiplayerSynchronizer.MethodName.SetVisibilityFor,
                     spawnedOnPeerId,
                     true
