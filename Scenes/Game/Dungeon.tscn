@@ -1783,9 +1783,8 @@ transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 
 [node name="coin_stack_medium3" parent="BehideObjects" instance=ExtResource("45_ij5eg")]
 transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, -12.9808, 4.05, 13.1515)
 
-[node name="coin_stack_medium4" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("45_ij5eg")]
+[node name="coin_stack_medium4" parent="BehideObjects" instance=ExtResource("45_ij5eg")]
 transform = Transform3D(-0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, -0.258819, -11.0937, 4.05, 11.0447)
-CollisionNodes = [null]
 
 [node name="table_long" parent="BehideObjects" instance=ExtResource("48_7sqaq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 20)
@@ -1821,28 +1820,23 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -12.39
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -10.3964, 0, 22.1319)
 CollisionNodes = [NodePath("../keg/CollisionShape3D"), NodePath("../keg/CollisionShape3D2")]
 
-[node name="bottle_A_green2" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("49_f5e6i")]
+[node name="bottle_A_green2" parent="BehideObjects" instance=ExtResource("49_f5e6i")]
 transform = Transform3D(9.01571e-09, -0.206256, 0.978498, -1, -4.37114e-08, -1.64918e-15, 4.27715e-08, -0.978498, -0.206256, 1.47359, 6.55374, 13.0075)
-CollisionNodes = [null]
 
 [node name="bottle_B_brown" parent="BehideObjects" instance=ExtResource("60_jatlx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.9, 1, 11.6536)
 
-[node name="RigidBody3D5" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("43_aidiq")]
+[node name="RigidBody3D5" parent="BehideObjects" instance=ExtResource("43_aidiq")]
 transform = Transform3D(0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, 0.258819, -32.3, 0, 12.1)
-CollisionNodes = [null]
 
-[node name="bottle_A_brown" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("36_o14ff")]
+[node name="bottle_A_brown" parent="BehideObjects" instance=ExtResource("36_o14ff")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.7, 1.5, 11.9)
-CollisionNodes = [null]
 
-[node name="bottle_B_green" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("37_up8ek")]
+[node name="bottle_B_green" parent="BehideObjects" instance=ExtResource("37_up8ek")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.1, 1.5, 12.2)
-CollisionNodes = [null]
 
-[node name="stool2" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("42_7sqaq")]
+[node name="stool2" parent="BehideObjects" instance=ExtResource("42_7sqaq")]
 transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, -25.9, 0, 22.7)
-CollisionNodes = [null]
 
 [node name="trunk_medium" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("39_behv8")]
 transform = Transform3D(-0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, -0.258819, -27, 0, 23)
@@ -1852,41 +1846,32 @@ CollisionNodes = [null, null]
 transform = Transform3D(0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, 0.258819, -24.8, 0, 22.9)
 CollisionNodes = [null, null]
 
-[node name="table_small" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("40_aidiq")]
+[node name="table_small" parent="BehideObjects" instance=ExtResource("40_aidiq")]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -22, 0, 12)
-CollisionNodes = [null]
 
-[node name="table_small2" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("40_aidiq")]
+[node name="table_small2" parent="BehideObjects" instance=ExtResource("40_aidiq")]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -26, 0, 12)
-CollisionNodes = [null]
 
-[node name="table_small3" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("40_aidiq")]
+[node name="table_small3" parent="BehideObjects" instance=ExtResource("40_aidiq")]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -26, 0, 16)
-CollisionNodes = [null]
 
-[node name="table_small4" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("40_aidiq")]
+[node name="table_small4" parent="BehideObjects" instance=ExtResource("40_aidiq")]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -22, 0, 16)
-CollisionNodes = [null]
 
-[node name="trunk_medium3" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("41_b5oh7")]
+[node name="trunk_medium3" parent="BehideObjects" instance=ExtResource("41_b5oh7")]
 transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, -22, 1, 16)
-CollisionNodes = [null]
 
-[node name="trunk_medium4" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("42_lb4e7")]
+[node name="trunk_medium4" parent="BehideObjects" instance=ExtResource("42_lb4e7")]
 transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, -21.9, 1, 12.3)
-CollisionNodes = [null]
 
-[node name="trunk_medium5" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("43_dd1r3")]
+[node name="trunk_medium5" parent="BehideObjects" instance=ExtResource("43_dd1r3")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -26, 1, 16)
-CollisionNodes = [null]
 
-[node name="trunk_medium6" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("41_b5oh7")]
+[node name="trunk_medium6" parent="BehideObjects" instance=ExtResource("41_b5oh7")]
 transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, -26, 1, 12)
-CollisionNodes = [null]
 
-[node name="bottle_A_labeled_green" parent="BehideObjects" node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("44_ncg7d")]
+[node name="bottle_A_labeled_green" parent="BehideObjects" instance=ExtResource("44_ncg7d")]
 transform = Transform3D(-0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, -0.965926, -25.4, 0, 16.5)
-CollisionNodes = [null]
 
 [node name="plate_small" parent="BehideObjects" instance=ExtResource("65_bqcop")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.6483, 0.5, 22.8031)
