@@ -30,8 +30,8 @@ public partial class PropHuntSupervisor : Supervisor
     [Export] private Label hunterWonLabel = null!;
 
     private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "Supervisor/PropHunt");
-    private static readonly TimeSpan PreGameDuration = TimeSpan.FromSeconds(1);
-    private static readonly TimeSpan InGameDuration = TimeSpan.FromMinutes(5);
+    private static readonly TimeSpan preGameDuration = TimeSpan.FromSeconds(1);
+    private static readonly TimeSpan inGameDuration = TimeSpan.FromMinutes(5);
 
     private readonly TaskCompletionSource<int> hunterPeerIdTcs = new();
     private Task<int> HunterPeerId => hunterPeerIdTcs.Task;
@@ -65,7 +65,7 @@ public partial class PropHuntSupervisor : Supervisor
 
             if (!IsMultiplayerAuthority()) return;
             Spawner.SpawnPlayer(HunterPeerId.Result);
-            inGameCountdown.StartCountdown(InGameDuration);
+            inGameCountdown.StartCountdown(inGameDuration);
         };
 
         inGameCountdown.TimeElapsed += () =>
@@ -91,7 +91,7 @@ public partial class PropHuntSupervisor : Supervisor
                 Spawner.CallDeferred(nameof(Spawner.SpawnPlayer), player.Key); // TODO: Add spawn points
             }
 
-            preGameCountdown.StartCountdownDeferred(PreGameDuration);
+            preGameCountdown.StartCountdownDeferred(preGameDuration);
         });
     }
 

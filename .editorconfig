@@ -10,3 +10,12 @@ indent_size = 2
 
 [*.gd]
 indent_style = tab
+
+[*.cs]
+# Instance fields are camelCase and don't start with _
+dotnet_naming_rule.private_instance_fields_should_be_camel_case.severity = warning
+dotnet_naming_rule.private_instance_fields_should_be_camel_case.symbols = private_instance_fields
+dotnet_naming_rule.private_instance_fields_should_be_camel_case.style = private_instance_field_style
+dotnet_naming_symbols.private_instance_fields.applicable_kinds = field
+dotnet_naming_symbols.private_instance_fields.applicable_accessibilities = private
+dotnet_naming_style.private_instance_field_style.capitalization = camel_case
