@@ -1,0 +1,53 @@
+[gd_scene load_steps=7 format=3 uid="uid://ckdmku8xbwnnh"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_tpw7n"]
+[ext_resource type="PackedScene" uid="uid://b7swgbhyjdbjt" path="res://Assets/Models/Dungeon/Props/Barrel/barrel_large.gltf" id="2_8l186"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_brtb4"]
+height = 0.26469
+radius = 0.7
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_8l186"]
+height = 1.1875
+radius = 0.88
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_iqdam"]
+height = 0.4
+radius = 0.68
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_8l186"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="barrel_large" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+script = ExtResource("1_tpw7n")
+VisualNode = NodePath("barrel_large")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2"), NodePath("CollisionShape3D3")]
+Mass = 1.0
+
+[node name="barrel_large" parent="." instance=ExtResource("2_8l186")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.70269, 0)
+shape = SubResource("CylinderShape3D_brtb4")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.98125, 0)
+shape = SubResource("CylinderShape3D_8l186")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("CylinderShape3D_iqdam")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_8l186")

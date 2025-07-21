@@ -37,6 +37,10 @@ project/assembly_name="Behide"
 
 run/main_run_args="--log-to-godot-sink"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/lightmap_probe_grid/plugin.cfg")
+
 [input]
 
 move_forward={
@@ -80,6 +84,12 @@ open_menu={
 , Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":6,"pressure":0.0,"pressed":false,"script":null)
 ]
 }
+morph={
+"deadzone": 0.2,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":1,"canceled":false,"pressed":false,"double_click":false,"script":null)
+, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":0,"pressure":0.0,"pressed":false,"script":null)
+]
+}
 
 [physics]
 
@@ -90,3 +100,7 @@ common/physics_interpolation=true
 [rendering]
 
 textures/vram_compression/import_s3tc_bptc=true
+global_illumination/gi/use_half_resolution=true
+global_illumination/sdfgi/probe_ray_count=0
+global_illumination/sdfgi/frames_to_update_lights=4
+occlusion_culling/use_occlusion_culling=true

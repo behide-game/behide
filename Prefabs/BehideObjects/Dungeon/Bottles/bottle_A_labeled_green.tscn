@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://dma8ykq3fequt"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_mamxj"]
+[ext_resource type="PackedScene" uid="uid://cvyj1dd5ega4p" path="res://Assets/Models/Dungeon/Props/Bottle/bottle_A_labeled_green.gltf" id="2_w2tuk"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_aai3l"]
+height = 0.88
+radius = 0.18
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_mamxj"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="bottle_A_labeled_green" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+script = ExtResource("1_mamxj")
+VisualNode = NodePath("bottle_A_labeled_green")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="bottle_A_labeled_green" parent="." instance=ExtResource("2_w2tuk")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.44, 0)
+shape = SubResource("CylinderShape3D_aai3l")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_mamxj")

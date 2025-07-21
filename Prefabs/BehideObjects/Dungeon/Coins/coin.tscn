@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=3 uid="uid://dvoluuyi3o1ya"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_aefr8"]
+[ext_resource type="PackedScene" uid="uid://cm0rhkqhhxghr" path="res://Assets/Models/Dungeon/Props/Coin/coin.gltf" id="2_aefr8"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_f8atq"]
+height = 0.125
+radius = 0.16748
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_fypgb"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="coin" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, 0, 0, 0)
+script = ExtResource("1_aefr8")
+VisualNode = NodePath("coin")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="coin" parent="." instance=ExtResource("2_aefr8")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.999997, 0, 1.49012e-08, 0, 1, 0, -1.49012e-08, 0, 0.999997, 0, 0, 0)
+shape = SubResource("CylinderShape3D_f8atq")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_fypgb")

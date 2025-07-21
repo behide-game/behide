@@ -1,19 +1,24 @@
-[gd_scene load_steps=12 format=3 uid="uid://bq63a6mdt3w4"]
+[gd_scene load_steps=14 format=3 uid="uid://bh3nk67jxv7k"]
 
+[ext_resource type="PackedScene" uid="uid://cfyb4305uyrca" path="res://Scenes/Game/Dungeon.tscn" id="3_ln2h6"]
+[ext_resource type="LightmapGIData" uid="uid://dgwf5ticdlnsv" path="res://Scenes/Game/Game.lmbake" id="3_ti1oi"]
 [ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Assets/Shaders/chromatic_aberration.tres" id="4_32cbu"]
 [ext_resource type="Environment" uid="uid://c8ttkksgix01d" path="res://Scenes/Game/environment.tres" id="4_tyqxg"]
-[ext_resource type="PackedScene" uid="uid://cuuh5753pn6hj" path="res://Prefabs/BehideObject/behide_object.tscn" id="6_s06yr"]
-[ext_resource type="Resource" uid="uid://c7xkht1loifw3" path="res://Prefabs/BehideObjects/blue_cube/blue_cube.tres" id="7_yfvw8"]
-[ext_resource type="Resource" uid="uid://s6ycpy75saj2" path="res://Prefabs/BehideObjects/green_cube/green_cube.tres" id="8_yyqxy"]
-[ext_resource type="Resource" uid="uid://dwlhlbsva836h" path="res://Prefabs/BehideObjects/purple_cube/purple_cube.tres" id="9_k3vrc"]
+[ext_resource type="Script" uid="uid://qiap5mw17kh1" path="res://addons/lightmap_probe_grid/lightmap_probe_grid.gd" id="5_bsqcq"]
+[ext_resource type="PackedScene" uid="uid://ejs15n81bpnf" path="res://Prefabs/BehideObjects/Cube/yellow_cube.tscn" id="8_bsqcq"]
+[ext_resource type="PackedScene" uid="uid://cwbve28vlg05s" path="res://Prefabs/BehideObjects/Cube/purple_cube.tscn" id="9_jf0ra"]
 [ext_resource type="PackedScene" uid="uid://cehw1sq4q5yu8" path="res://Prefabs/Supervisors/PropHuntSupervisor.tscn" id="9_m1o7v"]
-[ext_resource type="Resource" uid="uid://chra8ec3wkom4" path="res://Prefabs/BehideObjects/yellow_cube/yellow_cube.tres" id="10_rnlv5"]
-[ext_resource type="Resource" uid="uid://bocjeygw1lfar" path="res://Prefabs/BehideObjects/mirror_ball/mirror_ball.tres" id="10_wgnhc"]
+[ext_resource type="PackedScene" uid="uid://bq7j4kkgcstpo" path="res://Prefabs/BehideObjects/Cube/mirror_cube.tscn" id="10_fg52j"]
+[ext_resource type="PackedScene" uid="uid://xmljgt42lsch" path="res://Prefabs/BehideObjects/Cube/green_cube.tscn" id="11_6581v"]
+[ext_resource type="PackedScene" uid="uid://ewhknfhtqscj" path="res://Prefabs/BehideObjects/Cube/blue_cube.tscn" id="12_6hht6"]
+[ext_resource type="PackedScene" uid="uid://damtas0dagou5" path="res://Prefabs/BehideObjects/Sphere/mirror_sphere.tscn" id="13_kjp6r"]
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_10ki7"]
-size = Vector2(1, 1)
-
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_edkrd"]
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_ti1oi"]
+auto_exposure_speed = 4.0
+dof_blur_far_distance = 20.0
+dof_blur_far_transition = 20.0
+dof_blur_amount = 0.05
+auto_exposure_min_sensitivity = 100.0
 
 [node name="multiplayer" type="Node3D"]
 
@@ -29,77 +34,1248 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("4_tyqxg")
+camera_attributes = SubResource("CameraAttributesPractical_ti1oi")
+
 [node name="World" type="Node3D" parent="."]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="World"]
-environment = ExtResource("4_tyqxg")
+[node name="LightmapGI" type="LightmapGI" parent="World"]
+quality = 0
+generate_probes_subdiv = 0
+light_data = ExtResource("3_ti1oi")
 
-[node name="Light" type="DirectionalLight3D" parent="World"]
-transform = Transform3D(0.979768, -0.0894539, 0.179033, 0, 0.894552, 0.446963, -0.200137, -0.43792, 0.876454, 0, 4.47552, 0)
+[node name="Sun" type="DirectionalLight3D" parent="World"]
+transform = Transform3D(0.500003, -0.749999, 0.43301, -1.49013e-08, 0.499998, 0.866027, -0.866023, -0.433016, 0.250001, 5, 16, -34)
 shadow_enabled = true
 
-[node name="Ground" type="StaticBody3D" parent="World"]
-transform = Transform3D(40, 0, 0, 0, 40, 0, 0, 0, 40, 0, 0, 0)
+[node name="Dungeon" parent="World" instance=ExtResource("3_ln2h6")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 6, 0, 6)
 
-[node name="Plane" type="MeshInstance3D" parent="World/Ground"]
-mesh = SubResource("PlaneMesh_10ki7")
+[node name="LightmapProbeGrid" type="Node3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.1225, 3.64508, -0.1224)
+visible = false
+script = ExtResource("5_bsqcq")
+size = Vector3(10.8031, 6.29016, 12.2862)
+probes_number = Vector3i(5, 4, 6)
+far_distance = 1.0
+object_size = 1.0
+metadata/_custom_type_script = "uid://qiap5mw17kh1"
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Ground"]
-shape = SubResource("WorldBoundaryShape3D_edkrd")
+[node name="LightmapProbe 0, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, 3.14508, 6.14311)
+
+[node name="LightmapProbe 0, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, 3.14508, 3.68587)
+
+[node name="LightmapProbe 0, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, 3.14508, 1.22862)
+
+[node name="LightmapProbe 0, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, 3.14508, -1.22862)
+
+[node name="LightmapProbe 0, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, 3.14508, -3.68587)
+
+[node name="LightmapProbe 0, 0, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, 3.14508, -6.14311)
+
+[node name="LightmapProbe 0, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, 1.04836, 6.14311)
+
+[node name="LightmapProbe 0, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, 1.04836, 3.68587)
+
+[node name="LightmapProbe 0, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, 1.04836, 1.22862)
+
+[node name="LightmapProbe 0, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, 1.04836, -1.22862)
+
+[node name="LightmapProbe 0, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, 1.04836, -3.68587)
+
+[node name="LightmapProbe 0, 1, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, 1.04836, -6.14311)
+
+[node name="LightmapProbe 0, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, -1.04836, 6.14311)
+
+[node name="LightmapProbe 0, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, -1.04836, 3.68587)
+
+[node name="LightmapProbe 0, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, -1.04836, 1.22862)
+
+[node name="LightmapProbe 0, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, -1.04836, -1.22862)
+
+[node name="LightmapProbe 0, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, -1.04836, -3.68587)
+
+[node name="LightmapProbe 0, 2, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, -1.04836, -6.14311)
+
+[node name="LightmapProbe 0, 3, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, -3.14508, 6.14311)
+
+[node name="LightmapProbe 0, 3, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, -3.14508, 3.68587)
+
+[node name="LightmapProbe 0, 3, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, -3.14508, 1.22862)
+
+[node name="LightmapProbe 0, 3, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, -3.14508, -1.22862)
+
+[node name="LightmapProbe 0, 3, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, -3.14508, -3.68587)
+
+[node name="LightmapProbe 0, 3, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.40157, -3.14508, -6.14311)
+
+[node name="LightmapProbe 1, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, 3.14508, 6.14311)
+
+[node name="LightmapProbe 1, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, 3.14508, 3.68587)
+
+[node name="LightmapProbe 1, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, 3.14508, 1.22862)
+
+[node name="LightmapProbe 1, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, 3.14508, -1.22862)
+
+[node name="LightmapProbe 1, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, 3.14508, -3.68587)
+
+[node name="LightmapProbe 1, 0, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, 3.14508, -6.14311)
+
+[node name="LightmapProbe 1, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, 1.04836, 6.14311)
+
+[node name="LightmapProbe 1, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, 1.04836, 3.68587)
+
+[node name="LightmapProbe 1, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, 1.04836, 1.22862)
+
+[node name="LightmapProbe 1, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, 1.04836, -1.22862)
+
+[node name="LightmapProbe 1, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, 1.04836, -3.68587)
+
+[node name="LightmapProbe 1, 1, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, 1.04836, -6.14311)
+
+[node name="LightmapProbe 1, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, -1.04836, 6.14311)
+
+[node name="LightmapProbe 1, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, -1.04836, 3.68587)
+
+[node name="LightmapProbe 1, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, -1.04836, 1.22862)
+
+[node name="LightmapProbe 1, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, -1.04836, -1.22862)
+
+[node name="LightmapProbe 1, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, -1.04836, -3.68587)
+
+[node name="LightmapProbe 1, 2, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, -1.04836, -6.14311)
+
+[node name="LightmapProbe 1, 3, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, -3.14508, 6.14311)
+
+[node name="LightmapProbe 1, 3, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, -3.14508, 3.68587)
+
+[node name="LightmapProbe 1, 3, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, -3.14508, 1.22862)
+
+[node name="LightmapProbe 1, 3, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, -3.14508, -1.22862)
+
+[node name="LightmapProbe 1, 3, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, -3.14508, -3.68587)
+
+[node name="LightmapProbe 1, 3, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70078, -3.14508, -6.14311)
+
+[node name="LightmapProbe 2, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.14508, 6.14311)
+
+[node name="LightmapProbe 2, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.14508, 3.68587)
+
+[node name="LightmapProbe 2, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.14508, 1.22862)
+
+[node name="LightmapProbe 2, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.14508, -1.22862)
+
+[node name="LightmapProbe 2, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.14508, -3.68587)
+
+[node name="LightmapProbe 2, 0, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.14508, -6.14311)
+
+[node name="LightmapProbe 2, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04836, 6.14311)
+
+[node name="LightmapProbe 2, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04836, 3.68587)
+
+[node name="LightmapProbe 2, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04836, 1.22862)
+
+[node name="LightmapProbe 2, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04836, -1.22862)
+
+[node name="LightmapProbe 2, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04836, -3.68587)
+
+[node name="LightmapProbe 2, 1, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04836, -6.14311)
+
+[node name="LightmapProbe 2, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.04836, 6.14311)
+
+[node name="LightmapProbe 2, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.04836, 3.68587)
+
+[node name="LightmapProbe 2, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.04836, 1.22862)
+
+[node name="LightmapProbe 2, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.04836, -1.22862)
+
+[node name="LightmapProbe 2, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.04836, -3.68587)
+
+[node name="LightmapProbe 2, 2, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.04836, -6.14311)
+
+[node name="LightmapProbe 2, 3, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.14508, 6.14311)
+
+[node name="LightmapProbe 2, 3, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.14508, 3.68587)
+
+[node name="LightmapProbe 2, 3, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.14508, 1.22862)
+
+[node name="LightmapProbe 2, 3, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.14508, -1.22862)
+
+[node name="LightmapProbe 2, 3, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.14508, -3.68587)
+
+[node name="LightmapProbe 2, 3, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.14508, -6.14311)
+
+[node name="LightmapProbe 3, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, 3.14508, 6.14311)
+
+[node name="LightmapProbe 3, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, 3.14508, 3.68587)
+
+[node name="LightmapProbe 3, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, 3.14508, 1.22862)
+
+[node name="LightmapProbe 3, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, 3.14508, -1.22862)
+
+[node name="LightmapProbe 3, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, 3.14508, -3.68587)
+
+[node name="LightmapProbe 3, 0, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, 3.14508, -6.14311)
+
+[node name="LightmapProbe 3, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, 1.04836, 6.14311)
+
+[node name="LightmapProbe 3, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, 1.04836, 3.68587)
+
+[node name="LightmapProbe 3, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, 1.04836, 1.22862)
+
+[node name="LightmapProbe 3, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, 1.04836, -1.22862)
+
+[node name="LightmapProbe 3, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, 1.04836, -3.68587)
+
+[node name="LightmapProbe 3, 1, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, 1.04836, -6.14311)
+
+[node name="LightmapProbe 3, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, -1.04836, 6.14311)
+
+[node name="LightmapProbe 3, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, -1.04836, 3.68587)
+
+[node name="LightmapProbe 3, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, -1.04836, 1.22862)
+
+[node name="LightmapProbe 3, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, -1.04836, -1.22862)
+
+[node name="LightmapProbe 3, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, -1.04836, -3.68587)
+
+[node name="LightmapProbe 3, 2, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, -1.04836, -6.14311)
+
+[node name="LightmapProbe 3, 3, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, -3.14508, 6.14311)
+
+[node name="LightmapProbe 3, 3, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, -3.14508, 3.68587)
+
+[node name="LightmapProbe 3, 3, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, -3.14508, 1.22862)
+
+[node name="LightmapProbe 3, 3, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, -3.14508, -1.22862)
+
+[node name="LightmapProbe 3, 3, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, -3.14508, -3.68587)
+
+[node name="LightmapProbe 3, 3, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.70078, -3.14508, -6.14311)
+
+[node name="LightmapProbe 4, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, 3.14508, 6.14311)
+
+[node name="LightmapProbe 4, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, 3.14508, 3.68587)
+
+[node name="LightmapProbe 4, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, 3.14508, 1.22862)
+
+[node name="LightmapProbe 4, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, 3.14508, -1.22862)
+
+[node name="LightmapProbe 4, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, 3.14508, -3.68587)
+
+[node name="LightmapProbe 4, 0, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, 3.14508, -6.14311)
+
+[node name="LightmapProbe 4, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, 1.04836, 6.14311)
+
+[node name="LightmapProbe 4, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, 1.04836, 3.68587)
+
+[node name="LightmapProbe 4, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, 1.04836, 1.22862)
+
+[node name="LightmapProbe 4, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, 1.04836, -1.22862)
+
+[node name="LightmapProbe 4, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, 1.04836, -3.68587)
+
+[node name="LightmapProbe 4, 1, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, 1.04836, -6.14311)
+
+[node name="LightmapProbe 4, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, -1.04836, 6.14311)
+
+[node name="LightmapProbe 4, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, -1.04836, 3.68587)
+
+[node name="LightmapProbe 4, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, -1.04836, 1.22862)
+
+[node name="LightmapProbe 4, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, -1.04836, -1.22862)
+
+[node name="LightmapProbe 4, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, -1.04836, -3.68587)
+
+[node name="LightmapProbe 4, 2, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, -1.04836, -6.14311)
+
+[node name="LightmapProbe 4, 3, 0" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, -3.14508, 6.14311)
+
+[node name="LightmapProbe 4, 3, 1" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, -3.14508, 3.68587)
+
+[node name="LightmapProbe 4, 3, 2" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, -3.14508, 1.22862)
+
+[node name="LightmapProbe 4, 3, 3" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, -3.14508, -1.22862)
+
+[node name="LightmapProbe 4, 3, 4" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, -3.14508, -3.68587)
+
+[node name="LightmapProbe 4, 3, 5" type="LightmapProbe" parent="World/LightmapProbeGrid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.40157, -3.14508, -6.14311)
+
+[node name="LightmapProbeGrid2" type="Node3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.98656, 3.97474, -1.0246)
+visible = false
+script = ExtResource("5_bsqcq")
+size = Vector3(5.71845, 6.94948, 13.9177)
+probes_number = Vector3i(4, 3, 5)
+far_distance = 1.0
+object_size = 1.0
+metadata/_custom_type_script = "uid://qiap5mw17kh1"
+
+[node name="LightmapProbe 0, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, 3.47474, 6.95883)
+
+[node name="LightmapProbe 0, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, 3.47474, 3.47941)
+
+[node name="LightmapProbe 0, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, 3.47474, 0)
+
+[node name="LightmapProbe 0, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, 3.47474, -3.47941)
+
+[node name="LightmapProbe 0, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, 3.47474, -6.95883)
+
+[node name="LightmapProbe 0, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, 0, 6.95883)
+
+[node name="LightmapProbe 0, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, 0, 3.47941)
+
+[node name="LightmapProbe 0, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, 0, 0)
+
+[node name="LightmapProbe 0, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, 0, -3.47941)
+
+[node name="LightmapProbe 0, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, 0, -6.95883)
+
+[node name="LightmapProbe 0, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, -3.47474, 6.95883)
+
+[node name="LightmapProbe 0, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, -3.47474, 3.47941)
+
+[node name="LightmapProbe 0, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, -3.47474, 0)
+
+[node name="LightmapProbe 0, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, -3.47474, -3.47941)
+
+[node name="LightmapProbe 0, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.85922, -3.47474, -6.95883)
+
+[node name="LightmapProbe 1, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, 3.47474, 6.95883)
+
+[node name="LightmapProbe 1, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, 3.47474, 3.47941)
+
+[node name="LightmapProbe 1, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, 3.47474, 0)
+
+[node name="LightmapProbe 1, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, 3.47474, -3.47941)
+
+[node name="LightmapProbe 1, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, 3.47474, -6.95883)
+
+[node name="LightmapProbe 1, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, 0, 6.95883)
+
+[node name="LightmapProbe 1, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, 0, 3.47941)
+
+[node name="LightmapProbe 1, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, 0, 0)
+
+[node name="LightmapProbe 1, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, 0, -3.47941)
+
+[node name="LightmapProbe 1, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, 0, -6.95883)
+
+[node name="LightmapProbe 1, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, -3.47474, 6.95883)
+
+[node name="LightmapProbe 1, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, -3.47474, 3.47941)
+
+[node name="LightmapProbe 1, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, -3.47474, 0)
+
+[node name="LightmapProbe 1, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, -3.47474, -3.47941)
+
+[node name="LightmapProbe 1, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.953075, -3.47474, -6.95883)
+
+[node name="LightmapProbe 2, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, 3.47474, 6.95883)
+
+[node name="LightmapProbe 2, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, 3.47474, 3.47941)
+
+[node name="LightmapProbe 2, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, 3.47474, 0)
+
+[node name="LightmapProbe 2, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, 3.47474, -3.47941)
+
+[node name="LightmapProbe 2, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, 3.47474, -6.95883)
+
+[node name="LightmapProbe 2, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, 0, 6.95883)
+
+[node name="LightmapProbe 2, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, 0, 3.47941)
+
+[node name="LightmapProbe 2, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, 0, 0)
+
+[node name="LightmapProbe 2, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, 0, -3.47941)
+
+[node name="LightmapProbe 2, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, 0, -6.95883)
+
+[node name="LightmapProbe 2, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, -3.47474, 6.95883)
+
+[node name="LightmapProbe 2, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, -3.47474, 3.47941)
+
+[node name="LightmapProbe 2, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, -3.47474, 0)
+
+[node name="LightmapProbe 2, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, -3.47474, -3.47941)
+
+[node name="LightmapProbe 2, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.953075, -3.47474, -6.95883)
+
+[node name="LightmapProbe 3, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, 3.47474, 6.95883)
+
+[node name="LightmapProbe 3, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, 3.47474, 3.47941)
+
+[node name="LightmapProbe 3, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, 3.47474, 0)
+
+[node name="LightmapProbe 3, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, 3.47474, -3.47941)
+
+[node name="LightmapProbe 3, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, 3.47474, -6.95883)
+
+[node name="LightmapProbe 3, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, 0, 6.95883)
+
+[node name="LightmapProbe 3, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, 0, 3.47941)
+
+[node name="LightmapProbe 3, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, 0, 0)
+
+[node name="LightmapProbe 3, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, 0, -3.47941)
+
+[node name="LightmapProbe 3, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, 0, -6.95883)
+
+[node name="LightmapProbe 3, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, -3.47474, 6.95883)
+
+[node name="LightmapProbe 3, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, -3.47474, 3.47941)
+
+[node name="LightmapProbe 3, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, -3.47474, 0)
+
+[node name="LightmapProbe 3, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, -3.47474, -3.47941)
+
+[node name="LightmapProbe 3, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.85922, -3.47474, -6.95883)
+
+[node name="LightmapProbeGrid3" type="Node3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.0367, 3.8414, -18.1046)
+visible = false
+script = ExtResource("5_bsqcq")
+size = Vector3(14.0719, 5.64015, 18.0831)
+probes_number = Vector3i(5, 4, 5)
+far_distance = 1.0
+object_size = 1.0
+metadata/_custom_type_script = "uid://qiap5mw17kh1"
+
+[node name="LightmapProbe 0, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, 2.82008, 9.04156)
+
+[node name="LightmapProbe 0, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, 2.82008, 4.52078)
+
+[node name="LightmapProbe 0, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, 2.82008, 0)
+
+[node name="LightmapProbe 0, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, 2.82008, -4.52078)
+
+[node name="LightmapProbe 0, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, 2.82008, -9.04156)
+
+[node name="LightmapProbe 0, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, 0.940025, 9.04156)
+
+[node name="LightmapProbe 0, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, 0.940025, 4.52078)
+
+[node name="LightmapProbe 0, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, 0.940025, 0)
+
+[node name="LightmapProbe 0, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, 0.940025, -4.52078)
+
+[node name="LightmapProbe 0, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, 0.940025, -9.04156)
+
+[node name="LightmapProbe 0, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, -0.940025, 9.04156)
+
+[node name="LightmapProbe 0, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, -0.940025, 4.52078)
+
+[node name="LightmapProbe 0, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, -0.940025, 0)
+
+[node name="LightmapProbe 0, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, -0.940025, -4.52078)
+
+[node name="LightmapProbe 0, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, -0.940025, -9.04156)
+
+[node name="LightmapProbe 0, 3, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, -2.82008, 9.04156)
+
+[node name="LightmapProbe 0, 3, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, -2.82008, 4.52078)
+
+[node name="LightmapProbe 0, 3, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, -2.82008, 0)
+
+[node name="LightmapProbe 0, 3, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, -2.82008, -4.52078)
+
+[node name="LightmapProbe 0, 3, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.03595, -2.82008, -9.04156)
+
+[node name="LightmapProbe 1, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, 2.82008, 9.04156)
+
+[node name="LightmapProbe 1, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, 2.82008, 4.52078)
+
+[node name="LightmapProbe 1, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, 2.82008, 0)
+
+[node name="LightmapProbe 1, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, 2.82008, -4.52078)
+
+[node name="LightmapProbe 1, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, 2.82008, -9.04156)
+
+[node name="LightmapProbe 1, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, 0.940025, 9.04156)
+
+[node name="LightmapProbe 1, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, 0.940025, 4.52078)
+
+[node name="LightmapProbe 1, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, 0.940025, 0)
+
+[node name="LightmapProbe 1, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, 0.940025, -4.52078)
+
+[node name="LightmapProbe 1, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, 0.940025, -9.04156)
+
+[node name="LightmapProbe 1, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, -0.940025, 9.04156)
+
+[node name="LightmapProbe 1, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, -0.940025, 4.52078)
+
+[node name="LightmapProbe 1, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, -0.940025, 0)
+
+[node name="LightmapProbe 1, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, -0.940025, -4.52078)
+
+[node name="LightmapProbe 1, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, -0.940025, -9.04156)
+
+[node name="LightmapProbe 1, 3, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, -2.82008, 9.04156)
+
+[node name="LightmapProbe 1, 3, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, -2.82008, 4.52078)
+
+[node name="LightmapProbe 1, 3, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, -2.82008, 0)
+
+[node name="LightmapProbe 1, 3, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, -2.82008, -4.52078)
+
+[node name="LightmapProbe 1, 3, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.51798, -2.82008, -9.04156)
+
+[node name="LightmapProbe 2, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.82008, 9.04156)
+
+[node name="LightmapProbe 2, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.82008, 4.52078)
+
+[node name="LightmapProbe 2, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.82008, 0)
+
+[node name="LightmapProbe 2, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.82008, -4.52078)
+
+[node name="LightmapProbe 2, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.82008, -9.04156)
+
+[node name="LightmapProbe 2, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.940025, 9.04156)
+
+[node name="LightmapProbe 2, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.940025, 4.52078)
+
+[node name="LightmapProbe 2, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.940025, 0)
+
+[node name="LightmapProbe 2, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.940025, -4.52078)
+
+[node name="LightmapProbe 2, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.940025, -9.04156)
+
+[node name="LightmapProbe 2, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.940025, 9.04156)
+
+[node name="LightmapProbe 2, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.940025, 4.52078)
+
+[node name="LightmapProbe 2, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.940025, 0)
+
+[node name="LightmapProbe 2, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.940025, -4.52078)
+
+[node name="LightmapProbe 2, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.940025, -9.04156)
+
+[node name="LightmapProbe 2, 3, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.82008, 9.04156)
+
+[node name="LightmapProbe 2, 3, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.82008, 4.52078)
+
+[node name="LightmapProbe 2, 3, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.82008, 0)
+
+[node name="LightmapProbe 2, 3, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.82008, -4.52078)
+
+[node name="LightmapProbe 2, 3, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.82008, -9.04156)
+
+[node name="LightmapProbe 3, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, 2.82008, 9.04156)
+
+[node name="LightmapProbe 3, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, 2.82008, 4.52078)
+
+[node name="LightmapProbe 3, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, 2.82008, 0)
+
+[node name="LightmapProbe 3, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, 2.82008, -4.52078)
+
+[node name="LightmapProbe 3, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, 2.82008, -9.04156)
+
+[node name="LightmapProbe 3, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, 0.940025, 9.04156)
+
+[node name="LightmapProbe 3, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, 0.940025, 4.52078)
+
+[node name="LightmapProbe 3, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, 0.940025, 0)
+
+[node name="LightmapProbe 3, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, 0.940025, -4.52078)
+
+[node name="LightmapProbe 3, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, 0.940025, -9.04156)
+
+[node name="LightmapProbe 3, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, -0.940025, 9.04156)
+
+[node name="LightmapProbe 3, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, -0.940025, 4.52078)
+
+[node name="LightmapProbe 3, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, -0.940025, 0)
+
+[node name="LightmapProbe 3, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, -0.940025, -4.52078)
+
+[node name="LightmapProbe 3, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, -0.940025, -9.04156)
+
+[node name="LightmapProbe 3, 3, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, -2.82008, 9.04156)
+
+[node name="LightmapProbe 3, 3, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, -2.82008, 4.52078)
+
+[node name="LightmapProbe 3, 3, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, -2.82008, 0)
+
+[node name="LightmapProbe 3, 3, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, -2.82008, -4.52078)
+
+[node name="LightmapProbe 3, 3, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.51798, -2.82008, -9.04156)
+
+[node name="LightmapProbe 4, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, 2.82008, 9.04156)
+
+[node name="LightmapProbe 4, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, 2.82008, 4.52078)
+
+[node name="LightmapProbe 4, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, 2.82008, 0)
+
+[node name="LightmapProbe 4, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, 2.82008, -4.52078)
+
+[node name="LightmapProbe 4, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, 2.82008, -9.04156)
+
+[node name="LightmapProbe 4, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, 0.940025, 9.04156)
+
+[node name="LightmapProbe 4, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, 0.940025, 4.52078)
+
+[node name="LightmapProbe 4, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, 0.940025, 0)
+
+[node name="LightmapProbe 4, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, 0.940025, -4.52078)
+
+[node name="LightmapProbe 4, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, 0.940025, -9.04156)
+
+[node name="LightmapProbe 4, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, -0.940025, 9.04156)
+
+[node name="LightmapProbe 4, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, -0.940025, 4.52078)
+
+[node name="LightmapProbe 4, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, -0.940025, 0)
+
+[node name="LightmapProbe 4, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, -0.940025, -4.52078)
+
+[node name="LightmapProbe 4, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, -0.940025, -9.04156)
+
+[node name="LightmapProbe 4, 3, 0" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, -2.82008, 9.04156)
+
+[node name="LightmapProbe 4, 3, 1" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, -2.82008, 4.52078)
+
+[node name="LightmapProbe 4, 3, 2" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, -2.82008, 0)
+
+[node name="LightmapProbe 4, 3, 3" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, -2.82008, -4.52078)
+
+[node name="LightmapProbe 4, 3, 4" type="LightmapProbe" parent="World/LightmapProbeGrid3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.03595, -2.82008, -9.04156)
+
+[node name="LightmapProbeGrid4" type="Node3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.97859, 4.0934, -32.1025)
+visible = false
+script = ExtResource("5_bsqcq")
+size = Vector3(20.1881, 4.83334, 4.74999)
+probes_number = Vector3i(6, 3, 6)
+far_distance = 1.0
+object_size = 1.0
+metadata/_custom_type_script = "uid://qiap5mw17kh1"
+
+[node name="LightmapProbe 0, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, 2.41667, 2.375)
+
+[node name="LightmapProbe 0, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, 2.41667, 1.425)
+
+[node name="LightmapProbe 0, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, 2.41667, 0.474999)
+
+[node name="LightmapProbe 0, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, 2.41667, -0.474999)
+
+[node name="LightmapProbe 0, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, 2.41667, -1.425)
+
+[node name="LightmapProbe 0, 0, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, 2.41667, -2.375)
+
+[node name="LightmapProbe 0, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, 0, 2.375)
+
+[node name="LightmapProbe 0, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, 0, 1.425)
+
+[node name="LightmapProbe 0, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, 0, 0.474999)
+
+[node name="LightmapProbe 0, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, 0, -0.474999)
+
+[node name="LightmapProbe 0, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, 0, -1.425)
+
+[node name="LightmapProbe 0, 1, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, 0, -2.375)
+
+[node name="LightmapProbe 0, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, -2.41667, 2.375)
+
+[node name="LightmapProbe 0, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, -2.41667, 1.425)
+
+[node name="LightmapProbe 0, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, -2.41667, 0.474999)
+
+[node name="LightmapProbe 0, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, -2.41667, -0.474999)
+
+[node name="LightmapProbe 0, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, -2.41667, -1.425)
+
+[node name="LightmapProbe 0, 2, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.0941, -2.41667, -2.375)
+
+[node name="LightmapProbe 1, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, 2.41667, 2.375)
+
+[node name="LightmapProbe 1, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, 2.41667, 1.425)
+
+[node name="LightmapProbe 1, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, 2.41667, 0.474999)
+
+[node name="LightmapProbe 1, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, 2.41667, -0.474999)
+
+[node name="LightmapProbe 1, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, 2.41667, -1.425)
+
+[node name="LightmapProbe 1, 0, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, 2.41667, -2.375)
+
+[node name="LightmapProbe 1, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, 0, 2.375)
+
+[node name="LightmapProbe 1, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, 0, 1.425)
+
+[node name="LightmapProbe 1, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, 0, 0.474999)
+
+[node name="LightmapProbe 1, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, 0, -0.474999)
+
+[node name="LightmapProbe 1, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, 0, -1.425)
+
+[node name="LightmapProbe 1, 1, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, 0, -2.375)
+
+[node name="LightmapProbe 1, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, -2.41667, 2.375)
+
+[node name="LightmapProbe 1, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, -2.41667, 1.425)
+
+[node name="LightmapProbe 1, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, -2.41667, 0.474999)
+
+[node name="LightmapProbe 1, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, -2.41667, -0.474999)
+
+[node name="LightmapProbe 1, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, -2.41667, -1.425)
+
+[node name="LightmapProbe 1, 2, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05644, -2.41667, -2.375)
+
+[node name="LightmapProbe 2, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, 2.41667, 2.375)
+
+[node name="LightmapProbe 2, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, 2.41667, 1.425)
+
+[node name="LightmapProbe 2, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, 2.41667, 0.474999)
+
+[node name="LightmapProbe 2, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, 2.41667, -0.474999)
+
+[node name="LightmapProbe 2, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, 2.41667, -1.425)
+
+[node name="LightmapProbe 2, 0, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, 2.41667, -2.375)
+
+[node name="LightmapProbe 2, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, 0, 2.375)
+
+[node name="LightmapProbe 2, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, 0, 1.425)
+
+[node name="LightmapProbe 2, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, 0, 0.474999)
+
+[node name="LightmapProbe 2, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, 0, -0.474999)
+
+[node name="LightmapProbe 2, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, 0, -1.425)
+
+[node name="LightmapProbe 2, 1, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, 0, -2.375)
+
+[node name="LightmapProbe 2, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, -2.41667, 2.375)
+
+[node name="LightmapProbe 2, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, -2.41667, 1.425)
+
+[node name="LightmapProbe 2, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, -2.41667, 0.474999)
+
+[node name="LightmapProbe 2, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, -2.41667, -0.474999)
+
+[node name="LightmapProbe 2, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, -2.41667, -1.425)
+
+[node name="LightmapProbe 2, 2, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.01881, -2.41667, -2.375)
+
+[node name="LightmapProbe 3, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, 2.41667, 2.375)
+
+[node name="LightmapProbe 3, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, 2.41667, 1.425)
+
+[node name="LightmapProbe 3, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, 2.41667, 0.474999)
+
+[node name="LightmapProbe 3, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, 2.41667, -0.474999)
+
+[node name="LightmapProbe 3, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, 2.41667, -1.425)
+
+[node name="LightmapProbe 3, 0, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, 2.41667, -2.375)
+
+[node name="LightmapProbe 3, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, 0, 2.375)
+
+[node name="LightmapProbe 3, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, 0, 1.425)
+
+[node name="LightmapProbe 3, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, 0, 0.474999)
+
+[node name="LightmapProbe 3, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, 0, -0.474999)
+
+[node name="LightmapProbe 3, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, 0, -1.425)
+
+[node name="LightmapProbe 3, 1, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, 0, -2.375)
+
+[node name="LightmapProbe 3, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, -2.41667, 2.375)
+
+[node name="LightmapProbe 3, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, -2.41667, 1.425)
+
+[node name="LightmapProbe 3, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, -2.41667, 0.474999)
+
+[node name="LightmapProbe 3, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, -2.41667, -0.474999)
+
+[node name="LightmapProbe 3, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, -2.41667, -1.425)
+
+[node name="LightmapProbe 3, 2, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.01882, -2.41667, -2.375)
+
+[node name="LightmapProbe 4, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, 2.41667, 2.375)
+
+[node name="LightmapProbe 4, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, 2.41667, 1.425)
+
+[node name="LightmapProbe 4, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, 2.41667, 0.474999)
+
+[node name="LightmapProbe 4, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, 2.41667, -0.474999)
+
+[node name="LightmapProbe 4, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, 2.41667, -1.425)
+
+[node name="LightmapProbe 4, 0, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, 2.41667, -2.375)
+
+[node name="LightmapProbe 4, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, 0, 2.375)
+
+[node name="LightmapProbe 4, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, 0, 1.425)
+
+[node name="LightmapProbe 4, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, 0, 0.474999)
+
+[node name="LightmapProbe 4, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, 0, -0.474999)
+
+[node name="LightmapProbe 4, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, 0, -1.425)
+
+[node name="LightmapProbe 4, 1, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, 0, -2.375)
+
+[node name="LightmapProbe 4, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, -2.41667, 2.375)
+
+[node name="LightmapProbe 4, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, -2.41667, 1.425)
+
+[node name="LightmapProbe 4, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, -2.41667, 0.474999)
+
+[node name="LightmapProbe 4, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, -2.41667, -0.474999)
+
+[node name="LightmapProbe 4, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, -2.41667, -1.425)
+
+[node name="LightmapProbe 4, 2, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.05644, -2.41667, -2.375)
+
+[node name="LightmapProbe 5, 0, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, 2.41667, 2.375)
+
+[node name="LightmapProbe 5, 0, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, 2.41667, 1.425)
+
+[node name="LightmapProbe 5, 0, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, 2.41667, 0.474999)
+
+[node name="LightmapProbe 5, 0, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, 2.41667, -0.474999)
+
+[node name="LightmapProbe 5, 0, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, 2.41667, -1.425)
+
+[node name="LightmapProbe 5, 0, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, 2.41667, -2.375)
+
+[node name="LightmapProbe 5, 1, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, 0, 2.375)
+
+[node name="LightmapProbe 5, 1, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, 0, 1.425)
+
+[node name="LightmapProbe 5, 1, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, 0, 0.474999)
+
+[node name="LightmapProbe 5, 1, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, 0, -0.474999)
+
+[node name="LightmapProbe 5, 1, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, 0, -1.425)
+
+[node name="LightmapProbe 5, 1, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, 0, -2.375)
+
+[node name="LightmapProbe 5, 2, 0" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, -2.41667, 2.375)
+
+[node name="LightmapProbe 5, 2, 1" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, -2.41667, 1.425)
+
+[node name="LightmapProbe 5, 2, 2" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, -2.41667, 0.474999)
+
+[node name="LightmapProbe 5, 2, 3" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, -2.41667, -0.474999)
+
+[node name="LightmapProbe 5, 2, 4" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, -2.41667, -1.425)
+
+[node name="LightmapProbe 5, 2, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, -2.41667, -2.375)
 
 [node name="BehideObjects" type="Node3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 21)
 
-[node name="Blue cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 11)
-Resource = ExtResource("7_yfvw8")
+[node name="BehideObject" parent="World/BehideObjects" instance=ExtResource("8_bsqcq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -37)
 
-[node name="Green cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 0)
-Resource = ExtResource("8_yyqxy")
+[node name="BehideObject2" parent="World/BehideObjects" instance=ExtResource("9_jf0ra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -40)
 
-[node name="Purple cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -3)
-Resource = ExtResource("9_k3vrc")
+[node name="BehideObject3" parent="World/BehideObjects" instance=ExtResource("10_fg52j")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -42)
 
-[node name="Yellow cube" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, 0)
-Resource = ExtResource("10_rnlv5")
+[node name="BehideObject4" parent="World/BehideObjects" instance=ExtResource("11_6581v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -36)
 
-[node name="Ball" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, 3)
-Resource = ExtResource("10_wgnhc")
+[node name="BehideObject5" parent="World/BehideObjects" instance=ExtResource("12_6hht6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -39)
 
-[node name="Ball2" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 3)
-Resource = ExtResource("10_wgnhc")
-
-[node name="Ball3" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, -3)
-Resource = ExtResource("10_wgnhc")
-
-[node name="Ball4" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, -3)
-Resource = ExtResource("10_wgnhc")
-
-[node name="Ball5" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.5, 0)
-Resource = ExtResource("10_wgnhc")
-
-[node name="Ball6" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.5, 0)
-Resource = ExtResource("10_wgnhc")
-
-[node name="Ball7" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 14)
-Resource = ExtResource("10_wgnhc")
-
-[node name="Ball8" parent="World/BehideObjects" instance=ExtResource("6_s06yr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -6)
-Resource = ExtResource("10_wgnhc")
-
-[node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(0.825015, -0.249057, 0.507268, 0, 0.897643, 0.440723, -0.565111, -0.363603, 0.740569, 3, 3, 3)
-fov = 90.0
+[node name="BehideObject6" parent="World/BehideObjects" instance=ExtResource("13_kjp6r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -39)
 
 [node name="Players" type="Node3D" parent="."]
 

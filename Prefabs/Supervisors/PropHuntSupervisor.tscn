@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://cehw1sq4q5yu8"]
 
-[ext_resource type="Script" uid="uid://38mycbkkwpw4" path="res://Scripts/Supervisors/PropHuntSupervisor.cs" id="1_0pdhf"]
+[ext_resource type="Script" uid="uid://38mycbkkwpw4" path="res://Prefabs/Supervisors/PropHuntSupervisor.cs" id="1_0pdhf"]
 [ext_resource type="Script" uid="uid://dlbrls7b4x0kx" path="res://Scripts/Supervisors/PlayerSpawner.cs" id="3_l302j"]
 [ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/Player/player.tscn" id="4_nsml5"]
 [ext_resource type="Script" uid="uid://sggdi83gahf1" path="res://Scenes/Controls/Countdown/AdvancedLabelCountdown.cs" id="5_7hsgi"]
@@ -47,6 +47,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme = ExtResource("5_sfeev")
 
 [node name="AdvancedLabelCountdown" type="Node" parent="UI" node_paths=PackedStringArray("labels")]

@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://31lpggbwr2ib"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_b4dfd"]
+[ext_resource type="PackedScene" uid="uid://c1u7na0sjtxj6" path="res://Assets/Models/Dungeon/Props/Plate/plate_food_A.gltf" id="2_q7ev5"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_re2wg"]
+height = 0.12
+radius = 0.48
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wy7ss"]
+radius = 0.36
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_b4dfd"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="plate_food_A" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+script = ExtResource("1_b4dfd")
+VisualNode = NodePath("plate_food_A")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2")]
+Mass = 1.0
+
+[node name="plate_food_A" parent="." instance=ExtResource("2_q7ev5")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0600001, 0)
+shape = SubResource("CylinderShape3D_re2wg")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 0.42, -0.14)
+shape = SubResource("SphereShape3D_wy7ss")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_b4dfd")

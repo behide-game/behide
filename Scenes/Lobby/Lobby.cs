@@ -28,6 +28,7 @@ public partial class Lobby : Control
     [Export] private LabelCountdown countdown = null!;
 
     private ILogger log = null!;
+    private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(1);// TimeSpan.FromSeconds(5);
     private CancellationTokenSource inRoomEventsCts = new();
     private readonly CancellationTokenSource nodeAliveCts = new();
 
@@ -85,8 +86,8 @@ public partial class Lobby : Control
         if (allReady)
         {
             // No clock delta needed as the time is based on the first player to have joined the room
-            countdown.StartCountdown(TimeSpan.FromSeconds(5));
-            log.Debug("Game start planned for {Start}", DateTimeOffset.Now + TimeSpan.FromSeconds(5));
+            countdown.StartCountdown(countdownDuration);
+            log.Debug("Game start planned for {Start}", DateTimeOffset.Now + countdownDuration);
         }
         else
         {

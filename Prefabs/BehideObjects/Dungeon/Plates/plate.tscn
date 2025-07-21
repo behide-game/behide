@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://hl5g4b0u5jm"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_6tip4"]
+[ext_resource type="PackedScene" uid="uid://be1jh2ebp3m15" path="res://Assets/Models/Dungeon/Props/Plate/plate.gltf" id="2_6tip4"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_re2wg"]
+height = 0.12
+radius = 0.48
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_83epw"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="plate" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+script = ExtResource("1_6tip4")
+VisualNode = NodePath("plate")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="plate" parent="." instance=ExtResource("2_6tip4")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0600001, 0)
+shape = SubResource("CylinderShape3D_re2wg")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_83epw")
