@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Concurrency;
 using Godot;
 
 namespace Behide.Game.Player;
@@ -31,10 +30,10 @@ public partial class PlayerProp : PlayerMovements
         if (Input.IsActionJustPressed("morph") && focusedBehideObject is not null) Rpc(MethodName.Morph, focusedBehideObject.GetPath());
     }
 
-[Rpc(CallLocal = true)]
+    [Rpc(CallLocal = true)]
     private void Morph(NodePath behideObjectPath)
     {
-        BehideObject behideObject = GetNode(behideObjectPath) as BehideObject;
+        if (GetNode(behideObjectPath) is not BehideObject behideObject) return;
         if (behideObject.VisualNode.Duplicate() is not Node3D newVisualNode) return;
         // Remove current visual node and collision nodes
         currentVisualNode.QueueFree();
