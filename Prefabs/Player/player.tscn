@@ -23,10 +23,12 @@ collisionNodes = [NodePath("CollisionShape3D")]
 rayCast = NodePath("CameraDisk/Camera/RayCast3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 gi_mode = 2
 mesh = SubResource("BoxMesh_x40yu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("BoxShape3D_rr4v2")
 
 [node name="CameraDisk" type="Node3D" parent="."]

@@ -12,7 +12,7 @@ public partial class PlayerProp : PlayerMovements
     [Export] private CollisionShape3D[] collisionNodes = null!;
     [Export] private RayCast3D rayCast = null!;
     private Vector3 initialCameraPosition = Vector3.Zero;
-    private Node? focusedBehideObject;
+    private BehideObject? focusedBehideObject;
 
     public override void _EnterTree()
     {
@@ -22,13 +22,13 @@ public partial class PlayerProp : PlayerMovements
 
     public override void _Process(double delta)
     {
-        focusedBehideObject = rayCast.GetCollider() as Node;
+        focusedBehideObject = rayCast.GetCollider() as BehideObject;
     }
 
     public override void _Input(InputEvent rawEvent)
     {
         base._Input(rawEvent);
-        if (Input.IsActionJustPressed("morph") && focusedBehideObject is not null) Rpc(MethodName.Morph,focusedBehideObject.GetPath());
+        if (Input.IsActionJustPressed("morph") && focusedBehideObject is not null) Rpc(MethodName.Morph, focusedBehideObject.GetPath());
     }
 
 [Rpc(CallLocal = true)]
@@ -36,7 +36,6 @@ public partial class PlayerProp : PlayerMovements
     {
         BehideObject behideObject = GetNode(behideObjectPath) as BehideObject;
         if (behideObject.VisualNode.Duplicate() is not Node3D newVisualNode) return;
-        GD.Print(newVisualNode);
         // Remove current visual node and collision nodes
         currentVisualNode.QueueFree();
         RemoveChild(currentVisualNode);
