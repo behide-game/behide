@@ -19,10 +19,10 @@ public partial class PlayerBody : CharacterBody3D
     [Export] private float horizontalSensitivity = 0.005f;
     // Accelerations m/s^2
     private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
-    [Export] private float jumpAcceleration = 20;
-    [Export] private float pushForce = 1;
+    [Export] private float jumpAcceleration = 300;
+    [Export] private float pushForce = 0.2f;
     // Move speed in m/s
-    [Export] private float moveSpeed = 5;
+    [Export] private float moveSpeed = 6;
 
 
     private Serilog.ILogger log = null!;

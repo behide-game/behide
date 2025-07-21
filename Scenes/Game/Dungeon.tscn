@@ -178,7 +178,11 @@ size = Vector3(2, 0.2, 0.5)
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="Floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+collision_layer = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
 shape = SubResource("WorldBoundaryShape3D_hkla2")
 
 [node name="Court" type="Node3D" parent="."]
@@ -514,6 +518,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33, 0, 21)
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -33, 0, 15)
 
 [node name="Walls" type="StaticBody3D" parent="Court"]
+collision_layer = 3
 
 [node name="wall_broken2" parent="Court/Walls" instance=ExtResource("4_s60wc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 4, 16)
@@ -771,6 +776,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 8, 8)
 [node name="Little room" type="Node3D" parent="Court"]
 
 [node name="Stairs" type="StaticBody3D" parent="Court/Little room"]
+collision_layer = 3
 
 [node name="stairs_wood2" parent="Court/Little room/Stairs" instance=ExtResource("3_d3ktp")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -10, 0, 22)
@@ -780,6 +786,7 @@ transform = Transform3D(-4.3681e-08, 0.564448, 0.825468, -1.62919e-09, 0.825468,
 shape = SubResource("BoxShape3D_wnikl")
 
 [node name="Walls" type="StaticBody3D" parent="Court/Little room"]
+collision_layer = 3
 
 [node name="wall_pillar2" parent="Court/Little room/Walls" instance=ExtResource("12_utlgx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 4, 16)
@@ -824,6 +831,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 7.45, 16)
 shape = SubResource("BoxShape3D_c1l3a")
 
 [node name="Floor" type="StaticBody3D" parent="Court/Little room"]
+collision_layer = 3
 
 [node name="floor_wood_large_dark2" parent="Court/Little room/Floor" instance=ExtResource("14_c1l3a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 4, 18)
