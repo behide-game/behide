@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
 using Godot;
 
 namespace Behide.Game.Player;
@@ -11,7 +12,7 @@ public partial class PlayerProp : PlayerMovements
     [Export] private CollisionShape3D[] collisionNodes = null!;
     [Export] private RayCast3D rayCast = null!;
     private Vector3 initialCameraPosition = Vector3.Zero;
-    private BehideObject? focusedBehideObject;
+    private Node? focusedBehideObject;
 
     public override void _EnterTree()
     {
@@ -21,19 +22,21 @@ public partial class PlayerProp : PlayerMovements
 
     public override void _Process(double delta)
     {
-        focusedBehideObject = rayCast.GetCollider() as BehideObject;
+        focusedBehideObject = rayCast.GetCollider() as Node;
     }
 
     public override void _Input(InputEvent rawEvent)
     {
         base._Input(rawEvent);
-        if (Input.IsActionJustPressed("morph") && focusedBehideObject is not null) Morph(focusedBehideObject);
+        if (Input.IsActionJustPressed("morph") && focusedBehideObject is not null) Rpc(MethodName.Morph,focusedBehideObject.GetPath());
     }
 
-    private void Morph(BehideObject behideObject)
+[Rpc(CallLocal = true)]
+    private void Morph(NodePath behideObjectPath)
     {
+        BehideObject behideObject = GetNode(behideObjectPath) as BehideObject;
         if (behideObject.VisualNode.Duplicate() is not Node3D newVisualNode) return;
-
+        GD.Print(newVisualNode);
         // Remove current visual node and collision nodes
         currentVisualNode.QueueFree();
         RemoveChild(currentVisualNode);

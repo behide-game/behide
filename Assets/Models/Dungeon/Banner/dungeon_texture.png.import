@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://drlk8hwmbbj43"
-path.s3tc="res://.godot/imported/dungeon_texture.png-6d9ec59a916a47294fa65a776c215d14.s3tc.ctex"
+uid="uid://ckbs4rmm4wsjh"
+path.s3tc="res://.godot/imported/dungeon_texture.png-54bb48dc780378231f8be038c4099db7.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Assets/Models/Dungeon/dungeon_texture.png"
-dest_files=["res://.godot/imported/dungeon_texture.png-6d9ec59a916a47294fa65a776c215d14.s3tc.ctex"]
+source_file="res://Assets/Models/Dungeon/Banner/dungeon_texture.png"
+dest_files=["res://.godot/imported/dungeon_texture.png-54bb48dc780378231f8be038c4099db7.s3tc.ctex"]
 
 [params]
 
