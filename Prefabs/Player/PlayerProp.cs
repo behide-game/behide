@@ -21,12 +21,14 @@ public partial class PlayerProp : PlayerMovements
 
     public override void _Process(double delta)
     {
+        if (!IsMultiplayerAuthority()) return;
         focusedBehideObject = rayCast.GetCollider() as BehideObject;
     }
 
     public override void _Input(InputEvent rawEvent)
     {
         base._Input(rawEvent);
+        if (!IsMultiplayerAuthority()) return;
         if (Input.IsActionJustPressed("morph") && focusedBehideObject is not null) Rpc(MethodName.Morph, focusedBehideObject.GetPath());
     }
 
