@@ -11,17 +11,16 @@ public partial class PlayerBody : CharacterBody3D
     private Camera3D camera = null!;
     public MultiplayerSynchronizer PositionSynchronizer = null!;
 
-    [ExportGroup("Movements")]
-    // Rotation sensitivities
+    [ExportGroup("Camera rotation")]
     [Export] private float maxRotation = Mathf.DegToRad(90);
     [Export] private float verticalSensitivity = 0.005f;
     [Export] private float horizontalSensitivity = 0.005f;
-    // Accelerations m/s^2
+
+    [ExportGroup("Movements")]
     private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
     [Export] private float jumpAcceleration = 300;
-    [Export] private float pushForce = 0.5f;
-    // Move speed in m/s
     [Export] private float moveSpeed = 6;
+    [Export] private float pushCoefficient = 0.6f;
 
     private Serilog.ILogger log = null!;
     // Rotation accumulators
@@ -103,17 +102,14 @@ public partial class PlayerBody : CharacterBody3D
         {
             var collision = GetSlideCollision(i);
             if (collision.GetCollider() is not RigidBody3D rb) continue;
-            if (!rb.IsMultiplayerAuthority())
-            {
-                Rpc(nameof(SetObjectAuthority), rb.GetPath());
-            }
+            if (!rb.IsMultiplayerAuthority()) Rpc(nameof(SetObjectAuthority), rb.GetPath());
 
             var pushDirection = -collision.GetNormal();
-            var velocityDiff = Mathf.Max(0, Velocity.Dot(pushDirection) - rb.LinearVelocity.Dot(pushDirection));
-            var massRatio = Mathf.Min(1, Mass / rb.Mass);
             pushDirection.Y = 0; // Remove verticality
-            var impulse = pushDirection * pushForce * massRatio * velocityDiff;
-
+            var velocityDiff = Mathf.Max(0, Velocity.Dot(pushDirection) - rb.LinearVelocity.Dot(pushDirection));
+            var massRatio = Mass / rb.Mass;
+            var massContribution = massRatio >= 1 ? rb.Mass : Mass;
+            var impulse = pushDirection * velocityDiff * massContribution * pushCoefficient;
             rb.ApplyImpulse(impulse, collision.GetPosition() - rb.GlobalPosition);
         }
     }

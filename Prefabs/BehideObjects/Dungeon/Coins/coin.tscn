@@ -23,10 +23,11 @@ properties/3/replication_mode = 2
 
 [node name="coin" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, 0, 0, 0)
+mass = 0.01
 script = ExtResource("1_aefr8")
 VisualNode = NodePath("coin")
 CollisionNodes = [NodePath("CollisionShape3D")]
-Mass = 1.0
+Mass = 0.01
 
 [node name="coin" parent="." instance=ExtResource("2_aefr8")]
 

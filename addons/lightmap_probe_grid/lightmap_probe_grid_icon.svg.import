@@ -3,16 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dtmcycli3j3j1"
-path.s3tc="res://.godot/imported/lightmap_probe_grid_icon.svg-71f84c7339e4d62a065aeef79112e123.s3tc.ctex"
+path.etc2="res://.godot/imported/lightmap_probe_grid_icon.svg-71f84c7339e4d62a065aeef79112e123.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://addons/lightmap_probe_grid/lightmap_probe_grid_icon.svg"
-dest_files=["res://.godot/imported/lightmap_probe_grid_icon.svg-71f84c7339e4d62a065aeef79112e123.s3tc.ctex"]
+dest_files=["res://.godot/imported/lightmap_probe_grid_icon.svg-71f84c7339e4d62a065aeef79112e123.etc2.ctex"]
 
 [params]
 

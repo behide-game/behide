@@ -3,16 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dkji3nm6gn28n"
-path.s3tc="res://.godot/imported/spacebits_texture.png-742d38a15958696d1991f335c1be1765.s3tc.ctex"
+path.etc2="res://.godot/imported/spacebits_texture.png-742d38a15958696d1991f335c1be1765.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://Assets/Models/SpaceBase/spacebits_texture.png"
-dest_files=["res://.godot/imported/spacebits_texture.png-742d38a15958696d1991f335c1be1765.s3tc.ctex"]
+dest_files=["res://.godot/imported/spacebits_texture.png-742d38a15958696d1991f335c1be1765.etc2.ctex"]
 
 [params]
 
