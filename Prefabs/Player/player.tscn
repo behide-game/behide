@@ -16,39 +16,35 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("currentVisualNode", "collisionNodes", "rayCast", "CameraDisk", "camera", "PositionSynchronizer")]
-slide_on_ceiling = false
 platform_on_leave = 2
 script = ExtResource("1_hnwp3")
 currentVisualNode = NodePath("MeshInstance3D")
 collisionNodes = [NodePath("CollisionShape3D")]
-rayCast = NodePath("CameraDisk/Camera/RayCast3D")
+rayCast = NodePath("CameraDisk/SpringArm3D/Camera/RayCast")
 cameraAdjustTransitionType = 9
 cameraAdjustEaseType = 1
 CameraDisk = NodePath("CameraDisk")
-camera = NodePath("CameraDisk/Camera")
+camera = NodePath("CameraDisk/SpringArm3D/Camera")
 PositionSynchronizer = NodePath("PositionSynchronizer")
-jumpAcceleration = 300.0
-pushForce = 0.2
-moveSpeed = 6.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 gi_mode = 2
 mesh = SubResource("BoxMesh_x40yu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("BoxShape3D_rr4v2")
 
 [node name="CameraDisk" type="Node3D" parent="."]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
 
-[node name="Camera" type="Camera3D" parent="CameraDisk"]
-transform = Transform3D(1, 0, 0, 0, 0.996918, 0.0784591, 0, -0.0784591, 0.996917, 0, 1.2, 4)
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraDisk"]
+transform = Transform3D(1, 0, 0, 0, 0.996917, 0.0784591, 0, -0.0784591, 0.996917, 0, 1, 0)
+spring_length = 5.0
+
+[node name="Camera" type="Camera3D" parent="CameraDisk/SpringArm3D"]
 keep_aspect = 0
 fov = 90.0
 
-[node name="RayCast3D" type="RayCast3D" parent="CameraDisk/Camera"]
+[node name="RayCast" type="RayCast3D" parent="CameraDisk/SpringArm3D/Camera"]
 target_position = Vector3(0, 0, -20)
 debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
 
