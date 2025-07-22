@@ -62,7 +62,7 @@ font_color = Color(0, 0.117647, 0.176471, 1)
 font = ExtResource("7_xxjlh")
 font_size = 24
 
-[node name="Lobby" type="PanelContainer" node_paths=PackedStringArray("chooseModeControl", "lobbyControl", "codeInput", "playerListNode", "readyButtonLabel", "countdown")]
+[node name="Lobby" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -70,13 +70,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_jn132")
 script = ExtResource("1_vmtcs")
-chooseModeControl = NodePath("ChooseMode")
-lobbyControl = NodePath("Lobby")
-codeInput = NodePath("ChooseMode/Buttons/VBoxContainer/Code/LineEdit")
-playerListNode = NodePath("Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer/Players")
 playerListItemScene = ExtResource("2_3qdhv")
-readyButtonLabel = NodePath("Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center/Label")
-countdown = NodePath("Countdown")
 
 [node name="Countdown" type="Node" parent="." node_paths=PackedStringArray("label")]
 script = ExtResource("3_lj1ok")

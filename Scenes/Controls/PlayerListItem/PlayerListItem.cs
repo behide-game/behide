@@ -4,17 +4,23 @@ using Behide.Types;
 
 namespace Behide.UI.Controls;
 
-[Tool]
+[Tool, SceneTree]
 public partial class PlayerListItem : Control
 {
     private Player? _player;
     private Player? Player { get => _player; set { _player = value; Compute(); } }
 
-    [Export] private Label usernameLabel = null!;
-    [Export] private Label readyLabel = null!;
+    private Label usernameLabel = null!;
+    private Label readyLabel = null!;
 
     private Serilog.ILogger log = null!;
-    public override void _EnterTree() => log = Serilog.Log.ForContext("Tag", "UI/Lobby/PlayerListItem");
+
+    public override void _EnterTree()
+    {
+        log = Serilog.Log.ForContext("Tag", "UI/Lobby/PlayerListItem");
+        usernameLabel = _.Container.MarginReady.Ready.Label;
+        readyLabel = _.Container.MarginUsername.Username;
+    }
 
     public void SetPlayer(Player player)
     {

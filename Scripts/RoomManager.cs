@@ -12,7 +12,7 @@ namespace Behide;
 
 public partial class RoomManager : Node
 {
-    [Export] private TimeSynchronizer timeSynchronizer = null!;
+    private TimeSynchronizer timeSynchronizer = null!;
     private NetworkManager network = null!;
 
     /// <summary>

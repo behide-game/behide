@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://bh3nk67jxv7k"]
 
 [ext_resource type="PackedScene" uid="uid://cfyb4305uyrca" path="res://Scenes/Game/Dungeon.tscn" id="3_ln2h6"]
-[ext_resource type="LightmapGIData" uid="uid://dgwf5ticdlnsv" path="res://Scenes/Game/Game.lmbake" id="3_ti1oi"]
+[ext_resource type="LightmapGIData" uid="uid://6sbhtkuqpw24" path="res://Scenes/Game/Game.lmbake" id="3_ti1oi"]
 [ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Assets/Shaders/chromatic_aberration.tres" id="4_32cbu"]
 [ext_resource type="Environment" uid="uid://c8ttkksgix01d" path="res://Scenes/Game/environment.tres" id="4_tyqxg"]
 [ext_resource type="Script" uid="uid://qiap5mw17kh1" path="res://addons/lightmap_probe_grid/lightmap_probe_grid.gd" id="5_bsqcq"]
@@ -51,6 +51,27 @@ shadow_enabled = true
 
 [node name="Dungeon" parent="World" instance=ExtResource("3_ln2h6")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 6, 0, 6)
+
+[node name="BehideObjects" type="Node3D" parent="World/Dungeon/BehideObjects" index="75"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 15, 0, 12)
+
+[node name="BehideObject" parent="World/Dungeon/BehideObjects/BehideObjects" instance=ExtResource("8_bsqcq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -37)
+
+[node name="BehideObject2" parent="World/Dungeon/BehideObjects/BehideObjects" instance=ExtResource("9_jf0ra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -40)
+
+[node name="BehideObject3" parent="World/Dungeon/BehideObjects/BehideObjects" instance=ExtResource("10_fg52j")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -42)
+
+[node name="BehideObject4" parent="World/Dungeon/BehideObjects/BehideObjects" instance=ExtResource("11_6581v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -36)
+
+[node name="BehideObject5" parent="World/Dungeon/BehideObjects/BehideObjects" instance=ExtResource("12_6hht6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -39)
+
+[node name="BehideObject6" parent="World/Dungeon/BehideObjects/BehideObjects" instance=ExtResource("13_kjp6r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -39)
 
 [node name="LightmapProbeGrid" type="Node3D" parent="World"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.1225, 3.64508, -0.1224)
@@ -1256,29 +1277,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, -2.41667, -1.425)
 [node name="LightmapProbe 5, 2, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, -2.41667, -2.375)
 
-[node name="BehideObjects" type="Node3D" parent="World"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 21)
-
-[node name="BehideObject" parent="World/BehideObjects" instance=ExtResource("8_bsqcq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -37)
-
-[node name="BehideObject2" parent="World/BehideObjects" instance=ExtResource("9_jf0ra")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -40)
-
-[node name="BehideObject3" parent="World/BehideObjects" instance=ExtResource("10_fg52j")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -42)
-
-[node name="BehideObject4" parent="World/BehideObjects" instance=ExtResource("11_6581v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -36)
-
-[node name="BehideObject5" parent="World/BehideObjects" instance=ExtResource("12_6hht6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -39)
-
-[node name="BehideObject6" parent="World/BehideObjects" instance=ExtResource("13_kjp6r")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -39)
-
 [node name="Players" type="Node3D" parent="."]
 
-[node name="Supervisor" parent="." node_paths=PackedStringArray("playersNode", "behideObjects") instance=ExtResource("9_m1o7v")]
-playersNode = NodePath("../Players")
-behideObjects = NodePath("../World/BehideObjects")
+[node name="Supervisor" parent="." node_paths=PackedStringArray("PlayersNode", "BehideObjects", "BehideObjects") instance=ExtResource("9_m1o7v")]
+PlayersNode = NodePath("../Players")
+BehideObjects = NodePath("../World/Dungeon/BehideObjects/BehideObjects")
+BehideObjects = NodePath("../World/Dungeon/BehideObjects/BehideObjects")
+
+[editable path="World/Dungeon"]
+[editable path="World/Dungeon/Little room/Walls/wall_doorway_scaffold2"]

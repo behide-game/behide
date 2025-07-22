@@ -17,9 +17,8 @@ public partial class Supervisor : Node
 {
     private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "Supervisor/Base");
 
-    [Export] private Node behideObjects = null!;
+    [Export] public Node BehideObjects = null!;
     private Node behideObjectsParent = null!;
-    [Export] private string openMenuAction = null!;
     [Export] protected PlayerSpawner Spawner = null!;
 
     protected readonly Dictionary<int, BehaviorSubject<Player>> Players = GameManager.Room.Players;
@@ -42,11 +41,11 @@ public partial class Supervisor : Node
         SetMultiplayerAuthority(firstPlayerToJoin);
 
         // Hide behide objects on the authority to prevent bugs
-        behideObjects.SetMultiplayerAuthority(firstPlayerToJoin);
+        BehideObjects.SetMultiplayerAuthority(firstPlayerToJoin);
         if (IsMultiplayerAuthority())
         {
-            behideObjectsParent = behideObjects.GetParent();
-            behideObjectsParent.RemoveChild(behideObjects);
+            behideObjectsParent = BehideObjects.GetParent();
+            behideObjectsParent.RemoveChild(BehideObjects);
         }
 
         // Wait players to be ready
@@ -74,12 +73,12 @@ public partial class Supervisor : Node
 
     protected virtual void PlayersReady()
     {
-        if (IsMultiplayerAuthority()) behideObjectsParent.AddChild(behideObjects);
+        if (IsMultiplayerAuthority()) behideObjectsParent.AddChild(BehideObjects);
     }
 
     public override void _Input(InputEvent @event)
     {
-        if (!@event.IsAction(openMenuAction, true)) return;
+        if (!@event.IsAction(InputActions.OpenMenu, true)) return;
         _ = GameManager.Room.LeaveRoom();
         GameManager.instance.SetGameState(GameManager.GameState.Lobby);
     }

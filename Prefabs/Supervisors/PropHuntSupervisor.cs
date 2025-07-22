@@ -6,28 +6,33 @@ using Behide.UI.Controls;
 
 namespace Behide.Game.Supervisors;
 
+[SceneTree]
 public partial class PropHuntSupervisor : Supervisor
 {
-    [Export] private Node3D playersNode = null!;
+    [Export] private Node PlayersNode
+    {
+        get => Spawner.PlayersNode;
+        set => Spawner.PlayersNode = value;
+    }
+    [Export] private new Node BehideObjects
+    {
+        get => ((Supervisor)this).BehideObjects;
+        set => ((Supervisor)this).BehideObjects = value;
+    }
 
-    [ExportGroup("Countdowns")]
-    [Export] private AdvancedLabelCountdown preGameCountdown = null!;
-    [Export] private LabelCountdown inGameCountdown = null!;
+    private AdvancedLabelCountdown preGameCountdown = null!;
+    private LabelCountdown inGameCountdown = null!;
 
-    [ExportGroup("UI nodes")]
-    [ExportSubgroup("Game parts")]
-    [Export] private Control preGameProp = null!;
-    [Export] private Control preGameHunter = null!;
-    [Export] private Control inGame = null!;
-    [Export] private Control endGame = null!;
+    private Control preGameProp = null!;
+    private Control preGameHunter = null!;
+    private Control inGame = null!;
+    private Control endGame = null!;
 
-    [ExportSubgroup("In-game")]
-    [Export] private Label isPropLabel = null!;
-    [Export] private Label isHunterLabel = null!;
+    private Label isPropLabel = null!;
+    private Label isHunterLabel = null!;
 
-    [ExportSubgroup("End-game")]
-    [Export] private Label propsWonLabel = null!;
-    [Export] private Label hunterWonLabel = null!;
+    private Label propsWonLabel = null!;
+    private Label hunterWonLabel = null!;
 
     private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "Supervisor/PropHunt");
     private static readonly TimeSpan preGameDuration = TimeSpan.FromSeconds(1);
@@ -39,7 +44,19 @@ public partial class PropHuntSupervisor : Supervisor
     public override void _EnterTree()
     {
         base._EnterTree();
-        Spawner.PlayersNode = playersNode;
+        // Load nodes
+        preGameCountdown = _.UI.AdvancedLabelCountdown;
+        preGameProp = _.UI.Pre_gameProp;
+        preGameHunter = _.UI.Pre_gameHunter;
+
+        inGame = _.UI.In_game;
+        inGameCountdown = _.UI.In_game.Countdown;
+        isPropLabel = _.UI.In_game.IsProp;
+        isHunterLabel = _.UI.In_game.IsHunter;
+
+        endGame = _.UI.End_game;
+        propsWonLabel = _.UI.End_game.PropsWin;
+        hunterWonLabel = _.UI.End_game.HunterWins;
 
         // Show UI
         var localPeerId = Multiplayer.GetUniqueId();
