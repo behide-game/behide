@@ -30,10 +30,11 @@ properties/3/spawn = true
 properties/3/replication_mode = 2
 
 [node name="barrel_large" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+mass = 25.0
 script = ExtResource("1_tpw7n")
 VisualNode = NodePath("barrel_large")
 CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2"), NodePath("CollisionShape3D3")]
-Mass = 1.0
+Mass = 25.0
 
 [node name="barrel_large" parent="." instance=ExtResource("2_8l186")]
 

@@ -5,13 +5,19 @@ using Godot;
 
 namespace Behide.Game.Player;
 
-public partial class PlayerProp : PlayerMovements
+public partial class PlayerProp : PlayerBody
 {
     [Export] private Node3D currentVisualNode = null!;
     [Export] private CollisionShape3D[] collisionNodes = null!;
     [Export] private RayCast3D rayCast = null!;
-    private Vector3 initialCameraPosition = Vector3.Zero;
+    [ExportGroup("Camera adjust transition")]
+    [Export] private float cameraAdjustDuration = 0.4f;
+    [Export] private Tween.TransitionType cameraAdjustTransitionType;
+    [Export] private Tween.EaseType cameraAdjustEaseType;
     private BehideObject? focusedBehideObject;
+
+    private Vector3 initialCameraPosition = Vector3.Zero;
+    private Tween? cameraAdjustTween;
 
     public override void _EnterTree()
     {
@@ -64,6 +70,9 @@ public partial class PlayerProp : PlayerMovements
 
         collisionNodes = newCollisionNodes.ToArray();
 
+        // Set mass
+        Mass = behideObject.Mass;
+
         AdjustCameraPosition();
     }
 
@@ -76,9 +85,16 @@ public partial class PlayerProp : PlayerMovements
                 .Select(meshInstance3D => ((MeshInstance3D)meshInstance3D).GetAabb())
                 .Aggregate(new Aabb(), (current, aabb) => current.Merge(aabb));
 
-        CameraDisk.Position = initialCameraPosition + globalAabb.GetCenter();
-
+        var newPosition = initialCameraPosition + globalAabb.GetCenter();
         var newScale = Math.Max(0.1f, Mathf.Sqrt((globalAabb.Size.X + globalAabb.Size.Y + globalAabb.Size.Z) / 3f));
-        CameraDisk.Scale = new Vector3(newScale, newScale, newScale);
+        var newScaleVector = new Vector3(newScale, newScale, newScale);
+
+        cameraAdjustTween?.Kill();
+        cameraAdjustTween = GetTree().CreateTween();
+        cameraAdjustTween.SetTrans(cameraAdjustTransitionType);
+        cameraAdjustTween.SetEase(cameraAdjustEaseType);
+
+        cameraAdjustTween.TweenProperty(CameraDisk, "position", newPosition, cameraAdjustDuration);
+        cameraAdjustTween.Parallel().TweenProperty(CameraDisk, "scale", newScaleVector, cameraAdjustDuration);
     }
 }

@@ -22,10 +22,11 @@ properties/3/spawn = true
 properties/3/replication_mode = 2
 
 [node name="bottle_B_green" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+mass = 1.7
 script = ExtResource("1_6doql")
 VisualNode = NodePath("bottle_B_green")
 CollisionNodes = [NodePath("CollisionShape3D")]
-Mass = 1.0
+Mass = 1.7
 
 [node name="bottle_B_green" parent="." instance=ExtResource("2_6doql")]
 

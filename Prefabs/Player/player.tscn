@@ -15,12 +15,21 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("currentVisualNode", "collisionNodes", "rayCast")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("currentVisualNode", "collisionNodes", "rayCast", "CameraDisk", "camera", "PositionSynchronizer")]
 slide_on_ceiling = false
+platform_on_leave = 2
 script = ExtResource("1_hnwp3")
 currentVisualNode = NodePath("MeshInstance3D")
 collisionNodes = [NodePath("CollisionShape3D")]
 rayCast = NodePath("CameraDisk/Camera/RayCast3D")
+cameraAdjustTransitionType = 9
+cameraAdjustEaseType = 1
+CameraDisk = NodePath("CameraDisk")
+camera = NodePath("CameraDisk/Camera")
+PositionSynchronizer = NodePath("PositionSynchronizer")
+jumpAcceleration = 300.0
+pushForce = 0.2
+moveSpeed = 6.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
