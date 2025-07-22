@@ -5,7 +5,7 @@ using Godot;
 
 namespace Behide.Game.Player;
 
-[SceneTree("player.tscn")]
+[SceneTree("prop.tscn")]
 public partial class PlayerProp : PlayerBody
 {
     private Node3D currentVisualNode = null!;
@@ -22,11 +22,16 @@ public partial class PlayerProp : PlayerBody
 
     public override void _EnterTree()
     {
+        CameraDisk = _.CameraDisk;
+        camera = _.CameraDisk.SpringArm3D.Camera;
+        PositionSynchronizer = _.PositionSynchronizer;
         base._EnterTree();
         currentVisualNode = _.MeshInstance3D;
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
         rayCast = _.CameraDisk.SpringArm3D.Camera.RayCast;
+
+        Health = 100;
     }
 
     public override void _Process(double delta)
@@ -40,6 +45,7 @@ public partial class PlayerProp : PlayerBody
         base._Input(rawEvent);
         if (!IsMultiplayerAuthority()) return;
         if (Input.IsActionJustPressed(InputActions.Morph) && focusedBehideObject is not null) Rpc(MethodName.Morph, focusedBehideObject.GetPath());
+        if (Input.IsActionJustPressed("suffer")) Health -= 10;
     }
 
     [Rpc(CallLocal = true)]

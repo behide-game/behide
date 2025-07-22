@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://iwqa8xgo1ip3"]
+[gd_scene load_steps=8 format=3 uid="uid://iwqa8xgo1ip3"]
 
-[ext_resource type="Script" uid="uid://bnid2w67fk441" path="res://Prefabs/Player/PlayerProp.cs" id="1_hnwp3"]
-[ext_resource type="Texture2D" uid="uid://cbvq7gqgqsc3c" path="res://Assets/Images/cross-visor.svg" id="2_hnwp3"]
+[ext_resource type="Script" uid="uid://bnid2w67fk441" path="res://Prefabs/Player/PlayerProp.cs" id="1_qudki"]
+[ext_resource type="Texture2D" uid="uid://cbvq7gqgqsc3c" path="res://Assets/Images/cross-visor.svg" id="2_svrpp"]
+[ext_resource type="PackedScene" uid="uid://dnroif1jiq4ge" path="res://Scenes/Prefabs/health_bar_3d.tscn" id="3_ky5tt"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_x40yu"]
 
@@ -15,9 +16,16 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[node name="Player" type="CharacterBody3D"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_ky5tt"]
+viewport_path = NodePath("SubViewport")
+
+[node name="Prop" type="CharacterBody3D" node_paths=PackedStringArray("currentVisualNode", "collisionNodes", "rayCast", "healthBar")]
 platform_on_leave = 2
-script = ExtResource("1_hnwp3")
+script = ExtResource("1_qudki")
+currentVisualNode = NodePath("MeshInstance3D")
+collisionNodes = [NodePath("CollisionShape3D")]
+rayCast = NodePath("CameraDisk/SpringArm3D/Camera/RayCast")
+healthBar = NodePath("SubViewport/HealthBar3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 gi_mode = 2
@@ -61,5 +69,16 @@ size_flags_vertical = 4
 [node name="Crosshair" type="TextureRect" parent="HUD"]
 layout_mode = 2
 size_flags_horizontal = 4
-texture = ExtResource("2_hnwp3")
+texture = ExtResource("2_svrpp")
 expand_mode = 3
+
+[node name="SubViewport" type="SubViewport" parent="."]
+disable_3d = true
+transparent_bg = true
+
+[node name="HealthBar3D" parent="SubViewport" instance=ExtResource("3_ky5tt")]
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.57122, 0)
+billboard = 1
+texture = SubResource("ViewportTexture_ky5tt")

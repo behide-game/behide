@@ -1,14 +1,14 @@
+using System.Globalization;
 using Godot;
 
 namespace Behide.Game.Player;
 
-[SceneTree("player.tscn")]
 public partial class PlayerBody : CharacterBody3D
 {
-    [Export] public float Mass = 60;
+    [Export] public float Mass = 30;
 
     protected Node3D CameraDisk = null!;
-    private Camera3D camera = null!;
+    protected Camera3D camera = null!;
     public MultiplayerSynchronizer PositionSynchronizer = null!;
 
     [ExportGroup("Camera rotation")]
@@ -18,7 +18,7 @@ public partial class PlayerBody : CharacterBody3D
 
     [ExportGroup("Movements")]
     private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
-    [Export] private float jumpAcceleration = 300;
+    [Export] private float jumpAcceleration = 400;
     [Export] private float moveSpeed = 6;
     [Export] private float pushCoefficient = 0.6f;
 
@@ -28,13 +28,26 @@ public partial class PlayerBody : CharacterBody3D
     private float rotationY;
     private bool jumping;
 
+    [ExportGroup("Stats")]
+
+    [Export] protected ProgressBar healthBar = null!;
+    [Export] private double health;
+    public double Health
+    {
+        get => health;
+        set
+        {
+            // Set the bar and the text to match the health amount (for debug purpose)
+            health = Mathf.Clamp(value, 0L, 100L);
+            healthBar.Value = health;
+            healthBar.GetNode<Label>("HealthAmountText").Text = health.ToString(CultureInfo.InvariantCulture);
+        }
+    }
+
     // --- Initialization ---
     public override void _EnterTree()
     {
         log = Serilog.Log.ForContext("Tag", "Player/Movements");
-        CameraDisk = _.CameraDisk;
-        camera = _.CameraDisk.SpringArm3D.Camera;
-        PositionSynchronizer = _.PositionSynchronizer;
 
         // Set authority
         var ownerPeerId = int.Parse(Name);
@@ -52,7 +65,6 @@ public partial class PlayerBody : CharacterBody3D
             Input.MouseMode = Input.MouseModeEnum.Captured;
         }
     }
-
 
     // --- Movements ---
     public override void _PhysicsProcess(double delta)

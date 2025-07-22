@@ -14,7 +14,8 @@ using Types;
 public partial class PlayerSpawner : Node
 {
     [Export] public Node PlayersNode = null!;
-    [Export] private PackedScene playerPrefab = null!;
+    [Export] private PackedScene playerPropPrefab = null!;
+    [Export] private PackedScene playerHunterPrefab = null!;
 
     private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "PlayerSpawner");
 
@@ -50,7 +51,7 @@ public partial class PlayerSpawner : Node
         var playerToSpawn = playerObservable.Value;
 
         // Create node
-        var playerNode = playerPrefab.Instantiate<PlayerBody>();
+        var playerNode = playerHunterPrefab.Instantiate<PlayerBody>();
         playerNode.Name = playerToSpawn.PeerId.ToString();
         playerNode.Position = new Vector3(0, 0, playerToSpawn.PeerId * 4);
 

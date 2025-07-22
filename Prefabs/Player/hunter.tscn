@@ -1,0 +1,74 @@
+[gd_scene load_steps=8 format=3 uid="uid://beaeb2uyytjul"]
+
+[ext_resource type="Script" uid="uid://luuofj7aqswe" path="res://Prefabs/Player/PlayerHunter.cs" id="1_w58js"]
+[ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crossair.svg" id="2_qudki"]
+[ext_resource type="PackedScene" uid="uid://bjv42ug8hv36" path="res://Assets/Models/Prefabs/gun.glb" id="2_svrpp"]
+[ext_resource type="PackedScene" uid="uid://dnroif1jiq4ge" path="res://Scenes/Prefabs/health_bar_3d.tscn" id="4_w58js"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_qudki"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_svrpp"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_n61o8"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Hunter" type="CharacterBody3D" node_paths=PackedStringArray("healthBar")]
+slide_on_ceiling = false
+script = ExtResource("1_w58js")
+healthBar = NodePath("HealthBar3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+gi_mode = 2
+mesh = SubResource("CapsuleMesh_qudki")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CapsuleShape3D_svrpp")
+
+[node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_n61o8")
+
+[node name="HUD" type="HBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -15.0
+offset_top = -15.0
+offset_right = 15.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Crosshair" type="TextureRect" parent="HUD"]
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("2_qudki")
+expand_mode = 3
+
+[node name="HealthBar3D" parent="." instance=ExtResource("4_w58js")]
+offset_left = -532.0
+offset_top = 248.0
+offset_right = -413.0
+offset_bottom = 263.0
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
+keep_aspect = 0
+fov = 90.0
+
+[node name="Gun" parent="Camera" instance=ExtResource("2_svrpp")]
+transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0.491, -0.384, -0.949)
+
+[node name="RayCast3D" type="RayCast3D" parent="Camera/Gun"]
+target_position = Vector3(0, 0, -20)
+debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
