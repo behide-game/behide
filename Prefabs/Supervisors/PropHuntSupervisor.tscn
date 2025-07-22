@@ -20,18 +20,8 @@ bg_color = Color(0.894118, 0.945098, 0.968627, 1)
 font_size = 20
 font_color = Color(0.0980392, 0.109804, 0.117647, 1)
 
-[node name="Supervisor" type="Node3D" node_paths=PackedStringArray("preGameCountdown", "inGameCountdown", "preGameProp", "preGameHunter", "inGame", "endGame", "isPropLabel", "isHunterLabel", "propsWonLabel", "hunterWonLabel", "Spawner")]
+[node name="Supervisor" type="Node3D" node_paths=PackedStringArray("Spawner")]
 script = ExtResource("1_0pdhf")
-preGameCountdown = NodePath("UI/AdvancedLabelCountdown")
-inGameCountdown = NodePath("UI/In-game/LabelCountdown")
-preGameProp = NodePath("UI/Pre-game Prop")
-preGameHunter = NodePath("UI/Pre-game Hunter")
-inGame = NodePath("UI/In-game")
-endGame = NodePath("UI/End-game")
-isPropLabel = NodePath("UI/In-game/IsProp")
-isHunterLabel = NodePath("UI/In-game/IsHunter")
-propsWonLabel = NodePath("UI/End-game/PropsWin")
-hunterWonLabel = NodePath("UI/End-game/HunterWins")
 openMenuAction = "open_menu"
 Spawner = NodePath("PlayerSpawner")
 
@@ -152,7 +142,7 @@ offset_bottom = 23.0
 grow_horizontal = 2
 text = "Time remaining: 5:00"
 
-[node name="LabelCountdown" type="Node" parent="UI/In-game" node_paths=PackedStringArray("label")]
+[node name="Countdown" type="Node" parent="UI/In-game" node_paths=PackedStringArray("label")]
 script = ExtResource("6_w7xx4")
 label = NodePath("../CountdownLabel")
 runningTextFormat = "Remaining time: {0:mm\\:ss}"

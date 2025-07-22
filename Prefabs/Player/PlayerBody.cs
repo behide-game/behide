@@ -2,15 +2,14 @@ using Godot;
 
 namespace Behide.Game.Player;
 
-// This script run on authority peer.
+[SceneTree("player.tscn")]
 public partial class PlayerBody : CharacterBody3D
 {
     [Export] public float Mass = 60;
 
-    [ExportGroup("Nodes")]
-    [Export] protected Node3D CameraDisk = null!;
-    [Export] private Camera3D camera = null!;
-    [Export] public MultiplayerSynchronizer PositionSynchronizer = null!;
+    protected Node3D CameraDisk = null!;
+    private Camera3D camera = null!;
+    public MultiplayerSynchronizer PositionSynchronizer = null!;
 
     [ExportGroup("Movements")]
     // Rotation sensitivities
@@ -20,10 +19,9 @@ public partial class PlayerBody : CharacterBody3D
     // Accelerations m/s^2
     private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
     [Export] private float jumpAcceleration = 300;
-    [Export] private float pushForce = 0.2f;
+    [Export] private float pushForce = 0.5f;
     // Move speed in m/s
     [Export] private float moveSpeed = 6;
-
 
     private Serilog.ILogger log = null!;
     // Rotation accumulators
@@ -35,6 +33,9 @@ public partial class PlayerBody : CharacterBody3D
     public override void _EnterTree()
     {
         log = Serilog.Log.ForContext("Tag", "Player/Movements");
+        CameraDisk = _.CameraDisk;
+        camera = _.CameraDisk.SpringArm3D.Camera;
+        PositionSynchronizer = _.PositionSynchronizer;
 
         // Set authority
         var ownerPeerId = int.Parse(Name);
@@ -69,7 +70,7 @@ public partial class PlayerBody : CharacterBody3D
         }
 
         // Add movements
-        var inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
+        var inputDir = Input.GetVector(InputActions.MoveLeft, InputActions.MoveRight, InputActions.MoveForward, InputActions.MoveBack);
         var direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
         if (direction != Vector3.Zero)
         {
@@ -131,7 +132,7 @@ public partial class PlayerBody : CharacterBody3D
         if (!IsMultiplayerAuthority()) return;
 
         // Escape
-        if (rawEvent.IsActionPressed("ui_cancel"))
+        if (rawEvent.IsActionPressed(BuiltinInputActions.UiCancel))
             Input.MouseMode = Input.MouseMode == Input.MouseModeEnum.Captured
                 ? Input.MouseModeEnum.Visible
                 : Input.MouseModeEnum.Captured;
@@ -145,6 +146,6 @@ public partial class PlayerBody : CharacterBody3D
         }
 
         // Jump
-        if (Input.IsActionJustPressed("jump")) jumping = true;
+        if (Input.IsActionJustPressed(InputActions.Jump)) jumping = true;
     }
 }

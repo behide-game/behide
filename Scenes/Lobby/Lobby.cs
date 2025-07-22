@@ -13,19 +13,20 @@ namespace Behide.Game.UI.Lobby;
 
 using Types;
 
+[SceneTree]
 public partial class Lobby : Control
 {
-    [Export] private Control chooseModeControl = null!;
-    [Export] private Control lobbyControl = null!;
+    private Control chooseModeControl = null!;
+    private Control lobbyControl = null!;
 
-    [ExportGroup("Choose mode")]
-    [Export] private LineEdit codeInput = null!;
+    // Choose mode
+    private LineEdit codeInput = null!;
 
-    [ExportGroup("Lobby")]
-    [Export] private VBoxContainer playerListNode = null!;
+    // Lobby
+    private VBoxContainer playerListNode = null!;
     [Export] private PackedScene playerListItemScene = null!;
-    [Export] private Label readyButtonLabel = null!;
-    [Export] private LabelCountdown countdown = null!;
+    private Label readyButtonLabel = null!;
+    private LabelCountdown countdown = null!;
 
     private ILogger log = null!;
     private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(1);// TimeSpan.FromSeconds(5);
@@ -35,11 +36,14 @@ public partial class Lobby : Control
     public override void _EnterTree()
     {
         log = Log.ForContext("Tag", "UI/Lobby");
+        chooseModeControl = _.ChooseMode;
+        lobbyControl = _.Lobby;
+        codeInput = _.ChooseMode.Buttons.VBoxContainer.Code.LineEdit;
+        playerListNode = _.Lobby.Boxes.Players.MarginContainer.VBoxContainer.ScrollContainer.Players;
+        readyButtonLabel = _.Lobby.Boxes.VBoxContainer.HBoxContainer.Ready.Center.Label;
+        countdown = _.Countdown;
 
-        chooseModeControl = GetNode<Control>("ChooseMode");
         chooseModeControl.Show();
-
-        lobbyControl = GetNode<Control>("Lobby");
         lobbyControl.Hide();
 
         // Set authority
@@ -227,7 +231,7 @@ public partial class Lobby : Control
     }
     private void OnQuitButtonPressed()
     {
-        _ = GameManager.Room.LeaveRoom();
+        var _ = GameManager.Room.LeaveRoom();
         HideLobby();
     }
 }

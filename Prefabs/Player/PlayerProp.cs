@@ -5,15 +5,16 @@ using Godot;
 
 namespace Behide.Game.Player;
 
+[SceneTree("player.tscn")]
 public partial class PlayerProp : PlayerBody
 {
-    [Export] private Node3D currentVisualNode = null!;
-    [Export] private CollisionShape3D[] collisionNodes = null!;
-    [Export] private RayCast3D rayCast = null!;
+    private Node3D currentVisualNode = null!;
+    private CollisionShape3D[] collisionNodes = null!;
+    private RayCast3D rayCast = null!;
     [ExportGroup("Camera adjust transition")]
     [Export] private float cameraAdjustDuration = 0.4f;
-    [Export] private Tween.TransitionType cameraAdjustTransitionType;
-    [Export] private Tween.EaseType cameraAdjustEaseType;
+    [Export] private Tween.TransitionType cameraAdjustTransitionType = Tween.TransitionType.Bounce;
+    [Export] private Tween.EaseType cameraAdjustEaseType = Tween.EaseType.Out;
     private BehideObject? focusedBehideObject;
 
     private Vector3 initialCameraPosition = Vector3.Zero;
@@ -22,7 +23,10 @@ public partial class PlayerProp : PlayerBody
     public override void _EnterTree()
     {
         base._EnterTree();
+        currentVisualNode = _.MeshInstance3D;
+        collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
+        rayCast = _.CameraDisk.SpringArm3D.Camera.RayCast;
     }
 
     public override void _Process(double delta)
@@ -35,7 +39,7 @@ public partial class PlayerProp : PlayerBody
     {
         base._Input(rawEvent);
         if (!IsMultiplayerAuthority()) return;
-        if (Input.IsActionJustPressed("morph") && focusedBehideObject is not null) Rpc(MethodName.Morph, focusedBehideObject.GetPath());
+        if (Input.IsActionJustPressed(InputActions.Morph) && focusedBehideObject is not null) Rpc(MethodName.Morph, focusedBehideObject.GetPath());
     }
 
     [Rpc(CallLocal = true)]
@@ -43,6 +47,7 @@ public partial class PlayerProp : PlayerBody
     {
         if (GetNode(behideObjectPath) is not BehideObject behideObject) return;
         if (behideObject.VisualNode.Duplicate() is not Node3D newVisualNode) return;
+
         // Remove current visual node and collision nodes
         currentVisualNode.QueueFree();
         RemoveChild(currentVisualNode);
