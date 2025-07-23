@@ -38,20 +38,23 @@ public partial class PlayerSpawner : Node
         // Authority is set by the parent node that must be a supervisor
     }
 
-    public void SpawnPlayer(int peerId)
+    public void SpawnPlayer(int peerId, bool isHunter)
     {
         if (!IsMultiplayerAuthority()) return;
-        Rpc(nameof(SpawnPlayerRpc), peerId);
+        Rpc(nameof(SpawnPlayerRpc), peerId, isHunter);
     }
 
     [Rpc(CallLocal = true)]
-    private void SpawnPlayerRpc(int peerIdToSpawn)
+    private void SpawnPlayerRpc(int peerIdToSpawn, bool isHunter)
     {
         var playerObservable = players[peerIdToSpawn];
         var playerToSpawn = playerObservable.Value;
 
         // Create node
-        var playerNode = playerHunterPrefab.Instantiate<PlayerBody>();
+        var playerNode = isHunter ?
+        playerHunterPrefab.Instantiate<PlayerBody>() :
+        playerPropPrefab.Instantiate<PlayerBody>();
+
         playerNode.Name = playerToSpawn.PeerId.ToString();
         playerNode.Position = new Vector3(0, 0, playerToSpawn.PeerId * 4);
 

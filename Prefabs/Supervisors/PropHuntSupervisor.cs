@@ -81,7 +81,7 @@ public partial class PropHuntSupervisor : Supervisor
             inGame.Show();
 
             if (!IsMultiplayerAuthority()) return;
-            Spawner.SpawnPlayer(HunterPeerId.Result);
+            Spawner.SpawnPlayer(HunterPeerId.Result, true);
             inGameCountdown.StartCountdown(inGameDuration);
         };
 
@@ -105,7 +105,7 @@ public partial class PropHuntSupervisor : Supervisor
             foreach (var player in GameManager.Room.Players)
             {
                 if (player.Key == await HunterPeerId) continue;
-                Spawner.CallDeferred(nameof(Spawner.SpawnPlayer), player.Key); // TODO: Add spawn points
+                Spawner.CallDeferred(nameof(Spawner.SpawnPlayer), player.Key, false); // TODO: Add spawn points
             }
 
             preGameCountdown.StartCountdownDeferred(preGameDuration);
