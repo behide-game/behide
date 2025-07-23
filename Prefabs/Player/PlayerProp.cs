@@ -20,11 +20,16 @@ public partial class PlayerProp : PlayerBody
     private Vector3 initialCameraPosition = Vector3.Zero;
     private Tween? cameraAdjustTween;
 
-    public override void _EnterTree()
+    protected override void InitializeNodes()
     {
         CameraDisk = _.CameraDisk;
-        camera = _.CameraDisk.SpringArm3D.Camera;
+        Camera = _.CameraDisk.SpringArm3D.Camera;
         PositionSynchronizer = _.PositionSynchronizer;
+        healthBar = _.SubViewport.HealthBar3D;
+    }
+
+    public override void _EnterTree()
+    {
         base._EnterTree();
         currentVisualNode = _.MeshInstance3D;
         collisionNodes = [_.CollisionShape3D];

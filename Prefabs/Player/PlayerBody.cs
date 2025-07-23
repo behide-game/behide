@@ -3,12 +3,12 @@ using Godot;
 
 namespace Behide.Game.Player;
 
-public partial class PlayerBody : CharacterBody3D
+public abstract partial class PlayerBody : CharacterBody3D
 {
     [Export] public float Mass = 30;
 
     protected Node3D CameraDisk = null!;
-    protected Camera3D camera = null!;
+    protected Camera3D Camera = null!;
     public MultiplayerSynchronizer PositionSynchronizer = null!;
 
     [ExportGroup("Camera rotation")]
@@ -30,9 +30,9 @@ public partial class PlayerBody : CharacterBody3D
 
     [ExportGroup("Stats")]
 
-    [Export] protected ProgressBar healthBar = null!;
+    public ProgressBar healthBar = null!;
     [Export] private double health;
-    public double Health
+    protected double Health
     {
         get => health;
         set
@@ -45,9 +45,12 @@ public partial class PlayerBody : CharacterBody3D
     }
 
     // --- Initialization ---
+    protected abstract void InitializeNodes();
     public override void _EnterTree()
     {
+        InitializeNodes();
         log = Serilog.Log.ForContext("Tag", "Player/Movements");
+
 
         // Set authority
         var ownerPeerId = int.Parse(Name);
@@ -61,7 +64,7 @@ public partial class PlayerBody : CharacterBody3D
         // Only when we are the authority
         if (IsMultiplayerAuthority())
         {
-            camera.MakeCurrent();
+            Camera.MakeCurrent();
             Input.MouseMode = Input.MouseModeEnum.Captured;
         }
     }

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://luuofj7aqswe" path="res://Prefabs/Player/PlayerHunter.cs" id="1_w58js"]
 [ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crossair.svg" id="2_qudki"]
-[ext_resource type="PackedScene" uid="uid://bjv42ug8hv36" path="res://Assets/Models/Prefabs/gun.glb" id="2_svrpp"]
+[ext_resource type="PackedScene" uid="uid://bbuv8m4lpdg1u" path="res://Assets/Models/Prefabs/gun.glb" id="2_svrpp"]
 [ext_resource type="PackedScene" uid="uid://dnroif1jiq4ge" path="res://Scenes/Prefabs/health_bar_3d.tscn" id="4_w58js"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_qudki"]
@@ -17,10 +17,10 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[node name="Hunter" type="CharacterBody3D" node_paths=PackedStringArray("healthBar")]
+[node name="Hunter" type="CharacterBody3D"]
 slide_on_ceiling = false
 script = ExtResource("1_w58js")
-healthBar = NodePath("HealthBar3D")
+health = 1.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
@@ -68,7 +68,3 @@ fov = 90.0
 
 [node name="Gun" parent="Camera" instance=ExtResource("2_svrpp")]
 transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0.491, -0.384, -0.949)
-
-[node name="RayCast3D" type="RayCast3D" parent="Camera/Gun"]
-target_position = Vector3(0, 0, -20)
-debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
