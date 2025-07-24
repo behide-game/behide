@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Behide.Game.Supervisors;
 using Godot;
 
 namespace Behide.Game.Player;
@@ -20,6 +21,8 @@ public partial class PlayerProp : PlayerBody
     private Vector3 initialCameraPosition = Vector3.Zero;
     private Tween? cameraAdjustTween;
 
+    private PropHuntSupervisor supervisor = null!;
+
     protected override void InitializeNodes()
     {
         CameraDisk = _.CameraDisk;
@@ -30,6 +33,7 @@ public partial class PlayerProp : PlayerBody
 
     public override void _EnterTree()
     {
+        GD.Print(supervisor);
         base._EnterTree();
         currentVisualNode = _.MeshInstance3D;
         collisionNodes = [_.CollisionShape3D];
@@ -37,6 +41,13 @@ public partial class PlayerProp : PlayerBody
         rayCast = _.CameraDisk.SpringArm3D.Camera.RayCast;
 
         Health = 100;
+        supervisor = GetNode<PropHuntSupervisor>("./../../Supervisor");
+        GD.Print(Multiplayer.GetUniqueId());
+        GD.Print(supervisor.HunterPeerIdToExport);
+        if (Multiplayer.GetUniqueId() == supervisor.HunterPeerIdToExport)
+        {
+            healthBar.Visible = false;
+        }
     }
 
     public override void _Process(double delta)

@@ -9,12 +9,14 @@ namespace Behide.Game.Supervisors;
 [SceneTree]
 public partial class PropHuntSupervisor : Supervisor
 {
-    [Export] private Node PlayersNode
+    [Export]
+    private Node PlayersNode
     {
         get => Spawner.PlayersNode;
         set => Spawner.PlayersNode = value;
     }
-    [Export] private new Node BehideObjects
+    [Export]
+    private new Node BehideObjects
     {
         get => ((Supervisor)this).BehideObjects;
         set => ((Supervisor)this).BehideObjects = value;
@@ -40,10 +42,14 @@ public partial class PropHuntSupervisor : Supervisor
 
     private readonly TaskCompletionSource<int> hunterPeerIdTcs = new();
     private Task<int> HunterPeerId => hunterPeerIdTcs.Task;
+    public int HunterPeerIdToExport;
 
     public override void _EnterTree()
     {
         base._EnterTree();
+        // Convert task to int
+        CallDeferred(nameof(ConvertHunterId));
+
         // Load nodes
         preGameCountdown = _.UI.AdvancedLabelCountdown;
         preGameProp = _.UI.Pre_gameProp;
@@ -125,5 +131,14 @@ public partial class PropHuntSupervisor : Supervisor
     {
         if (!hunterPeerIdTcs.TrySetResult(peerId)) log.Warning("Failed to set hunterPeerId. The hunter has been chose multiple times ?");
         log.Information("Hunter has been chosen (PeerId: {PeerId})", peerId);
+    }
+
+    private async void ConvertHunterId()
+    {
+        HunterPeerIdToExport = await Task.Run(async () =>
+        {
+            var hunterPeerId = await HunterPeerId;
+            return hunterPeerId;
+        });
     }
 }

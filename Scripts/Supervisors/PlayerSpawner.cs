@@ -51,9 +51,9 @@ public partial class PlayerSpawner : Node
         var playerToSpawn = playerObservable.Value;
 
         // Create node
-        var playerNode = isHunter ?
-        playerHunterPrefab.Instantiate<PlayerBody>() :
-        playerPropPrefab.Instantiate<PlayerBody>();
+        var playerNode = isHunter
+        ? playerHunterPrefab.Instantiate<PlayerBody>()
+        : playerPropPrefab.Instantiate<PlayerBody>();
 
         playerNode.Name = playerToSpawn.PeerId.ToString();
         playerNode.Position = new Vector3(0, 0, playerToSpawn.PeerId * 4);
@@ -62,7 +62,11 @@ public partial class PlayerSpawner : Node
         PlayersNode.AddChild(playerNode, true);
 
         // Disable visibility if authority
-        if (playerToSpawn.PeerId != localPlayer.Value.PeerId) RpcId(playerToSpawn.PeerId, nameof(SpawnedPlayerRpc));
+        if (playerToSpawn.PeerId != localPlayer.Value.PeerId)
+        {
+            RpcId(playerToSpawn.PeerId, nameof(SpawnedPlayerRpc));
+            return;
+        }
 
         playerNode.PositionSynchronizer.SetVisibilityPublic(false);
 
