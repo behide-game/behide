@@ -41,15 +41,13 @@ public partial class PropHuntSupervisor : Supervisor
     private static readonly TimeSpan inGameDuration = TimeSpan.FromMinutes(5);
 
     private readonly TaskCompletionSource<int> hunterPeerIdTcs = new();
-    private Task<int> HunterPeerId => hunterPeerIdTcs.Task;
-    public int HunterPeerIdToExport;
+    private readonly TaskCompletionSource<bool> isLocalPeerHunterTcs = new();
+    public Task<int> HunterPeerId => hunterPeerIdTcs.Task;
+    public Task<bool> IsLocalPeerHunter => isLocalPeerHunterTcs.Task;
 
     public override void _EnterTree()
     {
         base._EnterTree();
-        // Convert task to int
-        CallDeferred(nameof(ConvertHunterId));
-
         // Load nodes
         preGameCountdown = _.UI.AdvancedLabelCountdown;
         preGameProp = _.UI.Pre_gameProp;
@@ -129,16 +127,12 @@ public partial class PropHuntSupervisor : Supervisor
     [Rpc(CallLocal = true)]
     public void RpcSetHunter(int peerId)
     {
-        if (!hunterPeerIdTcs.TrySetResult(peerId)) log.Warning("Failed to set hunterPeerId. The hunter has been chose multiple times ?");
-        log.Information("Hunter has been chosen (PeerId: {PeerId})", peerId);
-    }
-
-    private async void ConvertHunterId()
-    {
-        HunterPeerIdToExport = await Task.Run(async () =>
+        if (!hunterPeerIdTcs.TrySetResult(peerId)
+            || !isLocalPeerHunterTcs.TrySetResult(Multiplayer.GetUniqueId() == peerId))
         {
-            var hunterPeerId = await HunterPeerId;
-            return hunterPeerId;
-        });
+            log.Warning("Failed to set hunterPeerId to {PeerId}. The hunter has been chose multiple times ?", peerId);
+            return;
+        }
+        log.Information("Hunter has been chosen (PeerId: {PeerId})", peerId);
     }
 }

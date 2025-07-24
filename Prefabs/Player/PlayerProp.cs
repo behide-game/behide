@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Behide.Game.Supervisors;
 using Godot;
 
@@ -12,6 +13,8 @@ public partial class PlayerProp : PlayerBody
     private Node3D currentVisualNode = null!;
     private CollisionShape3D[] collisionNodes = null!;
     private RayCast3D rayCast = null!;
+    private PropHuntSupervisor supervisor = null!;
+
     [ExportGroup("Camera adjust transition")]
     [Export] private float cameraAdjustDuration = 0.4f;
     [Export] private Tween.TransitionType cameraAdjustTransitionType = Tween.TransitionType.Bounce;
@@ -21,33 +24,27 @@ public partial class PlayerProp : PlayerBody
     private Vector3 initialCameraPosition = Vector3.Zero;
     private Tween? cameraAdjustTween;
 
-    private PropHuntSupervisor supervisor = null!;
-
     protected override void InitializeNodes()
     {
+        // PlayerBody nodes
         CameraDisk = _.CameraDisk;
         Camera = _.CameraDisk.SpringArm3D.Camera;
         PositionSynchronizer = _.PositionSynchronizer;
-        healthBar = _.SubViewport.HealthBar3D;
-    }
 
-    public override void _EnterTree()
-    {
-        GD.Print(supervisor);
-        base._EnterTree();
+        // PlayerProp nodes
+        healthBar = _.SubViewport.HealthBar3D;
         currentVisualNode = _.MeshInstance3D;
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
         rayCast = _.CameraDisk.SpringArm3D.Camera.RayCast;
+        supervisor = GetNode<PropHuntSupervisor>("/root/multiplayer/Supervisor");
+    }
 
+    public override void _EnterTree()
+    {
+        base._EnterTree();
         Health = 100;
-        supervisor = GetNode<PropHuntSupervisor>("./../../Supervisor");
-        GD.Print(Multiplayer.GetUniqueId());
-        GD.Print(supervisor.HunterPeerIdToExport);
-        if (Multiplayer.GetUniqueId() == supervisor.HunterPeerIdToExport)
-        {
-            healthBar.Visible = false;
-        }
+        Task.Run(async () => healthBar.CallDeferred(CanvasItem.MethodName.SetVisible, !await supervisor.IsLocalPeerHunter));
     }
 
     public override void _Process(double delta)

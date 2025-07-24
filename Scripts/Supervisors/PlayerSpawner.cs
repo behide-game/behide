@@ -52,8 +52,8 @@ public partial class PlayerSpawner : Node
 
         // Create node
         var playerNode = isHunter
-        ? playerHunterPrefab.Instantiate<PlayerBody>()
-        : playerPropPrefab.Instantiate<PlayerBody>();
+            ? playerHunterPrefab.Instantiate<PlayerBody>()
+            : playerPropPrefab.Instantiate<PlayerBody>();
 
         playerNode.Name = playerToSpawn.PeerId.ToString();
         playerNode.Position = new Vector3(0, 0, playerToSpawn.PeerId * 4);
