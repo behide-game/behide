@@ -16,13 +16,13 @@ public partial class PlayerHunter : PlayerBody
         PositionSynchronizer = _.PositionSynchronizer;
         Hud = _.HUD;
         healthBar = _.HealthBar3D;
-        if (!IsMultiplayerAuthority()) healthBar.Visible = false;
     }
 
     public override void _EnterTree()
     {
         base._EnterTree();
         Health = 100;
+        if (!IsMultiplayerAuthority()) healthBar.Visible = false;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -38,10 +38,8 @@ public partial class PlayerHunter : PlayerBody
 
             var query = PhysicsRayQueryParameters3D.Create(from, to);
             var result = spaceState.IntersectRay(query);
-            //if (result["collider"] is PlayerProp)
-            //{
             var collider = result["collider"].As<Node>();
-            if (collider is PlayerProp) Rpc(MethodName.healthUpdate, collider.GetPath(), 20);;
+            if (collider is PlayerProp) Rpc(MethodName.PlayerHitRpc, collider.GetPath(), 20);;
         }
     }
 
@@ -52,9 +50,9 @@ public partial class PlayerHunter : PlayerBody
     }
 
     [Rpc(CallLocal = true)]
-    private void healthUpdate(NodePath playerPath, int healthDealt)
+    private void PlayerHitRpc(NodePath playerPath, int healthDealt)
     {
-        var player = (PlayerProp)GetNode(playerPath);
-        player.Health -= healthDealt;
+        var player = GetNode(playerPath) as PlayerProp;
+        if (player is not null) player.Health -= healthDealt;
     }
 }

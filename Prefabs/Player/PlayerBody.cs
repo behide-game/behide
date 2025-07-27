@@ -33,7 +33,7 @@ public abstract partial class PlayerBody : CharacterBody3D
     [ExportGroup("Stats")]
 
     public ProgressBar healthBar = null!;
-    [Export] public double health;
+    [Export] private double health;
     public double Health
     {
         get => health;
