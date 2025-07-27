@@ -30,6 +30,7 @@ public partial class PlayerProp : PlayerBody
         CameraDisk = _.CameraDisk;
         Camera = _.CameraDisk.SpringArm3D.Camera;
         PositionSynchronizer = _.PositionSynchronizer;
+        Hud = _.HUD;
 
         // PlayerProp nodes
         healthBar = _.SubViewport.HealthBar3D;

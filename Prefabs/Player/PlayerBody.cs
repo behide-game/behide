@@ -1,6 +1,7 @@
 using System.Globalization;
 using Godot;
 
+
 namespace Behide.Game.Player;
 
 public abstract partial class PlayerBody : CharacterBody3D
@@ -9,6 +10,7 @@ public abstract partial class PlayerBody : CharacterBody3D
 
     protected Node3D CameraDisk = null!;
     protected Camera3D Camera = null!;
+    protected BoxContainer Hud = null!;
     public MultiplayerSynchronizer PositionSynchronizer = null!;
 
     [ExportGroup("Camera rotation")]
@@ -31,8 +33,8 @@ public abstract partial class PlayerBody : CharacterBody3D
     [ExportGroup("Stats")]
 
     public ProgressBar healthBar = null!;
-    [Export] private double health;
-    protected double Health
+    [Export] public double health;
+    public double Health
     {
         get => health;
         set
@@ -67,6 +69,7 @@ public abstract partial class PlayerBody : CharacterBody3D
             Camera.MakeCurrent();
             Input.MouseMode = Input.MouseModeEnum.Captured;
         }
+        else Hud.Visible = false;
     }
 
     // --- Movements ---
@@ -77,7 +80,7 @@ public abstract partial class PlayerBody : CharacterBody3D
 
         // Add the gravity.
         if (!IsOnFloor()) velocity += Vector3.Down * (float)(gravity * delta);
-        else if (jumping)
+        if (jumping)
         {
             velocity += Vector3.Up * (float)(jumpAcceleration * delta);
             jumping = false;
@@ -157,6 +160,6 @@ public abstract partial class PlayerBody : CharacterBody3D
         }
 
         // Jump
-        if (Input.IsActionJustPressed(InputActions.Jump)) jumping = true;
+        if (Input.IsActionJustPressed(InputActions.Jump) && IsOnFloor()) jumping = true;
     }
 }

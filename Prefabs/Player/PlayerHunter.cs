@@ -1,5 +1,5 @@
 using Godot;
-
+using System.Globalization;
 namespace Behide.Game.Player;
 
 [SceneTree("hunter.tscn")]
@@ -8,14 +8,15 @@ public partial class PlayerHunter : PlayerBody
     private RayCast3D rayCastView = null!;
     private RayCast3D rayCastGun = null!;
     private const float rayLength = 1000.0f;
-    private Vector2 winSize;
 
     protected override void InitializeNodes()
     {
         CameraDisk = _.Camera;
         Camera = _.Camera;
         PositionSynchronizer = _.PositionSynchronizer;
+        Hud = _.HUD;
         healthBar = _.HealthBar3D;
+        if (!IsMultiplayerAuthority()) healthBar.Visible = false;
     }
 
     public override void _EnterTree()
@@ -29,18 +30,18 @@ public partial class PlayerHunter : PlayerBody
         base._PhysicsProcess(delta);
         if (Input.IsActionJustPressed("morph"))
         {
-            winSize = GetViewport().GetVisibleRect().Size;
+            var windowSize = GetViewport().GetVisibleRect().Size;
             var spaceState = GetWorld3D().DirectSpaceState;
 
-            var from = Camera.ProjectRayOrigin(winSize / 2);
-            var to = from + Camera.ProjectRayNormal(winSize / 2) * rayLength;
+            var from = Camera.ProjectRayOrigin(windowSize / 2);
+            var to = from + Camera.ProjectRayNormal(windowSize / 2) * rayLength;
 
             var query = PhysicsRayQueryParameters3D.Create(from, to);
             var result = spaceState.IntersectRay(query);
             //if (result["collider"] is PlayerProp)
             //{
             var collider = result["collider"].As<Node>();
-            if (collider is PlayerProp) GD.Print("Hit");
+            if (collider is PlayerProp) Rpc(MethodName.healthUpdate, collider.GetPath(), 20);;
         }
     }
 
@@ -48,5 +49,12 @@ public partial class PlayerHunter : PlayerBody
     {
         base._Input(rawEvent);
         if (Input.IsActionJustPressed("suffer")) Health -= 10;
+    }
+
+    [Rpc(CallLocal = true)]
+    private void healthUpdate(NodePath playerPath, int healthDealt)
+    {
+        var player = (PlayerProp)GetNode(playerPath);
+        player.Health -= healthDealt;
     }
 }
