@@ -38,8 +38,13 @@ public partial class PlayerHunter : PlayerBody
 
             var query = PhysicsRayQueryParameters3D.Create(from, to);
             var result = spaceState.IntersectRay(query);
-            var collider = result["collider"].As<Node>();
-            if (collider is PlayerProp) Rpc(MethodName.PlayerHitRpc, collider.GetPath(), 20);;
+            try
+            {
+                var collider = result["collider"].As<Node>();
+                if (collider is PlayerProp) Rpc(MethodName.PlayerHitRpc, collider.GetPath());
+                else Rpc(MethodName.PlayerMissRpc);
+            }
+            catch{}
         }
     }
 
@@ -50,9 +55,15 @@ public partial class PlayerHunter : PlayerBody
     }
 
     [Rpc(CallLocal = true)]
-    private void PlayerHitRpc(NodePath playerPath, int healthDealt)
+    private void PlayerHitRpc(NodePath playerPath)
     {
         var player = GetNode(playerPath) as PlayerProp;
-        if (player is not null) player.Health -= healthDealt;
+        if (player is not null) player.Health -= 20;
+    }
+
+    [Rpc(CallLocal = true)]
+    private void PlayerMissRpc()
+    {
+        Health -= 5;
     }
 }
