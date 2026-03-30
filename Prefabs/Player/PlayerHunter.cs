@@ -1,5 +1,5 @@
 using Godot;
-using System.Globalization;
+
 namespace Behide.Game.Player;
 
 [SceneTree("hunter.tscn")]
@@ -15,21 +15,21 @@ public partial class PlayerHunter : PlayerBody
         Camera = _.Camera;
         PositionSynchronizer = _.PositionSynchronizer;
         Hud = _.HUD;
-        healthBar = _.HealthBar3D;
+        HealthBar = _.HUD.HealthBar;
     }
 
     public override void _EnterTree()
     {
         base._EnterTree();
         Health = 100;
-        if (!IsMultiplayerAuthority()) healthBar.Visible = false;
     }
 
     public override void _PhysicsProcess(double delta)
     {
         base._PhysicsProcess(delta);
-        if (Input.IsActionJustPressed("morph"))
+        if (Input.IsActionJustPressed("morph")) // TODO: Create a new action for firing
         {
+            GD.Print("Fire!");
             var windowSize = GetViewport().GetVisibleRect().Size;
             var spaceState = GetWorld3D().DirectSpaceState;
 
@@ -38,32 +38,28 @@ public partial class PlayerHunter : PlayerBody
 
             var query = PhysicsRayQueryParameters3D.Create(from, to);
             var result = spaceState.IntersectRay(query);
-            try
-            {
-                var collider = result["collider"].As<Node>();
-                if (collider is PlayerProp) Rpc(MethodName.PlayerHitRpc, collider.GetPath());
-                else Rpc(MethodName.PlayerMissRpc);
-            }
-            catch{}
+
+            if (result.TryGetValue("collider", out var collider)
+                && collider.AsGodotObject() is PlayerProp player)
+                Rpc(MethodName.PlayerHitRpc, player.GetPath());
+            else
+                Rpc(MethodName.PlayerMissRpc);
         }
     }
 
     public override void _Input(InputEvent rawEvent)
     {
         base._Input(rawEvent);
-        if (Input.IsActionJustPressed("suffer")) Health -= 10;
+        if (Input.IsActionJustPressed("suffer")) Health -= 10; // TODO: Remove
     }
 
-    [Rpc(CallLocal = true)]
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void PlayerHitRpc(NodePath playerPath)
     {
-        var player = GetNode(playerPath) as PlayerProp;
-        if (player is not null) player.Health -= 20;
+        var node = GetNode(playerPath);
+        if (node is PlayerProp player) player.Health -= 20;
     }
 
     [Rpc(CallLocal = true)]
-    private void PlayerMissRpc()
-    {
-        Health -= 5;
-    }
+    private void PlayerMissRpc() => Health -= 5;
 }

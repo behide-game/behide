@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Behide.Game.Supervisors;
 using Godot;
 
@@ -31,9 +30,9 @@ public partial class PlayerProp : PlayerBody
         Camera = _.CameraDisk.SpringArm3D.Camera;
         PositionSynchronizer = _.PositionSynchronizer;
         Hud = _.HUD;
+        HealthBar = _.HUD.HealthBar;
 
         // PlayerProp nodes
-        healthBar = _.SubViewport.HealthBar3D;
         currentVisualNode = _.MeshInstance3D;
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
@@ -45,7 +44,6 @@ public partial class PlayerProp : PlayerBody
     {
         base._EnterTree();
         Health = 100;
-        Task.Run(async () => healthBar.CallDeferred(CanvasItem.MethodName.SetVisible, !await supervisor.IsLocalPeerHunter));
     }
 
     public override void _Process(double delta)
@@ -87,7 +85,13 @@ public partial class PlayerProp : PlayerBody
         var newCollisionNodes = new List<CollisionShape3D>(behideObject.CollisionNodes.Length);
         foreach (var collisionNode in behideObject.CollisionNodes)
         {
-            if (collisionNode.Duplicate() is not CollisionShape3D newCollisionNode) continue;
+            var newNode = collisionNode.Duplicate();
+            if (newNode is not CollisionShape3D newCollisionNode)
+            {
+                newNode.QueueFree();
+                continue;
+            }
+
             newCollisionNode.Position -= initialVisualNodePos;
             AddChild(newCollisionNode);
             newCollisionNodes.Add(newCollisionNode);

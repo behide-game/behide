@@ -1,6 +1,6 @@
-[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://7rh3qw7chtko"]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://7rh3qw7chtko"]
 
-[ext_resource type="Texture2D" uid="uid://tsukhj7j0r3i" path="res://Assets/Models/Dungeon/dungeon_texture.png" id="1_kejmd"]
+[ext_resource type="Texture2D" uid="uid://drlk8hwmbbj43" path="res://Assets/Models/Dungeon/dungeon_texture.png" id="1_kejmd"]
 
 [resource]
 resource_name = "texture"
