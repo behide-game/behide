@@ -71,7 +71,7 @@ public partial class PlayerSpawner : Node
                 await onNodeSpawned.Take(1); // Wait the player's node to have spawned
 
                 // Enable visibility
-                playerNode.PositionSynchronizer.CallThreadSafe(
+                playerNode.PositionSynchronizer.CallDeferred(
                     MultiplayerSynchronizer.MethodName.SetVisibilityFor,
                     spawnedOnPeerId,
                     true
