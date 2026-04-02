@@ -1,4 +1,3 @@
-using System.Linq;
 using Godot;
 using Serilog;
 using Serilog.Events;
@@ -8,14 +7,14 @@ namespace Behide.Logging;
 
 public static class Logging
 {
-    private const string ConsoleOutputFormat = "[{Timestamp:HH:mm:ss} {Level:u3}] [{Tag:u3}] {Message:lj}";
-    private const string LogFileOutputFormat = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] [{Tag}] {Message:lj}{NewLine}{Exception}";
+    private const string consoleOutputFormat = "[{Timestamp:HH:mm:ss} {Level:u3}] [{Tag:u3}] {Message:lj}";
+    private const string logFileOutputFormat = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] [{Tag}] {Message:lj}{NewLine}{Exception}";
 
     public static void ConfigureLogger()
     {
         var logToGodotSink = OS.GetCmdlineArgs().Contains("--log-to-godot-sink");
 
-        var now = System.DateTimeOffset.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+        var now = DateTimeOffset.Now.ToString("yyyy-MM-dd_HH-mm-ss");
         var logFilePath = ProjectSettings.GlobalizePath($"user://logs/log-{now}.txt");
         var jsonLogFilePath = ProjectSettings.GlobalizePath($"user://logs/log-json-{now}.txt");
 
@@ -28,13 +27,13 @@ public static class Logging
                 if (logToGodotSink)
                     cl
                     .MinimumLevel.Debug()
-                    .WriteTo.Godot(ConsoleOutputFormat);
+                    .WriteTo.Godot(consoleOutputFormat);
                 else
-                    cl.WriteTo.Console(outputTemplate: ConsoleOutputFormat + System.Environment.NewLine);
+                    cl.WriteTo.Console(outputTemplate: consoleOutputFormat + System.Environment.NewLine);
             })
             // File logger
             .WriteTo.Logger(cl => cl
-                .WriteTo.File(logFilePath, outputTemplate: LogFileOutputFormat)
+                .WriteTo.File(logFilePath, outputTemplate: logFileOutputFormat)
                 .WriteTo.File(new JsonFormatter(), jsonLogFilePath)
             )
             .CreateLogger();

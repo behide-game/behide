@@ -1,4 +1,3 @@
-using System;
 using Godot;
 
 namespace Behide.UI.Controls;

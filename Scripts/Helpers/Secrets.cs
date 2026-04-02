@@ -1,12 +1,9 @@
-using System.Linq;
-using Godot;
-
 namespace Behide;
 
 public static class Secrets
 {
-    private static readonly (string, string)[] DotenvFile =
-        FileAccess
+    private static readonly (string, string)[] dotenvFile =
+        Godot.FileAccess
             .GetFileAsString("res://.env")
             .ReplaceLineEndings("\n")
             .Split("\n")
@@ -18,7 +15,7 @@ public static class Secrets
             })
             .ToArray();
 
-    public static readonly string SignalingHubUrl = DotenvFile.First(x => x.Item1 == "SIGNALING_URL").Item2;
-    public static readonly string RelayUsername = DotenvFile.First(x => x.Item1 == "RELAY_USERNAME").Item2;
-    public static readonly string RelayPassword = DotenvFile.First(x => x.Item1 == "RELAY_PASSWORD").Item2;
+    public static readonly string SignalingHubUrl = dotenvFile.First(x => x.Item1 == "SIGNALING_URL").Item2;
+    public static readonly string RelayUsername = dotenvFile.First(x => x.Item1 == "RELAY_USERNAME").Item2;
+    public static readonly string RelayPassword = dotenvFile.First(x => x.Item1 == "RELAY_PASSWORD").Item2;
 }
