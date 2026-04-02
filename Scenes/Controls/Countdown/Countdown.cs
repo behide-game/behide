@@ -28,7 +28,6 @@ public abstract partial class Countdown : Node
     }
 
     public void StartCountdown(TimeSpan duration) => StartCountdown(duration.TotalMilliseconds);
-    public void StartCountdownDeferred(TimeSpan duration) => CallDeferred(nameof(StartCountdown), duration.TotalMilliseconds);
     public void StartCountdown(double duration)
     {
         if (!IsMultiplayerAuthority()) return;

@@ -27,9 +27,9 @@ public partial class PlayerHunter : PlayerBody
     public override void _PhysicsProcess(double delta)
     {
         base._PhysicsProcess(delta);
+        if (!IsMultiplayerAuthority()) return;
         if (Input.IsActionJustPressed("morph")) // TODO: Create a new action for firing
         {
-            GD.Print("Fire!");
             var windowSize = GetViewport().GetVisibleRect().Size;
             var spaceState = GetWorld3D().DirectSpaceState;
 

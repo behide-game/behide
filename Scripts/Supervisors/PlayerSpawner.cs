@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 using Behide.Game.Player;
 using Godot;
 
@@ -40,7 +38,6 @@ public partial class PlayerSpawner : Node
 
     public void SpawnPlayer(int peerId, bool isHunter)
     {
-        if (!IsMultiplayerAuthority()) return;
         Rpc(nameof(SpawnPlayerRpc), peerId, isHunter);
     }
 
@@ -63,10 +60,7 @@ public partial class PlayerSpawner : Node
 
         // Disable visibility if authority
         if (playerToSpawn.PeerId != localPlayer.Value.PeerId)
-        {
             RpcId(playerToSpawn.PeerId, nameof(SpawnedPlayerRpc));
-            return;
-        }
 
         playerNode.PositionSynchronizer.SetVisibilityPublic(false);
 
@@ -77,12 +71,19 @@ public partial class PlayerSpawner : Node
                 await onNodeSpawned.Take(1); // Wait the player's node to have spawned
 
                 // Enable visibility
-                playerNode.PositionSynchronizer.CallDeferred(
+                playerNode.PositionSynchronizer.CallThreadSafe(
                     MultiplayerSynchronizer.MethodName.SetVisibilityFor,
                     spawnedOnPeerId,
                     true
                 );
             });
+
+        if (GameManager.Supervisor == null)
+        {
+            log.Error("Could not notify player spawned: Supervisor is null");
+            return;
+        }
+        GameManager.Supervisor.PlayerSpawned(playerNode);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer)]

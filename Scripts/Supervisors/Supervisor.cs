@@ -2,6 +2,7 @@ using Godot;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
+using Behide.Game.Player;
 
 namespace Behide.Game.Supervisors;
 using Types;
@@ -9,7 +10,7 @@ using Types;
 /// <summary>
 /// It just spawns players
 /// </summary>
-public partial class Supervisor : Node
+public abstract partial class Supervisor : Node
 {
     private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "Supervisor/Base");
 
@@ -18,9 +19,12 @@ public partial class Supervisor : Node
     [Export] protected PlayerSpawner Spawner = null!;
 
     protected readonly Dictionary<int, BehaviorSubject<Player>> Players = GameManager.Room.Players;
+    protected readonly List<PlayerBody> PlayerBodies = new();
 
     public override void _EnterTree()
     {
+        GameManager.Supervisor = this;
+
         // Set authority
         int firstPlayerToJoin;
         try
@@ -78,4 +82,8 @@ public partial class Supervisor : Node
         _ = GameManager.Room.LeaveRoom();
         GameManager.instance.SetGameState(GameManager.GameState.Lobby);
     }
+
+    public void PlayerSpawned(PlayerBody player) => PlayerBodies.Add(player);
+
+    public virtual void PlayerDied(PlayerBody playerBody) { }
 }

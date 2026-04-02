@@ -21,7 +21,20 @@ public abstract partial class PlayerBody : CharacterBody3D
         {
             field = Mathf.Clamp(value, 0L, 100L);
             HealthBar.Value = value;
+            if (field == 0) Died();
         }
+    }
+    public bool Alive;
+
+    private void Died()
+    {
+        Alive = false;
+        if (GameManager.Supervisor == null)
+        {
+            log.Error("Can not set notify death: Supervisor is null");
+            return;
+        }
+        GameManager.Supervisor.PlayerDied(this);
     }
 
     // --- Initialization ---
