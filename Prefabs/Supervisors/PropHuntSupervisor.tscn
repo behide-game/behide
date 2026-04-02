@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://cehw1sq4q5yu8"]
+[gd_scene load_steps=12 format=3 uid="uid://cehw1sq4q5yu8"]
 
 [ext_resource type="Script" uid="uid://38mycbkkwpw4" path="res://Prefabs/Supervisors/PropHuntSupervisor.cs" id="1_0pdhf"]
 [ext_resource type="Script" uid="uid://dlbrls7b4x0kx" path="res://Scripts/Supervisors/PlayerSpawner.cs" id="3_l302j"]
-[ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/Player/player.tscn" id="4_nsml5"]
+[ext_resource type="PackedScene" uid="uid://beaeb2uyytjul" path="res://Prefabs/Player/hunter.tscn" id="4_7hsgi"]
+[ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/Player/prop.tscn" id="4_nsml5"]
 [ext_resource type="Script" uid="uid://sggdi83gahf1" path="res://Scenes/Controls/Countdown/AdvancedLabelCountdown.cs" id="5_7hsgi"]
 [ext_resource type="Theme" uid="uid://cdr520krk72wo" path="res://Scenes/theme.tres" id="5_sfeev"]
 [ext_resource type="Script" uid="uid://djqbwwelecick" path="res://Scenes/Controls/Countdown/LabelCountdown.cs" id="6_w7xx4"]
@@ -22,12 +23,12 @@ font_color = Color(0.0980392, 0.109804, 0.117647, 1)
 
 [node name="Supervisor" type="Node3D" node_paths=PackedStringArray("Spawner")]
 script = ExtResource("1_0pdhf")
-openMenuAction = "open_menu"
 Spawner = NodePath("PlayerSpawner")
 
 [node name="PlayerSpawner" type="Node" parent="."]
 script = ExtResource("3_l302j")
-playerPrefab = ExtResource("4_nsml5")
+playerPropPrefab = ExtResource("4_nsml5")
+playerHunterPrefab = ExtResource("4_7hsgi")
 metadata/_custom_type_script = "uid://dlbrls7b4x0kx"
 
 [node name="UI" type="Control" parent="."]

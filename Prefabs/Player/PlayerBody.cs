@@ -1,40 +1,49 @@
 using Godot;
 
+
 namespace Behide.Game.Player;
 
-[SceneTree("player.tscn")]
-public partial class PlayerBody : CharacterBody3D
+public abstract partial class PlayerBody : CharacterBody3D
 {
-    [Export] public float Mass = 60;
+    private Serilog.ILogger log = null!;
 
     protected Node3D CameraDisk = null!;
-    private Camera3D camera = null!;
+    protected Camera3D Camera = null!;
+    protected Control Hud = null!;
+    protected ProgressBar HealthBar = null!;
     public MultiplayerSynchronizer PositionSynchronizer = null!;
 
-    [ExportGroup("Camera rotation")]
-    [Export] private float maxRotation = Mathf.DegToRad(90);
-    [Export] private float verticalSensitivity = 0.005f;
-    [Export] private float horizontalSensitivity = 0.005f;
+    [ExportGroup("Stats")]
+    public double Health
+    {
+        get;
+        set
+        {
+            field = Mathf.Clamp(value, 0L, 100L);
+            HealthBar.Value = value;
+            if (field == 0) Died();
+        }
+    }
+    public bool Alive;
 
-    [ExportGroup("Movements")]
-    private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
-    [Export] private float jumpAcceleration = 300;
-    [Export] private float moveSpeed = 6;
-    [Export] private float pushCoefficient = 0.6f;
-
-    private Serilog.ILogger log = null!;
-    // Rotation accumulators
-    private float rotationX;
-    private float rotationY;
-    private bool jumping;
+    private void Died()
+    {
+        Alive = false;
+        if (GameManager.Supervisor == null)
+        {
+            log.Error("Can not set notify death: Supervisor is null");
+            return;
+        }
+        GameManager.Supervisor.PlayerDied(this);
+    }
 
     // --- Initialization ---
+    protected abstract void InitializeNodes();
     public override void _EnterTree()
     {
+        InitializeNodes();
         log = Serilog.Log.ForContext("Tag", "Player/Movements");
-        CameraDisk = _.CameraDisk;
-        camera = _.CameraDisk.SpringArm3D.Camera;
-        PositionSynchronizer = _.PositionSynchronizer;
+
 
         // Set authority
         var ownerPeerId = int.Parse(Name);
@@ -48,100 +57,19 @@ public partial class PlayerBody : CharacterBody3D
         // Only when we are the authority
         if (IsMultiplayerAuthority())
         {
-            camera.MakeCurrent();
+            Camera.MakeCurrent();
             Input.MouseMode = Input.MouseModeEnum.Captured;
         }
+        else Hud.Visible = false;
     }
-
 
     // --- Movements ---
     public override void _PhysicsProcess(double delta)
     {
         if (!IsMultiplayerAuthority()) return;
-        var velocity = Velocity;
-
-        // Add the gravity.
-        if (!IsOnFloor()) velocity += Vector3.Down * (float)(gravity * delta);
-        else if (jumping)
-        {
-            velocity += Vector3.Up * (float)(jumpAcceleration * delta);
-            jumping = false;
-        }
-
-        // Add movements
-        var inputDir = Input.GetVector(InputActions.MoveLeft, InputActions.MoveRight, InputActions.MoveForward, InputActions.MoveBack);
-        var direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
-        if (direction != Vector3.Zero)
-        {
-            velocity.X = direction.X * moveSpeed;
-            velocity.Z = direction.Z * moveSpeed;
-        }
-        else
-        {
-            velocity.X = Mathf.MoveToward(Velocity.X, 0, moveSpeed);
-            velocity.Z = Mathf.MoveToward(Velocity.Z, 0, moveSpeed);
-        }
-
-        // Apply new velocity
-        Velocity = velocity;
-
+        ProcessPhysics(delta);
         ProcessRotation();
         PropagateCollision();
         MoveAndSlide();
-    }
-
-    private void ProcessRotation()
-    {
-        SetRotation(new Vector3(0, rotationY, 0)); // Left / Right (rotate the whole player)
-        CameraDisk.SetRotation(new Vector3(rotationX, 0, 0)); // Up / Down (Rotate camera disk)
-    }
-
-    private void PropagateCollision()
-    {
-        for (var i = 0; i < GetSlideCollisionCount(); i++)
-        {
-            var collision = GetSlideCollision(i);
-            if (collision.GetCollider() is not RigidBody3D rb) continue;
-            if (!rb.IsMultiplayerAuthority()) Rpc(nameof(SetObjectAuthority), rb.GetPath());
-
-            var pushDirection = -collision.GetNormal();
-            pushDirection.Y = 0; // Remove verticality
-            var velocityDiff = Mathf.Max(0, Velocity.Dot(pushDirection) - rb.LinearVelocity.Dot(pushDirection));
-            var massRatio = Mass / rb.Mass;
-            var massContribution = massRatio >= 1 ? rb.Mass : Mass;
-            var impulse = pushDirection * velocityDiff * massContribution * pushCoefficient;
-            rb.ApplyImpulse(impulse, collision.GetPosition() - rb.GlobalPosition);
-        }
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    private void SetObjectAuthority(NodePath nodePath)
-    {
-        var remoteId = Multiplayer.GetRemoteSenderId();
-        GetNode<RigidBody3D>(nodePath).SetMultiplayerAuthority(remoteId);
-        log.Debug("Set authority of {NodePath} to {RemoteId}", nodePath, remoteId);
-    }
-
-    // Run only on the peer who has the authority.
-    public override void _Input(InputEvent rawEvent)
-    {
-        if (!IsMultiplayerAuthority()) return;
-
-        // Escape
-        if (rawEvent.IsActionPressed(BuiltinInputActions.UiCancel))
-            Input.MouseMode = Input.MouseMode == Input.MouseModeEnum.Captured
-                ? Input.MouseModeEnum.Visible
-                : Input.MouseModeEnum.Captured;
-
-        // Rotation
-        if (rawEvent is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
-        {
-            rotationY -= mouseMotion.Relative.X * verticalSensitivity;
-            rotationX -= mouseMotion.Relative.Y * horizontalSensitivity;
-            rotationX = System.Math.Clamp(rotationX, -maxRotation, maxRotation);
-        }
-
-        // Jump
-        if (Input.IsActionJustPressed(InputActions.Jump)) jumping = true;
     }
 }

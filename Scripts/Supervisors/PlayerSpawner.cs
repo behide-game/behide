@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 using Behide.Game.Player;
 using Godot;
 
@@ -14,7 +12,8 @@ using Types;
 public partial class PlayerSpawner : Node
 {
     [Export] public Node PlayersNode = null!;
-    [Export] private PackedScene playerPrefab = null!;
+    [Export] private PackedScene playerPropPrefab = null!;
+    [Export] private PackedScene playerHunterPrefab = null!;
 
     private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "PlayerSpawner");
 
@@ -37,20 +36,22 @@ public partial class PlayerSpawner : Node
         // Authority is set by the parent node that must be a supervisor
     }
 
-    public void SpawnPlayer(int peerId)
+    public void SpawnPlayer(int peerId, bool isHunter)
     {
-        if (!IsMultiplayerAuthority()) return;
-        Rpc(nameof(SpawnPlayerRpc), peerId);
+        Rpc(nameof(SpawnPlayerRpc), peerId, isHunter);
     }
 
     [Rpc(CallLocal = true)]
-    private void SpawnPlayerRpc(int peerIdToSpawn)
+    private void SpawnPlayerRpc(int peerIdToSpawn, bool isHunter)
     {
         var playerObservable = players[peerIdToSpawn];
         var playerToSpawn = playerObservable.Value;
 
         // Create node
-        var playerNode = playerPrefab.Instantiate<PlayerBody>();
+        var playerNode = isHunter
+            ? playerHunterPrefab.Instantiate<PlayerBody>()
+            : playerPropPrefab.Instantiate<PlayerBody>();
+
         playerNode.Name = playerToSpawn.PeerId.ToString();
         playerNode.Position = new Vector3(0, 0, playerToSpawn.PeerId * 4);
 
@@ -58,7 +59,8 @@ public partial class PlayerSpawner : Node
         PlayersNode.AddChild(playerNode, true);
 
         // Disable visibility if authority
-        if (playerToSpawn.PeerId != localPlayer.Value.PeerId) RpcId(playerToSpawn.PeerId, nameof(SpawnedPlayerRpc));
+        if (playerToSpawn.PeerId != localPlayer.Value.PeerId)
+            RpcId(playerToSpawn.PeerId, nameof(SpawnedPlayerRpc));
 
         playerNode.PositionSynchronizer.SetVisibilityPublic(false);
 
@@ -75,6 +77,13 @@ public partial class PlayerSpawner : Node
                     true
                 );
             });
+
+        if (GameManager.Supervisor == null)
+        {
+            log.Error("Could not notify player spawned: Supervisor is null");
+            return;
+        }
+        GameManager.Supervisor.PlayerSpawned(playerNode);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer)]

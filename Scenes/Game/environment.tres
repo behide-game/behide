@@ -1,4 +1,4 @@
-[gd_resource type="Environment" load_steps=3 format=3 uid="uid://c8ttkksgix01d"]
+[gd_resource type="Environment" format=3 uid="uid://c8ttkksgix01d"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_quf31"]
 
@@ -13,5 +13,4 @@ reflected_light_source = 1
 tonemap_mode = 2
 glow_enabled = true
 glow_strength = 0.5
-glow_blend_mode = 1
 volumetric_fog_density = 0.02

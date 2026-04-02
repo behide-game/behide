@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 namespace Behide.UI.Controls;
 
@@ -28,6 +27,7 @@ public abstract partial class Countdown : Node
         if (timeElapsed) TimeElapsed?.Invoke();
     }
 
+    public void StartCountdown(TimeSpan duration) => StartCountdown(duration.TotalMilliseconds);
     public void StartCountdown(double duration)
     {
         if (!IsMultiplayerAuthority()) return;
@@ -36,14 +36,12 @@ public abstract partial class Countdown : Node
         Rpc(nameof(StartCountdownRpc), endTimestamp);
     }
 
-    public void StartCountdown(TimeSpan duration) => StartCountdown(duration.TotalMilliseconds);
-    public void StartCountdownDeferred(TimeSpan duration) => CallDeferred(nameof(StartCountdown), duration.TotalMilliseconds);
-
     public void ResetCountdown()
     {
         if (!IsMultiplayerAuthority()) return;
         Rpc(nameof(ResetCountdownRpc));
     }
+
 
     [Rpc(CallLocal = true)]
     private void StartCountdownRpc(long endTimestamp) =>

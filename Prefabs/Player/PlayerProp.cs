@@ -1,16 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Behide.Game.Supervisors;
 using Godot;
 
 namespace Behide.Game.Player;
 
-[SceneTree("player.tscn")]
+[SceneTree("prop.tscn")]
 public partial class PlayerProp : PlayerBody
 {
     private Node3D currentVisualNode = null!;
     private CollisionShape3D[] collisionNodes = null!;
     private RayCast3D rayCast = null!;
+    private PropHuntSupervisor supervisor = null!;
+
     [ExportGroup("Camera adjust transition")]
     [Export] private float cameraAdjustDuration = 0.4f;
     [Export] private Tween.TransitionType cameraAdjustTransitionType = Tween.TransitionType.Bounce;
@@ -20,13 +20,27 @@ public partial class PlayerProp : PlayerBody
     private Vector3 initialCameraPosition = Vector3.Zero;
     private Tween? cameraAdjustTween;
 
-    public override void _EnterTree()
+    protected override void InitializeNodes()
     {
-        base._EnterTree();
+        // PlayerBody nodes
+        CameraDisk = _.CameraDisk;
+        Camera = _.CameraDisk.SpringArm3D.Camera;
+        PositionSynchronizer = _.PositionSynchronizer;
+        Hud = _.HUD;
+        HealthBar = _.HUD.HealthBar;
+
+        // PlayerProp nodes
         currentVisualNode = _.MeshInstance3D;
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
         rayCast = _.CameraDisk.SpringArm3D.Camera.RayCast;
+        supervisor = GetNode<PropHuntSupervisor>("/root/multiplayer/Supervisor");
+    }
+
+    public override void _EnterTree()
+    {
+        base._EnterTree();
+        Health = 100;
     }
 
     public override void _Process(double delta)
@@ -40,6 +54,7 @@ public partial class PlayerProp : PlayerBody
         base._Input(rawEvent);
         if (!IsMultiplayerAuthority()) return;
         if (Input.IsActionJustPressed(InputActions.Morph) && focusedBehideObject is not null) Rpc(MethodName.Morph, focusedBehideObject.GetPath());
+        if (Input.IsActionJustPressed("suffer")) Health -= 10;
     }
 
     [Rpc(CallLocal = true)]
@@ -67,7 +82,13 @@ public partial class PlayerProp : PlayerBody
         var newCollisionNodes = new List<CollisionShape3D>(behideObject.CollisionNodes.Length);
         foreach (var collisionNode in behideObject.CollisionNodes)
         {
-            if (collisionNode.Duplicate() is not CollisionShape3D newCollisionNode) continue;
+            var newNode = collisionNode.Duplicate();
+            if (newNode is not CollisionShape3D newCollisionNode)
+            {
+                newNode.QueueFree();
+                continue;
+            }
+
             newCollisionNode.Position -= initialVisualNodePos;
             AddChild(newCollisionNode);
             newCollisionNodes.Add(newCollisionNode);

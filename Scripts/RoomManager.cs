@@ -1,7 +1,4 @@
 using Godot;
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Behide.Types;

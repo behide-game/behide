@@ -1,3 +1,5 @@
+using Behide.Game.Supervisors;
+
 namespace Behide;
 
 using Godot;
@@ -14,11 +16,20 @@ public partial class GameManager : Node
     public enum GameState { Home, Lobby, Game }
     public static GameState State { get; private set; } = GameState.Home;
 
-    private static readonly PackedScene HomeScene = ResourceLoader.Load<PackedScene>("res://Scenes/Home/Home.tscn");
-    private static readonly PackedScene LobbyScene = ResourceLoader.Load<PackedScene>("res://Scenes/Lobby/Lobby.tscn");
-    private static readonly PackedScene GameScene = ResourceLoader.Load<PackedScene>("res://Scenes/Game/Game.tscn");
+    private static readonly PackedScene homeScene = ResourceLoader.Load<PackedScene>("res://Scenes/Home/Home.tscn");
+    private static readonly PackedScene lobbyScene = ResourceLoader.Load<PackedScene>("res://Scenes/Lobby/Lobby.tscn");
+    private static readonly PackedScene gameScene = ResourceLoader.Load<PackedScene>("res://Scenes/Game/Game.tscn");
 
     private Serilog.ILogger log = null!;
+
+    public static Supervisor? Supervisor
+    {
+        get => State == GameState.Game ? field : null;
+        set
+        {
+            if (State == GameState.Game) field = value;
+        }
+    }
 
     public override void _EnterTree()
     {
@@ -50,10 +61,10 @@ public partial class GameManager : Node
     {
         var sceneToLoad = state switch
         {
-            GameState.Home => HomeScene,
-            GameState.Lobby => LobbyScene,
-            GameState.Game => GameScene,
-            _ => throw new System.Exception("Unexpected game state"),
+            GameState.Home => homeScene,
+            GameState.Lobby => lobbyScene,
+            GameState.Game => gameScene,
+            _ => throw new Exception("Unexpected game state"),
         };
 
         State = state;
