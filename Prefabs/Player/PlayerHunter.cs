@@ -18,16 +18,11 @@ public partial class PlayerHunter : PlayerBody
         HealthBar = _.HUD.HealthBar;
     }
 
-    public override void _EnterTree()
-    {
-        base._EnterTree();
-        Health = 100;
-    }
-
     public override void _PhysicsProcess(double delta)
     {
         base._PhysicsProcess(delta);
         if (!IsMultiplayerAuthority()) return;
+        if (!Alive) return;
         if (Input.IsActionJustPressed("morph")) // TODO: Create a new action for firing
         {
             var windowSize = GetViewport().GetVisibleRect().Size;
@@ -50,6 +45,7 @@ public partial class PlayerHunter : PlayerBody
     public override void _Input(InputEvent rawEvent)
     {
         base._Input(rawEvent);
+        if (!Alive) return;
         if (Input.IsActionJustPressed("suffer")) Health -= 10; // TODO: Remove
     }
 

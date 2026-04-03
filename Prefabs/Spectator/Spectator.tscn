@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://1t0iy2imhdg4"]
+
+[ext_resource type="Script" uid="uid://cdmg4qsk6n7vj" path="res://Prefabs/Spectator/Spectator.cs" id="1_6po2o"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_6po2o"]
+radius = 0.57467264
+
+[node name="Spectator" type="CharacterBody3D" unique_id=195170206]
+script = ExtResource("1_6po2o")
+
+[node name="Camera" type="Camera3D" parent="." unique_id=441094346]
+current = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=338543086]
+shape = SubResource("SphereShape3D_6po2o")

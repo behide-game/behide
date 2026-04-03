@@ -46,6 +46,7 @@ public abstract partial class Supervisor : Node
         {
             behideObjectsParent = BehideObjects.GetParent();
             behideObjectsParent.RemoveChild(BehideObjects);
+            BehideObjects.SetOwner(null);
         }
 
         // Wait players to be ready
@@ -73,7 +74,11 @@ public abstract partial class Supervisor : Node
 
     protected virtual void PlayersReady()
     {
-        if (IsMultiplayerAuthority()) behideObjectsParent.AddChild(BehideObjects);
+        if (IsMultiplayerAuthority())
+        {
+            behideObjectsParent.AddChild(BehideObjects);
+            BehideObjects.SetOwner(behideObjectsParent);
+        }
     }
 
     public override void _Input(InputEvent @event)
@@ -86,4 +91,5 @@ public abstract partial class Supervisor : Node
     public void PlayerSpawned(PlayerBody player) => PlayerBodies.Add(player);
 
     public virtual void PlayerDied(PlayerBody playerBody) { }
+    public virtual void LocalPlayerDied() { }
 }

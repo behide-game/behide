@@ -37,7 +37,18 @@ public abstract partial class PlayerBody
         }
 
         // Add movements
-        var inputDir = Input.GetVector(InputActions.MoveLeft, InputActions.MoveRight, InputActions.MoveForward, InputActions.MoveBack);
+        if (!Alive)
+        {
+            Velocity = Vector3.Zero;
+            return;
+        }
+
+        var inputDir = Input.GetVector(
+            InputActions.MoveLeft,
+            InputActions.MoveRight,
+            InputActions.MoveForward,
+            InputActions.MoveBack
+        );
         var direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
         if (direction != Vector3.Zero)
         {
@@ -70,12 +81,13 @@ public abstract partial class PlayerBody
                 ? Input.MouseModeEnum.Visible
                 : Input.MouseModeEnum.Captured;
 
+        if (!Alive) return;
         // Rotation
         if (rawEvent is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
         {
             rotationY -= mouseMotion.Relative.X * verticalSensitivity;
             rotationX -= mouseMotion.Relative.Y * horizontalSensitivity;
-            rotationX = System.Math.Clamp(rotationX, -maxRotation, maxRotation);
+            rotationX = Math.Clamp(rotationX, -maxRotation, maxRotation);
         }
 
         // Jump

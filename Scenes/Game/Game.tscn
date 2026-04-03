@@ -22,6 +22,13 @@ auto_exposure_min_sensitivity = 100.0
 
 [node name="multiplayer" type="Node3D" unique_id=1513482735]
 
+[node name="Supervisor" parent="." unique_id=583360088 node_paths=PackedStringArray("PlayersNode", "BehideObjects", "BehideObjects") instance=ExtResource("9_m1o7v")]
+PlayersNode = NodePath("../Players")
+BehideObjects = NodePath("../World/Dungeon/BehideObjects/BehideObjects")
+BehideObjects = NodePath("../World/Dungeon/BehideObjects/BehideObjects")
+
+[node name="Players" type="Node3D" parent="." unique_id=203314885]
+
 [node name="VisualEffectsLayer" type="CanvasLayer" parent="." unique_id=510708513]
 layer = -1
 
@@ -1276,13 +1283,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, -2.41667, -1.425)
 
 [node name="LightmapProbe 5, 2, 5" type="LightmapProbe" parent="World/LightmapProbeGrid4" unique_id=1982291310]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.0941, -2.41667, -2.375)
-
-[node name="Players" type="Node3D" parent="." unique_id=203314885]
-
-[node name="Supervisor" parent="." unique_id=583360088 node_paths=PackedStringArray("PlayersNode", "BehideObjects", "BehideObjects") instance=ExtResource("9_m1o7v")]
-PlayersNode = NodePath("../Players")
-BehideObjects = NodePath("../World/Dungeon/BehideObjects/BehideObjects")
-BehideObjects = NodePath("../World/Dungeon/BehideObjects/BehideObjects")
 
 [editable path="World/Dungeon"]
 [editable path="World/Dungeon/Little room/Walls/wall_doorway_scaffold2"]

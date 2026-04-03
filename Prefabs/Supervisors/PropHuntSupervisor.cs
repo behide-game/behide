@@ -1,9 +1,10 @@
+using Behide.Prefabs.Spectator;
 using Godot;
 using Behide.UI.Controls;
 
 namespace Behide.Game.Supervisors;
 
-[SceneTree]
+[SceneTree(root: "nodes")]
 public partial class PropHuntSupervisor : Supervisor
 {
     [Export]
@@ -21,6 +22,7 @@ public partial class PropHuntSupervisor : Supervisor
 
     private AdvancedLabelCountdown preGameCountdown = null!;
     private LabelCountdown inGameCountdown = null!;
+    private bool gameFinished;
 
     private Control preGameProp = null!;
     private Control preGameHunter = null!;
@@ -33,8 +35,10 @@ public partial class PropHuntSupervisor : Supervisor
     private Label propsWonLabel = null!;
     private Label hunterWinLabel = null!;
 
+    private Spectator spectator = null!;
+
     private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "Supervisor/PropHunt");
-    private static readonly TimeSpan preGameDuration = TimeSpan.FromSeconds(1);
+    private static readonly TimeSpan preGameDuration = TimeSpan.FromSeconds(2);
     private static readonly TimeSpan inGameDuration = TimeSpan.FromMinutes(5);
 
     private EventHandler<int>? hunterChosen;

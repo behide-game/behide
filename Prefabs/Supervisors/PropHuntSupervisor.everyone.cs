@@ -9,18 +9,20 @@ public partial class PropHuntSupervisor
     {
         base._EnterTree();
         // Load nodes
-        preGameCountdown = _.UI.AdvancedLabelCountdown;
-        preGameProp = _.UI.Pre_gameProp;
-        preGameHunter = _.UI.Pre_gameHunter;
+        preGameCountdown = nodes.UI.AdvancedLabelCountdown;
+        preGameProp = nodes.UI.Pre_gameProp;
+        preGameHunter = nodes.UI.Pre_gameHunter;
 
-        inGame = _.UI.In_game;
-        inGameCountdown = _.UI.In_game.Countdown;
-        isPropLabel = _.UI.In_game.IsProp;
-        isHunterLabel = _.UI.In_game.IsHunter;
+        inGame = nodes.UI.In_game;
+        inGameCountdown = nodes.UI.In_game.Countdown;
+        isPropLabel = nodes.UI.In_game.IsProp;
+        isHunterLabel = nodes.UI.In_game.IsHunter;
 
-        endGame = _.UI.End_game;
-        propsWonLabel = _.UI.End_game.PropsWin;
-        hunterWinLabel = _.UI.End_game.HunterWins;
+        endGame = nodes.UI.End_game;
+        propsWonLabel = nodes.UI.End_game.PropsWin;
+        hunterWinLabel = nodes.UI.End_game.HunterWins;
+
+        spectator = nodes.Spectator;
 
         // Show UI
         hunterChosen += (_, hunter) =>
@@ -57,6 +59,11 @@ public partial class PropHuntSupervisor
         CheckGameEnd(playerBody);
     }
 
+    public override void LocalPlayerDied()
+    {
+        if (!gameFinished) spectator.Enable();
+    }
+
     [Rpc(CallLocal = true)]
     public void RpcSetHunter(int peerId)
     {
@@ -69,10 +76,16 @@ public partial class PropHuntSupervisor
     public void RpcGameFinished(bool propsWon)
     {
         inGameCountdown.TimeElapsed -= GameTimeout;
+        gameFinished = true;
+
+        // Change UI
         inGame.Hide();
         endGame.Show();
         if (propsWon) propsWonLabel.Show();
         else hunterWinLabel.Show();
+
+        // Stop player bodies
+        foreach (var body in PlayerBodies) body.Alive = false;
 
         log.Information("Game finished!: {Winner}", propsWon ? "Props won" : "Hunter wins");
     }

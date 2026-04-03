@@ -37,12 +37,6 @@ public partial class PlayerProp : PlayerBody
         supervisor = GetNode<PropHuntSupervisor>("/root/multiplayer/Supervisor");
     }
 
-    public override void _EnterTree()
-    {
-        base._EnterTree();
-        Health = 100;
-    }
-
     public override void _Process(double delta)
     {
         if (!IsMultiplayerAuthority()) return;
@@ -53,8 +47,10 @@ public partial class PlayerProp : PlayerBody
     {
         base._Input(rawEvent);
         if (!IsMultiplayerAuthority()) return;
-        if (Input.IsActionJustPressed(InputActions.Morph) && focusedBehideObject is not null) Rpc(MethodName.Morph, focusedBehideObject.GetPath());
-        if (Input.IsActionJustPressed("suffer")) Health -= 10;
+        if (!Alive) return;
+        if (Input.IsActionJustPressed(InputActions.Morph) && focusedBehideObject is not null)
+            Rpc(MethodName.Morph, focusedBehideObject.GetPath());
+        if (Input.IsActionJustPressed(InputActions.Suffer)) Health -= 10;
     }
 
     [Rpc(CallLocal = true)]
