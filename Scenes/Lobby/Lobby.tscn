@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://ch26lr3yfn732"]
+[gd_scene format=3 uid="uid://ch26lr3yfn732"]
 
 [ext_resource type="Script" uid="uid://dm7h4qmja7uar" path="res://Scenes/Lobby/Lobby.cs" id="1_vmtcs"]
 [ext_resource type="PackedScene" uid="uid://do5karhuhkwaw" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.tscn" id="2_3qdhv"]
@@ -62,7 +62,7 @@ font_color = Color(0, 0.117647, 0.176471, 1)
 font = ExtResource("7_xxjlh")
 font_size = 24
 
-[node name="Lobby" type="PanelContainer"]
+[node name="Lobby" type="PanelContainer" unique_id=967472195]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -72,7 +72,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_jn132")
 script = ExtResource("1_vmtcs")
 playerListItemScene = ExtResource("2_3qdhv")
 
-[node name="Countdown" type="Node" parent="." node_paths=PackedStringArray("label")]
+[node name="Countdown" type="Node" parent="." unique_id=564553342 node_paths=PackedStringArray("label")]
 script = ExtResource("3_lj1ok")
 label = NodePath("../Lobby/Header/MarginContainer/Countdown")
 runningTextFormat = "Start in {0:s\\.ff}s"
@@ -80,22 +80,22 @@ beforeRunningText = "Not ready"
 afterRunningText = "Starting game..."
 metadata/_custom_type_script = "uid://d5711da0fkld"
 
-[node name="ChooseMode" type="VBoxContainer" parent="."]
+[node name="ChooseMode" type="VBoxContainer" parent="." unique_id=1966937483]
 layout_mode = 2
 theme_override_constants/separation = 40
 
-[node name="CenterContainer" type="CenterContainer" parent="ChooseMode"]
+[node name="CenterContainer" type="CenterContainer" parent="ChooseMode" unique_id=1363456372]
 layout_mode = 2
 
-[node name="Logo" parent="ChooseMode/CenterContainer" instance=ExtResource("5_ah4j3")]
+[node name="Logo" parent="ChooseMode/CenterContainer" unique_id=1689766647 instance=ExtResource("5_ah4j3")]
 layout_mode = 2
 
-[node name="Buttons" type="HBoxContainer" parent="ChooseMode"]
+[node name="Buttons" type="HBoxContainer" parent="ChooseMode" unique_id=965936034]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 50
 
-[node name="Host" type="Button" parent="ChooseMode/Buttons"]
+[node name="Host" type="Button" parent="ChooseMode/Buttons" unique_id=1426429497]
 clip_children = 2
 custom_minimum_size = Vector2(300, 350)
 layout_mode = 2
@@ -109,7 +109,7 @@ Color = Color(0.0392157, 0.337255, 0.611765, 1)
 BorderWidth = 8
 BackgroundColor = Color(0.894118, 0.945098, 0.968627, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="ChooseMode/Buttons/Host"]
+[node name="MarginContainer" type="MarginContainer" parent="ChooseMode/Buttons/Host" unique_id=891105613]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -121,7 +121,7 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="Pattern" type="Control" parent="ChooseMode/Buttons/Host/MarginContainer"]
+[node name="Pattern" type="Control" parent="ChooseMode/Buttons/Host/MarginContainer" unique_id=1482590510]
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("5_vnyn6")
@@ -131,7 +131,7 @@ Gap = Vector2(40, 30)
 Rotation = -45.0
 Offset = Vector2(0, -45)
 
-[node name="PanelContainer" type="PanelContainer" parent="ChooseMode/Buttons/Host"]
+[node name="PanelContainer" type="PanelContainer" parent="ChooseMode/Buttons/Host" unique_id=2038370109]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 1
 anchors_preset = 12
@@ -145,21 +145,21 @@ size_flags_vertical = 8
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_cmklm")
 
-[node name="Label" type="Label" parent="ChooseMode/Buttons/Host/PanelContainer"]
+[node name="Label" type="Label" parent="ChooseMode/Buttons/Host/PanelContainer" unique_id=896887214]
 layout_mode = 2
 text = "Host"
 label_settings = SubResource("LabelSettings_adnue")
 horizontal_alignment = 1
 uppercase = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ChooseMode/Buttons"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ChooseMode/Buttons" unique_id=929548706]
 custom_minimum_size = Vector2(0, 350)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 alignment = 1
 
-[node name="Code" type="MarginContainer" parent="ChooseMode/Buttons/VBoxContainer"]
+[node name="Code" type="MarginContainer" parent="ChooseMode/Buttons/VBoxContainer" unique_id=720203028]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -176,11 +176,11 @@ InvertOrientation = true
 BorderWidth = 8
 BackgroundColor = Color(0.894118, 0.945098, 0.968627, 1)
 
-[node name="LineEdit" type="LineEdit" parent="ChooseMode/Buttons/VBoxContainer/Code"]
+[node name="LineEdit" type="LineEdit" parent="ChooseMode/Buttons/VBoxContainer/Code" unique_id=297186332]
 layout_mode = 2
-theme_override_colors/caret_color = Color(0, 0, 0, 1)
-theme_override_colors/font_placeholder_color = Color(0.309385, 0.309385, 0.309385, 1)
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_placeholder_color = Color(0.309385, 0.309385, 0.309385, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("7_rk5ct")
 theme_override_font_sizes/font_size = 24
 placeholder_text = "AB01"
@@ -188,7 +188,7 @@ alignment = 1
 max_length = 4
 flat = true
 
-[node name="Validate" type="Button" parent="ChooseMode/Buttons/VBoxContainer"]
+[node name="Validate" type="Button" parent="ChooseMode/Buttons/VBoxContainer" unique_id=415732800]
 clip_children = 2
 custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
@@ -204,7 +204,7 @@ Color = Color(0.917647, 0.117647, 0.215686, 1)
 BorderWidth = 8
 BackgroundColor = Color(0.894118, 0.945098, 0.968627, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="ChooseMode/Buttons/VBoxContainer/Validate"]
+[node name="MarginContainer" type="MarginContainer" parent="ChooseMode/Buttons/VBoxContainer/Validate" unique_id=1277768929]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -216,7 +216,7 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="Pattern" type="Control" parent="ChooseMode/Buttons/VBoxContainer/Validate/MarginContainer"]
+[node name="Pattern" type="Control" parent="ChooseMode/Buttons/VBoxContainer/Validate/MarginContainer" unique_id=1263528958]
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("5_vnyn6")
@@ -226,7 +226,7 @@ Gap = Vector2(40, 30)
 Rotation = -45.0
 Offset = Vector2(0, -45)
 
-[node name="PanelContainer" type="PanelContainer" parent="ChooseMode/Buttons/VBoxContainer/Validate"]
+[node name="PanelContainer" type="PanelContainer" parent="ChooseMode/Buttons/VBoxContainer/Validate" unique_id=708393635]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 1
 anchors_preset = 12
@@ -240,26 +240,26 @@ size_flags_vertical = 8
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_72q8q")
 
-[node name="Label" type="Label" parent="ChooseMode/Buttons/VBoxContainer/Validate/PanelContainer"]
+[node name="Label" type="Label" parent="ChooseMode/Buttons/VBoxContainer/Validate/PanelContainer" unique_id=1132885208]
 layout_mode = 2
 text = "Join"
 label_settings = SubResource("LabelSettings_adnue")
 horizontal_alignment = 1
 uppercase = true
 
-[node name="Lobby" type="VBoxContainer" parent="."]
+[node name="Lobby" type="VBoxContainer" parent="." unique_id=1779128093]
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 40
 
-[node name="Header" type="HBoxContainer" parent="Lobby"]
+[node name="Header" type="HBoxContainer" parent="Lobby" unique_id=959581221]
 layout_mode = 2
 alignment = 1
 
-[node name="Logo" parent="Lobby/Header" instance=ExtResource("5_ah4j3")]
+[node name="Logo" parent="Lobby/Header" unique_id=1681229338 instance=ExtResource("5_ah4j3")]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Lobby/Header"]
+[node name="MarginContainer" type="MarginContainer" parent="Lobby/Header" unique_id=120102080]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 8
@@ -270,7 +270,7 @@ BezelSize = 12
 BorderRadius = 0
 Color = Color(1, 0, 0.458824, 1)
 
-[node name="Countdown" type="Label" parent="Lobby/Header/MarginContainer"]
+[node name="Countdown" type="Label" parent="Lobby/Header/MarginContainer" unique_id=1001992688]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Not ready"
@@ -278,13 +278,13 @@ label_settings = SubResource("LabelSettings_vwysm")
 horizontal_alignment = 1
 uppercase = true
 
-[node name="Code" type="HBoxContainer" parent="Lobby/Header"]
+[node name="Code" type="HBoxContainer" parent="Lobby/Header" unique_id=1213287782]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 alignment = 2
 
-[node name="Container" type="MarginContainer" parent="Lobby/Header/Code"]
+[node name="Container" type="MarginContainer" parent="Lobby/Header/Code" unique_id=1199664904]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 8
@@ -295,29 +295,29 @@ BezelSize = 12
 BorderRadius = 0
 Color = Color(0.878431, 0.878431, 0, 1)
 
-[node name="Label" type="Label" parent="Lobby/Header/Code/Container"]
+[node name="Label" type="Label" parent="Lobby/Header/Code/Container" unique_id=1429702073]
 layout_mode = 2
 text = "Code"
 label_settings = SubResource("LabelSettings_k17q5")
 vertical_alignment = 1
 uppercase = true
 
-[node name="Value" type="Label" parent="Lobby/Header/Code"]
+[node name="Value" type="Label" parent="Lobby/Header/Code" unique_id=505538744]
 layout_mode = 2
 text = "abc01"
 label_settings = SubResource("LabelSettings_8edeb")
 vertical_alignment = 1
 uppercase = true
 
-[node name="CenterContainer" type="CenterContainer" parent="Lobby/Header"]
+[node name="CenterContainer" type="CenterContainer" parent="Lobby/Header" unique_id=1003135390]
 layout_mode = 2
 
-[node name="Boxes" type="HBoxContainer" parent="Lobby"]
+[node name="Boxes" type="HBoxContainer" parent="Lobby" unique_id=1237363575]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="Players" type="Control" parent="Lobby/Boxes"]
+[node name="Players" type="Control" parent="Lobby/Boxes" unique_id=799483364]
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
 script = ExtResource("5_ew8go")
@@ -325,8 +325,8 @@ BezelSize = 30
 BorderRadius = 0
 Color = Color(0.792157, 0.878431, 0.898039, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/Players"]
-layout_mode = 2
+[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/Players" unique_id=410748514]
+layout_mode = 0
 offset_right = 350.0
 offset_bottom = 445.0
 size_flags_vertical = 3
@@ -335,7 +335,7 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Lobby/Boxes/Players/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Lobby/Boxes/Players/MarginContainer" unique_id=1703766419]
 clip_children = 2
 layout_mode = 2
 theme_override_constants/separation = 15
@@ -344,35 +344,35 @@ BezelSize = 20
 BorderRadius = 0
 Color = Color(0.792157, 0.878431, 0.898039, 1)
 
-[node name="Label" type="Label" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer" unique_id=842222119]
 layout_mode = 2
 text = "Players"
 label_settings = SubResource("LabelSettings_f4vnb")
 horizontal_alignment = 1
 uppercase = true
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer" unique_id=754305754]
 layout_mode = 2
 size_flags_vertical = 3
 follow_focus = true
 
-[node name="Players" type="VBoxContainer" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="Players" type="VBoxContainer" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer" unique_id=868924334]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Lobby/Boxes"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Lobby/Boxes" unique_id=2025060507]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 20
 alignment = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Lobby/Boxes/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Lobby/Boxes/VBoxContainer" unique_id=1141927016]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Ready" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer"]
+[node name="Ready" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer" unique_id=1042668914]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_jtf8b")
@@ -382,7 +382,7 @@ BezelSize = 30
 BorderRadius = 0
 Color = Color(0, 0.396078, 0.552941, 1)
 
-[node name="Center" type="CenterContainer" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Ready"]
+[node name="Center" type="CenterContainer" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Ready" unique_id=140658013]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -390,7 +390,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center"]
+[node name="Label" type="Label" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center" unique_id=46518547]
 layout_mode = 2
 text = "Set ready"
 label_settings = SubResource("LabelSettings_fpqc4")
@@ -398,7 +398,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="Quit" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer"]
+[node name="Quit" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer" unique_id=1672628483]
 layout_mode = 2
 size_flags_horizontal = 3
 flat = true
@@ -408,7 +408,7 @@ BorderRadius = 0
 Color = Color(0.729412, 0.101961, 0.101961, 1)
 InvertOrientation = true
 
-[node name="Center" type="CenterContainer" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Quit"]
+[node name="Center" type="CenterContainer" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Quit" unique_id=140090003]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -416,7 +416,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Quit/Center"]
+[node name="Label" type="Label" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Quit/Center" unique_id=789460289]
 layout_mode = 2
 text = "Quit"
 label_settings = SubResource("LabelSettings_fpqc4")

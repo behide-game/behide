@@ -7,8 +7,7 @@ namespace Behide.UI.Controls;
 [Tool, SceneTree]
 public partial class PlayerListItem : Control
 {
-    private Player? _player;
-    private Player? Player { get => _player; set { _player = value; Compute(); } }
+    private Player? Player { get; set { field = value; Compute(); } }
 
     private Label usernameLabel = null!;
     private Label readyLabel = null!;
@@ -18,8 +17,8 @@ public partial class PlayerListItem : Control
     public override void _EnterTree()
     {
         log = Serilog.Log.ForContext("Tag", "UI/Lobby/PlayerListItem");
-        usernameLabel = _.Container.MarginReady.Ready.Label;
-        readyLabel = _.Container.MarginUsername.Username;
+        usernameLabel = _.Container.MarginUsername.Username;
+        readyLabel = _.Container.MarginReady.Ready.Label;
     }
 
     public void SetPlayer(Player player)
