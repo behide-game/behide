@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dxxjp2jrsmpwg"]
+[gd_scene format=3 uid="uid://dxxjp2jrsmpwg"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_8r4st"]
 [ext_resource type="PackedScene" uid="uid://uv52tqhgc26c" path="res://Assets/Models/Dungeon/Props/Box/box_large.gltf" id="2_2l0d2"]
@@ -20,18 +20,20 @@ properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[node name="box" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+[node name="box" type="RigidBody3D" unique_id=552702625 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
 mass = 15.0
 script = ExtResource("1_8r4st")
 VisualNode = NodePath("box")
 CollisionNodes = [NodePath("CollisionShape3D")]
 Mass = 15.0
 
-[node name="box" parent="." instance=ExtResource("2_2l0d2")]
+[node name="box" parent="." unique_id=698347348 instance=ExtResource("2_2l0d2")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2028856752]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 shape = SubResource("BoxShape3D_hu7if")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=238673490]
 replication_config = SubResource("SceneReplicationConfig_8r4st")

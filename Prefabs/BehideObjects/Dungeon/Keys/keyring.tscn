@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://p0mjn7bad2ox"]
+[gd_scene format=3 uid="uid://p0mjn7bad2ox"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_68h86"]
 [ext_resource type="PackedScene" uid="uid://xeogaitojcfg" path="res://Assets/Models/Dungeon/Props/Key/keyring.gltf" id="2_tmahi"]
@@ -20,17 +20,19 @@ properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[node name="keyring" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+[node name="keyring" type="RigidBody3D" unique_id=1223102315 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
 script = ExtResource("1_68h86")
 VisualNode = NodePath("keyring")
 CollisionNodes = [NodePath("CollisionShape3D")]
 Mass = 1.0
 
-[node name="keyring" parent="." instance=ExtResource("2_tmahi")]
+[node name="keyring" parent="." unique_id=1975070771 instance=ExtResource("2_tmahi")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1426154292]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02, 0.1, -0.075)
 shape = SubResource("BoxShape3D_4pj1h")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=740587195]
 replication_config = SubResource("SceneReplicationConfig_tmahi")

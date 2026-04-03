@@ -15,7 +15,8 @@ public partial class Spectator : CharacterBody3D
     public void Enable()
     {
         _.Camera.MakeCurrent();
-        Input.MouseMode = Input.MouseModeEnum.Captured;
+        if (Input.MouseMode != Input.MouseModeEnum.Captured)
+            Input.MouseMode = Input.MouseModeEnum.Captured;
         enabled = true;
     }
 

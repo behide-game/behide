@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://do5karhuhkwaw"]
+[gd_scene format=3 uid="uid://do5karhuhkwaw"]
 
 [ext_resource type="Script" uid="uid://dxsc5rfmscwrm" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.cs" id="1_e7184"]
 [ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="2_418vq"]
@@ -10,39 +10,37 @@ font = ExtResource("3_37cwf")
 [sub_resource type="LabelSettings" id="LabelSettings_url6u"]
 font = ExtResource("3_37cwf")
 
-[node name="PlayerListItem" type="MarginContainer" node_paths=PackedStringArray("usernameLabel", "readyLabel")]
+[node name="PlayerListItem" type="MarginContainer" unique_id=1963591353]
 size_flags_horizontal = 3
 script = ExtResource("1_e7184")
-usernameLabel = NodePath("Container/MarginUsername/Username")
-readyLabel = NodePath("Container/MarginReady/Ready/Label")
 
-[node name="Container" type="SplitContainer" parent="."]
+[node name="Container" type="SplitContainer" parent="." unique_id=2014818286]
 layout_mode = 2
 script = ExtResource("2_418vq")
 BezelSize = 15
 BorderRadius = 0
 Color = Color(0.133333, 0.341176, 0.478431, 1)
 
-[node name="MarginUsername" type="MarginContainer" parent="Container"]
+[node name="MarginUsername" type="MarginContainer" parent="Container" unique_id=1061078266]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Username" type="Label" parent="Container/MarginUsername"]
+[node name="Username" type="Label" parent="Container/MarginUsername" unique_id=1100396652]
 layout_mode = 2
 text = "username"
 label_settings = SubResource("LabelSettings_mt0eq")
 
-[node name="MarginReady" type="MarginContainer" parent="Container"]
+[node name="MarginReady" type="MarginContainer" parent="Container" unique_id=1456983523]
 layout_mode = 2
 size_flags_horizontal = 8
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Ready" type="MarginContainer" parent="Container/MarginReady"]
+[node name="Ready" type="MarginContainer" parent="Container/MarginReady" unique_id=1065794298]
 layout_mode = 2
 theme_override_constants/margin_left = 9
 theme_override_constants/margin_top = 10
@@ -53,7 +51,7 @@ BezelSize = 10
 BorderRadius = 0
 Color = Color(0.74902, 0.0901961, 0.419608, 1)
 
-[node name="Label" type="Label" parent="Container/MarginReady/Ready"]
+[node name="Label" type="Label" parent="Container/MarginReady/Ready" unique_id=1041698326]
 layout_mode = 2
 text = "Not ready"
 label_settings = SubResource("LabelSettings_url6u")

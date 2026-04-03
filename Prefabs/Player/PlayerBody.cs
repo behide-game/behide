@@ -25,22 +25,20 @@ public abstract partial class PlayerBody : CharacterBody3D
         }
     }
 
-    private bool alive = true;
-    public bool Alive
-    {
-        get => alive;
-        set
-        {
-            alive = value;
-            if (!value) Hud.Visible = false;
-        }
-    }
+    private bool freeze;
+    public bool Alive = true;
 
     private void Died()
     {
         Alive = false;
         supervisor.PlayerDied(this);
-        if (IsMultiplayerAuthority()) supervisor.LocalPlayerDied();
+        if (IsMultiplayerAuthority()) supervisor.LocalPlayerDied(this);
+    }
+
+    public void Freeze()
+    {
+        freeze = true;
+        Hud.Visible = false;
     }
 
     // --- Initialization ---

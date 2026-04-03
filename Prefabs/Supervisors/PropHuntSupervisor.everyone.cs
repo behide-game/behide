@@ -59,9 +59,11 @@ public partial class PropHuntSupervisor
         CheckGameEnd(playerBody);
     }
 
-    public override void LocalPlayerDied()
+    public override void LocalPlayerDied(PlayerBody playerBody)
     {
-        if (!gameFinished) spectator.Enable();
+        if (gameFinished) return;
+        playerBody.Freeze();
+        spectator.Enable();
     }
 
     [Rpc(CallLocal = true)]
@@ -84,8 +86,8 @@ public partial class PropHuntSupervisor
         if (propsWon) propsWonLabel.Show();
         else hunterWinLabel.Show();
 
-        // Stop player bodies
-        foreach (var body in PlayerBodies) body.Alive = false;
+        // Freeze player bodies
+        foreach (var body in PlayerBodies) body.Freeze();
 
         log.Information("Game finished!: {Winner}", propsWon ? "Props won" : "Hunter wins");
     }

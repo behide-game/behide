@@ -1,6 +1,5 @@
 using Godot;
 using Behide.Types;
-// ReSharper disable InconsistentNaming
 
 namespace Behide.UI.Controls;
 

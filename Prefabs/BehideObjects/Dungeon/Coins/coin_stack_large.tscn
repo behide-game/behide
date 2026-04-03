@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dn8y487aan6cm"]
+[gd_scene format=3 uid="uid://dn8y487aan6cm"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_mqx3j"]
 [ext_resource type="PackedScene" uid="uid://xjuevfpebmul" path="res://Assets/Models/Dungeon/Props/Coin/coin_stack_large.gltf" id="2_mqx3j"]
@@ -21,18 +21,20 @@ properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[node name="coin_stack_large" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+[node name="coin_stack_large" type="RigidBody3D" unique_id=590370585 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, 0, 0, 0)
+collision_layer = 4
+collision_mask = 7
 script = ExtResource("1_mqx3j")
 VisualNode = NodePath("coin_stack_large")
 CollisionNodes = [NodePath("CollisionShape3D")]
 Mass = 1.0
 
-[node name="coin_stack_large" parent="." instance=ExtResource("2_mqx3j")]
+[node name="coin_stack_large" parent="." unique_id=1704068805 instance=ExtResource("2_mqx3j")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=304809063]
 transform = Transform3D(0.999997, 0, 1.49012e-08, 0, 1, 0, -1.49012e-08, 0, 0.999997, 0, 0.55, 0)
 shape = SubResource("CylinderShape3D_f8atq")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2077757797]
 replication_config = SubResource("SceneReplicationConfig_qwqkv")

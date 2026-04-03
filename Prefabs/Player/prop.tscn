@@ -18,6 +18,8 @@ properties/1/replication_mode = 1
 load_path = "res://.godot/imported/cross-visor.svg-00ba57c13ac8beaa6b3e0195f079b92d.ctex"
 
 [node name="Prop" type="CharacterBody3D" unique_id=486043969]
+collision_layer = 2
+collision_mask = 7
 platform_on_leave = 2
 script = ExtResource("1_qudki")
 

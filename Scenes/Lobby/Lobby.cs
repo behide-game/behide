@@ -138,7 +138,7 @@ public partial class Lobby : Control
         }
         catch (Exception e)
         {
-            log.Warning("Trying to host game failed: {error}", e.Message); // TODO: Show error to user
+            log.Warning(e, "Trying to host game failed: {error}", e.Message); // TODO: Show error to user
         }
     }
     public async void JoinButtonPressed()
@@ -166,8 +166,8 @@ public partial class Lobby : Control
     private void AddPlayerToUi(BehaviorSubject<Player> player)
     {
         var playerItem = playerListItemScene.Instantiate<PlayerListItem>();
-        playerItem.SetPlayer(player.Value);
         playerListNode.AddChild(playerItem);
+        playerItem.SetPlayer(player.Value);
 
         // Update the UI accordingly to the player's state
         player.Subscribe(

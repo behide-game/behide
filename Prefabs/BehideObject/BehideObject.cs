@@ -17,7 +17,7 @@ public partial class BehideObject : RigidBody3D
     private void AutoFill()
     {
         var rootNode = GetTree().GetEditedSceneRoot();
-        rootNode.Name = System.IO.Path.GetFileNameWithoutExtension(GetSceneFilePath());
+        rootNode.Name = Path.GetFileNameWithoutExtension(GetSceneFilePath());
 
         // Find CollisionShape3D nodes
         CollisionNodes = FindChildren("*", nameof(CollisionShape3D))
@@ -53,5 +53,9 @@ public partial class BehideObject : RigidBody3D
         synchronizer.Name = nameof(MultiplayerSynchronizer);
         synchronizer.Owner = rootNode;
         synchronizer.ReplicationConfig = replicationConfig;
+
+        // Set collision layer
+        CollisionLayer = 4;
+        CollisionMask = 7;
     }
 }

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://ougos2g11qu5"]
+[gd_scene format=3 uid="uid://ougos2g11qu5"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_hrrpa"]
 [ext_resource type="PackedScene" uid="uid://dyib3v70qg470" path="res://Assets/Models/Dungeon/Props/chair.gltf" id="2_hrrpa"]
@@ -23,21 +23,23 @@ properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[node name="chair" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+[node name="chair" type="RigidBody3D" unique_id=787353468 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
 script = ExtResource("1_hrrpa")
 VisualNode = NodePath("chair")
 CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2")]
 Mass = 1.0
 
-[node name="chair" parent="." instance=ExtResource("2_hrrpa")]
+[node name="chair" parent="." unique_id=802407584 instance=ExtResource("2_hrrpa")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1465355510]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 shape = SubResource("BoxShape3D_m21xm")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=66811781]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.86, 0)
 shape = SubResource("BoxShape3D_vwmtl")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=617270124]
 replication_config = SubResource("SceneReplicationConfig_hrrpa")

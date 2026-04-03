@@ -1,9 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://bq7j4kkgcstpo"]
+[gd_scene format=3 uid="uid://bq7j4kkgcstpo"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_61y8y"]
 [ext_resource type="Material" uid="uid://buhde0n3ewcfp" path="res://Prefabs/BehideObjects/Cube/mirror_mat.tres" id="2_61y8y"]
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_oyu5o"]
+[sub_resource type="BoxMesh" id="BoxMesh_hj8j7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hj8j7"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_61y8y"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
@@ -17,25 +21,23 @@ properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[sub_resource type="BoxMesh" id="BoxMesh_hj8j7"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_hj8j7"]
-
-[node name="BehideObject" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+[node name="mirror_cube" type="RigidBody3D" unique_id=379343789 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
 script = ExtResource("1_61y8y")
-VisualNode = NodePath("MeshInstance3D")
+VisualNode = NodePath("mirror_cube")
 CollisionNodes = [NodePath("CollisionShape3D")]
 Mass = 1.0
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_oyu5o")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="mirror_cube" type="MeshInstance3D" parent="." unique_id=552304539]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 material_override = ExtResource("2_61y8y")
 gi_mode = 2
 mesh = SubResource("BoxMesh_hj8j7")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=991294759]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("BoxShape3D_hj8j7")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1457019006]
+replication_config = SubResource("SceneReplicationConfig_61y8y")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dxmrf533plg67"]
+[gd_scene format=3 uid="uid://dxmrf533plg67"]
 
 [ext_resource type="Texture2D" uid="uid://b3lgwbn2cu3ao" path="res://Assets/Images/Behide-logo.svg" id="1_sevdp"]
 [ext_resource type="FontFile" uid="uid://cl6gjjopg1e7m" path="res://Assets/Fonts/Roboto Flex/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf" id="2_fi5at"]
@@ -19,22 +19,22 @@ font = SubResource("FontVariation_dt7yx")
 font_size = 33
 font_color = Color(0.0980392, 0.109804, 0.117647, 1)
 
-[node name="Logo" type="HBoxContainer"]
+[node name="Logo" type="HBoxContainer" unique_id=1527548696]
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=106777083]
 layout_mode = 2
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="Logo" type="TextureRect" parent="MarginContainer"]
+[node name="Logo" type="TextureRect" parent="MarginContainer" unique_id=2045965796]
 layout_mode = 2
 size_flags_horizontal = 0
 texture = ExtResource("1_sevdp")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=449264997]
 layout_mode = 2
 text = "Behide"
 label_settings = SubResource("LabelSettings_285fj")

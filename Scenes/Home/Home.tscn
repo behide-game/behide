@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://cva4wcyi4gv27"]
+[gd_scene format=3 uid="uid://cva4wcyi4gv27"]
 
 [ext_resource type="Script" uid="uid://dcv2kk31wgoxq" path="res://Scenes/Home/Home.cs" id="1_6ww0f"]
 [ext_resource type="Texture2D" uid="uid://b3lgwbn2cu3ao" path="res://Assets/Images/Behide-logo.svg" id="1_scmxo"]
@@ -6,7 +6,7 @@
 [sub_resource type="LabelSettings" id="LabelSettings_aao6d"]
 font_size = 35
 
-[node name="Home" type="Control"]
+[node name="Home" type="Control" unique_id=338132723]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,7 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_6ww0f")
 
-[node name="Margin" type="Control" parent="."]
+[node name="Margin" type="Control" parent="." unique_id=92911079]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,26 +27,26 @@ offset_bottom = -60.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Logo" type="HBoxContainer" parent="Margin"]
+[node name="Logo" type="HBoxContainer" parent="Margin" unique_id=487663071]
 layout_mode = 1
 offset_right = 186.0
 offset_bottom = 49.0
 size_flags_horizontal = 0
 
-[node name="TextureRect" type="TextureRect" parent="Margin/Logo"]
+[node name="TextureRect" type="TextureRect" parent="Margin/Logo" unique_id=203430544]
 layout_mode = 2
 size_flags_horizontal = 0
 texture = ExtResource("1_scmxo")
 expand_mode = 3
 
-[node name="Label" type="Label" parent="Margin/Logo"]
+[node name="Label" type="Label" parent="Margin/Logo" unique_id=757051966]
 layout_mode = 2
 text = "Behide"
 label_settings = SubResource("LabelSettings_aao6d")
 vertical_alignment = 1
 uppercase = true
 
-[node name="Buttons" type="VBoxContainer" parent="Margin"]
+[node name="Buttons" type="VBoxContainer" parent="Margin" unique_id=1378771081]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -56,17 +56,17 @@ offset_right = 70.0
 grow_vertical = 0
 size_flags_horizontal = 0
 
-[node name="Play" type="Button" parent="Margin/Buttons"]
+[node name="Play" type="Button" parent="Margin/Buttons" unique_id=1080444524]
 layout_mode = 2
 text = "Play"
 alignment = 0
 
-[node name="Settings" type="Button" parent="Margin/Buttons"]
+[node name="Settings" type="Button" parent="Margin/Buttons" unique_id=1306795631]
 layout_mode = 2
 text = "Settings"
 alignment = 0
 
-[node name="Quit" type="Button" parent="Margin/Buttons"]
+[node name="Quit" type="Button" parent="Margin/Buttons" unique_id=1695128092]
 layout_mode = 2
 text = "Quit
 "
