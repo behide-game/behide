@@ -1,6 +1,6 @@
-[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cyh1wuis74osj"]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cyh1wuis74osj"]
 
-[ext_resource type="Shader" uid="uid://jxmr2w7ry1x4" path="res://Shaders/chromatic_aberration.gdshader" id="1_pc8tu"]
+[ext_resource type="Shader" uid="uid://jxmr2w7ry1x4" path="res://Assets/Shaders/chromatic_aberration.gdshader" id="1_pc8tu"]
 
 [resource]
 shader = ExtResource("1_pc8tu")
