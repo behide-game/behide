@@ -1,4 +1,5 @@
 using Behide.Game.Player;
+using Behide.Types;
 using Godot;
 
 namespace Behide.Game.Supervisors;
@@ -8,48 +9,33 @@ public partial class PropHuntSupervisor
     public override void _EnterTree()
     {
         base._EnterTree();
-        // Load nodes
-        preGameCountdown = nodes.UI.AdvancedLabelCountdown;
-        preGameProp = nodes.UI.Pre_gameProp;
-        preGameHunter = nodes.UI.Pre_gameHunter;
-
-        inGame = nodes.UI.In_game;
-        inGameCountdown = nodes.UI.In_game.Countdown;
-        isPropLabel = nodes.UI.In_game.IsProp;
-        isHunterLabel = nodes.UI.In_game.IsHunter;
-
-        endGame = nodes.UI.End_game;
-        propsWonLabel = nodes.UI.End_game.MarginContainer.MarginContainer.PropsWin;
-        hunterWinLabel = nodes.UI.End_game.MarginContainer.MarginContainer.HunterWins;
-
-        spectator = nodes.Spectator;
 
         // Show UI
         hunterChosen += (_, hunter) =>
         {
             if (hunter == Multiplayer.GetUniqueId())
             {
-                preGameHunter.CallDeferred(CanvasItem.MethodName.Show);
-                isHunterLabel.CallDeferred(CanvasItem.MethodName.Show);
+                PreGameHunter.CallDeferred(CanvasItem.MethodName.Show);
+                IsHunterLabel.CallDeferred(CanvasItem.MethodName.Show);
             }
             else
             {
-                preGameProp.CallDeferred(CanvasItem.MethodName.Show);
-                isPropLabel.CallDeferred(CanvasItem.MethodName.Show);
+                PreGameProp.CallDeferred(CanvasItem.MethodName.Show);
+                IsPropLabel.CallDeferred(CanvasItem.MethodName.Show);
             }
         };
 
-        preGameCountdown.TimeElapsed += () =>
+        PreGameCountdown.TimeElapsed += () =>
         {
-            preGameHunter.Hide();
-            preGameProp.Hide();
-            inGame.Show();
+            PreGameHunter.Hide();
+            PreGameProp.Hide();
+            InGame.Show();
 
             SpawnHunter();
-            inGameCountdown.StartCountdown(inGameDuration);
+            InGameCountdown.StartCountdown(inGameDuration);
         };
 
-        inGameCountdown.TimeElapsed += GameTimeout;
+        InGameCountdown.TimeElapsed += GameTimeout;
     }
 
 
@@ -62,7 +48,7 @@ public partial class PropHuntSupervisor
     public override void LocalPlayerDied(PlayerBody playerBody)
     {
         if (gameFinished) return;
-        spectator.Enable();
+        Spectator.Enable();
     }
 
     [Rpc(CallLocal = true)]
@@ -76,18 +62,18 @@ public partial class PropHuntSupervisor
     [Rpc(CallLocal = true)]
     public void RpcGameFinished(bool propsWon)
     {
-        inGameCountdown.TimeElapsed -= GameTimeout;
+        InGameCountdown.TimeElapsed -= GameTimeout;
         gameFinished = true;
 
         // Change UI
-        inGame.Hide();
-        endGame.Show();
-        if (propsWon) propsWonLabel.Show();
-        else hunterWinLabel.Show();
+        InGame.Hide();
+        EndGame.Show();
+        if (propsWon) PropsWonLabel.Show();
+        else HunterWinLabel.Show();
 
         // Freeze player bodies
         foreach (var body in PlayerBodies) body.Freeze();
-        spectator.Disable();
+        Spectator.Disable();
 
         log.Information("Game finished!: {Winner}", propsWon ? "Props won" : "Hunter wins");
     }
@@ -95,6 +81,7 @@ public partial class PropHuntSupervisor
     private void UiRestart()
     {
         if (!gameFinished) return;
+        room.SetPlayerState(new PlayerStateInLobby(false));
         GameManager.SetGameState(GameManager.GameState.Lobby);
     }
 

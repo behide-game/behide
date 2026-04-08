@@ -17,9 +17,12 @@ public partial class PlayerListItem : Control
             {
                 UsernameLabel.Text = p.Username;
                 ReadyLabel.Text =
-                    p.State is PlayerStateInLobby isReady
-                        ? isReady.IsReady ? "Ready" : "Not ready"
-                        : "Gone";
+                    p.State switch
+                    {
+                        PlayerStateInLobby isReady => isReady.IsReady ? "Ready" : "Not ready",
+                        PlayerStateInGame => "In game",
+                        _ => "Gone"
+                    };
             },
             onCompleted: QueueFree
         );

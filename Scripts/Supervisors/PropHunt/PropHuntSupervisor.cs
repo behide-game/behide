@@ -21,22 +21,22 @@ public partial class PropHuntSupervisor : Supervisor
         set => ((Supervisor)this).BehideObjects = value;
     }
 
-    private AdvancedLabelCountdown preGameCountdown = null!;
-    private LabelCountdown inGameCountdown = null!;
     private bool gameFinished;
 
-    private Control preGameProp = null!;
-    private Control preGameHunter = null!;
-    private Control inGame = null!;
-    private Control endGame = null!;
+    private AdvancedLabelCountdown PreGameCountdown => nodes.UI.AdvancedLabelCountdown;
+    private LabelCountdown InGameCountdown => nodes.UI.In_game.Countdown;
 
-    private Label isPropLabel = null!;
-    private Label isHunterLabel = null!;
+    private Control PreGameProp => nodes.UI.Pre_gameProp;
+    private Control PreGameHunter => nodes.UI.Pre_gameHunter;
+    private Control InGame => nodes.UI.In_game;
+    private Control EndGame => nodes.UI.End_game;
 
-    private Label propsWonLabel = null!;
-    private Label hunterWinLabel = null!;
+    private Label IsPropLabel => nodes.UI.In_game.IsProp;
+    private Label IsHunterLabel => nodes.UI.In_game.IsHunter;
+    private Label PropsWonLabel => nodes.UI.End_game.PropsWin;
+    private Label HunterWinLabel => nodes.UI.End_game.HunterWins;
 
-    private Spectator spectator = null!;
+    private Spectator Spectator => nodes.Spectator;
 
     private readonly Serilog.ILogger log = Log.CreateLogger("Supervisor/PropHunt");
     private static readonly TimeSpan preGameDuration = TimeSpan.FromSeconds(2);

@@ -7,8 +7,6 @@ using Godot;
 
 namespace Behide.Game.Supervisors;
 
-using Types;
-
 [GlobalClass]
 public partial class PlayerSpawner : Node
 {
@@ -18,20 +16,19 @@ public partial class PlayerSpawner : Node
 
     private readonly Serilog.ILogger log = Log.CreateLogger("PlayerSpawner");
 
-    private readonly Dictionary<int, BehaviorSubject<Player>> players = GameManager.Room.Room.Players;
-    private BehaviorSubject<Player> localPlayer = null!;
+    private Room room = null!;
     private readonly Dictionary<int, ReplaySubject<Unit>> onPlayerSpawned = new();
 
     public override void _EnterTree()
     {
-        if (GameManager.Room.Room.LocalPlayer is null)
+        if (GameManager.Room.Room is null)
         {
-            log.Error("No local player found. It means we are not connected to a room...");
+            log.Error("Not in a room");
             return;
         }
+        room = GameManager.Room.Room;
 
-        localPlayer = GameManager.Room.Room.LocalPlayer;
-        foreach (var peerId in GameManager.Room.Room.Players.Keys)
+        foreach (var peerId in room.Players.Keys)
             onPlayerSpawned.Add(peerId, new ReplaySubject<Unit>());
 
         // Authority is set by the parent node that must be a supervisor
@@ -45,7 +42,7 @@ public partial class PlayerSpawner : Node
     [Rpc(CallLocal = true)]
     private void SpawnPlayerRpc(int peerIdToSpawn, bool isHunter)
     {
-        var playerObservable = players[peerIdToSpawn];
+        var playerObservable = room.Players[peerIdToSpawn];
         var playerToSpawn = playerObservable.Value;
 
         // Create node
@@ -60,7 +57,7 @@ public partial class PlayerSpawner : Node
         PlayersNode.AddChild(playerNode, true);
 
         // Disable visibility if authority
-        if (playerToSpawn.PeerId != localPlayer.Value.PeerId)
+        if (playerToSpawn.PeerId != room.LocalPlayer.Value.PeerId)
             RpcId(playerToSpawn.PeerId, nameof(SpawnedPlayerRpc));
 
         playerNode.PositionSynchronizer.SetVisibilityPublic(false);

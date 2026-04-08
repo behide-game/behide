@@ -12,7 +12,7 @@ public partial class PropHuntSupervisor
         hunterChosen += (_, hunter) =>
         {
             SpawnProps(hunter);
-            preGameCountdown.StartCountdown(preGameDuration); // Start countdown
+            PreGameCountdown.StartCountdown(preGameDuration); // Start countdown
         };
 
         ChooseHunter();
@@ -20,14 +20,14 @@ public partial class PropHuntSupervisor
 
     private void ChooseHunter()
     {
-        var idx = new Random().Next(Players.Count);
-        var playerId = Players.ElementAt(idx).Key;
+        var idx = new Random().Next(room.Players.Count);
+        var playerId = room.Players.ElementAt(idx).Key;
         Rpc(nameof(RpcSetHunter), playerId);
     }
 
     private void SpawnProps(int hunter)
     {
-        foreach (var player in GameManager.Room.Room.Players)
+        foreach (var player in room.Players)
         {
             if (player.Key == hunter) continue;
             Spawner.SpawnPlayer(player.Key, false); // TODO: Add spawn points

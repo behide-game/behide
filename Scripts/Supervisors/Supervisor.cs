@@ -19,18 +19,24 @@ public abstract partial class Supervisor : Node
     private Node behideObjectsParent = null!;
     [Export] protected PlayerSpawner Spawner = null!;
 
-    protected readonly Dictionary<int, BehaviorSubject<Player>> Players = GameManager.Room.Room.Players;
-    protected readonly List<PlayerBody> PlayerBodies = new();
+    protected Room room = null!;
+    protected readonly List<PlayerBody> PlayerBodies = [];
 
     public override void _EnterTree()
     {
         GameManager.Supervisor = this;
+        if (GameManager.Room.Room is null)
+        {
+            log.Error("Cannot set up supervisor: Not in a room");
+            return;
+        }
+        room = GameManager.Room.Room;
 
         // Set authority
         int firstPlayerToJoin;
         try
         {
-            firstPlayerToJoin = Players.Min(kv => kv.Key);
+            firstPlayerToJoin = room.Players.Min(kv => kv.Key);
         }
         catch (Exception)
         {
@@ -53,7 +59,7 @@ public abstract partial class Supervisor : Node
         // Wait players to be ready
         Task.Run(async () =>
         {
-            var tasks = Players.Select(kv => kv.Value
+            var tasks = room.Players.Select(kv => kv.Value
                 .Where(p => p.State is PlayerStateInGame)
                 .Take(1)
                 .ToTask()
@@ -69,17 +75,15 @@ public abstract partial class Supervisor : Node
     private void SetReadyWhenSceneLoaded()
     {
         var sceneNode = GetTree().CurrentScene;
-        if (sceneNode.IsNodeReady()) GameManager.Room.Room.SetPlayerState(new PlayerStateInGame());
-        else sceneNode.Ready += () => GameManager.Room.Room.SetPlayerState(new PlayerStateInGame());
+        if (sceneNode.IsNodeReady()) room.SetPlayerState(new PlayerStateInGame());
+        else sceneNode.Ready += () => room.SetPlayerState(new PlayerStateInGame());
     }
 
     protected virtual void PlayersReady()
     {
-        if (IsMultiplayerAuthority())
-        {
-            behideObjectsParent.AddChild(BehideObjects);
-            BehideObjects.SetOwner(behideObjectsParent);
-        }
+        if (!IsMultiplayerAuthority()) return;
+        behideObjectsParent.AddChild(BehideObjects);
+        BehideObjects.SetOwner(behideObjectsParent);
     }
 
     public override void _Input(InputEvent @event)

@@ -24,9 +24,9 @@ bg_color = Color(0.894118, 0.945098, 0.968627, 1)
 font_size = 20
 font_color = Color(0.0980392, 0.109804, 0.117647, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_yncfe"]
+[sub_resource type="LabelSettings" id="LabelSettings_efs40"]
 font = ExtResource("10_c34b8")
-font_size = 24
+font_size = 25
 
 [node name="Supervisor" type="Node3D" unique_id=2086486061 node_paths=PackedStringArray("Spawner")]
 script = ExtResource("1_8yh7x")
@@ -160,7 +160,7 @@ beforeRunningText = "Spawning players..."
 afterRunningText = "Game finished"
 metadata/_custom_type_script = "uid://djqbwwelecick"
 
-[node name="End-game" type="Control" parent="UI" unique_id=1103533486]
+[node name="End-game" type="MarginContainer" parent="UI" unique_id=1950012555]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -168,33 +168,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/End-game" unique_id=1950012555]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 100
-theme_override_constants/margin_top = 100
-theme_override_constants/margin_right = 100
-theme_override_constants/margin_bottom = 100
-
-[node name="Control" type="Control" parent="UI/End-game/MarginContainer" unique_id=1606280308]
-layout_mode = 2
-script = ExtResource("9_efs40")
-BorderRadius = 0
-Color = Color(0.025840001, 0.106126174, 0.20906562, 0.75000006)
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/End-game/MarginContainer" unique_id=1611514464]
-layout_mode = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="PropsWin" type="Label" parent="UI/End-game/MarginContainer/MarginContainer" unique_id=831366820]
+[node name="PropsWin" type="Label" parent="UI/End-game" unique_id=831366820]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
@@ -202,7 +181,7 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 35
 text = "Props won !"
 
-[node name="HunterWins" type="Label" parent="UI/End-game/MarginContainer/MarginContainer" unique_id=173217186]
+[node name="HunterWins" type="Label" parent="UI/End-game" unique_id=173217186]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
@@ -210,59 +189,72 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 35
 text = "Hunter wins !"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/End-game/MarginContainer/MarginContainer" unique_id=662633208]
-custom_minimum_size = Vector2(0, 150)
+[node name="Buttons" type="HBoxContainer" parent="UI/End-game" unique_id=2120910974]
 layout_mode = 2
+size_flags_horizontal = 10
 size_flags_vertical = 8
-theme_override_constants/separation = 20
-alignment = 1
+theme_override_constants/separation = -20
+alignment = 2
 
-[node name="Restart" type="Button" parent="UI/End-game/MarginContainer/MarginContainer/HBoxContainer" unique_id=411554919]
+[node name="Restart" type="MarginContainer" parent="UI/End-game/Buttons" unique_id=1680059424]
+z_index = 1
 layout_mode = 2
-size_flags_horizontal = 3
-flat = true
 script = ExtResource("9_efs40")
-BezelSize = 30
+BezelSize = 20
 BorderRadius = 0
-Color = Color(0, 0.39607844, 0.5529412, 1)
-BackgroundColor = Color(0, 0, 0, 0)
+Color = Color(0.039215688, 0.15686275, 0.32941177, 1)
 
-[node name="Label" type="Label" parent="UI/End-game/MarginContainer/MarginContainer/HBoxContainer/Restart" unique_id=798961093]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MarginContainer" type="MarginContainer" parent="UI/End-game/Buttons/Restart" unique_id=1566249671]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="UI/End-game/Buttons/Restart/MarginContainer" unique_id=1355130234]
+layout_mode = 2
 text = "Restart"
-label_settings = SubResource("LabelSettings_yncfe")
+label_settings = SubResource("LabelSettings_efs40")
 horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="Quit" type="Button" parent="UI/End-game/MarginContainer/MarginContainer/HBoxContainer" unique_id=1374989308]
+[node name="Button" type="Button" parent="UI/End-game/Buttons/Restart" unique_id=410078177]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 flat = true
+
+[node name="Quit" type="MarginContainer" parent="UI/End-game/Buttons" unique_id=606161577]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
 script = ExtResource("9_efs40")
-BezelSize = 30
+BezelSize = 20
 BorderRadius = 0
 Color = Color(0.7294118, 0.101960786, 0.101960786, 1)
-InvertOrientation = true
-BackgroundColor = Color(0, 0, 0, 0)
 
-[node name="Label" type="Label" parent="UI/End-game/MarginContainer/MarginContainer/HBoxContainer/Quit" unique_id=1664001444]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MarginContainer" type="MarginContainer" parent="UI/End-game/Buttons/Quit" unique_id=94754414]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="UI/End-game/Buttons/Quit/MarginContainer" unique_id=809790567]
+layout_mode = 2
 text = "Quit"
-label_settings = SubResource("LabelSettings_yncfe")
+label_settings = SubResource("LabelSettings_efs40")
 horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[connection signal="pressed" from="UI/End-game/MarginContainer/MarginContainer/HBoxContainer/Restart" to="." method="UiRestart"]
-[connection signal="pressed" from="UI/End-game/MarginContainer/MarginContainer/HBoxContainer/Quit" to="." method="UiQuit"]
+[node name="Button" type="Button" parent="UI/End-game/Buttons/Quit" unique_id=1949035232]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+flat = true
+
+[connection signal="pressed" from="UI/End-game/Buttons/Restart/Button" to="." method="UiRestart"]
+[connection signal="pressed" from="UI/End-game/Buttons/Quit/Button" to="." method="UiQuit"]
