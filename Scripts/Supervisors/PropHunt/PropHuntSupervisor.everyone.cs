@@ -19,8 +19,8 @@ public partial class PropHuntSupervisor
         isHunterLabel = nodes.UI.In_game.IsHunter;
 
         endGame = nodes.UI.End_game;
-        propsWonLabel = nodes.UI.End_game.PropsWin;
-        hunterWinLabel = nodes.UI.End_game.HunterWins;
+        propsWonLabel = nodes.UI.End_game.MarginContainer.MarginContainer.PropsWin;
+        hunterWinLabel = nodes.UI.End_game.MarginContainer.MarginContainer.HunterWins;
 
         spectator = nodes.Spectator;
 
@@ -62,7 +62,6 @@ public partial class PropHuntSupervisor
     public override void LocalPlayerDied(PlayerBody playerBody)
     {
         if (gameFinished) return;
-        playerBody.Freeze();
         spectator.Enable();
     }
 
@@ -88,7 +87,21 @@ public partial class PropHuntSupervisor
 
         // Freeze player bodies
         foreach (var body in PlayerBodies) body.Freeze();
+        spectator.Disable();
 
         log.Information("Game finished!: {Winner}", propsWon ? "Props won" : "Hunter wins");
+    }
+
+    private void UiRestart()
+    {
+        if (!gameFinished) return;
+        GameManager.SetGameState(GameManager.GameState.Lobby);
+    }
+
+    private void UiQuit()
+    {
+        if (!gameFinished) return;
+        _ = GameManager.Room.LeaveRoom();
+        GameManager.SetGameState(GameManager.GameState.Home);
     }
 }

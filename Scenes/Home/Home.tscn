@@ -1,75 +1,286 @@
 [gd_scene format=3 uid="uid://cva4wcyi4gv27"]
 
 [ext_resource type="Script" uid="uid://dcv2kk31wgoxq" path="res://Scenes/Home/Home.cs" id="1_6ww0f"]
-[ext_resource type="Texture2D" uid="uid://b3lgwbn2cu3ao" path="res://Assets/Images/Behide-logo.svg" id="1_scmxo"]
+[ext_resource type="PackedScene" uid="uid://cfyb4305uyrca" path="res://Scenes/Dungeon/Dungeon.tscn" id="2_ydllb"]
+[ext_resource type="PackedScene" uid="uid://dxmrf533plg67" path="res://Scenes/Controls/Logo.tscn" id="3_6di0c"]
+[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="4_gv7h4"]
+[ext_resource type="PackedScene" uid="uid://ejs15n81bpnf" path="res://Prefabs/BehideObjects/Cube/yellow_cube.tscn" id="7_1ahje"]
+[ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="7_xbfhp"]
+[ext_resource type="PackedScene" uid="uid://cwbve28vlg05s" path="res://Prefabs/BehideObjects/Cube/purple_cube.tscn" id="8_xbfhp"]
+[ext_resource type="FontFile" uid="uid://26b4v0rh3143" path="res://Assets/Fonts/Space Mono/SpaceMono-Bold.ttf" id="8_yypu2"]
+[ext_resource type="PackedScene" uid="uid://bq7j4kkgcstpo" path="res://Prefabs/BehideObjects/Cube/mirror_cube.tscn" id="9_yypu2"]
+[ext_resource type="PackedScene" uid="uid://xmljgt42lsch" path="res://Prefabs/BehideObjects/Cube/green_cube.tscn" id="10_lpr55"]
+[ext_resource type="PackedScene" uid="uid://ewhknfhtqscj" path="res://Prefabs/BehideObjects/Cube/blue_cube.tscn" id="11_yvac4"]
+[ext_resource type="PackedScene" uid="uid://damtas0dagou5" path="res://Prefabs/BehideObjects/Sphere/mirror_sphere.tscn" id="12_52d0w"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_aao6d"]
-font_size = 35
+[sub_resource type="LabelSettings" id="LabelSettings_5ug15"]
+font = ExtResource("7_xbfhp")
+font_size = 25
 
-[node name="Home" type="Control" unique_id=338132723]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[sub_resource type="LabelSettings" id="LabelSettings_ogb76"]
+font = ExtResource("7_xbfhp")
+font_size = 30
+font_color = Color(0.09803922, 0.10980392, 0.11764706, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ogb76"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+draw_center = false
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="Home" type="Node3D" unique_id=714137104]
 script = ExtResource("1_6ww0f")
 
-[node name="Margin" type="Control" parent="." unique_id=92911079]
-layout_mode = 1
+[node name="UI" type="MarginContainer" parent="." unique_id=1168512662]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 60.0
-offset_top = 60.0
-offset_right = -60.0
-offset_bottom = -60.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
 
-[node name="Logo" type="HBoxContainer" parent="Margin" unique_id=487663071]
-layout_mode = 1
-offset_right = 186.0
-offset_bottom = 49.0
-size_flags_horizontal = 0
+[node name="Content" type="VBoxContainer" parent="UI" unique_id=362767866]
+layout_mode = 2
+theme_override_constants/separation = 40
 
-[node name="TextureRect" type="TextureRect" parent="Margin/Logo" unique_id=203430544]
+[node name="Logo" parent="UI/Content" unique_id=1527548696 instance=ExtResource("3_6di0c")]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Container" type="HBoxContainer" parent="UI/Content" unique_id=695475535]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="Global Buttons" type="HBoxContainer" parent="UI/Content/Container" unique_id=529948630]
 layout_mode = 2
 size_flags_horizontal = 0
-texture = ExtResource("1_scmxo")
-expand_mode = 3
+theme_override_constants/separation = -20
+alignment = 1
 
-[node name="Label" type="Label" parent="Margin/Logo" unique_id=757051966]
+[node name="Settings" type="MarginContainer" parent="UI/Content/Container/Global Buttons" unique_id=786974503]
+z_index = 1
 layout_mode = 2
-text = "Behide"
-label_settings = SubResource("LabelSettings_aao6d")
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("4_gv7h4")
+BezelSize = 20
+BorderRadius = 0
+Color = Color(0.039215688, 0.15686275, 0.32941177, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Content/Container/Global Buttons/Settings" unique_id=1236848016]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+
+[node name="Label" type="Label" parent="UI/Content/Container/Global Buttons/Settings/MarginContainer" unique_id=597981655]
+layout_mode = 2
+text = "Settings"
+label_settings = SubResource("LabelSettings_5ug15")
+horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="Buttons" type="VBoxContainer" parent="Margin" unique_id=1378771081]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -101.0
-offset_right = 70.0
-grow_vertical = 0
-size_flags_horizontal = 0
-
-[node name="Play" type="Button" parent="Margin/Buttons" unique_id=1080444524]
+[node name="Button" type="Button" parent="UI/Content/Container/Global Buttons/Settings" unique_id=1258598510]
 layout_mode = 2
-text = "Play"
-alignment = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+flat = true
 
-[node name="Settings" type="Button" parent="Margin/Buttons" unique_id=1306795631]
+[node name="Quit" type="MarginContainer" parent="UI/Content/Container/Global Buttons" unique_id=1262457445]
 layout_mode = 2
-text = "Settings"
-alignment = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+script = ExtResource("4_gv7h4")
+BezelSize = 20
+BorderRadius = 0
+Color = Color(0.019607844, 0.105882354, 0.20784314, 1)
 
-[node name="Quit" type="Button" parent="Margin/Buttons" unique_id=1695128092]
+[node name="MarginContainer" type="MarginContainer" parent="UI/Content/Container/Global Buttons/Quit" unique_id=2023867399]
 layout_mode = 2
-text = "Quit
-"
-alignment = 0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
 
-[connection signal="pressed" from="Margin/Buttons/Play" to="." method="PlayButtonPressed"]
+[node name="Label" type="Label" parent="UI/Content/Container/Global Buttons/Quit/MarginContainer" unique_id=1905504609]
+layout_mode = 2
+text = "Quit"
+label_settings = SubResource("LabelSettings_5ug15")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="Button" type="Button" parent="UI/Content/Container/Global Buttons/Quit" unique_id=289151321]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+flat = true
+
+[node name="RoomButtons" type="HBoxContainer" parent="UI/Content/Container" unique_id=1558666390]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+
+[node name="Create" type="MarginContainer" parent="UI/Content/Container/RoomButtons" unique_id=1520046873]
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("4_gv7h4")
+BezelSize = 20
+BorderRadius = 0
+Color = Color(0.13333334, 0.34117648, 0.47843137, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Content/Container/RoomButtons/Create" unique_id=1802404858]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_right = 40
+
+[node name="Label" type="Label" parent="UI/Content/Container/RoomButtons/Create/MarginContainer" unique_id=696726501]
+layout_mode = 2
+text = "Create"
+label_settings = SubResource("LabelSettings_5ug15")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="Button" type="Button" parent="UI/Content/Container/RoomButtons/Create" unique_id=2050824094]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+flat = true
+
+[node name="Or" type="Label" parent="UI/Content/Container/RoomButtons" unique_id=178906996]
+layout_mode = 2
+text = "or"
+label_settings = SubResource("LabelSettings_ogb76")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Join" type="MarginContainer" parent="UI/Content/Container/RoomButtons" unique_id=808980679]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+script = ExtResource("4_gv7h4")
+BezelSize = 20
+BorderRadius = 0
+Color = Color(0.7921569, 0.8784314, 0.8980392, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Content/Container/RoomButtons/Join" unique_id=97696599]
+layout_mode = 2
+theme_override_constants/separation = -16
+
+[node name="Input" type="MarginContainer" parent="UI/Content/Container/RoomButtons/Join/HBoxContainer" unique_id=236292972]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 10
+
+[node name="Box" type="MarginContainer" parent="UI/Content/Container/RoomButtons/Join/HBoxContainer/Input" unique_id=806955735]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_right = 16
+script = ExtResource("4_gv7h4")
+BezelSize = 16
+BorderRadius = 0
+Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
+
+[node name="LineEdit" type="LineEdit" parent="UI/Content/Container/RoomButtons/Join/HBoxContainer/Input/Box" unique_id=17249999]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_placeholder_color = Color(0.309385, 0.309385, 0.309385, 1)
+theme_override_colors/caret_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("8_yypu2")
+theme_override_font_sizes/font_size = 25
+theme_override_styles/focus = SubResource("StyleBoxFlat_ogb76")
+placeholder_text = "AB01"
+alignment = 1
+max_length = 4
+flat = true
+
+[node name="Button" type="MarginContainer" parent="UI/Content/Container/RoomButtons/Join/HBoxContainer" unique_id=1743903177]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Join" type="MarginContainer" parent="UI/Content/Container/RoomButtons/Join/HBoxContainer/Button" unique_id=1220037958]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 3
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_right = 0
+script = ExtResource("4_gv7h4")
+BezelSize = 16
+BorderRadius = 0
+Color = Color(1, 0, 0.45882353, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Content/Container/RoomButtons/Join/HBoxContainer/Button/Join" unique_id=1355225278]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+
+[node name="Label" type="Label" parent="UI/Content/Container/RoomButtons/Join/HBoxContainer/Button/Join/MarginContainer" unique_id=2075008229]
+layout_mode = 2
+text = "Join"
+label_settings = SubResource("LabelSettings_5ug15")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="Button" type="Button" parent="UI/Content/Container/RoomButtons/Join/HBoxContainer/Button/Join" unique_id=696014758]
+layout_mode = 2
+size_flags_vertical = 3
+flat = true
+
+[node name="Dungeon" parent="." unique_id=1145563756 instance=ExtResource("2_ydllb")]
+
+[node name="Camera" type="Camera3D" parent="." unique_id=1548027102]
+transform = Transform3D(0.6507995, -0.18630573, 0.73603684, 0, 0.96942663, 0.2453814, -0.7592496, -0.15969409, 0.6309024, -14.851292, 4.4300385, 22.774435)
+
+[node name="BehideObjects" type="Node3D" parent="." unique_id=1314474833]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 15, 0, 12)
+
+[node name="BehideObject" parent="BehideObjects" unique_id=1347755166 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("7_1ahje")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -37)
+CollisionNodes = []
+
+[node name="BehideObject2" parent="BehideObjects" unique_id=1916946187 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("8_xbfhp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -40)
+CollisionNodes = []
+
+[node name="BehideObject3" parent="BehideObjects" unique_id=379343789 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("9_yypu2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -42)
+CollisionNodes = []
+
+[node name="BehideObject4" parent="BehideObjects" unique_id=759419184 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("10_lpr55")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -36)
+CollisionNodes = []
+
+[node name="BehideObject5" parent="BehideObjects" unique_id=2117437491 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("11_yvac4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -39)
+CollisionNodes = []
+
+[node name="BehideObject6" parent="BehideObjects" unique_id=1631732522 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("12_52d0w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -39)
+CollisionNodes = []
+
+[connection signal="pressed" from="UI/Content/Container/Global Buttons/Settings/Button" to="." method="SettingsButtonPressed"]
+[connection signal="pressed" from="UI/Content/Container/Global Buttons/Quit/Button" to="." method="QuitButtonPressed"]
+[connection signal="pressed" from="UI/Content/Container/RoomButtons/Create/Button" to="." method="CreateRoomButtonPressed"]
+[connection signal="pressed" from="UI/Content/Container/RoomButtons/Join/HBoxContainer/Button/Join/Button" to="." method="JoinRoomButtonPressed"]

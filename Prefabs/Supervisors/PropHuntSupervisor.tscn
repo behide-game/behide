@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cehw1sq4q5yu8"]
 
-[ext_resource type="Script" uid="uid://dtyebxhht3m0b" path="res://Prefabs/Supervisors/PropHuntSupervisor.cs" id="1_8yh7x"]
+[ext_resource type="Script" uid="uid://dtyebxhht3m0b" path="res://Scripts/Supervisors/PropHunt/PropHuntSupervisor.cs" id="1_8yh7x"]
 [ext_resource type="PackedScene" uid="uid://1t0iy2imhdg4" path="res://Prefabs/Spectator/Spectator.tscn" id="2_8yh7x"]
 [ext_resource type="Script" uid="uid://dlbrls7b4x0kx" path="res://Scripts/Supervisors/PlayerSpawner.cs" id="3_l302j"]
 [ext_resource type="PackedScene" uid="uid://beaeb2uyytjul" path="res://Prefabs/Player/hunter.tscn" id="4_7hsgi"]
@@ -8,6 +8,8 @@
 [ext_resource type="Script" uid="uid://sggdi83gahf1" path="res://Scenes/Controls/Countdown/AdvancedLabelCountdown.cs" id="5_7hsgi"]
 [ext_resource type="Theme" uid="uid://cdr520krk72wo" path="res://Scenes/theme.tres" id="5_sfeev"]
 [ext_resource type="Script" uid="uid://djqbwwelecick" path="res://Scenes/Controls/Countdown/LabelCountdown.cs" id="6_w7xx4"]
+[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="9_efs40"]
+[ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="10_c34b8"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_6mxck"]
 font_size = 20
@@ -21,6 +23,10 @@ bg_color = Color(0.894118, 0.945098, 0.968627, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_8yh7x"]
 font_size = 20
 font_color = Color(0.0980392, 0.109804, 0.117647, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_yncfe"]
+font = ExtResource("10_c34b8")
+font_size = 24
 
 [node name="Supervisor" type="Node3D" unique_id=2086486061 node_paths=PackedStringArray("Spawner")]
 script = ExtResource("1_8yh7x")
@@ -163,34 +169,100 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PropsWin" type="Label" parent="UI/End-game" unique_id=831366820]
-visible = false
+[node name="MarginContainer" type="MarginContainer" parent="UI/End-game" unique_id=1950012555]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -10.5
-offset_right = 20.0
-offset_bottom = 10.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="Control" type="Control" parent="UI/End-game/MarginContainer" unique_id=1606280308]
+layout_mode = 2
+script = ExtResource("9_efs40")
+BorderRadius = 0
+Color = Color(0.025840001, 0.106126174, 0.20906562, 0.75000006)
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/End-game/MarginContainer" unique_id=1611514464]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="PropsWin" type="Label" parent="UI/End-game/MarginContainer/MarginContainer" unique_id=831366820]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 35
 text = "Props won !"
 
-[node name="HunterWins" type="Label" parent="UI/End-game" unique_id=173217186]
+[node name="HunterWins" type="Label" parent="UI/End-game/MarginContainer/MarginContainer" unique_id=173217186]
 visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 35
+text = "Hunter wins !"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/End-game/MarginContainer/MarginContainer" unique_id=662633208]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Restart" type="Button" parent="UI/End-game/MarginContainer/MarginContainer/HBoxContainer" unique_id=411554919]
+layout_mode = 2
+size_flags_horizontal = 3
+flat = true
+script = ExtResource("9_efs40")
+BezelSize = 30
+BorderRadius = 0
+Color = Color(0, 0.39607844, 0.5529412, 1)
+BackgroundColor = Color(0, 0, 0, 0)
+
+[node name="Label" type="Label" parent="UI/End-game/MarginContainer/MarginContainer/HBoxContainer/Restart" unique_id=798961093]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -10.5
-offset_right = 20.0
-offset_bottom = 10.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Hunter wins !"
+text = "Restart"
+label_settings = SubResource("LabelSettings_yncfe")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="Quit" type="Button" parent="UI/End-game/MarginContainer/MarginContainer/HBoxContainer" unique_id=1374989308]
+layout_mode = 2
+size_flags_horizontal = 3
+flat = true
+script = ExtResource("9_efs40")
+BezelSize = 30
+BorderRadius = 0
+Color = Color(0.7294118, 0.101960786, 0.101960786, 1)
+InvertOrientation = true
+BackgroundColor = Color(0, 0, 0, 0)
+
+[node name="Label" type="Label" parent="UI/End-game/MarginContainer/MarginContainer/HBoxContainer/Quit" unique_id=1664001444]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Quit"
+label_settings = SubResource("LabelSettings_yncfe")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[connection signal="pressed" from="UI/End-game/MarginContainer/MarginContainer/HBoxContainer/Restart" to="." method="UiRestart"]
+[connection signal="pressed" from="UI/End-game/MarginContainer/MarginContainer/HBoxContainer/Quit" to="." method="UiQuit"]

@@ -1,11 +1,13 @@
 using Behide.Game.Supervisors;
 using Godot;
+using Serilog;
+using Log = Behide.Logging.Log;
 
 namespace Behide.Game.Player;
 
 public abstract partial class PlayerBody : CharacterBody3D
 {
-    private Serilog.ILogger log = null!;
+    private readonly ILogger log = Log.CreateLogger("Player/Movements");
 
     protected Node3D CameraDisk = null!;
     protected Camera3D Camera = null!;
@@ -38,6 +40,8 @@ public abstract partial class PlayerBody : CharacterBody3D
     public void Freeze()
     {
         freeze = true;
+        if (Input.MouseMode != Input.MouseModeEnum.Visible)
+            Input.MouseMode = Input.MouseModeEnum.Visible;
         Hud.Visible = false;
     }
 
@@ -45,7 +49,6 @@ public abstract partial class PlayerBody : CharacterBody3D
     protected abstract void InitializeNodes();
     public override void _EnterTree()
     {
-        log = Serilog.Log.ForContext("Tag", "Player/Movements");
         if (GameManager.Supervisor is null) log.Error("Supervisor is null");
         else supervisor = GameManager.Supervisor;
 

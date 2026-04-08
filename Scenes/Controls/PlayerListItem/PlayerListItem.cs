@@ -6,43 +6,24 @@ namespace Behide.UI.Controls;
 [Tool, SceneTree]
 public partial class PlayerListItem : Control
 {
-    private Player? Player { get; set { field = value; Compute(); } }
+    private Label UsernameLabel => _.Container.MarginUsername.Username;
+    private Label ReadyLabel => _.Container.MarginReady.Ready.Label;
+    private IDisposable? subscription;
 
-    private Label usernameLabel = null!;
-    private Label readyLabel = null!;
-
-    private Serilog.ILogger log = null!;
-
-    public override void _EnterTree()
+    public void SetPlayer(IObservable<Player> player)
     {
-        log = Serilog.Log.ForContext("Tag", "UI/Lobby/PlayerListItem");
-        usernameLabel = _.Container.MarginUsername.Username;
-        readyLabel = _.Container.MarginReady.Ready.Label;
+        subscription = player.Subscribe(
+            p =>
+            {
+                UsernameLabel.Text = p.Username;
+                ReadyLabel.Text =
+                    p.State is PlayerStateInLobby isReady
+                        ? isReady.IsReady ? "Ready" : "Not ready"
+                        : "Gone";
+            },
+            onCompleted: QueueFree
+        );
     }
 
-    public void SetPlayer(Player player)
-    {
-        if (player.State is not PlayerStateInLobby)
-        {
-            log.Error("Player state is not in lobby");
-            return;
-        }
-        Player = player;
-    }
-
-    private void Compute()
-    {
-        if (Player is null) return;
-
-        if (Player.State is not PlayerStateInLobby playerState)
-        {
-            log.Error("Player state is not in lobby");
-            return;
-        }
-
-        usernameLabel.Text = Player.Username;
-        readyLabel.Text = playerState.IsReady ? "Ready" : "Not ready";
-    }
-
-    public int? GetPeerId() => Player?.PeerId;
+    public override void _ExitTree() => subscription?.Dispose();
 }

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bh3nk67jxv7k"]
 
-[ext_resource type="PackedScene" uid="uid://cfyb4305uyrca" path="res://Scenes/Game/Dungeon.tscn" id="3_ln2h6"]
+[ext_resource type="PackedScene" uid="uid://cfyb4305uyrca" path="res://Scenes/Dungeon/Dungeon.tscn" id="3_ln2h6"]
 [ext_resource type="LightmapGIData" uid="uid://6sbhtkuqpw24" path="res://Scenes/Game/Game.lmbake" id="3_ti1oi"]
 [ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Assets/Shaders/chromatic_aberration.tres" id="4_32cbu"]
 [ext_resource type="Environment" uid="uid://c8ttkksgix01d" path="res://Scenes/Game/environment.tres" id="4_tyqxg"]
@@ -56,10 +56,10 @@ light_data = ExtResource("3_ti1oi")
 transform = Transform3D(0.500003, -0.749999, 0.43301, -1.49013e-08, 0.499998, 0.866027, -0.866023, -0.433016, 0.250001, 5, 16, -34)
 shadow_enabled = true
 
-[node name="Dungeon" parent="World" unique_id=1815258447 instance=ExtResource("3_ln2h6")]
+[node name="Dungeon" parent="World" unique_id=1145563756 instance=ExtResource("3_ln2h6")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 6, 0, 6)
 
-[node name="BehideObjects" type="Node3D" parent="World/Dungeon/BehideObjects" parent_id_path=PackedInt32Array(1815258447, 1828677655) index="75" unique_id=174306534]
+[node name="BehideObjects" type="Node3D" parent="World/Dungeon/BehideObjects" parent_id_path=PackedInt32Array(1145563756, 1828677655) index="75" unique_id=174306534]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 15, 0, 12)
 
 [node name="BehideObject" parent="World/Dungeon/BehideObjects/BehideObjects" unique_id=844311179 instance=ExtResource("8_bsqcq")]

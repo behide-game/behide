@@ -20,6 +20,13 @@ public partial class Spectator : CharacterBody3D
         enabled = true;
     }
 
+    public void Disable()
+    {
+        enabled = false;
+        if (Input.MouseMode != Input.MouseModeEnum.Visible)
+            Input.MouseMode = Input.MouseModeEnum.Visible;
+    }
+
     public override void _Input(InputEvent rawEvent)
     {
         base._Input(rawEvent);

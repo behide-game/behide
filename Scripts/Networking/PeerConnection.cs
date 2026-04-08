@@ -1,5 +1,6 @@
 using Godot;
 using System.Reactive.Subjects;
+using Behide.Logging;
 using Behide.OnlineServices.Signaling;
 
 namespace Behide.Networking;
@@ -41,7 +42,7 @@ public partial class PeerConnection : WebRtcPeerConnection
         }
     };
 
-    private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "PeerConnection");
+    private readonly Serilog.ILogger log = Log.CreateLogger("PeerConnection");
 
     public PeerConnection()
     {

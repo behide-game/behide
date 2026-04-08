@@ -1,8 +1,7 @@
 using Godot;
 using Serilog;
-using System.Reactive.Subjects;
-using Behide.OnlineServices.Signaling;
 using Behide.UI.Controls;
+using Log = Behide.Logging.Log;
 
 // ReSharper disable WithExpressionModifiesAllMembers
 
@@ -10,225 +9,119 @@ namespace Behide.Game.UI.Lobby;
 
 using Types;
 
-[SceneTree]
+[SceneTree(root: "nodes")]
 public partial class Lobby : Control
 {
-    private Control chooseModeControl = null!;
-    private Control lobbyControl = null!;
-
-    // Choose mode
-    private LineEdit codeInput = null!;
-
-    // Lobby
-    private VBoxContainer playerListNode = null!;
-    [Export] private PackedScene playerListItemScene = null!;
-    private Label readyButtonLabel = null!;
-    private LabelCountdown countdown = null!;
-
-    private ILogger log = null!;
-    private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(1);// TimeSpan.FromSeconds(5);
-    private CancellationTokenSource inRoomEventsCts = new();
+    private readonly ILogger log = Log.CreateLogger("UI/Lobby");
     private readonly CancellationTokenSource nodeAliveCts = new();
+    private CancellationToken NodeAliveCt => nodeAliveCts.Token;
+    private Room room = null!;
+
+    private Control PlayerList => nodes.Lobby.Boxes.Players.MarginContainer.VBoxContainer.ScrollContainer.Players;
+    private Label ReadyButton => nodes.Lobby.Boxes.Buttons.Ready.MarginContainer.Label;
+    private LabelCountdown Countdown => nodes.Countdown;
+    private Label RoomCode => nodes.Lobby.Header.Code.Value;
+
+    [Export] private PackedScene playerListItemScene = null!;
+    private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(10);
 
     public override void _EnterTree()
     {
-        log = Log.ForContext("Tag", "UI/Lobby");
-        chooseModeControl = _.ChooseMode;
-        lobbyControl = _.Lobby;
-        codeInput = _.ChooseMode.Buttons.VBoxContainer.Code.LineEdit;
-        playerListNode = _.Lobby.Boxes.Players.MarginContainer.VBoxContainer.ScrollContainer.Players;
-        readyButtonLabel = _.Lobby.Boxes.VBoxContainer.HBoxContainer.Ready.Center.Label;
-        countdown = _.Countdown;
-
-        chooseModeControl.Show();
-        lobbyControl.Hide();
-
-        // Set authority
-        GameManager.Room.PlayerLeft.Subscribe(_ => OnPlayersChanged(), nodeAliveCts.Token);
-        GameManager.Room.PlayerRegistered.Subscribe(_ => OnPlayersChanged(), nodeAliveCts.Token);
-        void OnPlayersChanged()
+        if (GameManager.Room.Room is null)
         {
-            var minPeerId = GameManager.Room.Players.Min(p => p.Key);
-            if (minPeerId == GetMultiplayerAuthority()) return;
-            SetMultiplayerAuthority(minPeerId);
+            log.Error("Not in a room");
+            return;
         }
 
-        // Subscribe to countdown
-        countdown.TimeElapsed += () =>
+        room = GameManager.Room.Room;
+
+        // Set authority
+        UpdateLobbyAuthority();
+        room.PlayerLeft.Subscribe(_ => UpdateLobbyAuthority(), NodeAliveCt);
+        room.PlayerJoined.Subscribe(_ => UpdateLobbyAuthority(), NodeAliveCt);
+
+        // Update countdown state
+        room.PlayerStateChanged.Subscribe(_ => RefreshCountdownState(), NodeAliveCt);
+
+        // Start game when countdown finished
+        Countdown.TimeElapsed += () =>
         {
-            if (!IsMultiplayerAuthority() || inRoomEventsCts.Token.IsCancellationRequested) return;
+            if (!IsMultiplayerAuthority()) return;
             CallDeferred(Node.MethodName.Rpc, nameof(StartGameRpc));
         };
-    }
 
-    private void CancelRoomEvents()
-    {
-        inRoomEventsCts.Cancel();
-        inRoomEventsCts.Dispose();
-        inRoomEventsCts = new CancellationTokenSource();
+        // Set room code in UI
+        RoomCode.Text = room.RoomId.ToString();
+
+        // Set players UI
+        foreach (var player in room.Players.Values) AddPlayerToUi(player);
+        room.PlayerJoined.Subscribe(p => AddPlayerToUi(room.Players[p.PeerId]), NodeAliveCt);
     }
 
     public override void _ExitTree()
     {
-        inRoomEventsCts.Cancel();
-        inRoomEventsCts.Dispose();
         nodeAliveCts.Cancel();
         nodeAliveCts.Dispose();
+    }
+
+    private void AddPlayerToUi(IObservable<Player> player)
+    {
+        var node = playerListItemScene.Instantiate<PlayerListItem>();
+        PlayerList.AddChild(node);
+        node.SetPlayer(player);
+    }
+
+    private void ReadyButtonPressed()
+    {
+        var playerState = room.LocalPlayer.Value.State;
+        if (playerState is not PlayerStateInLobby state)
+        {
+            log.Error("Cannot toggle player state: Player not in a lobby state: {}", playerState);
+            return;
+        }
+        room.SetPlayerState(state with { IsReady = !state.IsReady });
+
+        ReadyButton.Text = !state.IsReady ? "Unset ready" : "Set ready"; // TODO: I18n
+
+        RefreshCountdownState();
+    }
+
+    private static void QuitButtonPressed()
+    {
+        _ = GameManager.Room.LeaveRoom();
+        GameManager.SetGameState(GameManager.GameState.Home);
+    }
+
+    private void UpdateLobbyAuthority()
+    {
+        var minPeerId = room.Players.Min(p => p.Key);
+        if (minPeerId == GetMultiplayerAuthority()) return;
+        SetMultiplayerAuthority(minPeerId);
+        Countdown.SetMultiplayerAuthority(minPeerId);
     }
 
     private void RefreshCountdownState()
     {
         if (!IsMultiplayerAuthority()) return; // Only the lobby authority can start the countdown
 
-        var allReady = GameManager.Room.Players.Values.All(player =>
+        var allReady = room.Players.Values.All(player =>
             player.Value.State is PlayerStateInLobby { IsReady: true }
         );
 
         if (allReady)
         {
             // No clock delta needed as the time is based on the first player to have joined the room
-            countdown.StartCountdown(countdownDuration);
+            Countdown.StartCountdown(countdownDuration);
             log.Debug("Game start planned for {Start}", DateTimeOffset.Now + countdownDuration);
         }
         else
         {
-            countdown.ResetCountdown();
+            Countdown.ResetCountdown();
             log.Debug("Game start cancelled");
         }
     }
 
     [Rpc(CallLocal = true)]
-    private void StartGameRpc()
-    {
-        GameManager.instance.SetGameState(GameManager.GameState.Game);
-    }
-
-    private void ShowLobby(RoomId roomId)
-    {
-        chooseModeControl.Hide();
-        lobbyControl.Show();
-        GetNode<Label>("Lobby/Header/Code/Value").Text = RoomId.raw(roomId);
-
-        // Add players to UI
-        foreach (var player in GameManager.Room.Players.Values) AddPlayerToUi(player);
-        GameManager.Room.PlayerRegistered.Subscribe(AddPlayerToUi, inRoomEventsCts.Token);
-
-        // eventsCts.Token.Register(countdown.Cancel);
-        // TODO: Check if it break something
-        // gameStartTime = null;
-    }
-    private void HideLobby()
-    {
-        lobbyControl.Hide();
-        chooseModeControl.Show();
-
-        CancelRoomEvents(); // Unsubscribe from room events
-
-        foreach (var playerControl in playerListNode.GetChildren()) playerControl.QueueFree();
-        readyButtonLabel.Text = "Not ready";
-    }
-
-    public async void HostButtonPressed()
-    {
-        try
-        {
-            var roomId = await GameManager.Room.CreateRoom();
-            log.Information("Room created with code {RoomId}", roomId);
-            ShowLobby(roomId);
-        }
-        catch (Exception e)
-        {
-            log.Warning(e, "Trying to host game failed: {error}", e.Message); // TODO: Show error to user
-        }
-    }
-    public async void JoinButtonPressed()
-    {
-        try
-        {
-            var rawCode = codeInput.Text;
-            var code = RoomId.tryParse(rawCode).ToNullable();
-            if (code is null)
-            {
-                log.Error("Invalid room code");
-                return;
-            }
-
-            await GameManager.Room.JoinRoom(code);
-            ShowLobby(code);
-        }
-        catch (Exception e)
-        {
-            log.Warning("Trying to join room failed: {error}", e.Message); // TODO: Show error to user
-        }
-    }
-
-    // Apply the player state to the UI
-    private void AddPlayerToUi(BehaviorSubject<Player> player)
-    {
-        var playerItem = playerListItemScene.Instantiate<PlayerListItem>();
-        playerListNode.AddChild(playerItem);
-        playerItem.SetPlayer(player.Value);
-
-        // Update the UI accordingly to the player's state
-        player.Subscribe(
-            UpdatePlayerUi, // Update UI when it's state changes
-            () => RemovePlayerFromUi(player.Value.PeerId), // Remove player from UI when he leaves
-            inRoomEventsCts.Token
-        );
-
-        RefreshCountdownState();
-    }
-    private void RemovePlayerFromUi(int playerId)
-    {
-        var playerLabel = playerListNode
-            .GetChildren()
-            .Cast<PlayerListItem>()
-            .FirstOrDefault(p => p.GetPeerId() == playerId);
-
-        if (playerLabel is null) return;
-
-        playerListNode.RemoveChild(playerLabel);
-        playerLabel.QueueFree();
-
-        RefreshCountdownState();
-    }
-
-    private void UpdatePlayerUi(Player player)
-    {
-        if (player.State is not PlayerStateInLobby) return;
-        var playerItem = playerListNode
-            .GetChildren()
-            .Cast<PlayerListItem>()
-            .FirstOrDefault(p => p.GetPeerId() == player.PeerId);
-
-        if (playerItem is null)
-        {
-            log.Error("Player {Username} not found", player.Username);
-            return;
-        }
-
-        playerItem.SetPlayer(player);
-        RefreshCountdownState();
-    }
-
-    // Handle UI button presses
-    private void OnReadyButtonPressed()
-    {
-        var player = GameManager.Room.LocalPlayer;
-        if (player?.Value.State is not PlayerStateInLobby playerState)
-        {
-            log.Error("Player state is not in lobby");
-            return;
-        }
-
-        var newState = playerState with { IsReady = !playerState.IsReady };
-        GameManager.Room.SetPlayerState(newState);
-
-        readyButtonLabel.Text = newState.IsReady ? "Set not ready" : "Set ready";
-    }
-    private void OnQuitButtonPressed()
-    {
-        var _ = GameManager.Room.LeaveRoom();
-        HideLobby();
-    }
+    private void StartGameRpc() =>
+        GameManager.SetGameState(GameManager.GameState.Game);
 }

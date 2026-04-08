@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TypedSignalR.Client;
 using Behide.Types;
 using Serilog;
+using Log = Behide.Logging.Log;
 
 // ReSharper disable once CheckNamespace
 namespace Behide.OnlineServices.Signaling;
@@ -15,7 +16,7 @@ public abstract class ConnectionAttempt(ConnectionAttemptId id, ISignalingHub hu
 {
     public readonly ConnectionAttemptId Id = id;
     protected readonly ISignalingHub Hub = hub;
-    protected readonly ILogger Log = Serilog.Log.ForContext("Tag", $"Signaling/ConnectionAttempt({id})");
+    protected readonly ILogger Log = Logging.Log.CreateLogger($"Signaling/ConnectionAttempt({id})");
     public readonly ReplaySubject<IceCandidate> Candidates = new();
 
     public void SendIceCandidate(IceCandidate candidate)
@@ -64,7 +65,7 @@ public partial class Signaling : Node
 {
     private HubConnection connection = null!;
     private ISignalingHub hub = null!;
-    private ILogger log = null!;
+    private readonly ILogger log = Log.CreateLogger("Signaling");
     private HubReceiver receiver = null!;
 
     /// <summary>
@@ -98,8 +99,6 @@ public partial class Signaling : Node
 
     public override void _EnterTree()
     {
-        log = Log.ForContext("Tag", "Signaling");
-
         connection = new HubConnectionBuilder()
             .WithUrl(Secrets.SignalingHubUrl)
             .WithAutomaticReconnect()
@@ -185,7 +184,7 @@ public partial class Signaling : Node
         throw new Exception(error.ToLocalizedString());
     }
 
-    public async Task<RoomConnectionInfo> ConnectToRoomPlayers()
+    public async Task<RoomConnectionInfo> GetConnectionInfo()
     {
         var res = await hub.ConnectToRoomPlayers();
         if (!res.HasError(out var error)) return res.ResultValue;

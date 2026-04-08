@@ -3,6 +3,7 @@ using System.Reactive.Subjects;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using Behide.Game.Player;
+using Behide.Logging;
 
 namespace Behide.Game.Supervisors;
 using Types;
@@ -12,13 +13,13 @@ using Types;
 /// </summary>
 public abstract partial class Supervisor : Node
 {
-    private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "Supervisor/Base");
+    private readonly Serilog.ILogger log = Log.CreateLogger("Supervisor/Base");
 
     [Export] public Node BehideObjects = null!;
     private Node behideObjectsParent = null!;
     [Export] protected PlayerSpawner Spawner = null!;
 
-    protected readonly Dictionary<int, BehaviorSubject<Player>> Players = GameManager.Room.Players;
+    protected readonly Dictionary<int, BehaviorSubject<Player>> Players = GameManager.Room.Room.Players;
     protected readonly List<PlayerBody> PlayerBodies = new();
 
     public override void _EnterTree()
@@ -35,7 +36,7 @@ public abstract partial class Supervisor : Node
         {
             log.Error("No player found. This means that the room is empty. Strange...");
             _ = GameManager.Room.LeaveRoom();
-            GameManager.instance.SetGameState(GameManager.GameState.Home);
+            GameManager.SetGameState(GameManager.GameState.Home);
             return;
         }
         SetMultiplayerAuthority(firstPlayerToJoin);
@@ -68,8 +69,8 @@ public abstract partial class Supervisor : Node
     private void SetReadyWhenSceneLoaded()
     {
         var sceneNode = GetTree().CurrentScene;
-        if (sceneNode.IsNodeReady()) GameManager.Room.SetPlayerState(new PlayerStateInGame());
-        else sceneNode.Ready += () => GameManager.Room.SetPlayerState(new PlayerStateInGame());
+        if (sceneNode.IsNodeReady()) GameManager.Room.Room.SetPlayerState(new PlayerStateInGame());
+        else sceneNode.Ready += () => GameManager.Room.Room.SetPlayerState(new PlayerStateInGame());
     }
 
     protected virtual void PlayersReady()
@@ -85,7 +86,7 @@ public abstract partial class Supervisor : Node
     {
         if (!@event.IsAction(InputActions.OpenMenu, true)) return;
         _ = GameManager.Room.LeaveRoom();
-        GameManager.instance.SetGameState(GameManager.GameState.Lobby);
+        GameManager.SetGameState(GameManager.GameState.Lobby);
     }
 
     public void PlayerSpawned(PlayerBody player) => PlayerBodies.Add(player);

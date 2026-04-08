@@ -37,7 +37,7 @@ public abstract partial class PlayerBody
         }
 
         // Add movements
-        if (freeze)
+        if (freeze || !Alive)
         {
             Velocity = Vector3.Zero;
             return;
@@ -74,7 +74,7 @@ public abstract partial class PlayerBody
     public override void _Input(InputEvent rawEvent)
     {
         if (!IsMultiplayerAuthority()) return;
-        if (freeze) return;
+        if (!Alive || freeze) return;
 
         // Escape
         if (rawEvent.IsActionPressed(BuiltinInputActions.UiCancel))
@@ -82,7 +82,6 @@ public abstract partial class PlayerBody
                 ? Input.MouseModeEnum.Visible
                 : Input.MouseModeEnum.Captured;
 
-        if (!Alive) return;
         // Rotation
         if (rawEvent is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
         {

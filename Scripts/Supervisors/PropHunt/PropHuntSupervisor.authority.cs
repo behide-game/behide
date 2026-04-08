@@ -27,7 +27,7 @@ public partial class PropHuntSupervisor
 
     private void SpawnProps(int hunter)
     {
-        foreach (var player in GameManager.Room.Players)
+        foreach (var player in GameManager.Room.Room.Players)
         {
             if (player.Key == hunter) continue;
             Spawner.SpawnPlayer(player.Key, false); // TODO: Add spawn points

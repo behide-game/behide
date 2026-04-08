@@ -1,6 +1,6 @@
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Behide.Types;
+using Behide.Logging;
 using Godot;
 
 namespace Behide;
@@ -12,43 +12,45 @@ namespace Behide;
 /// </summary>
 public partial class TimeSynchronizer : Node
 {
-    private Serilog.ILogger log = null!;
+    private readonly Serilog.ILogger log = Log.CreateLogger("TimeSync");
     private CancellationToken? timeSyncCancellationToken;
     private Subject<long> clockDeltaMeasurements = new();
 
     public BehaviorSubject<TimeSpan?> ClockDelta = new(null);
 
-    public override void _EnterTree()
+    public void Start()
     {
-        log = Serilog.Log.ForContext("Tag", "TimeSync");
-    }
-
-    public void Start(BehaviorSubject<Player> localPlayer)
-    {
-        // Cancel time synchronization when we quit the room
-        var cts = new CancellationTokenSource();
-        localPlayer.Subscribe(_ => { }, onCompleted: cts.Cancel, token: cts.Token);
-        timeSyncCancellationToken = cts.Token;
+        if (GameManager.Room.Room is null)
+        {
+            log.Error("Cannot start time synchronization: Not in a room");
+            return;
+        }
+        var room = GameManager.Room.Room;
 
         // Determine reference player
-        if (GameManager.Room.Players.Count == 0)
+        if (room.Players.Count == 0)
         {
             log.Error("Failed to start time synchronization, no players in room");
             return;
         }
-        if (GameManager.Room.Players.Count == 1)
+        if (room.Players.Count == 1)
         {
             log.Information("Stopping time synchronization because we are now the time reference");
             return;
         }
+        var referencePlayer = room.Players.MinBy(kv => kv.Key).Value;
 
-        var referencePlayer = GameManager.Room.Players.MinBy(kv => kv.Key).Value;
+        // Cancel time synchronization when we quit the room
+        var cts = new CancellationTokenSource();
+        room.RoomLeft.Subscribe(_ => { }, onCompleted: cts.Cancel, token: cts.Token);
+        timeSyncCancellationToken = cts.Token;
+
         referencePlayer.Subscribe(
             _ => { },
-            onCompleted: () =>
+            onCompleted: () => // When reference disconnects, restart time sync
             {
                 cts.Cancel();
-                Start(localPlayer);
+                Start();
             },
             token: cts.Token
         );
@@ -83,17 +85,15 @@ public partial class TimeSynchronizer : Node
         // When a new delta is emitted we determine the average clock delta with the reference.
         // We discard the deltas that differ by more than 1 standard deviation from the median.
         // The purpose is to eliminate the packets that were retransmitted by tcp.
-        var windowLength = 9;
+        const int windowLength = 9;
         var deltaWindow = new List<long>(windowLength);
         clockDeltaMeasurements
             .Select(newValue =>
             {
                 if (deltaWindow.Count >= windowLength) deltaWindow.RemoveAt(0);
                 deltaWindow.Add(newValue);
-                return deltaWindow.ToArray();
-            })
-            .Select(deltas =>
-            {
+
+                var deltas = deltaWindow.ToArray();
                 if (deltas.Length == 0) return (TimeSpan?)null;
 
                 // Calculating standard deviation

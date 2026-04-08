@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://cfyb4305uyrca"]
 
+[ext_resource type="Environment" uid="uid://c8ttkksgix01d" path="res://Scenes/Game/environment.tres" id="1_eudhg"]
 [ext_resource type="PackedScene" uid="uid://cwl8vqiprpg44" path="res://Assets/Models/Dungeon/Batiments/Pillar/pillar_decorated.gltf" id="2_78svp"]
+[ext_resource type="LightmapGIData" uid="uid://03h2onju4cki" path="res://Scenes/Dungeon/Dungeon.lmbake" id="2_v8h4g"]
 [ext_resource type="PackedScene" uid="uid://bpof5is2eg4de" path="res://Assets/Models/Dungeon/Batiments/Stairs/stairs_wood.gltf" id="3_d3ktp"]
 [ext_resource type="PackedScene" uid="uid://ccb28bbg0acxt" path="res://Assets/Models/Dungeon/Batiments/Floor/Tile/floor_tile_large.gltf" id="3_i7wmt"]
 [ext_resource type="PackedScene" uid="uid://bcydc3w101qmv" path="res://Assets/Models/Dungeon/Batiments/Floor/Tile/floor_tile_small_weeds_B.gltf" id="3_ij5eg"]
@@ -78,6 +80,13 @@
 [ext_resource type="PackedScene" uid="uid://iayvi6lwk3ct" path="res://Prefabs/BehideObjects/Dungeon/Candles/candle_thin.tscn" id="76_kcrxe"]
 [ext_resource type="PackedScene" uid="uid://br4ao5ffpbtt5" path="res://Prefabs/BehideObjects/Dungeon/Beds/bed_floor.tscn" id="77_f8atq"]
 [ext_resource type="PackedScene" uid="uid://oq3cxwfc3rjk" path="res://Prefabs/BehideObjects/Dungeon/Coins/coin_stack_small.tscn" id="78_t1d2p"]
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_v8h4g"]
+auto_exposure_speed = 4.0
+dof_blur_far_distance = 20.0
+dof_blur_far_transition = 20.0
+dof_blur_amount = 0.05
+auto_exposure_min_sensitivity = 100.0
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_hkla2"]
 
@@ -180,6 +189,13 @@ size = Vector3(2, 0.2, 0.5)
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=397947548]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1999666855]
+environment = ExtResource("1_eudhg")
+camera_attributes = SubResource("CameraAttributesPractical_v8h4g")
+
+[node name="LightmapGI" type="LightmapGI" parent="." unique_id=1443591995]
+light_data = ExtResource("2_v8h4g")
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1263918633]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
@@ -1599,60 +1615,88 @@ transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, 
 
 [node name="StaticProps" type="Node3D" parent="." unique_id=1988295651]
 
-[node name="torch_mounted2" parent="StaticProps" unique_id=482367846 instance=ExtResource("45_01r5e")]
+[node name="torch_mounted2" parent="StaticProps" unique_id=1009907461 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.7, 2, 13)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted2" unique_id=514797046]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
-[node name="torch_mounted6" parent="StaticProps" unique_id=1598133916 instance=ExtResource("45_01r5e")]
+[node name="torch_mounted6" parent="StaticProps" unique_id=284519871 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -6, 6, 15.5)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted6" unique_id=1220587296]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
-[node name="torch_mounted7" parent="StaticProps" unique_id=922962045 instance=ExtResource("45_01r5e")]
+[node name="torch_mounted7" parent="StaticProps" unique_id=2141230082 instance=ExtResource("45_01r5e")]
 transform = Transform3D(1, 0, -5.96046e-08, 0, 1, 0, 5.96046e-08, 0, 1, -6, 6, 16.5)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted7" unique_id=1022988872]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
-[node name="torch_mounted8" parent="StaticProps" unique_id=2060852518 instance=ExtResource("45_01r5e")]
+[node name="torch_mounted8" parent="StaticProps" unique_id=1675805326 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-1.03316e-07, 0, -1, 0, 1, 0, 1, 0, -1.03316e-07, 1.8, 6, 20)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted8" unique_id=502692714]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
-[node name="torch_mounted3" parent="StaticProps" unique_id=135457202 instance=ExtResource("45_01r5e")]
+[node name="torch_mounted3" parent="StaticProps" unique_id=28944803 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.7, 2, 18)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted3" unique_id=613884998]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
-[node name="torch_mounted4" parent="StaticProps" unique_id=744104774 instance=ExtResource("45_01r5e")]
+[node name="torch_mounted4" parent="StaticProps" unique_id=2079177310 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -13.7, 2, 19)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted4" unique_id=367718357]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
-[node name="torch_mounted5" parent="StaticProps" unique_id=1444683441 instance=ExtResource("45_01r5e")]
+[node name="torch_mounted5" parent="StaticProps" unique_id=1675883751 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -13.7, 2, 14)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted5" unique_id=1805073723]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
 [node name="sword_shield_gold2" parent="StaticProps" unique_id=1460365534 instance=ExtResource("45_lb4e7")]
@@ -1664,50 +1708,65 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2, 0, 
 [node name="banner_patternB_blue3" parent="StaticProps" unique_id=1415775167 instance=ExtResource("55_2w7no")]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -14, 0, 16.5)
 
-[node name="torch_mounted9" parent="StaticProps" unique_id=361383383 instance=ExtResource("45_01r5e")]
+[node name="torch_mounted9" parent="StaticProps" unique_id=626857896 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -38, 3.9, 23.5)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted9" unique_id=1970876345]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
-[node name="torch_mounted10" parent="StaticProps" unique_id=1480222193 instance=ExtResource("45_01r5e")]
+[node name="torch_mounted10" parent="StaticProps" unique_id=934990026 instance=ExtResource("45_01r5e")]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -38, 3.9, 12)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted10" unique_id=1915073071]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
-light_energy = 2.0
-omni_range = 6.0
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
-[node name="torch_mounted11" parent="StaticProps" unique_id=149228133 instance=ExtResource("45_01r5e")]
+[node name="torch_mounted11" parent="StaticProps" unique_id=1522406386 instance=ExtResource("45_01r5e")]
 transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -38, 3.9, 0.5)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted11" unique_id=1039498405]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
-light_energy = 2.0
-omni_range = 6.0
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
+omni_attenuation = 1.5
 
-[node name="torch_mounted12" parent="StaticProps" unique_id=455070058 instance=ExtResource("45_01r5e")]
+[node name="torch_mounted12" parent="StaticProps" unique_id=783056036 instance=ExtResource("45_01r5e")]
 transform = Transform3D(1.31135e-07, 0, 1, 0, 1, 0, -1, 0, 1.31135e-07, -41.5, 3.9, 6)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted12" unique_id=1449115684]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
-light_energy = 2.0
-omni_range = 6.0
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
+omni_attenuation = 1.5
 
-[node name="torch_mounted13" parent="StaticProps" unique_id=1663459090 instance=ExtResource("45_01r5e")]
+[node name="torch_mounted13" parent="StaticProps" unique_id=222099704 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-2.18558e-07, 0, -1, 0, 1, 0, 1, 0, -2.18558e-07, -34.5, 3.9, 6)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted13" unique_id=350525756]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
-light_energy = 2.0
-omni_range = 6.0
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
+omni_attenuation = 1.5
 
 [node name="shelf_large" type="StaticBody3D" parent="StaticProps" unique_id=613026630]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.7, 6.2622, 12.5075)
@@ -1757,7 +1816,10 @@ transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -33, 0, 15)
 [node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_triple5" unique_id=2053322407]
 transform = Transform3D(1, 0, -2.98023e-08, 0, 1, 0, 0, 0, 1, 0.0223665, 0.859392, 0.038353)
 light_color = Color(1, 0.741769, 0.563201, 1)
-light_energy = 0.2
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
 [node name="candle_triple6" parent="BehideObjects" unique_id=1910055521 instance=ExtResource("43_avh5c")]
@@ -1766,7 +1828,10 @@ transform = Transform3D(-0.866026, 0, -0.5, 0, 1, 0, 0.5, 0, -0.866026, -32.8, 0
 [node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_triple6" unique_id=1750737805]
 transform = Transform3D(1, 0, -2.98023e-08, 0, 1, 0, 0, 0, 1, 0.0223665, 0.859392, 0.038353)
 light_color = Color(1, 0.741769, 0.563201, 1)
-light_energy = 0.2
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
 [node name="RigidBody3D" parent="BehideObjects" unique_id=2140154829 instance=ExtResource("43_aidiq")]
@@ -1817,7 +1882,10 @@ transform = Transform3D(-0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, -0.258819
 [node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_triple4" unique_id=1095393764]
 transform = Transform3D(1, 0, -2.98023e-08, 0, 1, 0, 0, 0, 1, 0.0223665, 0.859392, 0.038353)
 light_color = Color(1, 0.741769, 0.563201, 1)
-light_energy = 0.2
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
 [node name="barrel_small" parent="BehideObjects" unique_id=1562836261 instance=ExtResource("50_8yjie")]
@@ -1952,7 +2020,10 @@ transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107
 [node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin" unique_id=1488994367]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.866881, 0)
 light_color = Color(1, 0.741769, 0.563201, 1)
-light_energy = 0.2
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
 [node name="bed_floor" parent="BehideObjects" unique_id=523108675 instance=ExtResource("77_f8atq")]
@@ -1979,7 +2050,10 @@ transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107
 [node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin2" unique_id=919823946]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.866881, 0)
 light_color = Color(1, 0.741769, 0.563201, 1)
-light_energy = 0.2
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
 [node name="candle_thin3" parent="BehideObjects" unique_id=2046879200 instance=ExtResource("76_kcrxe")]
@@ -1988,7 +2062,10 @@ transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107
 [node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin3" unique_id=1329416832]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.866881, 0)
 light_color = Color(1, 0.741769, 0.563201, 1)
-light_energy = 0.2
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
 [node name="candle_thin4" parent="BehideObjects" unique_id=1201533949 instance=ExtResource("76_kcrxe")]
@@ -1997,7 +2074,10 @@ transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107
 [node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin4" unique_id=1301340166]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.866881, 0)
 light_color = Color(1, 0.741769, 0.563201, 1)
-light_energy = 0.2
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
 [node name="barrel_small3" parent="BehideObjects" unique_id=523394209 instance=ExtResource("50_8yjie")]

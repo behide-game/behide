@@ -2,6 +2,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Behide.Game.Player;
+using Behide.Logging;
 using Godot;
 
 namespace Behide.Game.Supervisors;
@@ -15,22 +16,22 @@ public partial class PlayerSpawner : Node
     [Export] private PackedScene playerPropPrefab = null!;
     [Export] private PackedScene playerHunterPrefab = null!;
 
-    private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "PlayerSpawner");
+    private readonly Serilog.ILogger log = Log.CreateLogger("PlayerSpawner");
 
-    private readonly Dictionary<int, BehaviorSubject<Player>> players = GameManager.Room.Players;
+    private readonly Dictionary<int, BehaviorSubject<Player>> players = GameManager.Room.Room.Players;
     private BehaviorSubject<Player> localPlayer = null!;
     private readonly Dictionary<int, ReplaySubject<Unit>> onPlayerSpawned = new();
 
     public override void _EnterTree()
     {
-        if (GameManager.Room.LocalPlayer is null)
+        if (GameManager.Room.Room.LocalPlayer is null)
         {
             log.Error("No local player found. It means we are not connected to a room...");
             return;
         }
 
-        localPlayer = GameManager.Room.LocalPlayer;
-        foreach (var peerId in GameManager.Room.Players.Keys)
+        localPlayer = GameManager.Room.Room.LocalPlayer;
+        foreach (var peerId in GameManager.Room.Room.Players.Keys)
             onPlayerSpawned.Add(peerId, new ReplaySubject<Unit>());
 
         // Authority is set by the parent node that must be a supervisor

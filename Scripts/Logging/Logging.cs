@@ -5,12 +5,12 @@ using Serilog.Formatting.Json;
 
 namespace Behide.Logging;
 
-public static class Logging
+public static class Log
 {
     private const string consoleOutputFormat = "[{Timestamp:HH:mm:ss} {Level:u3}] [{Tag:u3}] {Message:lj}";
     private const string logFileOutputFormat = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] [{Tag}] {Message:lj}{NewLine}{Exception}";
 
-    public static void ConfigureLogger()
+    static Log()
     {
         var logToGodotSink = OS.GetCmdlineArgs().Contains("--log-to-godot-sink");
 
@@ -18,7 +18,7 @@ public static class Logging
         var logFilePath = ProjectSettings.GlobalizePath($"user://logs/log-{now}.txt");
         var jsonLogFilePath = ProjectSettings.GlobalizePath($"user://logs/log-json-{now}.txt");
 
-        Log.Logger = new LoggerConfiguration()
+        Serilog.Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Verbose() // TODO: change for production
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // Minimum level for SignalR logs
             // Console logger
@@ -38,4 +38,7 @@ public static class Logging
             )
             .CreateLogger();
     }
+
+    public static ILogger CreateLogger(string tag) => Serilog.Log.Logger.ForContext("Tag", tag);
+    public static void CloseAndFlush() => Serilog.Log.CloseAndFlush();
 }

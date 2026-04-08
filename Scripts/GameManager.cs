@@ -1,16 +1,16 @@
 using Behide.Game.Supervisors;
+using Serilog;
+using Log = Behide.Logging.Log;
 
 namespace Behide;
 
 using Godot;
-using Networking;
 
 public partial class GameManager : Node
 {
-    public static GameManager instance = null!;
+    private static GameManager instance = null!;
 
     public static RoomManager Room { get; private set; } = null!;
-    public static NetworkManager Network { get; private set; } = null!;
     public static TimeSynchronizer TimeSync { get; private set; } = null!;
 
     public enum GameState { Home, Lobby, Game }
@@ -20,15 +20,12 @@ public partial class GameManager : Node
     private static readonly PackedScene lobbyScene = ResourceLoader.Load<PackedScene>("res://Scenes/Lobby/Lobby.tscn");
     private static readonly PackedScene gameScene = ResourceLoader.Load<PackedScene>("res://Scenes/Game/Game.tscn");
 
-    private Serilog.ILogger log = null!;
+    private readonly ILogger log = Log.CreateLogger("GameManager");
 
     public static Supervisor? Supervisor
     {
         get => State == GameState.Game ? field : null;
-        set
-        {
-            if (State == GameState.Game) field = value;
-        }
+        set { if (State == GameState.Game) field = value; }
     }
 
     public override void _EnterTree()
@@ -39,25 +36,19 @@ public partial class GameManager : Node
 
         GetTree().AutoAcceptQuit = false;
 
-        Logging.Logging.ConfigureLogger();
-        log = Serilog.Log.ForContext("Tag", "GameManager");
-
         Room = GetNode<RoomManager>("/root/RoomManager");
-        Network = GetNode<NetworkManager>("/root/NetworkManager");
         TimeSync = GetNode<TimeSynchronizer>("/root/TimeSynchronizer");
     }
 
     public override void _Notification(int what)
     {
-        if (what == NotificationWMCloseRequest)
-        {
-            Serilog.Log.CloseAndFlush();
-            GetTree().Quit();
-        }
+        if (what != NotificationWMCloseRequest) return;
+        Log.CloseAndFlush();
+        GetTree().Quit();
     }
 
 
-    public void SetGameState(GameState state)
+    public static void SetGameState(GameState state)
     {
         var sceneToLoad = state switch
         {
@@ -68,7 +59,7 @@ public partial class GameManager : Node
         };
 
         State = state;
-        GetTree().ChangeSceneToPacked(sceneToLoad);
-        log.Verbose("Changed game state to {state}", state);
+        instance.GetTree().ChangeSceneToPacked(sceneToLoad);
+        instance.log.Verbose("Changed game state to {state}", state);
     }
 }

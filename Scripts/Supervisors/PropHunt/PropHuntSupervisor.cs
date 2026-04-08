@@ -1,10 +1,11 @@
 using Behide.Prefabs.Spectator;
 using Godot;
 using Behide.UI.Controls;
+using Behide.Logging;
 
 namespace Behide.Game.Supervisors;
 
-[SceneTree(root: "nodes")]
+[SceneTree("../../../Prefabs/Supervisors/PropHuntSupervisor.tscn", root: "nodes")]
 public partial class PropHuntSupervisor : Supervisor
 {
     [Export]
@@ -37,7 +38,7 @@ public partial class PropHuntSupervisor : Supervisor
 
     private Spectator spectator = null!;
 
-    private readonly Serilog.ILogger log = Serilog.Log.ForContext("Tag", "Supervisor/PropHunt");
+    private readonly Serilog.ILogger log = Log.CreateLogger("Supervisor/PropHunt");
     private static readonly TimeSpan preGameDuration = TimeSpan.FromSeconds(2);
     private static readonly TimeSpan inGameDuration = TimeSpan.FromMinutes(5);
 
