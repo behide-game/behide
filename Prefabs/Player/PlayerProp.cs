@@ -49,8 +49,7 @@ public partial class PlayerProp : PlayerBody
         if (!IsMultiplayerAuthority()) return;
         if (!Alive) return;
         if (Input.IsActionJustPressed(InputActions.Morph) && focusedBehideObject is not null)
-            Rpc(MethodName.Morph, focusedBehideObject.GetPath());
-        if (Input.IsActionJustPressed(InputActions.Suffer)) Health -= 10;
+            Rpc(nameof(Morph), focusedBehideObject.GetPath());
     }
 
     [Rpc(CallLocal = true)]

@@ -23,7 +23,7 @@ public partial class Lobby : Control
     private Label RoomCode => nodes.Lobby.Header.Code.Value;
 
     [Export] private PackedScene playerListItemScene = null!;
-    private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(10);
+    private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(2); //(10);
 
     public override void _EnterTree()
     {
@@ -41,7 +41,13 @@ public partial class Lobby : Control
         room.PlayerJoined.Subscribe(_ => UpdateLobbyAuthority(), NodeAliveCt);
 
         // Update countdown state
-        room.PlayerStateChanged.Subscribe(_ => RefreshCountdownState(), NodeAliveCt);
+        room.PlayerStateChanged.Subscribe(p =>
+        {
+            if (p.State is not PlayerStateInLobby) return;
+            RefreshCountdownState();
+        }, NodeAliveCt);
+        room.PlayerLeft.Subscribe(_ => RefreshCountdownState(), NodeAliveCt);
+        room.PlayerJoined.Subscribe(_ => RefreshCountdownState(), NodeAliveCt);
 
         // Start game when countdown finished
         Countdown.TimeElapsed += () =>
@@ -74,16 +80,17 @@ public partial class Lobby : Control
     private void ReadyButtonPressed()
     {
         var playerState = room.LocalPlayer.Value.State;
-        if (playerState is not PlayerStateInLobby state)
-        {
-            log.Error("Cannot toggle player state: Player not in a lobby state: {}", playerState);
-            return;
-        }
-        room.SetPlayerState(state with { IsReady = !state.IsReady });
+        if (playerState is not PlayerStateInLobby)
+            log.Warning("Player not in a lobby state: {State}", playerState);
 
-        ReadyButton.Text = !state.IsReady ? "Unset ready" : "Set ready"; // TODO: I18n
+        var newState =
+            playerState is PlayerStateInLobby state
+                ? state with { IsReady = !state.IsReady }
+                : new PlayerStateInLobby(true);
 
-        RefreshCountdownState();
+        room.SetPlayerState(newState);
+
+        ReadyButton.Text = newState.IsReady ? "Unset ready" : "Set ready"; // TODO: I18n
     }
 
     private static void QuitButtonPressed()

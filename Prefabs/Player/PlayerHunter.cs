@@ -23,15 +23,19 @@ public partial class PlayerHunter : PlayerBody
         base._PhysicsProcess(delta);
         if (!IsMultiplayerAuthority()) return;
         if (!Alive) return;
-        if (Input.IsActionJustPressed("morph")) // TODO: Create a new action for firing
+        if (Input.IsActionJustPressed(InputActions.Shoot))
         {
             var windowSize = GetViewport().GetVisibleRect().Size;
             var spaceState = GetWorld3D().DirectSpaceState;
 
             var from = Camera.ProjectRayOrigin(windowSize / 2);
             var to = from + Camera.ProjectRayNormal(windowSize / 2) * rayLength;
+            const uint mask =
+                (uint)LayerNames.Physics3DLayerMask.World
+                | (uint)LayerNames.Physics3DLayerMask.Players
+                | (uint)LayerNames.Physics3DLayerMask.Props;
 
-            var query = PhysicsRayQueryParameters3D.Create(from, to);
+            var query = PhysicsRayQueryParameters3D.Create(from, to, mask);
             var result = spaceState.IntersectRay(query);
 
             if (result.TryGetValue("collider", out var collider)
@@ -40,13 +44,6 @@ public partial class PlayerHunter : PlayerBody
             else
                 Rpc(MethodName.PlayerMissRpc);
         }
-    }
-
-    public override void _Input(InputEvent rawEvent)
-    {
-        base._Input(rawEvent);
-        if (!Alive) return;
-        if (Input.IsActionJustPressed("suffer")) Health -= 10; // TODO: Remove
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
