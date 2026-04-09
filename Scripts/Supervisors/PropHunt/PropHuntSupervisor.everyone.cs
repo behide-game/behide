@@ -60,7 +60,7 @@ public partial class PropHuntSupervisor
     }
 
     [Rpc(CallLocal = true)]
-    public void RpcGameFinished(bool propsWon)
+    public void RpcGameFinished(bool propsWon, bool timedOut)
     {
         InGameCountdown.TimeElapsed -= GameTimeout;
         gameFinished = true;
@@ -68,6 +68,7 @@ public partial class PropHuntSupervisor
         // Change UI
         InGame.Hide();
         EndGame.Show();
+        if (timedOut) TimedOut.Show();
         if (propsWon) PropsWonLabel.Show();
         else HunterWinLabel.Show();
 

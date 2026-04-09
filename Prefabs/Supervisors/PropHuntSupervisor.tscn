@@ -24,6 +24,10 @@ bg_color = Color(0.894118, 0.945098, 0.968627, 1)
 font_size = 20
 font_color = Color(0.0980392, 0.109804, 0.117647, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_c34b8"]
+font_size = 20
+font_color = Color(0, 0, 0, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_efs40"]
 font = ExtResource("10_c34b8")
 font_size = 25
@@ -173,21 +177,58 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="PropsWin" type="Label" parent="UI/End-game" unique_id=831366820]
+[node name="Winner" type="MarginContainer" parent="UI/End-game" unique_id=2040026077]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 15
+script = ExtResource("9_efs40")
+BezelSize = 20
+BorderRadius = 0
+Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
+
+[node name="PropsWin" type="Label" parent="UI/End-game/Winner" unique_id=831366820]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 35
 text = "Props won !"
+label_settings = SubResource("LabelSettings_c34b8")
 
-[node name="HunterWins" type="Label" parent="UI/End-game" unique_id=173217186]
+[node name="HunterWins" type="Label" parent="UI/End-game/Winner" unique_id=173217186]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 35
 text = "Hunter wins !"
+label_settings = SubResource("LabelSettings_c34b8")
+
+[node name="TimedOut" type="MarginContainer" parent="UI/End-game" unique_id=1573635682]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 15
+script = ExtResource("9_efs40")
+BezelSize = 20
+BorderRadius = 0
+Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
+
+[node name="Label" type="Label" parent="UI/End-game/TimedOut" unique_id=1177322988]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 35
+text = "Timed out"
+label_settings = SubResource("LabelSettings_c34b8")
 
 [node name="Buttons" type="HBoxContainer" parent="UI/End-game" unique_id=2120910974]
 layout_mode = 2
