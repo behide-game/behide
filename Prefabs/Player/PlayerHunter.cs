@@ -39,7 +39,7 @@ public partial class PlayerHunter : PlayerBody
             var result = spaceState.IntersectRay(query);
 
             if (result.TryGetValue("collider", out var collider)
-                && collider.AsGodotObject() is PlayerProp player)
+                && collider.AsGodotObject() is PlayerProp { Alive: true } player)
                 Rpc(MethodName.PlayerHitRpc, player.GetPath());
             else
                 Rpc(MethodName.PlayerMissRpc);

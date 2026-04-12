@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ch26lr3yfn732"]
 
 [ext_resource type="Script" uid="uid://dm7h4qmja7uar" path="res://Scenes/Lobby/Lobby.cs" id="1_vmtcs"]
-[ext_resource type="PackedScene" uid="uid://do5karhuhkwaw" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.tscn" id="2_3qdhv"]
+[ext_resource type="PackedScene" uid="uid://c87ce673cqrsj" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.tscn" id="2_3qdhv"]
 [ext_resource type="Script" uid="uid://djqbwwelecick" path="res://Scenes/Controls/Countdown/LabelCountdown.cs" id="3_lj1ok"]
 [ext_resource type="PackedScene" uid="uid://dxmrf533plg67" path="res://Scenes/Controls/Logo.tscn" id="5_ah4j3"]
 [ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="5_ew8go"]

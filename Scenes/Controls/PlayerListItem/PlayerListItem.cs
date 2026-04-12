@@ -7,22 +7,16 @@ namespace Behide.UI.Controls;
 public partial class PlayerListItem : Control
 {
     private Label UsernameLabel => _.Container.MarginUsername.Username;
-    private Label ReadyLabel => _.Container.MarginReady.Ready.Label;
+    private Label ReadyLabel => _.Container.Ready.Label;
     private IDisposable? subscription;
 
-    public void SetPlayer(IObservable<Player> player)
+    public void SetPlayer(IObservable<Player> player, Func<Player, string> label)
     {
         subscription = player.Subscribe(
             p =>
             {
                 UsernameLabel.Text = p.Username;
-                ReadyLabel.Text =
-                    p.State switch
-                    {
-                        PlayerStateInLobby isReady => isReady.IsReady ? "Ready" : "Not ready",
-                        PlayerStateInGame => "In game",
-                        _ => "Gone"
-                    };
+                ReadyLabel.Text = label.Invoke(p);
             },
             onCompleted: QueueFree
         );

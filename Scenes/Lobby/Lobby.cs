@@ -74,7 +74,12 @@ public partial class Lobby : Control
     {
         var node = playerListItemScene.Instantiate<PlayerListItem>();
         PlayerList.AddChild(node);
-        node.SetPlayer(player);
+        node.SetPlayer(player, p => p.State switch
+        {
+            PlayerStateInLobby isReady => isReady.IsReady ? "Ready" : "Not ready",
+            PlayerStateInGame => "In game",
+            _ => "Gone"
+        });
     }
 
     private void ReadyButtonPressed()

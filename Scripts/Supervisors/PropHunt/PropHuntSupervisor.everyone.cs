@@ -1,5 +1,6 @@
 using Behide.Game.Player;
 using Behide.Types;
+using Behide.UI.Controls;
 using Godot;
 
 namespace Behide.Game.Supervisors;
@@ -48,6 +49,7 @@ public partial class PropHuntSupervisor
     public override void LocalPlayerDied(PlayerBody playerBody)
     {
         if (gameFinished) return;
+        if (playerBody is PlayerHunter) return;
         Spectator.Enable();
     }
 
@@ -66,6 +68,23 @@ public partial class PropHuntSupervisor
         gameFinished = true;
 
         // Change UI
+        foreach (var player in room.Players.Values)
+        {
+            var body = PlayerBodies.Find(body => body.GetMultiplayerAuthority() == player.Value.PeerId);
+            var node = playerListItem.Instantiate<PlayerListItem>();
+            if (body is null)
+            {
+                log.Error("Failed to find player body: player = {Player}", player.Value);
+                node.SetPlayer(player, _ => "Error");
+            }
+            else
+                node.SetPlayer(player, _ => body.Alive ? "Survived" : "Died");
+
+            if (player.Value.PeerId == hunterPeerId)
+                HunterList.AddChild(node);
+            else
+                PropList.AddChild(node);
+        }
         InGame.Hide();
         EndGame.Show();
         if (timedOut) TimedOut.Show();
