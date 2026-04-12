@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://b4l2a1fikwn4t"]
+[gd_scene format=3 uid="uid://b4l2a1fikwn4t"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_kcojd"]
 [ext_resource type="PackedScene" uid="uid://bwv0vfygu0nmi" path="res://Assets/Models/Dungeon/Props/Table/table_medium.gltf" id="2_kcojd"]
@@ -23,26 +23,28 @@ properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[node name="table_medium" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+[node name="table_medium" type="RigidBody3D" unique_id=1575963263 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
 mass = 6.0
 script = ExtResource("1_kcojd")
 VisualNode = NodePath("table_medium")
 CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2"), NodePath("CollisionShape3D3")]
 Mass = 6.0
 
-[node name="table_medium" parent="." instance=ExtResource("2_kcojd")]
+[node name="table_medium" parent="." unique_id=1972644794 instance=ExtResource("2_kcojd")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=747483299]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -2.98023e-08)
 shape = SubResource("BoxShape3D_m21xm")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1539603409]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0.7)
 shape = SubResource("BoxShape3D_5ahis")
 
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=1100507862]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -0.7)
 shape = SubResource("BoxShape3D_5ahis")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1589613763]
 replication_config = SubResource("SceneReplicationConfig_el8tw")

@@ -27,11 +27,10 @@ public abstract partial class Countdown : Node
         if (timeElapsed) TimeElapsed?.Invoke();
     }
 
-    public void StartCountdown(TimeSpan duration) => StartCountdown(duration.TotalMilliseconds);
-    public void StartCountdown(double duration)
+    public void StartCountdown(TimeSpan duration)
     {
         if (!IsMultiplayerAuthority()) return;
-        var endDate = DateTimeOffset.Now + TimeSpan.FromMilliseconds(duration);
+        var endDate = DateTimeOffset.Now + duration;
         var endTimestamp = endDate.ToUnixTimeMilliseconds();
         Rpc(nameof(StartCountdownRpc), endTimestamp);
     }

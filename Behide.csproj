@@ -1,4 +1,4 @@
-<Project Sdk="Godot.NET.Sdk/4.6.1">
+<Project Sdk="Godot.NET.Sdk/4.6.2">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
@@ -29,6 +29,6 @@
   <ItemGroup>
     <Content Include="README.md" CopyToOutputDirectory="Never" />
     <Content Include="Scripts\Supervisors\README.md" CopyToOutputDirectory="Never" />
-    <Content Include="Prefabs\Supervisors\README.md" CopyToOutputDirectory="Never" />
+    <Content Include="Scripts\Supervisors\PropHunt\README.md" CopyToOutputDirectory="Never" />
   </ItemGroup>
 </Project>

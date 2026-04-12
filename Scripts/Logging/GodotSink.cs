@@ -17,7 +17,7 @@ public class GodotSink(string outputTemplate, IFormatProvider? formatProvider) :
         formatter.Format(logEvent, writer);
         writer.Flush();
 
-        string color = logEvent.Level switch
+        var color = logEvent.Level switch
         {
             LogEventLevel.Debug => Colors.SpringGreen.ToHtml(),
             LogEventLevel.Information => Colors.Cyan.ToHtml(),
@@ -27,7 +27,7 @@ public class GodotSink(string outputTemplate, IFormatProvider? formatProvider) :
             _ => Colors.LightGray.ToHtml(),
         };
 
-        foreach (string line in writer.ToString()?.Split('\n') ?? [])
+        foreach (var line in writer.ToString()?.Split('\n') ?? [])
             GD.PrintRich($"[color=#{color}]{line}[/color]");
 
         if (logEvent.Exception is null) return;
@@ -41,11 +41,11 @@ public class GodotSink(string outputTemplate, IFormatProvider? formatProvider) :
 
 public static class GodotSinkExtensions
 {
-    private const string DefaultGodotSinkOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}";
+    private const string defaultGodotSinkOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}";
 
     public static LoggerConfiguration Godot(
         this LoggerSinkConfiguration configuration,
-        string outputTemplate = DefaultGodotSinkOutputTemplate,
+        string outputTemplate = defaultGodotSinkOutputTemplate,
         IFormatProvider? formatProvider = null)
     {
         return configuration.Sink(new GodotSink(outputTemplate, formatProvider));

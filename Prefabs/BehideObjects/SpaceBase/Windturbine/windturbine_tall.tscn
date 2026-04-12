@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://ys6ow86fx6ym"]
+[gd_scene format=3 uid="uid://ys6ow86fx6ym"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_korb1"]
 [ext_resource type="PackedScene" uid="uid://du4kt4qjfdool" path="res://Assets/Models/SpaceBase/windturbine_tall.gltf" id="2_7x5jg"]
@@ -25,21 +25,23 @@ properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[node name="windturbine_tall" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+[node name="windturbine_tall" type="RigidBody3D" unique_id=1049075753 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
 script = ExtResource("1_korb1")
 VisualNode = NodePath("windturbine_tall")
 CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2")]
 Mass = 1.0
 
-[node name="windturbine_tall" parent="." instance=ExtResource("2_7x5jg")]
+[node name="windturbine_tall" parent="." unique_id=1138475143 instance=ExtResource("2_7x5jg")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1714652723]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.20267, 0)
 shape = SubResource("CylinderShape3D_0rk65")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=817945536]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2.04735, 0.0788574)
 shape = SubResource("CylinderShape3D_e30oe")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1482051807]
 replication_config = SubResource("SceneReplicationConfig_korb1")

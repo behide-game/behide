@@ -1,41 +1,12 @@
-[gd_scene load_steps=21 format=3 uid="uid://ch26lr3yfn732"]
+[gd_scene format=3 uid="uid://ch26lr3yfn732"]
 
 [ext_resource type="Script" uid="uid://dm7h4qmja7uar" path="res://Scenes/Lobby/Lobby.cs" id="1_vmtcs"]
-[ext_resource type="PackedScene" uid="uid://do5karhuhkwaw" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.tscn" id="2_3qdhv"]
+[ext_resource type="PackedScene" uid="uid://c87ce673cqrsj" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.tscn" id="2_3qdhv"]
 [ext_resource type="Script" uid="uid://djqbwwelecick" path="res://Scenes/Controls/Countdown/LabelCountdown.cs" id="3_lj1ok"]
 [ext_resource type="PackedScene" uid="uid://dxmrf533plg67" path="res://Scenes/Controls/Logo.tscn" id="5_ah4j3"]
 [ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="5_ew8go"]
-[ext_resource type="Script" uid="uid://c7dblouqmfhpy" path="res://Scenes/Controls/ShapePattern.cs" id="5_vnyn6"]
-[ext_resource type="Texture2D" uid="uid://b7hopap8ojrdp" path="res://Assets/Images/Behide-logo-rotated-blue.svg" id="6_uepy8"]
 [ext_resource type="FontFile" uid="uid://26b4v0rh3143" path="res://Assets/Fonts/Space Mono/SpaceMono-Bold.ttf" id="7_rk5ct"]
 [ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="7_xxjlh"]
-[ext_resource type="Texture2D" uid="uid://clt44a04l8lbr" path="res://Assets/Images/Behide-logo-rotated-red.svg" id="8_vs23f"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jn132"]
-content_margin_left = 60.0
-content_margin_top = 60.0
-content_margin_right = 60.0
-content_margin_bottom = 60.0
-bg_color = Color(0.894118, 0.945098, 0.968627, 1)
-corner_detail = 1
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cmklm"]
-content_margin_left = 0.0
-content_margin_top = 10.0
-content_margin_right = 0.0
-content_margin_bottom = 10.0
-bg_color = Color(0.0392157, 0.337255, 0.611765, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_adnue"]
-font = ExtResource("7_xxjlh")
-font_size = 30
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_72q8q"]
-content_margin_left = 0.0
-content_margin_top = 10.0
-content_margin_right = 0.0
-content_margin_bottom = 10.0
-bg_color = Color(0.917647, 0.117647, 0.215686, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_vwysm"]
 font = ExtResource("7_xxjlh")
@@ -43,7 +14,7 @@ font_size = 18
 
 [sub_resource type="LabelSettings" id="LabelSettings_k17q5"]
 font = ExtResource("7_xxjlh")
-font_size = 18
+font_size = 20
 font_color = Color(0.0196078, 0.105882, 0.207843, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_8edeb"]
@@ -56,23 +27,24 @@ font = ExtResource("7_xxjlh")
 font_size = 24
 font_color = Color(0, 0.117647, 0.176471, 1)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jtf8b"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_fpqc4"]
+[sub_resource type="LabelSettings" id="LabelSettings_qy7bc"]
 font = ExtResource("7_xxjlh")
-font_size = 24
+font_size = 25
 
-[node name="Lobby" type="PanelContainer"]
+[node name="Lobby" type="MarginContainer" unique_id=79567352]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_jn132")
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
 script = ExtResource("1_vmtcs")
 playerListItemScene = ExtResource("2_3qdhv")
 
-[node name="Countdown" type="Node" parent="." node_paths=PackedStringArray("label")]
+[node name="Countdown" type="Node" parent="." unique_id=564553342 node_paths=PackedStringArray("label")]
 script = ExtResource("3_lj1ok")
 label = NodePath("../Lobby/Header/MarginContainer/Countdown")
 runningTextFormat = "Start in {0:s\\.ff}s"
@@ -80,187 +52,23 @@ beforeRunningText = "Not ready"
 afterRunningText = "Starting game..."
 metadata/_custom_type_script = "uid://d5711da0fkld"
 
-[node name="ChooseMode" type="VBoxContainer" parent="."]
+[node name="Lobby" type="VBoxContainer" parent="." unique_id=1779128093]
 layout_mode = 2
 theme_override_constants/separation = 40
 
-[node name="CenterContainer" type="CenterContainer" parent="ChooseMode"]
-layout_mode = 2
-
-[node name="Logo" parent="ChooseMode/CenterContainer" instance=ExtResource("5_ah4j3")]
-layout_mode = 2
-
-[node name="Buttons" type="HBoxContainer" parent="ChooseMode"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 50
-
-[node name="Host" type="Button" parent="ChooseMode/Buttons"]
-clip_children = 2
-custom_minimum_size = Vector2(300, 350)
-layout_mode = 2
-size_flags_horizontal = 10
-size_flags_vertical = 4
-flat = true
-script = ExtResource("5_ew8go")
-BezelSize = 35
-BorderRadius = 5
-Color = Color(0.0392157, 0.337255, 0.611765, 1)
-BorderWidth = 8
-BackgroundColor = Color(0.894118, 0.945098, 0.968627, 1)
-
-[node name="MarginContainer" type="MarginContainer" parent="ChooseMode/Buttons/Host"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="Pattern" type="Control" parent="ChooseMode/Buttons/Host/MarginContainer"]
-layout_mode = 2
-mouse_filter = 2
-script = ExtResource("5_vnyn6")
-Shape = ExtResource("6_uepy8")
-ShapeSize = 35.0
-Gap = Vector2(40, 30)
-Rotation = -45.0
-Offset = Vector2(0, -45)
-
-[node name="PanelContainer" type="PanelContainer" parent="ChooseMode/Buttons/Host"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -21.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_vertical = 8
-mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_cmklm")
-
-[node name="Label" type="Label" parent="ChooseMode/Buttons/Host/PanelContainer"]
-layout_mode = 2
-text = "Host"
-label_settings = SubResource("LabelSettings_adnue")
-horizontal_alignment = 1
-uppercase = true
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ChooseMode/Buttons"]
-custom_minimum_size = Vector2(0, 350)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-alignment = 1
-
-[node name="Code" type="MarginContainer" parent="ChooseMode/Buttons/VBoxContainer"]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 3
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-script = ExtResource("5_ew8go")
-BezelSize = 10
-BorderRadius = 5
-Color = Color(0.917647, 0.117647, 0.215686, 1)
-InvertOrientation = true
-BorderWidth = 8
-BackgroundColor = Color(0.894118, 0.945098, 0.968627, 1)
-
-[node name="LineEdit" type="LineEdit" parent="ChooseMode/Buttons/VBoxContainer/Code"]
-layout_mode = 2
-theme_override_colors/caret_color = Color(0, 0, 0, 1)
-theme_override_colors/font_placeholder_color = Color(0.309385, 0.309385, 0.309385, 1)
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = ExtResource("7_rk5ct")
-theme_override_font_sizes/font_size = 24
-placeholder_text = "AB01"
-alignment = 1
-max_length = 4
-flat = true
-
-[node name="Validate" type="Button" parent="ChooseMode/Buttons/VBoxContainer"]
-clip_children = 2
-custom_minimum_size = Vector2(300, 300)
-layout_mode = 2
-size_flags_horizontal = 2
-size_flags_vertical = 4
-text = "Join
-"
-flat = true
-script = ExtResource("5_ew8go")
-BezelSize = 35
-BorderRadius = 5
-Color = Color(0.917647, 0.117647, 0.215686, 1)
-BorderWidth = 8
-BackgroundColor = Color(0.894118, 0.945098, 0.968627, 1)
-
-[node name="MarginContainer" type="MarginContainer" parent="ChooseMode/Buttons/VBoxContainer/Validate"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="Pattern" type="Control" parent="ChooseMode/Buttons/VBoxContainer/Validate/MarginContainer"]
-layout_mode = 2
-mouse_filter = 2
-script = ExtResource("5_vnyn6")
-Shape = ExtResource("8_vs23f")
-ShapeSize = 35.0
-Gap = Vector2(40, 30)
-Rotation = -45.0
-Offset = Vector2(0, -45)
-
-[node name="PanelContainer" type="PanelContainer" parent="ChooseMode/Buttons/VBoxContainer/Validate"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -21.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_vertical = 8
-mouse_filter = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_72q8q")
-
-[node name="Label" type="Label" parent="ChooseMode/Buttons/VBoxContainer/Validate/PanelContainer"]
-layout_mode = 2
-text = "Join"
-label_settings = SubResource("LabelSettings_adnue")
-horizontal_alignment = 1
-uppercase = true
-
-[node name="Lobby" type="VBoxContainer" parent="."]
-visible = false
-layout_mode = 2
-theme_override_constants/separation = 40
-
-[node name="Header" type="HBoxContainer" parent="Lobby"]
+[node name="Header" type="HBoxContainer" parent="Lobby" unique_id=959581221]
 layout_mode = 2
 alignment = 1
 
-[node name="Logo" parent="Lobby/Header" instance=ExtResource("5_ah4j3")]
+[node name="Logo" parent="Lobby/Header" unique_id=1681229338 instance=ExtResource("5_ah4j3")]
 layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="Lobby/Header"]
+[node name="MarginContainer" type="MarginContainer" parent="Lobby/Header" unique_id=120102080]
 layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 10
@@ -270,7 +78,7 @@ BezelSize = 12
 BorderRadius = 0
 Color = Color(1, 0, 0.458824, 1)
 
-[node name="Countdown" type="Label" parent="Lobby/Header/MarginContainer"]
+[node name="Countdown" type="Label" parent="Lobby/Header/MarginContainer" unique_id=1001992688]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Not ready"
@@ -278,13 +86,14 @@ label_settings = SubResource("LabelSettings_vwysm")
 horizontal_alignment = 1
 uppercase = true
 
-[node name="Code" type="HBoxContainer" parent="Lobby/Header"]
+[node name="Code" type="HBoxContainer" parent="Lobby/Header" unique_id=1213287782]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 8
+size_flags_vertical = 0
 theme_override_constants/separation = 10
 alignment = 2
 
-[node name="Container" type="MarginContainer" parent="Lobby/Header/Code"]
+[node name="Container" type="MarginContainer" parent="Lobby/Header/Code" unique_id=1199664904]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 8
@@ -295,47 +104,52 @@ BezelSize = 12
 BorderRadius = 0
 Color = Color(0.878431, 0.878431, 0, 1)
 
-[node name="Label" type="Label" parent="Lobby/Header/Code/Container"]
+[node name="Label" type="Label" parent="Lobby/Header/Code/Container" unique_id=1429702073]
 layout_mode = 2
 text = "Code"
 label_settings = SubResource("LabelSettings_k17q5")
 vertical_alignment = 1
 uppercase = true
 
-[node name="Value" type="Label" parent="Lobby/Header/Code"]
+[node name="Value" type="Label" parent="Lobby/Header/Code" unique_id=505538744]
 layout_mode = 2
 text = "abc01"
 label_settings = SubResource("LabelSettings_8edeb")
 vertical_alignment = 1
 uppercase = true
 
-[node name="CenterContainer" type="CenterContainer" parent="Lobby/Header"]
+[node name="CenterContainer" type="CenterContainer" parent="Lobby/Header" unique_id=1003135390]
 layout_mode = 2
 
-[node name="Boxes" type="HBoxContainer" parent="Lobby"]
+[node name="Boxes" type="Control" parent="Lobby" unique_id=726478714]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 20
 
-[node name="Players" type="Control" parent="Lobby/Boxes"]
+[node name="Players" type="Control" parent="Lobby/Boxes" unique_id=799483364]
 custom_minimum_size = Vector2(350, 0)
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
 script = ExtResource("5_ew8go")
 BezelSize = 30
 BorderRadius = 0
 Color = Color(0.792157, 0.878431, 0.898039, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/Players"]
-layout_mode = 2
-offset_right = 350.0
-offset_bottom = 445.0
+[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/Players" unique_id=410748514]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Lobby/Boxes/Players/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Lobby/Boxes/Players/MarginContainer" unique_id=1703766419]
 clip_children = 2
 layout_mode = 2
 theme_override_constants/separation = 15
@@ -344,87 +158,98 @@ BezelSize = 20
 BorderRadius = 0
 Color = Color(0.792157, 0.878431, 0.898039, 1)
 
-[node name="Label" type="Label" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer" unique_id=842222119]
 layout_mode = 2
 text = "Players"
 label_settings = SubResource("LabelSettings_f4vnb")
 horizontal_alignment = 1
 uppercase = true
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer" unique_id=754305754]
 layout_mode = 2
 size_flags_vertical = 3
 follow_focus = true
 
-[node name="Players" type="VBoxContainer" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="Players" type="VBoxContainer" parent="Lobby/Boxes/Players/MarginContainer/VBoxContainer/ScrollContainer" unique_id=868924334]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Lobby/Boxes"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 20
+[node name="Buttons" type="HBoxContainer" parent="Lobby/Boxes" unique_id=1370561775]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -261.0
+offset_top = -63.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 10
+size_flags_vertical = 8
+theme_override_constants/separation = -20
 alignment = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Lobby/Boxes/VBoxContainer"]
-custom_minimum_size = Vector2(0, 150)
+[node name="Ready" type="MarginContainer" parent="Lobby/Boxes/Buttons" unique_id=458893213]
+z_index = 1
 layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="Ready" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_jtf8b")
-flat = true
 script = ExtResource("5_ew8go")
-BezelSize = 30
+BezelSize = 20
 BorderRadius = 0
-Color = Color(0, 0.396078, 0.552941, 1)
+Color = Color(0.039215688, 0.15686275, 0.32941177, 1)
 
-[node name="Center" type="CenterContainer" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Ready"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/Buttons/Ready" unique_id=1291586526]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 15
 
-[node name="Label" type="Label" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Ready/Center"]
+[node name="Label" type="Label" parent="Lobby/Boxes/Buttons/Ready/MarginContainer" unique_id=1430324176]
 layout_mode = 2
 text = "Set ready"
-label_settings = SubResource("LabelSettings_fpqc4")
+label_settings = SubResource("LabelSettings_qy7bc")
 horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="Quit" type="Button" parent="Lobby/Boxes/VBoxContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="Lobby/Boxes/Buttons/Ready" unique_id=308941770]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 flat = true
+
+[node name="Quit" type="MarginContainer" parent="Lobby/Boxes/Buttons" unique_id=1315296564]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
 script = ExtResource("5_ew8go")
-BezelSize = 30
+BezelSize = 20
 BorderRadius = 0
-Color = Color(0.729412, 0.101961, 0.101961, 1)
-InvertOrientation = true
+Color = Color(0.7294118, 0.101960786, 0.101960786, 1)
 
-[node name="Center" type="CenterContainer" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Quit"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/Buttons/Quit" unique_id=708264660]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 15
 
-[node name="Label" type="Label" parent="Lobby/Boxes/VBoxContainer/HBoxContainer/Quit/Center"]
+[node name="Label" type="Label" parent="Lobby/Boxes/Buttons/Quit/MarginContainer" unique_id=1586408029]
 layout_mode = 2
 text = "Quit"
-label_settings = SubResource("LabelSettings_fpqc4")
+label_settings = SubResource("LabelSettings_qy7bc")
 horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[connection signal="pressed" from="ChooseMode/Buttons/Host" to="." method="HostButtonPressed"]
-[connection signal="pressed" from="ChooseMode/Buttons/VBoxContainer/Validate" to="." method="JoinButtonPressed"]
-[connection signal="pressed" from="Lobby/Boxes/VBoxContainer/HBoxContainer/Ready" to="." method="OnReadyButtonPressed"]
-[connection signal="pressed" from="Lobby/Boxes/VBoxContainer/HBoxContainer/Quit" to="." method="OnQuitButtonPressed"]
+[node name="Button" type="Button" parent="Lobby/Boxes/Buttons/Quit" unique_id=214824739]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+flat = true
+
+[connection signal="pressed" from="Lobby/Boxes/Buttons/Ready/Button" to="." method="ReadyButtonPressed"]
+[connection signal="pressed" from="Lobby/Boxes/Buttons/Quit/Button" to="." method="QuitButtonPressed"]

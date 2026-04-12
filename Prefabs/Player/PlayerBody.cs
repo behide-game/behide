@@ -1,19 +1,21 @@
+using Behide.Game.Supervisors;
 using Godot;
-
+using Serilog;
+using Log = Behide.Logging.Log;
 
 namespace Behide.Game.Player;
 
 public abstract partial class PlayerBody : CharacterBody3D
 {
-    private Serilog.ILogger log = null!;
+    private readonly ILogger log = Log.CreateLogger("Player/Movements");
 
     protected Node3D CameraDisk = null!;
     protected Camera3D Camera = null!;
     protected Control Hud = null!;
     protected ProgressBar HealthBar = null!;
+    private Supervisor supervisor = null!;
     public MultiplayerSynchronizer PositionSynchronizer = null!;
 
-    [ExportGroup("Stats")]
     public double Health
     {
         get;
@@ -24,26 +26,34 @@ public abstract partial class PlayerBody : CharacterBody3D
             if (field == 0) Died();
         }
     }
-    public bool Alive;
+
+    private bool freeze;
+    public bool Alive = true;
 
     private void Died()
     {
         Alive = false;
-        if (GameManager.Supervisor == null)
-        {
-            log.Error("Can not set notify death: Supervisor is null");
-            return;
-        }
-        GameManager.Supervisor.PlayerDied(this);
+        supervisor.PlayerDied(this);
+        if (IsMultiplayerAuthority()) supervisor.LocalPlayerDied(this);
+    }
+
+    public void Freeze()
+    {
+        freeze = true;
+        if (Input.MouseMode != Input.MouseModeEnum.Visible)
+            Input.MouseMode = Input.MouseModeEnum.Visible;
+        Hud.Visible = false;
     }
 
     // --- Initialization ---
     protected abstract void InitializeNodes();
     public override void _EnterTree()
     {
-        InitializeNodes();
-        log = Serilog.Log.ForContext("Tag", "Player/Movements");
+        if (GameManager.Supervisor is null) log.Error("Supervisor is null");
+        else supervisor = GameManager.Supervisor;
 
+        InitializeNodes();
+        Health = 100;
 
         // Set authority
         var ownerPeerId = int.Parse(Name);

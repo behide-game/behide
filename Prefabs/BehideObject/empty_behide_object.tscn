@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://cwdhlox0rlntj"]
+[gd_scene format=3 uid="uid://cwdhlox0rlntj"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_oyu5o"]
 
@@ -16,12 +16,12 @@ properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[node name="BehideObject" type="RigidBody3D" node_paths=PackedStringArray("CollisionNodes")]
+[node name="BehideObject" type="RigidBody3D" unique_id=397876020 node_paths=PackedStringArray("CollisionNodes")]
 script = ExtResource("1_oyu5o")
 CollisionNodes = [NodePath("CollisionShape3D")]
 Mass = 1.0
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=401731632]
 replication_config = SubResource("SceneReplicationConfig_oyu5o")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1038589555]

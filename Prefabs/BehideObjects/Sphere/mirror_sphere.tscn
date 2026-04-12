@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://damtas0dagou5"]
+[gd_scene format=3 uid="uid://damtas0dagou5"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_pa3dc"]
 [ext_resource type="Material" uid="uid://buhde0n3ewcfp" path="res://Prefabs/BehideObjects/Cube/mirror_mat.tres" id="2_eaa14"]
@@ -21,7 +21,9 @@ properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[node name="mirror_sphere" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+[node name="mirror_sphere" type="RigidBody3D" unique_id=1631732522 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, -0.3, 0)
 script = ExtResource("1_pa3dc")
@@ -29,15 +31,15 @@ VisualNode = NodePath("mirror_sphere")
 CollisionNodes = [NodePath("CollisionShape3D")]
 Mass = 1.0
 
-[node name="mirror_sphere" type="MeshInstance3D" parent="."]
+[node name="mirror_sphere" type="MeshInstance3D" parent="." unique_id=421554897]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 material_override = ExtResource("2_eaa14")
 gi_mode = 2
 mesh = SubResource("SphereMesh_mkb23")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1714465172]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("SphereShape3D_mkb23")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=176915833]
 replication_config = SubResource("SceneReplicationConfig_mkb23")

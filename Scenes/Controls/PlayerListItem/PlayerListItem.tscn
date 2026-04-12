@@ -1,59 +1,52 @@
-[gd_scene load_steps=6 format=3 uid="uid://do5karhuhkwaw"]
+[gd_scene format=3 uid="uid://c87ce673cqrsj"]
 
-[ext_resource type="Script" uid="uid://dxsc5rfmscwrm" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.cs" id="1_e7184"]
-[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="2_418vq"]
-[ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="3_37cwf"]
+[ext_resource type="Script" uid="uid://cnv83qrck0bgc" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.cs" id="1_e7184"]
+[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="2_vtxhq"]
+[ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="3_p8wd1"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_mt0eq"]
-font = ExtResource("3_37cwf")
+font = ExtResource("3_p8wd1")
 
 [sub_resource type="LabelSettings" id="LabelSettings_url6u"]
-font = ExtResource("3_37cwf")
+font = ExtResource("3_p8wd1")
 
-[node name="PlayerListItem" type="MarginContainer" node_paths=PackedStringArray("usernameLabel", "readyLabel")]
+[node name="PlayerListItem" type="MarginContainer" unique_id=1963591353]
 size_flags_horizontal = 3
 script = ExtResource("1_e7184")
-usernameLabel = NodePath("Container/MarginUsername/Username")
-readyLabel = NodePath("Container/MarginReady/Ready/Label")
 
-[node name="Container" type="SplitContainer" parent="."]
+[node name="Container" type="HBoxContainer" parent="." unique_id=754872024]
 layout_mode = 2
-script = ExtResource("2_418vq")
-BezelSize = 15
+theme_override_constants/separation = 10
+script = ExtResource("2_vtxhq")
+BezelSize = 10
 BorderRadius = 0
 Color = Color(0.133333, 0.341176, 0.478431, 1)
 
-[node name="MarginUsername" type="MarginContainer" parent="Container"]
+[node name="MarginUsername" type="MarginContainer" parent="Container" unique_id=1061078266]
 layout_mode = 2
 size_flags_horizontal = 0
-theme_override_constants/margin_left = 10
+theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Username" type="Label" parent="Container/MarginUsername"]
+[node name="Username" type="Label" parent="Container/MarginUsername" unique_id=1100396652]
 layout_mode = 2
 text = "username"
 label_settings = SubResource("LabelSettings_mt0eq")
 
-[node name="MarginReady" type="MarginContainer" parent="Container"]
+[node name="Ready" type="MarginContainer" parent="Container" unique_id=1065794298]
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 10
+theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
-
-[node name="Ready" type="MarginContainer" parent="Container/MarginReady"]
-layout_mode = 2
-theme_override_constants/margin_left = 9
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 9
-theme_override_constants/margin_bottom = 10
-script = ExtResource("2_418vq")
+script = ExtResource("2_vtxhq")
 BezelSize = 10
 BorderRadius = 0
 Color = Color(0.74902, 0.0901961, 0.419608, 1)
 
-[node name="Label" type="Label" parent="Container/MarginReady/Ready"]
+[node name="Label" type="Label" parent="Container/Ready" unique_id=1041698326]
 layout_mode = 2
 text = "Not ready"
 label_settings = SubResource("LabelSettings_url6u")

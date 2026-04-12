@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://rd2lrwj8ct0b"]
+[gd_scene format=3 uid="uid://rd2lrwj8ct0b"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_ok6fb"]
 [ext_resource type="PackedScene" uid="uid://ckgpqpq6rinai" path="res://Assets/Models/Dungeon/Props/stool.gltf" id="2_xhatu"]
@@ -20,17 +20,19 @@ properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[node name="stool" type="RigidBody3D" node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+[node name="stool" type="RigidBody3D" unique_id=1525703951 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
 script = ExtResource("1_ok6fb")
 VisualNode = NodePath("stool")
 CollisionNodes = [NodePath("CollisionShape3D")]
 Mass = 1.0
 
-[node name="stool" parent="." instance=ExtResource("2_xhatu")]
+[node name="stool" parent="." unique_id=2119252069 instance=ExtResource("2_xhatu")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1035138518]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 shape = SubResource("BoxShape3D_ywxi0")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=830470561]
 replication_config = SubResource("SceneReplicationConfig_ok6fb")

@@ -17,6 +17,8 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [node name="Hunter" type="CharacterBody3D" unique_id=586848524]
+collision_layer = 2
+collision_mask = 7
 slide_on_ceiling = false
 script = ExtResource("1_w58js")
 

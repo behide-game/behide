@@ -17,6 +17,7 @@ webrtc/
 Scenes/**/*.exr
 Scenes/**/*.exr.import
 *.lmbake
+*.lmbake.depren
 
 target/
 *.bin
