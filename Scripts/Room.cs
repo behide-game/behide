@@ -9,22 +9,6 @@ using Log = Behide.Logging.Log;
 
 namespace Behide;
 
-// public static class MyExtensions
-// {
-//     extension<T>(IMemoryPackable<T> packable)
-//     {
-//         private byte[] ToBytes() => MemoryPackSerializer.Serialize((T)packable);
-//         private static T? FromBytes(byte[] bytes) => MemoryPackSerializer.Deserialize<T>(bytes);
-//
-//         public Variant ToVariant() => Variant.CreateFrom(packable.ToBytes().AsSpan());
-//         public static T? FromVariant(Variant variant)
-//         {
-//             var bytes = variant.AsByteArray();
-//             return IMemoryPackable<T>.FromBytes(bytes);
-//         }
-//     }
-// }
-
 public partial class RoomConfiguration : Node
 {
     public RoomConfiguration() => Name = "Configuration";
@@ -182,7 +166,13 @@ public partial class Room : Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void RegisterPlayerRpc(Variant playerVariant)
     {
-        var player = (Player)playerVariant;
+        var player = Player.FromVariant(playerVariant);
+        if (player is null)
+        {
+            log.Error("[RegisterPlayerRpc] Failed to deserialize variant from {PlayerId}", Multiplayer.GetRemoteSenderId());
+            return;
+        }
+
         Players.Add(
             player.PeerId,
             new BehaviorSubject<Player>(player)
@@ -196,15 +186,20 @@ public partial class Room : Node
     {
         var playerId = Multiplayer.GetRemoteSenderId();
         var player = Players.GetValueOrDefault(playerId);
-
-        var newState = (PlayerState)newStateVariant;
-        log.Debug("[RPC] Player {PlayerId} is now in state {State}", playerId, newState);
-
         if (player is null)
         {
             log.Warning("[SetPlayerStateRpc]: Player {PlayerId} not found", playerId);
             return;
         }
+
+        var newState = PlayerState.FromVariant(newStateVariant);
+        if (newState is null)
+        {
+            log.Error("[SetPlayerStateRpc] Failed to deserialize variant from {PlayerId}", playerId);
+            return;
+        }
+
+        log.Debug("[RPC] Player {PlayerId} is now in state {State}", playerId, newState);
 
         var newPlayer = player.Value with { State = newState };
         player.OnNext(newPlayer);
