@@ -31,7 +31,7 @@ font = ExtResource("10_c34b8")
 font_size = 20
 font_color = Color(0, 0.117647, 0.176471, 1)
 
-[sub_resource type="FontVariation" id="FontVariation_5do5a"]
+[sub_resource type="FontVariation" id="FontVariation_yncfe"]
 base_font = ExtResource("11_yncfe")
 variation_opentype = {
 2003265652: 700
@@ -45,13 +45,9 @@ opentype_features = {
 }
 
 [sub_resource type="LabelSettings" id="LabelSettings_xer8t"]
-font = SubResource("FontVariation_5do5a")
+font = SubResource("FontVariation_yncfe")
 font_size = 24
 font_color = Color(0, 0.117647, 0.176471, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_c34b8"]
-font_size = 20
-font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_efs40"]
 font = ExtResource("10_c34b8")
@@ -229,6 +225,7 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 35
 text = "Props won !"
 label_settings = SubResource("LabelSettings_yncfe")
+uppercase = true
 
 [node name="HunterWins" type="Label" parent="UI/End-game/LeftPanel/Winner" unique_id=173217186]
 visible = false
@@ -238,6 +235,7 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 35
 text = "Hunter wins !"
 label_settings = SubResource("LabelSettings_yncfe")
+uppercase = true
 
 [node name="Hunters" type="MarginContainer" parent="UI/End-game/LeftPanel" unique_id=667904677]
 z_index = 1
@@ -311,7 +309,8 @@ size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 35
 text = "Timed out"
-label_settings = SubResource("LabelSettings_c34b8")
+label_settings = SubResource("LabelSettings_yncfe")
+uppercase = true
 
 [node name="Buttons" type="HBoxContainer" parent="UI/End-game" unique_id=2120910974]
 layout_mode = 2
