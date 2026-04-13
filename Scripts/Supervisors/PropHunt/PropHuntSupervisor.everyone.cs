@@ -72,13 +72,15 @@ public partial class PropHuntSupervisor
         {
             var body = PlayerBodies.Find(body => body.GetMultiplayerAuthority() == player.Value.PeerId);
             var node = playerListItem.Instantiate<PlayerListItem>();
+
+            node.SetPlayerName(player.Value.Username);
             if (body is null)
             {
                 log.Error("Failed to find player body: player = {Player}", player.Value);
-                node.SetPlayer(player, _ => "Error");
+                node.SetStatus("Error");
             }
             else
-                node.SetPlayer(player, _ => body.Alive ? "Survived" : "Died");
+                node.SetStatus(body.Alive ? "Survived" : "Died");
 
             if (player.Value.PeerId == hunterPeerId)
                 HunterList.AddChild(node);

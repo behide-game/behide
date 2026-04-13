@@ -27,6 +27,8 @@ namespace Behide;
 
 public partial class RoomConfiguration : Node
 {
+    public RoomConfiguration() => Name = "Configuration";
+
     private bool randomHunter;
     private int hunterCount = 1;
     private readonly HashSet<int> hunters = [];
@@ -40,6 +42,14 @@ public partial class RoomConfiguration : Node
     public void RemoveHunter(int peerId) => Rpc(nameof(RpcRemoveHunter), peerId);
 
     public bool IsHunter(int peerId) => hunters.Contains(peerId);
+
+    public void SendTo(long peerId)
+    {
+        RpcId(peerId, nameof(RpcSetRandomHunter), RandomHunter);
+        RpcId(peerId, nameof(RpcSetHunterCount), HunterCount);
+        foreach (var hunterId in hunters)
+            RpcId(peerId, nameof(RpcAddHunter), hunterId);
+    }
 
     // RPCs
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
@@ -67,6 +77,15 @@ public partial class RoomConfiguration : Node
     private void RpcRemoveHunter(int peerId)
     {
         hunters.Remove(peerId);
+        changed.OnNext(Unit.Default);
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+    private void RpcSetAll(bool random, int count, int[] hunterIds)
+    {
+        randomHunter = random;
+        hunterCount = count;
+        foreach (var id in hunterIds) hunters.Add(id);
         changed.OnNext(Unit.Default);
     }
 }
@@ -120,6 +139,10 @@ public partial class Room : Node
     {
         log.Debug("New peer connected, registering us with him: {Username}", LocalPlayer.Value.Username);
         RpcId(peerId, nameof(RegisterPlayerRpc), LocalPlayer.Value);
+
+        // Sync configuration
+        if (Multiplayer.GetUniqueId() == Players.Keys.Min())
+            Configuration.SendTo(peerId);
     }
 
     private void MultiplayerOnPeerDisconnected(long peerId)

@@ -1,5 +1,4 @@
 using Godot;
-using Behide.Types;
 
 namespace Behide.UI.Controls;
 
@@ -7,20 +6,8 @@ namespace Behide.UI.Controls;
 public partial class PlayerListItem : Control
 {
     private Label UsernameLabel => _.Container.MarginUsername.Username;
-    private Label ReadyLabel => _.Container.Ready.Label;
-    private IDisposable? subscription;
+    private Label StatusLabel => _.Container.Ready.Label;
 
-    public void SetPlayer(IObservable<Player> player, Func<Player, string> label)
-    {
-        subscription = player.Subscribe(
-            p =>
-            {
-                UsernameLabel.Text = p.Username;
-                ReadyLabel.Text = label.Invoke(p);
-            },
-            onCompleted: QueueFree
-        );
-    }
-
-    public override void _ExitTree() => subscription?.Dispose();
+    public void SetPlayerName(string playerName) => UsernameLabel.Text = playerName;
+    public void SetStatus(string status) => StatusLabel.Text = status;
 }

@@ -77,14 +77,29 @@ public partial class Lobby : Control
     private void AddPlayerToUi(BehaviorSubject<Player> player)
     {
         var node = playerListItemScene.Instantiate<PlayerListItem>();
-        node.SetPlayer(player, p => p.State switch
-        {
-            PlayerStateInLobby isReady => isReady.IsReady ? "Ready" : "Not ready",
-            PlayerStateInGame => "In game",
-            _ => "Gone"
-        });
 
-        room.Configuration.Changed.Subscribe(OnConfigChanged, NodeAliveCt);
+        // Sync ready state
+        player.Subscribe(
+            p =>
+            {
+                var status = p.State switch
+                {
+                    PlayerStateInLobby isReady => isReady.IsReady ? "Ready" : "Not ready",
+                    PlayerStateInGame => "In game",
+                    _ => "Gone"
+                };
+                node.SetPlayerName(p.Username);
+                node.SetStatus(status);
+            },
+            onCompleted: () => node.QueueFree(),
+            NodeAliveCt
+        );
+
+        // Sync prop/hunter state
+        var sub = room.Configuration.Changed.Subscribe(OnConfigChanged);
+        NodeAliveCt.Register(() => sub.Dispose());
+        player.Subscribe(_ => {}, onCompleted: () => sub.Dispose());
+
         OnConfigChanged(Unit.Default);
         return;
 
@@ -93,12 +108,12 @@ public partial class Lobby : Control
             if (room.Configuration.IsHunter(player.Value.PeerId))
             {
                 if (node.GetParent() == PropList) PropList.RemoveChild(node);
-                HunterList.AddChild(node);
+                if (node.GetParent() != HunterList) HunterList.AddChild(node);
             }
             else
             {
                 if (node.GetParent() == HunterList) HunterList.RemoveChild(node);
-                PropList.AddChild(node);
+                if (node.GetParent() != PropList) PropList.AddChild(node);
             }
         }
     }
