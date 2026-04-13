@@ -1,3 +1,5 @@
+using System.Reactive;
+using System.Reactive.Subjects;
 using Godot;
 using Serilog;
 using Behide.UI.Controls;
@@ -17,10 +19,12 @@ public partial class Lobby : Control
     private CancellationToken NodeAliveCt => nodeAliveCts.Token;
     private Room room = null!;
 
-    private Control PlayerList => nodes.Lobby.Boxes.Players.MarginContainer.VBoxContainer.ScrollContainer.Players;
+    private Control HunterList => nodes.Lobby.Boxes.ScrollContainer.Players.Hunters.PlayerList;
+    private Control PropList => nodes.Lobby.Boxes.ScrollContainer.Players.Props.PlayerList;
+    private Label RoleButton => nodes.Lobby.Boxes.Buttons.Role.MarginContainer.Label;
     private Label ReadyButton => nodes.Lobby.Boxes.Buttons.Ready.MarginContainer.Label;
     private LabelCountdown Countdown => nodes.Countdown;
-    private Label RoomCode => nodes.Lobby.Header.Code.Value;
+    private Label RoomCode => nodes.Lobby.Header.Code.Value.Value;
 
     [Export] private PackedScene playerListItemScene = null!;
     private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(2); //(10);
@@ -70,16 +74,49 @@ public partial class Lobby : Control
         nodeAliveCts.Dispose();
     }
 
-    private void AddPlayerToUi(IObservable<Player> player)
+    private void AddPlayerToUi(BehaviorSubject<Player> player)
     {
         var node = playerListItemScene.Instantiate<PlayerListItem>();
-        PlayerList.AddChild(node);
         node.SetPlayer(player, p => p.State switch
         {
             PlayerStateInLobby isReady => isReady.IsReady ? "Ready" : "Not ready",
             PlayerStateInGame => "In game",
             _ => "Gone"
         });
+
+        room.Configuration.Changed.Subscribe(OnConfigChanged, NodeAliveCt);
+        OnConfigChanged(Unit.Default);
+        return;
+
+        void OnConfigChanged(Unit _)
+        {
+            if (room.Configuration.IsHunter(player.Value.PeerId))
+            {
+                if (node.GetParent() == PropList) PropList.RemoveChild(node);
+                HunterList.AddChild(node);
+            }
+            else
+            {
+                if (node.GetParent() == HunterList) HunterList.RemoveChild(node);
+                PropList.AddChild(node);
+            }
+        }
+    }
+
+    private void RoleButtonPressed()
+    {
+        var config = room.Configuration;
+        var peerId = room.LocalPlayer.Value.PeerId;
+        if (config.IsHunter(peerId))
+        {
+            config.RemoveHunter(peerId);
+            RoleButton.Text = "Be hunter";
+        }
+        else
+        {
+            config.AddHunter(peerId);
+            RoleButton.Text = "Be prop";
+        }
     }
 
     private void ReadyButtonPressed()
