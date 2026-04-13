@@ -68,6 +68,21 @@ public partial class PropHuntSupervisor
         gameFinished = true;
 
         // Change UI
+        ShowEndGameUi(propsWon, timedOut);
+
+        // Release mouse
+        foreach (var body in PlayerBodies) body.ReleaseCamera();
+        Spectator.Disable();
+
+        // Destroy synchronizers to prevent errors
+        DestroySynchronizers(PlayersNode);
+        DestroySynchronizers(BehideObjects);
+
+        log.Information("Game finished!: {Winner}", propsWon ? "Props won" : "Hunter wins");
+    }
+
+    private void ShowEndGameUi(bool propsWon, bool timedOut)
+    {
         foreach (var player in room.Players.Values)
         {
             var body = PlayerBodies.Find(body => body.GetMultiplayerAuthority() == player.Value.PeerId);
@@ -92,12 +107,18 @@ public partial class PropHuntSupervisor
         if (timedOut) TimedOut.Show();
         if (propsWon) PropsWonLabel.Show();
         else HunterWinLabel.Show();
+    }
 
-        // Freeze player bodies
-        foreach (var body in PlayerBodies) body.Freeze();
-        Spectator.Disable();
+    private static void DestroySynchronizers(Node parent)
+    {
+        if (parent is MultiplayerSynchronizer)
+        {
+            parent.Free();
+            return;
+        }
 
-        log.Information("Game finished!: {Winner}", propsWon ? "Props won" : "Hunter wins");
+        foreach (var node in parent.GetChildren())
+            DestroySynchronizers(node);
     }
 
     private void UiRestart()
