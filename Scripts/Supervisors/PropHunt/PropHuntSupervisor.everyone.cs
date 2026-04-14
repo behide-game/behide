@@ -12,9 +12,9 @@ public partial class PropHuntSupervisor
         base._EnterTree();
 
         // Show UI
-        hunterChosen += (_, hunter) =>
+        huntersChose += (_, hunters) =>
         {
-            if (hunter == Multiplayer.GetUniqueId())
+            if (hunters.Contains(Multiplayer.GetUniqueId()))
             {
                 PreGameHunter.CallDeferred(CanvasItem.MethodName.Show);
                 IsHunterLabel.CallDeferred(CanvasItem.MethodName.Show);
@@ -32,7 +32,7 @@ public partial class PropHuntSupervisor
             PreGameProp.Hide();
             InGame.Show();
 
-            SpawnHunter();
+            SpawnHunters();
             InGameCountdown.StartCountdown(inGameDuration);
         };
 
@@ -49,16 +49,15 @@ public partial class PropHuntSupervisor
     public override void LocalPlayerDied(PlayerBody playerBody)
     {
         if (gameFinished) return;
-        if (playerBody is PlayerHunter) return;
         Spectator.Enable();
     }
 
     [Rpc(CallLocal = true)]
-    public void RpcSetHunter(int peerId)
+    public void RpcHuntersChose(int[] peerIds)
     {
-        hunterPeerId = peerId;
-        hunterChosen?.Invoke(null, peerId);
-        log.Information("Hunter has been chosen (PeerId: {PeerId})", peerId);
+        hunterPeerIds = peerIds;
+        huntersChose?.Invoke(null, peerIds);
+        log.Information("Hunters were chose (PeerIds: {PeerIds})", peerIds);
     }
 
     [Rpc(CallLocal = true)]
@@ -97,7 +96,7 @@ public partial class PropHuntSupervisor
             else
                 node.SetStatus(body.Alive ? "Survived" : "Died");
 
-            if (player.Value.PeerId == hunterPeerId)
+            if (hunterPeerIds.Contains(player.Value.PeerId))
                 HunterList.AddChild(node);
             else
                 PropList.AddChild(node);

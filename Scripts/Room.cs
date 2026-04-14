@@ -13,13 +13,15 @@ public partial class RoomConfiguration : Node
 {
     public RoomConfiguration() => Name = "Configuration";
 
-    private bool randomHunter;
-    private int hunterCount = 1;
-    private readonly HashSet<int> hunters = [];
-    private readonly Subject<Unit> changed = new();
+    /// <summary>
+    /// 0 when hunters are not chose randomly
+    /// </summary>
+    public int HunterCount { get; private set; }
 
-    public bool RandomHunter { get => randomHunter; set => Rpc(nameof(RpcSetRandomHunter), value); }
-    public int HunterCount { get => hunterCount; set => Rpc(nameof(RpcSetHunterCount), value); }
+    private readonly HashSet<int> hunters = [];
+    public int[] Hunters => hunters.ToArray();
+
+    private readonly Subject<Unit> changed = new();
     public IObservable<Unit> Changed => changed;
 
     public void AddHunter(int peerId) => Rpc(nameof(RpcAddHunter), peerId);
@@ -27,26 +29,13 @@ public partial class RoomConfiguration : Node
 
     public bool IsHunter(int peerId) => hunters.Contains(peerId);
 
-    public void SendTo(long peerId)
-    {
-        RpcId(peerId, nameof(RpcSetRandomHunter), RandomHunter);
-        RpcId(peerId, nameof(RpcSetHunterCount), HunterCount);
-        foreach (var hunterId in hunters)
-            RpcId(peerId, nameof(RpcAddHunter), hunterId);
-    }
+    public void SendTo(long peerId) => RpcId(peerId, nameof(RpcSetAll), HunterCount, hunters.ToArray());
 
     // RPCs
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    private void RpcSetRandomHunter(bool random)
-    {
-        randomHunter = random;
-        changed.OnNext(Unit.Default);
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void RpcSetHunterCount(int count)
     {
-        hunterCount = count;
+        HunterCount = count;
         changed.OnNext(Unit.Default);
     }
 
@@ -65,10 +54,9 @@ public partial class RoomConfiguration : Node
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    private void RpcSetAll(bool random, int count, int[] hunterIds)
+    private void RpcSetAll(int count, int[] hunterIds)
     {
-        randomHunter = random;
-        hunterCount = count;
+        HunterCount = count;
         foreach (var id in hunterIds) hunters.Add(id);
         changed.OnNext(Unit.Default);
     }
