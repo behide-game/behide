@@ -9,40 +9,48 @@ public partial class PropHuntSupervisor
         base.PlayersReady();
         if (!IsMultiplayerAuthority()) return;
 
-        hunterChosen += (_, hunter) =>
+        huntersChose += (_, hunters) =>
         {
-            SpawnProps(hunter);
+            SpawnProps(hunters);
             PreGameCountdown.StartCountdown(preGameDuration); // Start countdown
         };
 
-        ChooseHunter();
+        ChooseHunters();
     }
 
-    private void ChooseHunter()
+    private void ChooseHunters()
     {
-        var idx = new Random().Next(room.Players.Count);
-        var playerId = room.Players.ElementAt(idx).Key;
-        Rpc(nameof(RpcSetHunter), playerId);
+        if (room.Configuration.HunterCount > 0)
+        {
+            var ids = room.Players.Keys.ToArray();
+            Random.Shared.Shuffle(ids);
+            var hunterIds = ids[..room.Configuration.HunterCount];
+            Rpc(nameof(RpcHuntersChose), hunterIds);
+        }
+        else
+            Rpc(nameof(RpcHuntersChose), room.Configuration.Hunters);
     }
 
-    private void SpawnProps(int hunter)
+    private void SpawnProps(int[] hunters)
     {
         foreach (var player in room.Players)
         {
-            if (player.Key == hunter) continue;
+            if (hunters.Contains(player.Key)) continue;
             Spawner.SpawnPlayer(player.Key, false); // TODO: Add spawn points
         }
     }
 
-    private void SpawnHunter()
+    private void SpawnHunters()
     {
         if (!IsMultiplayerAuthority()) return;
-        if (hunterPeerId is null)
+        if (hunterPeerIds is null)
         {
-            log.Error("Cannot spawn the hunter, hunterPeerId is null");
+            log.Error("Cannot spawn hunters, hunterPeerIds is null");
             return;
         }
-        Spawner.SpawnPlayer(hunterPeerId.Value, true);
+
+        foreach (var hunterPeerId in hunterPeerIds)
+            Spawner.SpawnPlayer(hunterPeerId, true);
     }
 
     private void CheckGameEnd(PlayerBody dead)
@@ -50,7 +58,12 @@ public partial class PropHuntSupervisor
         if (!IsMultiplayerAuthority()) return;
 
         if (dead is PlayerHunter)
-            Rpc(nameof(RpcGameFinished), true, false);
+        {
+            var allHuntersDead = PlayerBodies.TrueForAll(playerBody =>
+                playerBody is PlayerProp || !playerBody.Alive
+            );
+            if (allHuntersDead) Rpc(nameof(RpcGameFinished), true, false);
+        }
         else
         {
             var allPropsDead = PlayerBodies.TrueForAll(playerBody =>

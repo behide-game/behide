@@ -46,6 +46,6 @@ public partial class PropHuntSupervisor : Supervisor
     private static readonly TimeSpan preGameDuration = TimeSpan.FromSeconds(2);
     private static readonly TimeSpan inGameDuration = TimeSpan.FromMinutes(5);
 
-    private EventHandler<int>? hunterChosen;
-    private int? hunterPeerId;
+    private EventHandler<int[]>? huntersChose;
+    private int[]? hunterPeerIds;
 }

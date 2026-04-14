@@ -37,7 +37,7 @@ public abstract partial class PlayerBody
         }
 
         // Add movements
-        if (freeze || !Alive)
+        if (!Alive)
         {
             Velocity = Vector3.Zero;
             return;
@@ -74,7 +74,7 @@ public abstract partial class PlayerBody
     public override void _Input(InputEvent rawEvent)
     {
         if (!IsMultiplayerAuthority()) return;
-        if (!Alive || freeze) return;
+        if (!Alive) return;
 
         // Escape
         if (rawEvent.IsActionPressed(BuiltinInputActions.UiCancel))

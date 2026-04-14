@@ -73,13 +73,13 @@ public partial class TimeSynchronizer : Node
         ClockDelta = new BehaviorSubject<TimeSpan?>(null);
 
         // Log when clock delta is updated
-        ClockDelta.Subscribe(
-            delta =>
-            {
-                if (delta is not null) log.Debug("[Time Sync] Clock delta changed: {Delta}", delta);
-            },
-            ct
-        );
+        // ClockDelta.Subscribe(
+        //     delta =>
+        //     {
+        //         if (delta is not null) log.Debug("[Time Sync] Clock delta changed: {Delta}", delta);
+        //     },
+        //     ct
+        // );
 
         // `clockDeltaMeasurements` are the latencies measured. They are independent.
         // When a new delta is emitted we determine the average clock delta with the reference.

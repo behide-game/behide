@@ -15,8 +15,8 @@
 
 [node name="Supervisor" parent="." unique_id=583360088 node_paths=PackedStringArray("PlayersNode", "BehideObjects", "BehideObjects") instance=ExtResource("9_m1o7v")]
 PlayersNode = NodePath("../Players")
-BehideObjects = NodePath("../World/Dungeon/BehideObjects/BehideObjects")
-BehideObjects = NodePath("../World/Dungeon/BehideObjects/BehideObjects")
+BehideObjects = NodePath("../World/Dungeon/BehideObjects")
+BehideObjects = NodePath("../World/Dungeon/BehideObjects")
 
 [node name="Players" type="Node3D" parent="." unique_id=203314885]
 

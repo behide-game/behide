@@ -1,9 +1,6 @@
 using Godot;
 using Serilog;
-using Behide.UI.Controls;
 using Log = Behide.Logging.Log;
-
-// ReSharper disable WithExpressionModifiesAllMembers
 
 namespace Behide.Game.UI.Lobby;
 
@@ -16,11 +13,6 @@ public partial class Lobby : Control
     private readonly CancellationTokenSource nodeAliveCts = new();
     private CancellationToken NodeAliveCt => nodeAliveCts.Token;
     private Room room = null!;
-
-    private Control PlayerList => nodes.Lobby.Boxes.Players.MarginContainer.VBoxContainer.ScrollContainer.Players;
-    private Label ReadyButton => nodes.Lobby.Boxes.Buttons.Ready.MarginContainer.Label;
-    private LabelCountdown Countdown => nodes.Countdown;
-    private Label RoomCode => nodes.Lobby.Header.Code.Value;
 
     [Export] private PackedScene playerListItemScene = null!;
     private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(2); //(10);
@@ -62,46 +54,16 @@ public partial class Lobby : Control
         // Set players UI
         foreach (var player in room.Players.Values) AddPlayerToUi(player);
         room.PlayerJoined.Subscribe(p => AddPlayerToUi(room.Players[p.PeerId]), NodeAliveCt);
+
+        // Listen room configuration changes
+        room.Configuration.Changed.Subscribe(_ => ChangePlayerList(), NodeAliveCt);
+        ChangePlayerList();
     }
 
     public override void _ExitTree()
     {
         nodeAliveCts.Cancel();
         nodeAliveCts.Dispose();
-    }
-
-    private void AddPlayerToUi(IObservable<Player> player)
-    {
-        var node = playerListItemScene.Instantiate<PlayerListItem>();
-        PlayerList.AddChild(node);
-        node.SetPlayer(player, p => p.State switch
-        {
-            PlayerStateInLobby isReady => isReady.IsReady ? "Ready" : "Not ready",
-            PlayerStateInGame => "In game",
-            _ => "Gone"
-        });
-    }
-
-    private void ReadyButtonPressed()
-    {
-        var playerState = room.LocalPlayer.Value.State;
-        if (playerState is not PlayerStateInLobby)
-            log.Warning("Player not in a lobby state: {State}", playerState);
-
-        var newState =
-            playerState is PlayerStateInLobby state
-                ? state with { IsReady = !state.IsReady }
-                : new PlayerStateInLobby(true);
-
-        room.SetPlayerState(newState);
-
-        ReadyButton.Text = newState.IsReady ? "Unset ready" : "Set ready"; // TODO: I18n
-    }
-
-    private static void QuitButtonPressed()
-    {
-        _ = GameManager.Room.LeaveRoom();
-        GameManager.SetGameState(GameManager.GameState.Home);
     }
 
     private void UpdateLobbyAuthority()

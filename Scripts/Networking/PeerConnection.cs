@@ -11,7 +11,7 @@ namespace Behide.Networking;
 public partial class PeerConnection : WebRtcPeerConnection
 {
     private readonly ReplaySubject<IceCandidate> iceCandidates = new();
-    private readonly Godot.Collections.Dictionary iceServers = new() {
+    private static readonly Godot.Collections.Dictionary iceServers = new() {
         {
             "iceServers",
             new Godot.Collections.Array {

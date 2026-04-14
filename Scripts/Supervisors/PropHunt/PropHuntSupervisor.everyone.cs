@@ -12,9 +12,9 @@ public partial class PropHuntSupervisor
         base._EnterTree();
 
         // Show UI
-        hunterChosen += (_, hunter) =>
+        huntersChose += (_, hunters) =>
         {
-            if (hunter == Multiplayer.GetUniqueId())
+            if (hunters.Contains(Multiplayer.GetUniqueId()))
             {
                 PreGameHunter.CallDeferred(CanvasItem.MethodName.Show);
                 IsHunterLabel.CallDeferred(CanvasItem.MethodName.Show);
@@ -32,7 +32,7 @@ public partial class PropHuntSupervisor
             PreGameProp.Hide();
             InGame.Show();
 
-            SpawnHunter();
+            SpawnHunters();
             InGameCountdown.StartCountdown(inGameDuration);
         };
 
@@ -49,16 +49,15 @@ public partial class PropHuntSupervisor
     public override void LocalPlayerDied(PlayerBody playerBody)
     {
         if (gameFinished) return;
-        if (playerBody is PlayerHunter) return;
         Spectator.Enable();
     }
 
     [Rpc(CallLocal = true)]
-    public void RpcSetHunter(int peerId)
+    public void RpcHuntersChose(int[] peerIds)
     {
-        hunterPeerId = peerId;
-        hunterChosen?.Invoke(null, peerId);
-        log.Information("Hunter has been chosen (PeerId: {PeerId})", peerId);
+        hunterPeerIds = peerIds;
+        huntersChose?.Invoke(null, peerIds);
+        log.Information("Hunters were chose (PeerIds: {PeerIds})", peerIds);
     }
 
     [Rpc(CallLocal = true)]
@@ -68,19 +67,36 @@ public partial class PropHuntSupervisor
         gameFinished = true;
 
         // Change UI
+        ShowEndGameUi(propsWon, timedOut);
+
+        // Release mouse
+        foreach (var body in PlayerBodies) body.ReleaseCamera();
+        Spectator.Disable();
+
+        // Destroy synchronizers to prevent errors
+        DestroySynchronizers(PlayersNode);
+        DestroySynchronizers(BehideObjects);
+
+        log.Information("Game finished!: {Winner}", propsWon ? "Props won" : "Hunter wins");
+    }
+
+    private void ShowEndGameUi(bool propsWon, bool timedOut)
+    {
         foreach (var player in room.Players.Values)
         {
             var body = PlayerBodies.Find(body => body.GetMultiplayerAuthority() == player.Value.PeerId);
             var node = playerListItem.Instantiate<PlayerListItem>();
+
+            node.SetPlayerName(player.Value.Username);
             if (body is null)
             {
                 log.Error("Failed to find player body: player = {Player}", player.Value);
-                node.SetPlayer(player, _ => "Error");
+                node.SetStatus("Error");
             }
             else
-                node.SetPlayer(player, _ => body.Alive ? "Survived" : "Died");
+                node.SetStatus(body.Alive ? "Survived" : "Died");
 
-            if (player.Value.PeerId == hunterPeerId)
+            if (hunterPeerIds.Contains(player.Value.PeerId))
                 HunterList.AddChild(node);
             else
                 PropList.AddChild(node);
@@ -90,12 +106,18 @@ public partial class PropHuntSupervisor
         if (timedOut) TimedOut.Show();
         if (propsWon) PropsWonLabel.Show();
         else HunterWinLabel.Show();
+    }
 
-        // Freeze player bodies
-        foreach (var body in PlayerBodies) body.Freeze();
-        Spectator.Disable();
+    private static void DestroySynchronizers(Node parent)
+    {
+        if (parent is MultiplayerSynchronizer)
+        {
+            parent.Free();
+            return;
+        }
 
-        log.Information("Game finished!: {Winner}", propsWon ? "Props won" : "Hunter wins");
+        foreach (var node in parent.GetChildren())
+            DestroySynchronizers(node);
     }
 
     private void UiRestart()
