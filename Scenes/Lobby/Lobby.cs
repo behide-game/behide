@@ -1,11 +1,6 @@
-using System.Reactive;
-using System.Reactive.Subjects;
 using Godot;
 using Serilog;
-using Behide.UI.Controls;
 using Log = Behide.Logging.Log;
-
-// ReSharper disable WithExpressionModifiesAllMembers
 
 namespace Behide.Game.UI.Lobby;
 
@@ -18,13 +13,6 @@ public partial class Lobby : Control
     private readonly CancellationTokenSource nodeAliveCts = new();
     private CancellationToken NodeAliveCt => nodeAliveCts.Token;
     private Room room = null!;
-
-    private Control HunterList => nodes.Lobby.Boxes.ScrollContainer.Players.Hunters.PlayerList;
-    private Control PropList => nodes.Lobby.Boxes.ScrollContainer.Players.Props.PlayerList;
-    private Label RoleButton => nodes.Lobby.Boxes.Buttons.Role.MarginContainer.Label;
-    private Label ReadyButton => nodes.Lobby.Boxes.Buttons.Ready.MarginContainer.Label;
-    private LabelCountdown Countdown => nodes.Countdown;
-    private Label RoomCode => nodes.Lobby.Header.Code.Value.Value;
 
     [Export] private PackedScene playerListItemScene = null!;
     private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(2); //(10);
@@ -66,94 +54,16 @@ public partial class Lobby : Control
         // Set players UI
         foreach (var player in room.Players.Values) AddPlayerToUi(player);
         room.PlayerJoined.Subscribe(p => AddPlayerToUi(room.Players[p.PeerId]), NodeAliveCt);
+
+        // Listen room configuration changes
+        room.Configuration.Changed.Subscribe(_ => ChangePlayerList(), NodeAliveCt);
+        ChangePlayerList();
     }
 
     public override void _ExitTree()
     {
         nodeAliveCts.Cancel();
         nodeAliveCts.Dispose();
-    }
-
-    private void AddPlayerToUi(BehaviorSubject<Player> player)
-    {
-        var node = playerListItemScene.Instantiate<PlayerListItem>();
-
-        // Sync ready state
-        player.Subscribe(
-            p =>
-            {
-                var status = p.State switch
-                {
-                    PlayerStateInLobby isReady => isReady.IsReady ? "Ready" : "Not ready",
-                    PlayerStateInGame => "In game",
-                    _ => "Gone"
-                };
-                node.SetPlayerName(p.Username);
-                node.SetStatus(status);
-            },
-            onCompleted: () => node.QueueFree(),
-            NodeAliveCt
-        );
-
-        // Sync prop/hunter state
-        var sub = room.Configuration.Changed.Subscribe(OnConfigChanged);
-        NodeAliveCt.Register(() => sub.Dispose());
-        player.Subscribe(_ => {}, onCompleted: () => sub.Dispose());
-
-        OnConfigChanged(Unit.Default);
-        return;
-
-        void OnConfigChanged(Unit _)
-        {
-            if (room.Configuration.IsHunter(player.Value.PeerId))
-            {
-                if (node.GetParent() == PropList) PropList.RemoveChild(node);
-                if (node.GetParent() != HunterList) HunterList.AddChild(node);
-            }
-            else
-            {
-                if (node.GetParent() == HunterList) HunterList.RemoveChild(node);
-                if (node.GetParent() != PropList) PropList.AddChild(node);
-            }
-        }
-    }
-
-    private void RoleButtonPressed()
-    {
-        var config = room.Configuration;
-        var peerId = room.LocalPlayer.Value.PeerId;
-        if (config.IsHunter(peerId))
-        {
-            config.RemoveHunter(peerId);
-            RoleButton.Text = "Be hunter";
-        }
-        else
-        {
-            config.AddHunter(peerId);
-            RoleButton.Text = "Be prop";
-        }
-    }
-
-    private void ReadyButtonPressed()
-    {
-        var playerState = room.LocalPlayer.Value.State;
-        if (playerState is not PlayerStateInLobby)
-            log.Warning("Player not in a lobby state: {State}", playerState);
-
-        var newState =
-            playerState is PlayerStateInLobby state
-                ? state with { IsReady = !state.IsReady }
-                : new PlayerStateInLobby(true);
-
-        room.SetPlayerState(newState);
-
-        ReadyButton.Text = newState.IsReady ? "Unset ready" : "Set ready"; // TODO: I18n
-    }
-
-    private static void QuitButtonPressed()
-    {
-        _ = GameManager.Room.LeaveRoom();
-        GameManager.SetGameState(GameManager.GameState.Home);
     }
 
     private void UpdateLobbyAuthority()

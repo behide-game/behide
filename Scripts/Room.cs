@@ -16,7 +16,18 @@ public partial class RoomConfiguration : Node
     /// <summary>
     /// 0 when hunters are not chose randomly
     /// </summary>
-    public int HunterCount { get; private set; }
+    private int hunterCount;
+    public int HunterCount
+    {
+        get => hunterCount;
+        set
+        {
+            GD.Print("Setting to " + value);
+            if (value < 0) return;
+            if (hunterCount == value) return;
+            Rpc(nameof(RpcSetHunterCount), value);
+        }
+    }
 
     private readonly HashSet<int> hunters = [];
     public int[] Hunters => hunters.ToArray();
@@ -35,7 +46,8 @@ public partial class RoomConfiguration : Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void RpcSetHunterCount(int count)
     {
-        HunterCount = count;
+        GD.Print("[RPC SetHunterCount] " + count);
+        hunterCount = count;
         changed.OnNext(Unit.Default);
     }
 
@@ -53,10 +65,11 @@ public partial class RoomConfiguration : Node
         changed.OnNext(Unit.Default);
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
     private void RpcSetAll(int count, int[] hunterIds)
     {
-        HunterCount = count;
+        GD.Print("[RPC SetAll] " + count);
+        hunterCount = count;
         foreach (var id in hunterIds) hunters.Add(id);
         changed.OnNext(Unit.Default);
     }
@@ -97,7 +110,6 @@ public partial class Room : Node
 
     public override void _EnterTree()
     {
-        log.Debug("Room enters tree");
         Multiplayer.PeerConnected += MultiplayerOnPeerConnected;
         Multiplayer.PeerDisconnected += MultiplayerOnPeerDisconnected;
 
@@ -111,10 +123,6 @@ public partial class Room : Node
     {
         log.Debug("New peer connected, registering us with him: {Username}", LocalPlayer.Value.Username);
         RpcId(peerId, nameof(RegisterPlayerRpc), LocalPlayer.Value);
-
-        // Sync configuration
-        if (Multiplayer.GetUniqueId() == Players.Keys.Min())
-            Configuration.SendTo(peerId);
     }
 
     private void MultiplayerOnPeerDisconnected(long peerId)
@@ -166,6 +174,11 @@ public partial class Room : Node
             new BehaviorSubject<Player>(player)
         );
         playerJoined.OnNext(player);
+
+        // Sync configuration
+        if (Multiplayer.GetUniqueId() != player.PeerId
+            && Multiplayer.GetUniqueId() == Players.Keys.Min())
+            Configuration.SendTo(player.PeerId);
     }
 
     /// <summary>Set a player state (the state of the caller)</summary>
