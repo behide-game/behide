@@ -70,7 +70,7 @@ public partial class PropHuntSupervisor
         ShowEndGameUi(propsWon, timedOut);
 
         // Release mouse
-        foreach (var body in PlayerBodies) body.ReleaseCamera();
+        foreach (var body in PlayerBodies) body.Freeze();
         Spectator.Disable();
 
         // Destroy synchronizers to prevent errors

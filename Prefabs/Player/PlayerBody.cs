@@ -27,6 +27,7 @@ public abstract partial class PlayerBody : CharacterBody3D
         }
     }
 
+    private bool freeze;
     public bool Alive = true;
 
     private void Died()
@@ -36,10 +37,11 @@ public abstract partial class PlayerBody : CharacterBody3D
         if (IsMultiplayerAuthority()) supervisor.LocalPlayerDied(this);
     }
 
-    public void ReleaseCamera()
+    public void Freeze()
     {
         if (Input.MouseMode != Input.MouseModeEnum.Visible)
             Input.MouseMode = Input.MouseModeEnum.Visible;
+        freeze = true;
         Hud.Visible = false;
     }
 
