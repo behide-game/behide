@@ -12,7 +12,7 @@ public partial class PropBody : PlayerBody
     private PropHuntSupervisor supervisor = null!;
 
     [ExportGroup("Camera adjust transition")]
-    [Export] private float cameraAdjustDuration = 0.4f;
+    [Export] private double cameraAdjustDuration = 0.4;
     [Export] private Tween.TransitionType cameraAdjustTransitionType = Tween.TransitionType.Bounce;
     [Export] private Tween.EaseType cameraAdjustEaseType = Tween.EaseType.Out;
     private BehideObject? focusedBehideObject;
@@ -128,7 +128,7 @@ public partial class PropBody : PlayerBody
         var newScaleVector = new Vector3(newScale, newScale, newScale);
 
         cameraAdjustTween?.Kill();
-        cameraAdjustTween = GetTree().CreateTween();
+        cameraAdjustTween = CreateTween();
         cameraAdjustTween.SetTrans(cameraAdjustTransitionType);
         cameraAdjustTween.SetEase(cameraAdjustEaseType);
 

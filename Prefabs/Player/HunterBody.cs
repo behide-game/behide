@@ -9,6 +9,10 @@ public partial class HunterBody : PlayerBody
     private RayCast3D rayCastGun = null!;
     private const float rayLength = 1000.0f;
 
+    private Tween? crosshairHitTween;
+    private Control CrosshairHit => _.HUD.Crosshair.CrosshairHit;
+    private double crosshairHitDuration = 0.3;
+
     protected override void InitializeNodes()
     {
         CameraDisk = _.Camera;
@@ -44,7 +48,15 @@ public partial class HunterBody : PlayerBody
             if (!result.TryGetValue("collider", out var collider)) return;
 
             if (collider.AsGodotObject() is PropBody player)
+            {
                 Rpc(MethodName.PlayerHitRpc, player.GetPath());
+
+                crosshairHitTween?.Kill();
+                crosshairHitTween = CreateTween();
+                crosshairHitTween.SetEase(Tween.EaseType.In);
+                crosshairHitTween.TweenProperty(CrosshairHit, "modulate", new Color(0xFFFFFF00), crosshairHitDuration);
+                CrosshairHit.Modulate = new Color(0xFFFFFFFF);
+            }
             else
                 Rpc(MethodName.PlayerMissRpc);
         }
