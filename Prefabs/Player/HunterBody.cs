@@ -3,7 +3,7 @@ using Godot;
 namespace Behide.Game.Player;
 
 [SceneTree("hunter.tscn")]
-public partial class PlayerHunter : PlayerBody
+public partial class HunterBody : PlayerBody
 {
     private RayCast3D rayCastView = null!;
     private RayCast3D rayCastGun = null!;
@@ -31,15 +31,15 @@ public partial class PlayerHunter : PlayerBody
             var from = Camera.ProjectRayOrigin(windowSize / 2);
             var to = from + Camera.ProjectRayNormal(windowSize / 2) * rayLength;
             const uint mask =
-                (uint)LayerNames.Physics3DLayerMask.World
-                | (uint)LayerNames.Physics3DLayerMask.Players
+                (uint)LayerNames.Physics3DLayerMask.Players
                 | (uint)LayerNames.Physics3DLayerMask.Props;
 
             var query = PhysicsRayQueryParameters3D.Create(from, to, mask);
             var result = spaceState.IntersectRay(query);
 
-            if (result.TryGetValue("collider", out var collider)
-                && collider.AsGodotObject() is PlayerProp { Alive: true } player)
+            if (!result.TryGetValue("collider", out var collider)) return;
+
+            if (collider.AsGodotObject() is PropBody player)
                 Rpc(MethodName.PlayerHitRpc, player.GetPath());
             else
                 Rpc(MethodName.PlayerMissRpc);
@@ -50,7 +50,7 @@ public partial class PlayerHunter : PlayerBody
     private void PlayerHitRpc(NodePath playerPath)
     {
         var node = GetNode(playerPath);
-        if (node is PlayerProp player) player.Health -= 20;
+        if (node is PropBody player) player.Health -= 20;
     }
 
     [Rpc(CallLocal = true)]

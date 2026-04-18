@@ -4,7 +4,7 @@ using Godot;
 namespace Behide.Game.Player;
 
 [SceneTree("prop.tscn")]
-public partial class PlayerProp : PlayerBody
+public partial class PropBody : PlayerBody
 {
     private Node3D currentVisualNode = null!;
     private CollisionShape3D[] collisionNodes = null!;
@@ -29,7 +29,7 @@ public partial class PlayerProp : PlayerBody
         Hud = _.HUD;
         HealthBar = _.HUD.HealthBar;
 
-        // PlayerProp nodes
+        // PropBody nodes
         currentVisualNode = _.MeshInstance3D;
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
@@ -99,11 +99,11 @@ public partial class PlayerProp : PlayerBody
 
     private void AdjustCameraPosition()
     {
-        var globalAabb = currentVisualNode is MeshInstance3D meshInstance3d
-            ? meshInstance3d.GetAabb()
+        var globalAabb = currentVisualNode is MeshInstance3D meshInstance3D
+            ? meshInstance3D.GetAabb()
             : currentVisualNode
                 .FindChildren("*", nameof(MeshInstance3D))
-                .Select(meshInstance3D => ((MeshInstance3D)meshInstance3D).GetAabb())
+                .Select(mi3D => ((MeshInstance3D)mi3D).GetAabb())
                 .Aggregate(new Aabb(), (current, aabb) => current.Merge(aabb));
 
         var newPosition = initialCameraPosition + globalAabb.GetCenter();

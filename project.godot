@@ -102,6 +102,7 @@ shoot={
 3d_physics/layer_2="Players"
 3d_physics/layer_3="Props"
 3d_physics/layer_4="Spectators"
+3d_physics/layer_5="World boundaries"
 
 [physics]
 

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://beaeb2uyytjul"]
 
-[ext_resource type="Script" uid="uid://luuofj7aqswe" path="res://Prefabs/Player/PlayerHunter.cs" id="1_w58js"]
+[ext_resource type="Script" uid="uid://luuofj7aqswe" path="res://Prefabs/Player/HunterBody.cs" id="1_w58js"]
 [ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crossair.svg" id="2_qudki"]
 [ext_resource type="PackedScene" uid="uid://bbuv8m4lpdg1u" path="res://Assets/Models/Prefabs/gun.glb" id="2_svrpp"]
 
