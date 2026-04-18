@@ -27,6 +27,13 @@ public partial class Lobby
         countLabel.Text = room.Configuration.HunterCount.ToString();
     }
 
+    private void UpdateRoleButton()
+    {
+        var config = room.Configuration;
+        var peerId = room.LocalPlayer.Value.PeerId;
+        RoleButton.Text = config.IsHunter(peerId) ? "Be prop" : "Be hunter";
+    }
+
     private void AddPlayerToUi(BehaviorSubject<Player> player)
     {
         AddPlayerToRolesList(player);

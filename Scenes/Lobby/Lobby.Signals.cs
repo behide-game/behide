@@ -17,15 +17,11 @@ public partial class Lobby
         var config = room.Configuration;
         var peerId = room.LocalPlayer.Value.PeerId;
         if (config.IsHunter(peerId))
-        {
             config.RemoveHunter(peerId);
-            RoleButton.Text = "Be hunter";
-        }
         else
-        {
             config.AddHunter(peerId);
-            RoleButton.Text = "Be prop";
-        }
+
+        UpdateRoleButton();
     }
 
     private void ReadyButtonPressed()

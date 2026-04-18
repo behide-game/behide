@@ -57,7 +57,10 @@ public partial class Lobby : Control
 
         // Listen room configuration changes
         room.Configuration.Changed.Subscribe(_ => ChangePlayerList(), NodeAliveCt);
+
+        // Update UI according to initial room state
         ChangePlayerList();
+        UpdateRoleButton();
     }
 
     public override void _ExitTree()
