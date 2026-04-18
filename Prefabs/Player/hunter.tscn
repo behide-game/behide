@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://luuofj7aqswe" path="res://Prefabs/Player/HunterBody.cs" id="1_w58js"]
 [ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crosshair.svg" id="2_qudki"]
 [ext_resource type="PackedScene" uid="uid://bbuv8m4lpdg1u" path="res://Assets/Models/Prefabs/gun.glb" id="2_svrpp"]
+[ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="3_w58js"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_qudki"]
 
@@ -18,6 +19,9 @@ properties/1/replication_mode = 2
 properties/2/path = NodePath("Camera:rotation:x")
 properties/2/spawn = true
 properties/2/replication_mode = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1qbrv"]
+shader = ExtResource("3_w58js")
 
 [node name="Hunter" type="CharacterBody3D" unique_id=586848524]
 collision_layer = 2
@@ -64,7 +68,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Crosshair" type="TextureRect" parent="HUD/Crosshair" unique_id=1502892851]
-modulate = Color(0, 0, 0, 1)
+material = SubResource("ShaderMaterial_1qbrv")
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 1
 anchors_preset = 8

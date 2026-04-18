@@ -2144,14 +2144,14 @@ transform = Transform3D(0.984534, 0, -0.175195, 0, 1, 0, 0.175195, 0, 0.984534, 
 [node name="lander_A" parent="BehideObjects" unique_id=251454055 instance=ExtResource("69_ncg7d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.5, 0, 10.5)
 
-[node name="candle_triple2" parent="BehideObjects" unique_id=2056237435 instance=ExtResource("43_avh5c")]
+[node name="Arthur" parent="BehideObjects" unique_id=2056237435 instance=ExtResource("43_avh5c")]
 transform = Transform3D(-0.70710695, 0, -0.70710707, 0, 1, 0, 0.70710707, 0, -0.70710695, -8.815176, 0.049999952, 22.427284)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_triple2" unique_id=1482128844]
+[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/Arthur" unique_id=1482128844]
 transform = Transform3D(0.9999998, 0, 0, 0, 1, 0, 0, 0, 0.9999998, 0.096179485, 0.96387625, -0.024765015)
 light_color = Color(1, 0.7411765, 0.5647059, 1)
 light_energy = 1.3
 light_size = 0.05
 light_specular = 0.2
 
-[editable path="BehideObjects/candle_triple2"]
+[editable path="BehideObjects/Arthur"]
