@@ -33,6 +33,8 @@ public abstract partial class PlayerBody : CharacterBody3D
     private void Died()
     {
         Alive = false;
+        SetVisible(false);
+        SetProcessMode(ProcessModeEnum.Disabled); // Disable collisions
         supervisor.PlayerDied(this);
         if (IsMultiplayerAuthority()) supervisor.LocalPlayerDied(this);
     }
