@@ -5,16 +5,16 @@ This game is in **<ins>slow</ins> development**
 # WIP
 - [X] Networking
 - [X] Base user interface
-- [ ] Base gameplay
+- [X] Base gameplay
 - [ ] Playable game
 - [ ] Player account?
 - [ ] Coherent design
 
 # Detailed WIP
 - [ ] Add effects when hunter shoots
-- [x] Add end game scene
-- [x] Add ability to start a new game
-- [ ] Add ability to choose the hunters/props repartition
+- [X] Add end game scene
+- [X] Add ability to start a new game
+- [X] Add ability to choose the hunters/props repartition
 - [ ] Add game info on HUD
   - [ ] Ammo
   - [ ] Kill field
