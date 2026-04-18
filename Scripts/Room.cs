@@ -22,7 +22,6 @@ public partial class RoomConfiguration : Node
         get => hunterCount;
         set
         {
-            GD.Print("Setting to " + value);
             if (value < 0) return;
             if (hunterCount == value) return;
             Rpc(nameof(RpcSetHunterCount), value);
@@ -46,7 +45,6 @@ public partial class RoomConfiguration : Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void RpcSetHunterCount(int count)
     {
-        GD.Print("[RPC SetHunterCount] " + count);
         hunterCount = count;
         changed.OnNext(Unit.Default);
     }
@@ -68,7 +66,6 @@ public partial class RoomConfiguration : Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
     private void RpcSetAll(int count, int[] hunterIds)
     {
-        GD.Print("[RPC SetAll] " + count);
         hunterCount = count;
         foreach (var id in hunterIds) hunters.Add(id);
         changed.OnNext(Unit.Default);

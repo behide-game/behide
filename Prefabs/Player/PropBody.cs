@@ -4,7 +4,7 @@ using Godot;
 namespace Behide.Game.Player;
 
 [SceneTree("prop.tscn")]
-public partial class PlayerProp : PlayerBody
+public partial class PropBody : PlayerBody
 {
     private Node3D currentVisualNode = null!;
     private CollisionShape3D[] collisionNodes = null!;
@@ -12,13 +12,17 @@ public partial class PlayerProp : PlayerBody
     private PropHuntSupervisor supervisor = null!;
 
     [ExportGroup("Camera adjust transition")]
-    [Export] private float cameraAdjustDuration = 0.4f;
+    [Export] private double cameraAdjustDuration = 0.4;
     [Export] private Tween.TransitionType cameraAdjustTransitionType = Tween.TransitionType.Bounce;
     [Export] private Tween.EaseType cameraAdjustEaseType = Tween.EaseType.Out;
     private BehideObject? focusedBehideObject;
 
     private Vector3 initialCameraPosition = Vector3.Zero;
     private Tween? cameraAdjustTween;
+
+    private const float maxSpeed = 1.55f;
+    private const float minSpeed = 0.5f;
+    private static readonly double speedConstant = Math.Log((maxSpeed - minSpeed) / (1 - minSpeed));
 
     protected override void InitializeNodes()
     {
@@ -27,14 +31,17 @@ public partial class PlayerProp : PlayerBody
         Camera = _.CameraDisk.SpringArm3D.Camera;
         PositionSynchronizer = _.PositionSynchronizer;
         Hud = _.HUD;
-        HealthBar = _.HUD.HealthBar;
+        HealthBar = _.HUD.Health.HealthBar;
+        HealthLabel = _.HUD.Health.HealthLabel;
 
-        // PlayerProp nodes
+        // PropBody nodes
         currentVisualNode = _.MeshInstance3D;
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
         rayCast = _.CameraDisk.SpringArm3D.Camera.RayCast;
         supervisor = GetNode<PropHuntSupervisor>("/root/multiplayer/Supervisor");
+
+        AdjustProperties();
     }
 
     public override void _Process(double delta)
@@ -94,24 +101,34 @@ public partial class PlayerProp : PlayerBody
         // Set mass
         Mass = behideObject.Mass;
 
-        AdjustCameraPosition();
+        // Set health and camera position
+        AdjustProperties();
     }
 
-    private void AdjustCameraPosition()
+    private void AdjustProperties()
     {
-        var globalAabb = currentVisualNode is MeshInstance3D meshInstance3d
-            ? meshInstance3d.GetAabb()
+        var aabb = currentVisualNode is MeshInstance3D meshInstance3D
+            ? meshInstance3D.GetAabb()
             : currentVisualNode
                 .FindChildren("*", nameof(MeshInstance3D))
-                .Select(meshInstance3D => ((MeshInstance3D)meshInstance3D).GetAabb())
+                .Select(mi3D => ((MeshInstance3D)mi3D).GetAabb())
                 .Aggregate(new Aabb(), (current, aabb) => current.Merge(aabb));
 
-        var newPosition = initialCameraPosition + globalAabb.GetCenter();
-        var newScale = Math.Max(0.1f, Mathf.Sqrt((globalAabb.Size.X + globalAabb.Size.Y + globalAabb.Size.Z) / 3f));
+        // Adjust health
+        var volume = aabb.Size.X * aabb.Size.Y * aabb.Size.Z;
+        var maxHealth = Math.Log(Math.Round(25 * volume), 1.096);
+        MaxHealth = Math.Max(1, (int)maxHealth);
+
+        // Adjust speed
+        MoveSpeed = (maxSpeed - minSpeed) * (float)Math.Exp(-volume*speedConstant) + minSpeed;
+
+        // Adjust camera position
+        var newPosition = initialCameraPosition + aabb.GetCenter();
+        var newScale = Math.Max(0.1f, Mathf.Sqrt((aabb.Size.X + aabb.Size.Y + aabb.Size.Z) / 3f));
         var newScaleVector = new Vector3(newScale, newScale, newScale);
 
         cameraAdjustTween?.Kill();
-        cameraAdjustTween = GetTree().CreateTween();
+        cameraAdjustTween = CreateTween();
         cameraAdjustTween.SetTrans(cameraAdjustTransitionType);
         cameraAdjustTween.SetEase(cameraAdjustEaseType);
 

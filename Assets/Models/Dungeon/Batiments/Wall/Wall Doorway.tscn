@@ -2,11 +2,18 @@
 
 [ext_resource type="PackedScene" uid="uid://bqidvylg2uf0o" path="res://Assets/Models/Dungeon/Batiments/Wall/wall_doorway.gltf" id="1_jugs2"]
 
-[node name="WallDoorway" type="Node3D" unique_id=161729173]
+[sub_resource type="BoxShape3D" id="BoxShape3D_jugs2"]
+size = Vector3(2, 2.7, 0.4)
+
+[node name="WallDoorway" type="StaticBody3D" unique_id=1632379086]
 
 [node name="wall_doorway2" parent="." unique_id=286437834 instance=ExtResource("1_jugs2")]
 
 [node name="wall_doorway_door" parent="wall_doorway2/wall_doorway" parent_id_path=PackedInt32Array(286437834, 280757824) index="0" unique_id=294459232]
 transform = Transform3D(-0.320613, 0, -0.94721, 0, 1, 0, 0.94721, 0, -0.320613, -0.820099, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=869828316]
+transform = Transform3D(-0.320613, 0, -0.9472102, 0, 1, 0, 0.9472102, 0, -0.320613, -1.0805984, 1.35, 0.7784966)
+shape = SubResource("BoxShape3D_jugs2")
 
 [editable path="wall_doorway2"]

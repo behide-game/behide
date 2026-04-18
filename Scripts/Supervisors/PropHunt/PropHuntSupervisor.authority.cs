@@ -57,17 +57,17 @@ public partial class PropHuntSupervisor
     {
         if (!IsMultiplayerAuthority()) return;
 
-        if (dead is PlayerHunter)
+        if (dead is HunterBody)
         {
             var allHuntersDead = PlayerBodies.TrueForAll(playerBody =>
-                playerBody is PlayerProp || !playerBody.Alive
+                playerBody is PropBody || !playerBody.Alive
             );
             if (allHuntersDead) Rpc(nameof(RpcGameFinished), true, false);
         }
         else
         {
             var allPropsDead = PlayerBodies.TrueForAll(playerBody =>
-                playerBody is PlayerHunter || !playerBody.Alive
+                playerBody is HunterBody || !playerBody.Alive
             );
             if (allPropsDead) Rpc(nameof(RpcGameFinished), false, false);
         }

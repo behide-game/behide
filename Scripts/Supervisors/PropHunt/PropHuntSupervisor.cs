@@ -43,8 +43,8 @@ public partial class PropHuntSupervisor : Supervisor
     private Spectator Spectator => nodes.Spectator;
 
     private readonly Serilog.ILogger log = Log.CreateLogger("Supervisor/PropHunt");
-    private static readonly TimeSpan preGameDuration = TimeSpan.FromSeconds(2);
-    private static readonly TimeSpan inGameDuration = TimeSpan.FromMinutes(5);
+    private static readonly TimeSpan preGameDuration = TimeSpan.FromSeconds(30);
+    private static readonly TimeSpan inGameDuration = TimeSpan.FromMinutes(7);
 
     private EventHandler<int[]>? huntersChose;
     private int[]? hunterPeerIds;

@@ -8,13 +8,32 @@ using Types;
 
 public partial class Lobby
 {
+    private Control HunterCountSelector => nodes.Lobby.Boxes.LeftPanel.HunterCount;
+    private LabelCountdown Countdown => nodes.Countdown;
+    private Label RoomCode => nodes.Lobby.Header.Code.Value.Value;
+
     private Control HunterList => nodes.Lobby.Boxes.LeftPanel.PlayersWithRole.Players.Hunters.PlayerList;
     private Control PropList => nodes.Lobby.Boxes.LeftPanel.PlayersWithRole.Players.Props.PlayerList;
     private Control PlayerList => nodes.Lobby.Boxes.LeftPanel.Players.Players.PlayerList;
+
     private Label RoleButton => nodes.Lobby.Boxes.Buttons.Role.MarginContainer.Label;
     private Label ReadyButton => nodes.Lobby.Boxes.Buttons.Ready.MarginContainer.Label;
-    private LabelCountdown Countdown => nodes.Countdown;
-    private Label RoomCode => nodes.Lobby.Header.Code.Value.Value;
+
+    private static void SortPlayerList(Control list)
+    {
+        var nodes = list.GetChildren()
+            .Skip(1)
+            .OrderBy(n => n.Name.ToString())
+            .ToArray();
+
+        foreach (var n in nodes) {
+            list.RemoveChild(n);
+            n.SetOwner(null);
+        }
+
+        foreach (var n in nodes) list.AddChild(n);
+    }
+
 
     private void ChangePlayerList()
     {
@@ -25,6 +44,13 @@ public partial class Lobby
         playersWithRole.SetVisible(room.Configuration.HunterCount == 0);
         players.SetVisible(room.Configuration.HunterCount != 0);
         countLabel.Text = room.Configuration.HunterCount.ToString();
+    }
+
+    private void UpdateRoleButton()
+    {
+        var config = room.Configuration;
+        var peerId = room.LocalPlayer.Value.PeerId;
+        RoleButton.Text = config.IsHunter(peerId) ? "Be prop" : "Be hunter";
     }
 
     private void AddPlayerToUi(BehaviorSubject<Player> player)
@@ -46,7 +72,9 @@ public partial class Lobby
             onCompleted: node.QueueFree,
             NodeAliveCt
         );
+
         PlayerList.AddChild(node);
+        SortPlayerList(PlayerList);
     }
 
     private void AddPlayerToRolesList(BehaviorSubject<Player> player)
@@ -87,12 +115,16 @@ public partial class Lobby
             if (room.Configuration.IsHunter(player.Value.PeerId))
             {
                 if (node.GetParent() == PropList) PropList.RemoveChild(node);
-                if (node.GetParent() != HunterList) HunterList.AddChild(node);
+                if (node.GetParent() == HunterList) return;
+                HunterList.AddChild(node);
+                SortPlayerList(HunterList);
             }
             else
             {
                 if (node.GetParent() == HunterList) HunterList.RemoveChild(node);
-                if (node.GetParent() != PropList) PropList.AddChild(node);
+                if (node.GetParent() == PropList) return;
+                PropList.AddChild(node);
+                SortPlayerList(PropList);
             }
         }
     }

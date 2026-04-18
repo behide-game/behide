@@ -23,7 +23,7 @@ properties/3/replication_mode = 2
 
 [node name="bottle_B_green" type="RigidBody3D" unique_id=785835312 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 mass = 1.7
 script = ExtResource("1_6doql")
 VisualNode = NodePath("bottle_B_green")

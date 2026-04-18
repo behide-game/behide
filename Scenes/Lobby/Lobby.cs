@@ -15,7 +15,7 @@ public partial class Lobby : Control
     private Room room = null!;
 
     [Export] private PackedScene playerListItemScene = null!;
-    private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(2); //(10);
+    private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(5);
 
     public override void _EnterTree()
     {
@@ -57,7 +57,10 @@ public partial class Lobby : Control
 
         // Listen room configuration changes
         room.Configuration.Changed.Subscribe(_ => ChangePlayerList(), NodeAliveCt);
+
+        // Update UI according to initial room state
         ChangePlayerList();
+        UpdateRoleButton();
     }
 
     public override void _ExitTree()
@@ -69,9 +72,10 @@ public partial class Lobby : Control
     private void UpdateLobbyAuthority()
     {
         var minPeerId = room.Players.Min(p => p.Key);
-        if (minPeerId == GetMultiplayerAuthority()) return;
         SetMultiplayerAuthority(minPeerId);
         Countdown.SetMultiplayerAuthority(minPeerId);
+
+        HunterCountSelector.SetVisible(IsMultiplayerAuthority());
     }
 
     private void RefreshCountdownState()

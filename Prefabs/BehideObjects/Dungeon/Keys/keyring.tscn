@@ -22,7 +22,7 @@ properties/3/replication_mode = 2
 
 [node name="keyring" type="RigidBody3D" unique_id=1223102315 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 script = ExtResource("1_68h86")
 VisualNode = NodePath("keyring")
 CollisionNodes = [NodePath("CollisionShape3D")]

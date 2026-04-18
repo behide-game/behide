@@ -25,7 +25,7 @@ properties/3/replication_mode = 2
 
 [node name="chair" type="RigidBody3D" unique_id=787353468 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 script = ExtResource("1_hrrpa")
 VisualNode = NodePath("chair")
 CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2")]

@@ -28,7 +28,7 @@ properties/3/replication_mode = 2
 
 [node name="table_long_broken" type="RigidBody3D" unique_id=462086264 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 mass = 20.0
 script = ExtResource("1_o4qor")
 VisualNode = NodePath("table_long_broken")

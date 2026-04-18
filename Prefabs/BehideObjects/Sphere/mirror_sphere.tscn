@@ -23,7 +23,7 @@ properties/3/replication_mode = 2
 
 [node name="mirror_sphere" type="RigidBody3D" unique_id=1631732522 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, -0.3, 0)
 script = ExtResource("1_pa3dc")

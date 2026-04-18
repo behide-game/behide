@@ -24,7 +24,7 @@ properties/3/replication_mode = 2
 [node name="candle_triple" type="RigidBody3D" unique_id=2111216983 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, 0, 0, 0)
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 script = ExtResource("1_l4jpx")
 VisualNode = NodePath("candle_triple")
 CollisionNodes = [NodePath("CollisionShape3D")]
