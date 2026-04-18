@@ -15,7 +15,7 @@ public partial class Lobby : Control
     private Room room = null!;
 
     [Export] private PackedScene playerListItemScene = null!;
-    private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(2); //(10);
+    private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(5);
 
     public override void _EnterTree()
     {

@@ -37,8 +37,9 @@
 [ext_resource type="PackedScene" uid="uid://bjfnksgdul2jx" path="res://Assets/Models/Dungeon/Batiments/Floor/Dirt/floor_dirt_small_weeds.gltf" id="17_qgqrk"]
 [ext_resource type="PackedScene" uid="uid://dtxnb1xegji45" path="res://Assets/Models/Dungeon/Batiments/Wall/wall_gated.gltf" id="17_sdqia"]
 [ext_resource type="PackedScene" uid="uid://tylqo4vstjk1" path="res://Assets/Models/Dungeon/Batiments/Floor/Dirt/floor_dirt_small_B.gltf" id="18_behv8"]
-[ext_resource type="PackedScene" uid="uid://m01nov3mxgvt" path="res://Assets/Models/Dungeon/Batiments/Wall/wall_doorway_scaffold.gltf" id="26_hu7if"]
+[ext_resource type="PackedScene" uid="uid://bqidvylg2uf0o" path="res://Assets/Models/Dungeon/Batiments/Wall/wall_doorway.gltf" id="23_byl8j"]
 [ext_resource type="PackedScene" uid="uid://c0bfmbtopepup" path="res://Assets/Models/Dungeon/Batiments/Pillar/pillar.gltf" id="27_bo5kc"]
+[ext_resource type="PackedScene" uid="uid://dypyy7n77pte7" path="res://Assets/Models/Dungeon/Batiments/Wall/Wall Doorway Scaffold.tscn" id="34_byl8j"]
 [ext_resource type="PackedScene" uid="uid://c7gy4m7s4hgq6" path="res://Assets/Models/Dungeon/Batiments/Wall/wall_half_endcap.gltf" id="35_b5oh7"]
 [ext_resource type="PackedScene" uid="uid://rbffttemepqb" path="res://Assets/Models/Dungeon/Batiments/Wall/wall_archedwindow_open.gltf" id="36_lb4e7"]
 [ext_resource type="PackedScene" uid="uid://b6od36ufgc7qf" path="res://Prefabs/BehideObjects/Dungeon/Bottles/bottle_A_brown.tscn" id="36_o14ff"]
@@ -94,19 +95,22 @@ auto_exposure_min_sensitivity = 100.0
 size = Vector3(36.5, 8, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_awhs8"]
-size = Vector3(0.75, 8, 14.5)
+size = Vector3(0.75, 9.1, 14.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_avgyw"]
+size = Vector3(0.8, 1.1, 17)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ffb3t"]
 size = Vector3(1, 8, 6.5)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_i7wmt"]
-size = Vector3(1, 5, 2)
+size = Vector3(1, 8, 2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_78svp"]
-size = Vector3(1, 9, 14)
+size = Vector3(1, 9.1, 14)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_d3ktp"]
-size = Vector3(1, 5, 15.25)
+size = Vector3(1, 5.1, 15.25)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_s60wc"]
 height = 4.0
@@ -125,7 +129,7 @@ size = Vector3(10.2, 1.1, 0.5)
 size = Vector3(18.8, 1.1, 0.5)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_llx5s"]
-size = Vector3(20.1, 1.1, 0.5)
+size = Vector3(20.1, 1.1, 0.8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ss6y5"]
 size = Vector3(24.3, 1.1, 0.5)
@@ -183,6 +187,8 @@ size = Vector3(4, 8, 0.5)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f8atq"]
 size = Vector3(2, 0.2, 0.5)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_byl8j"]
 
 [node name="Dungeon" type="Node3D" unique_id=1145563756]
 
@@ -612,9 +618,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, 24)
 [node name="wall27" parent="Court/Walls" unique_id=1255823186 instance=ExtResource("5_8xxts")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, 24)
 
-[node name="WallDoorway" parent="Court/Walls" unique_id=2054890835 instance=ExtResource("7_2eiqw")]
-transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 2, 0, 8)
-
 [node name="wall18" parent="Court/Walls" unique_id=1754777902 instance=ExtResource("5_8xxts")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 4, 0)
 
@@ -687,23 +690,27 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.75, 4, 24)
 shape = SubResource("BoxShape3D_hkla2")
 
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="Court/Walls" unique_id=1766011671]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.125, 4, 16.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.125, 4.55, 16.4)
 shape = SubResource("BoxShape3D_awhs8")
+
+[node name="CollisionShape3D11" type="CollisionShape3D" parent="Court/Walls" unique_id=1502632075]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6, 8.55, 24.15)
+shape = SubResource("BoxShape3D_avgyw")
 
 [node name="CollisionShape3D4" type="CollisionShape3D" parent="Court/Walls" unique_id=439550759]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 4, 3.75)
 shape = SubResource("BoxShape3D_ffb3t")
 
 [node name="CollisionShape3D5" type="CollisionShape3D" parent="Court/Walls" unique_id=1545593804]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 5.5, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 4, 8)
 shape = SubResource("BoxShape3D_i7wmt")
 
 [node name="CollisionShape3D6" type="CollisionShape3D" parent="Court/Walls" unique_id=228213689]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4.5, 16.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 4.55, 16.5)
 shape = SubResource("BoxShape3D_78svp")
 
 [node name="CollisionShape3D7" type="CollisionShape3D" parent="Court/Walls" unique_id=1367127147]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -5.875, 6.5, 10)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -5.875, 6.55, 10)
 shape = SubResource("BoxShape3D_d3ktp")
 
 [node name="CollisionShape3D8" type="CollisionShape3D" parent="Court/Walls" unique_id=874091303]
@@ -738,6 +745,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 10)
 
 [node name="pillar3" parent="Court/Walls" unique_id=1863420366 instance=ExtResource("27_bo5kc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 10)
+
+[node name="wall_doorway2" parent="Court/Walls" unique_id=1623592886 instance=ExtResource("23_byl8j")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2, 0, 8)
 
 [node name="Ceiling" type="Node3D" parent="Court" unique_id=73170362]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
@@ -913,7 +923,7 @@ shape = SubResource("BoxShape3D_rlnom")
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="Court/Floor2/Barriers" unique_id=878487416]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.3, 8.55, 24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.3, 8.55, 24.15)
 shape = SubResource("BoxShape3D_llx5s")
 metadata/_edit_lock_ = true
 
@@ -1053,11 +1063,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 4, 10)
 [node name="wall_Tsplit2" parent="Little room/Walls" unique_id=1537808620 instance=ExtResource("11_n56fu")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -14, 4, 16)
 
-[node name="wall_doorway_scaffold2" parent="Little room/Walls" unique_id=1337567393 instance=ExtResource("26_hu7if")]
+[node name="WallDoorway" parent="Little room/Walls" unique_id=1632379086 instance=ExtResource("34_byl8j")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 4, 16)
-
-[node name="wall_doorway_scaffold_door" parent="Little room/Walls/wall_doorway_scaffold2/wall_doorway_scaffold" parent_id_path=PackedInt32Array(1337567393, 1107566347) index="0" unique_id=670457773]
-transform = Transform3D(-0.573576, 0, -0.819152, 0, 1, 0, 0.819152, 0, -0.573576, -0.820099, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Little room/Walls" unique_id=1846389695]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.25, 6, 16)
@@ -1799,6 +1806,24 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -41.75
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.25)
 shape = SubResource("BoxShape3D_f8atq")
 
+[node name="Boundaries" type="StaticBody3D" parent="." unique_id=1957373727]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Boundaries" unique_id=1701827592]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 1.5, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_byl8j")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Boundaries" unique_id=1598177862]
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0, 0, 0.55)
+shape = SubResource("WorldBoundaryShape3D_byl8j")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Boundaries" unique_id=1656132791]
+transform = Transform3D(1.9106855e-15, 4.371139e-08, -1, 1, -4.371139e-08, 0, -4.371139e-08, -1, -4.371139e-08, 0, 0, 24.5)
+shape = SubResource("WorldBoundaryShape3D_byl8j")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Boundaries" unique_id=1026363831]
+transform = Transform3D(4.371139e-08, 1, 8.742278e-08, 1, -4.371139e-08, 0, 3.821371e-15, 8.742278e-08, -1, -42.25, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_byl8j")
+
 [node name="BehideObjects" type="Node3D" parent="." unique_id=1828677655]
 
 [node name="keg3" parent="BehideObjects" unique_id=120714071 instance=ExtResource("51_2w7no")]
@@ -2091,5 +2116,3 @@ transform = Transform3D(0.984534, 0, -0.175195, 0, 1, 0, 0.175195, 0, 0.984534, 
 
 [node name="lander_A" parent="BehideObjects" unique_id=251454055 instance=ExtResource("69_ncg7d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.5, 0, 10.5)
-
-[editable path="Little room/Walls/wall_doorway_scaffold2"]
