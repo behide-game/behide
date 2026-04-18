@@ -72,9 +72,10 @@ public partial class Lobby : Control
     private void UpdateLobbyAuthority()
     {
         var minPeerId = room.Players.Min(p => p.Key);
-        if (minPeerId == GetMultiplayerAuthority()) return;
         SetMultiplayerAuthority(minPeerId);
         Countdown.SetMultiplayerAuthority(minPeerId);
+
+        HunterCountSelector.SetVisible(IsMultiplayerAuthority());
     }
 
     private void RefreshCountdownState()
