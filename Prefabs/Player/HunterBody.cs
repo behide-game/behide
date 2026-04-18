@@ -15,7 +15,10 @@ public partial class HunterBody : PlayerBody
         Camera = _.Camera;
         PositionSynchronizer = _.PositionSynchronizer;
         Hud = _.HUD;
-        HealthBar = _.HUD.HealthBar;
+        HealthBar = _.HUD.Health.HealthBar;
+        HealthLabel = _.HUD.Health.HealthLabel;
+
+        MaxHealth = 150;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -50,9 +53,10 @@ public partial class HunterBody : PlayerBody
     private void PlayerHitRpc(NodePath playerPath)
     {
         var node = GetNode(playerPath);
-        if (node is PropBody player) player.Health -= 20;
+        if (node is not PropBody player) return;
+        player.Health -= 10.0 / player.MaxHealth;
     }
 
     [Rpc(CallLocal = true)]
-    private void PlayerMissRpc() => Health -= 5;
+    private void PlayerMissRpc() => Health -= 2.0 / MaxHealth;
 }

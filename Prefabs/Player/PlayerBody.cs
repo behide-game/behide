@@ -13,6 +13,7 @@ public abstract partial class PlayerBody : CharacterBody3D
     protected Camera3D Camera = null!;
     protected Control Hud = null!;
     protected ProgressBar HealthBar = null!;
+    protected Label HealthLabel = null!;
     private Supervisor supervisor = null!;
     public MultiplayerSynchronizer PositionSynchronizer = null!;
 
@@ -21,9 +22,20 @@ public abstract partial class PlayerBody : CharacterBody3D
         get;
         set
         {
-            field = Mathf.Clamp(value, 0L, 100L);
-            HealthBar.Value = value;
+            field = Mathf.Clamp(value, 0, 1);
+            HealthBar.Value = value * 100;
+            HealthLabel.Text = ((int)Math.Ceiling(value * MaxHealth)).ToString();
             if (field == 0) Died();
+        }
+    }
+
+    public int MaxHealth
+    {
+        get;
+        protected set
+        {
+            field = value;
+            HealthLabel.Text = ((int)Math.Ceiling(Health * field)).ToString();
         }
     }
 
@@ -55,7 +67,7 @@ public abstract partial class PlayerBody : CharacterBody3D
         else supervisor = GameManager.Supervisor;
 
         InitializeNodes();
-        Health = 100;
+        Health = 1;
 
         // Set authority
         var ownerPeerId = int.Parse(Name);
