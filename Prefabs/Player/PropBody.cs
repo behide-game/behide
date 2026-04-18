@@ -20,6 +20,10 @@ public partial class PropBody : PlayerBody
     private Vector3 initialCameraPosition = Vector3.Zero;
     private Tween? cameraAdjustTween;
 
+    private const float maxSpeed = 1.55f;
+    private const float minSpeed = 0.5f;
+    private static readonly double speedConstant = Math.Log((maxSpeed - minSpeed) / (1 - minSpeed));
+
     protected override void InitializeNodes()
     {
         // PlayerBody nodes
@@ -111,9 +115,12 @@ public partial class PropBody : PlayerBody
                 .Aggregate(new Aabb(), (current, aabb) => current.Merge(aabb));
 
         // Adjust health
-        var volume = Math.Round(25 * aabb.Size.X * aabb.Size.Y * aabb.Size.Z);
-        var maxHealth = Math.Log(volume, 1.096) + 1;
+        var volume = aabb.Size.X * aabb.Size.Y * aabb.Size.Z;
+        var maxHealth = Math.Log(Math.Round(25 * volume), 1.096);
         MaxHealth = Math.Max(1, (int)maxHealth);
+
+        // Adjust speed
+        MoveSpeed = (maxSpeed - minSpeed) * (float)Math.Exp(-volume*speedConstant) + minSpeed;
 
         // Adjust camera position
         var newPosition = initialCameraPosition + aabb.GetCenter();

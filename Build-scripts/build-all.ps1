@@ -1,3 +1,3 @@
-./Builds/build-linux.ps1
-./Builds/build-win.ps1
-./Builds/build-win-arm64.ps1
+./Build-scripts/build-linux.ps1
+./Build-scripts/build-win.ps1
+./Build-scripts/build-win-arm64.ps1

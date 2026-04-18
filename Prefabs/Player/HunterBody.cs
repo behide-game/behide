@@ -19,6 +19,7 @@ public partial class HunterBody : PlayerBody
         HealthLabel = _.HUD.Health.HealthLabel;
 
         MaxHealth = 150;
+        MoveSpeed = 1.2f;
     }
 
     public override void _PhysicsProcess(double delta)

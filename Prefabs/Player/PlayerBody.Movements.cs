@@ -14,8 +14,10 @@ public abstract partial class PlayerBody
     [ExportGroup("Movements")]
     private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
     [Export] private float jumpAcceleration = 400;
-    [Export] private float moveSpeed = 6;
     [Export] private float pushCoefficient = 0.6f;
+    [Export] protected float BaseMoveSpeed = 6;
+
+    protected float MoveSpeed = 1;
 
     // Rotation accumulators
     private float rotationX;
@@ -52,13 +54,13 @@ public abstract partial class PlayerBody
         var direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
         if (direction != Vector3.Zero)
         {
-            velocity.X = direction.X * moveSpeed;
-            velocity.Z = direction.Z * moveSpeed;
+            velocity.X = direction.X * MoveSpeed * BaseMoveSpeed;
+            velocity.Z = direction.Z * MoveSpeed * BaseMoveSpeed;
         }
         else
         {
-            velocity.X = Mathf.MoveToward(Velocity.X, 0, moveSpeed);
-            velocity.Z = Mathf.MoveToward(Velocity.Z, 0, moveSpeed);
+            velocity.X = Mathf.MoveToward(Velocity.X, 0, MoveSpeed * BaseMoveSpeed);
+            velocity.Z = Mathf.MoveToward(Velocity.Z, 0, MoveSpeed * BaseMoveSpeed);
         }
 
         // Apply new velocity
