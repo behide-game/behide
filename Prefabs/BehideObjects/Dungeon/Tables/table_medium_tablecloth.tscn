@@ -25,7 +25,7 @@ properties/3/replication_mode = 2
 
 [node name="table_medium_tablecloth" type="RigidBody3D" unique_id=1160205620 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 mass = 6.0
 script = ExtResource("1_ksfqw")
 VisualNode = NodePath("table_medium_tablecloth")

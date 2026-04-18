@@ -27,7 +27,7 @@ properties/3/replication_mode = 2
 
 [node name="lander_A" type="RigidBody3D" unique_id=303754115 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 script = ExtResource("1_1fkqa")
 VisualNode = NodePath("lander_A")
 CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2")]

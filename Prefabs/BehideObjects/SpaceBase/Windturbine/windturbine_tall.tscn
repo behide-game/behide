@@ -27,7 +27,7 @@ properties/3/replication_mode = 2
 
 [node name="windturbine_tall" type="RigidBody3D" unique_id=1049075753 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 script = ExtResource("1_korb1")
 VisualNode = NodePath("windturbine_tall")
 CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2")]

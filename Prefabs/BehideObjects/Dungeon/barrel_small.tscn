@@ -23,7 +23,7 @@ properties/3/replication_mode = 2
 
 [node name="barrel_small" type="RigidBody3D" unique_id=1872148403 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 mass = 2.0
 script = ExtResource("1_03fh8")
 VisualNode = NodePath("barrel_small")

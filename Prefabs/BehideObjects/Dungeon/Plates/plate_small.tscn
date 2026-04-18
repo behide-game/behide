@@ -23,7 +23,7 @@ properties/3/replication_mode = 2
 
 [node name="plate_small" type="RigidBody3D" unique_id=1990030916 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 mass = 0.1
 script = ExtResource("1_87uly")
 VisualNode = NodePath("plate_small")

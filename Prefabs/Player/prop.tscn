@@ -19,7 +19,7 @@ load_path = "res://.godot/imported/cross-visor.svg-00ba57c13ac8beaa6b3e0195f079b
 
 [node name="Prop" type="CharacterBody3D" unique_id=486043969]
 collision_layer = 2
-collision_mask = 7
+collision_mask = 23
 platform_on_leave = 2
 script = ExtResource("1_qudki")
 
@@ -42,7 +42,7 @@ fov = 90.0
 
 [node name="RayCast" type="RayCast3D" parent="CameraDisk/SpringArm3D/Camera" unique_id=1015855657]
 target_position = Vector3(0, 0, -20)
-collision_mask = 7
+collision_mask = 23
 debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
 
 [node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=512832509]

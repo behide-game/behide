@@ -24,7 +24,7 @@ properties/3/replication_mode = 2
 [node name="coin" type="RigidBody3D" unique_id=922546771 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 transform = Transform3D(0.965926, 0, -0.258819, 0, 1, 0, 0.258819, 0, 0.965926, 0, 0, 0)
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 mass = 0.01
 script = ExtResource("1_aefr8")
 VisualNode = NodePath("coin")

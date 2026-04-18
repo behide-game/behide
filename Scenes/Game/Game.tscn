@@ -62,3 +62,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -39)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -39)
 
 [editable path="World/Dungeon"]
+[editable path="World/Dungeon/BehideObjects/candle_triple2"]

@@ -22,7 +22,7 @@ properties/3/replication_mode = 2
 
 [node name="trunk_small_b" type="RigidBody3D" unique_id=2057025745 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 mass = 0.6
 script = ExtResource("1_72vy4")
 VisualNode = NodePath("trunk_small_b")

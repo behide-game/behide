@@ -23,7 +23,7 @@ properties/3/replication_mode = 2
 
 [node name="mirror_cube" type="RigidBody3D" unique_id=379343789 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 23
 script = ExtResource("1_61y8y")
 VisualNode = NodePath("mirror_cube")
 CollisionNodes = [NodePath("CollisionShape3D")]

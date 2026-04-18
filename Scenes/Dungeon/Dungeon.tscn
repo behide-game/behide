@@ -87,8 +87,6 @@ dof_blur_far_distance = 20.0
 dof_blur_far_transition = 20.0
 dof_blur_amount = 0.05
 
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_hkla2"]
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_hkla2"]
 size = Vector3(36.5, 8, 1)
 
@@ -188,6 +186,8 @@ size = Vector3(2, 0.2, 0.5)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_byl8j"]
 
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_hkla2"]
+
 [node name="Dungeon" type="Node3D" unique_id=1145563756]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=397947548]
@@ -201,12 +201,6 @@ camera_attributes = SubResource("CameraAttributesPractical_v8h4g")
 
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=1443591995]
 light_data = ExtResource("2_v8h4g")
-
-[node name="Floor" type="StaticBody3D" parent="." unique_id=1263918633]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=755095488]
-shape = SubResource("WorldBoundaryShape3D_hkla2")
 
 [node name="Court" type="Node3D" parent="." unique_id=1514937648]
 metadata/_edit_lock_ = true
@@ -1839,6 +1833,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.25)
 shape = SubResource("BoxShape3D_f8atq")
 
 [node name="Boundaries" type="StaticBody3D" parent="." unique_id=1957373727]
+collision_layer = 16
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Boundaries" unique_id=1701827592]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 1.5, 0, 0)
@@ -1855,6 +1850,9 @@ shape = SubResource("WorldBoundaryShape3D_byl8j")
 [node name="CollisionShape3D4" type="CollisionShape3D" parent="Boundaries" unique_id=1026363831]
 transform = Transform3D(4.371139e-08, 1, 8.742278e-08, 1, -4.371139e-08, 0, 3.821371e-15, 8.742278e-08, -1, -42.25, 0, 0)
 shape = SubResource("WorldBoundaryShape3D_byl8j")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="Boundaries" unique_id=1966822865]
+shape = SubResource("WorldBoundaryShape3D_hkla2")
 
 [node name="BehideObjects" type="Node3D" parent="." unique_id=1828677655]
 
