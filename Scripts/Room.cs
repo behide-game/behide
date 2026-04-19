@@ -33,6 +33,7 @@ public partial class RoomConfiguration : Node
 
     private readonly Subject<Unit> changed = new();
     public IObservable<Unit> Changed => changed;
+    public override void _ExitTree() => changed.OnCompleted();
 
     public void AddHunter(int peerId) => Rpc(nameof(RpcAddHunter), peerId);
     public void RemoveHunter(int peerId) => Rpc(nameof(RpcRemoveHunter), peerId);

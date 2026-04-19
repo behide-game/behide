@@ -1750,6 +1750,18 @@ shadow_caster_mask = 4294967279
 distance_fade_shadow = 6.0
 omni_attenuation = 1.5
 
+[node name="torch_mounted14" parent="StaticProps" unique_id=921049866 instance=ExtResource("45_01r5e")]
+transform = Transform3D(1.3113419e-07, 0, 1, 0, 1, 0, -1, 0, 1.3113419e-07, -41.5, 3.9, 18.1)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted14" unique_id=837133035]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
+light_color = Color(1, 0.741769, 0.563201, 1)
+shadow_enabled = true
+shadow_blur = 2.0
+shadow_caster_mask = 4294967279
+distance_fade_shadow = 6.0
+omni_attenuation = 1.5
+
 [node name="torch_mounted10" parent="StaticProps" unique_id=934990026 instance=ExtResource("45_01r5e")]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -38, 3.9, 12)
 
