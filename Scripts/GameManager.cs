@@ -14,6 +14,7 @@ public partial class GameManager : Node
 
     public static RoomManager Room { get; private set; } = null!;
     public static TimeSynchronizer TimeSync { get; private set; } = null!;
+    public static PauseMenu PauseMenu { get; private set; } = null!;
     public static Settings Settings { get; private set; } = null!;
 
     public enum GameState { Home, Lobby, Game }
@@ -41,7 +42,8 @@ public partial class GameManager : Node
 
         Room = GetNode<RoomManager>("/root/RoomManager");
         TimeSync = GetNode<TimeSynchronizer>("/root/TimeSynchronizer");
-        Settings = GetNode<PauseMenu>("/root/PauseMenu").Settings;
+        PauseMenu = GetNode<PauseMenu>("/root/PauseMenu");
+        Settings = PauseMenu.Settings;
     }
 
     public override void _Notification(int what)

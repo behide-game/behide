@@ -25,21 +25,25 @@ public partial class PauseMenu : Control
         SetVisible(false);
     }
 
-    private void ToggleMenu()
+    public void ToggleMenu()
     {
-        if (Visible)
+        if (!SettingsMenuUi.Visible)
         {
-            SetVisible(false);
-            Input.MouseMode = mouseModeBefore;
+            if (Visible)
+            {
+                SetVisible(false);
+                Input.MouseMode = mouseModeBefore;
+            }
+            else
+            {
+                SetVisible(true);
+                mouseModeBefore = Input.MouseMode;
+                if (Input.MouseMode != Input.MouseModeEnum.Visible)
+                    Input.MouseMode = Input.MouseModeEnum.Visible;
+                MoveToFront();
+            }
         }
-        else
-        {
-            SetVisible(true);
-            mouseModeBefore = Input.MouseMode;
-            if (Input.MouseMode != Input.MouseModeEnum.Visible)
-                Input.MouseMode = Input.MouseModeEnum.Visible;
-            MoveToFront();
-        }
+        ShowBaseMenu();
     }
 
     private void ShowBaseMenu()
@@ -48,7 +52,7 @@ public partial class PauseMenu : Control
         SettingsMenuUi.SetVisible(false);
     }
 
-    private void ShowSettingsMenu()
+    public void ShowSettingsMenu()
     {
         BaseMenuUi.SetVisible(false);
         SettingsMenuUi.SetVisible(true);
@@ -58,8 +62,7 @@ public partial class PauseMenu : Control
     {
         if (evt.IsActionPressed(BuiltinInputActions.UiCancel))
         {
-            if (!SettingsMenuUi.Visible) ToggleMenu();
-            ShowBaseMenu();
+            ToggleMenu();
             GetViewport().SetInputAsHandled();
         }
     }
