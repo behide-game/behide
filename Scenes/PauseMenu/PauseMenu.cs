@@ -9,7 +9,7 @@ public partial class PauseMenu : Control
     private Settings SettingsMenuUi => _.SettingsMenu;
     public Settings Settings => SettingsMenuUi;
 
-    private Input.MouseModeEnum mouseModeBefore;
+    public Input.MouseModeEnum MouseModeBefore;
 
     public override void _EnterTree()
     {
@@ -20,7 +20,7 @@ public partial class PauseMenu : Control
     public new void Show()
     {
         SetVisible(true);
-        mouseModeBefore = Input.MouseMode;
+        MouseModeBefore = Input.MouseMode;
         if (Input.MouseMode != Input.MouseModeEnum.Visible)
             Input.MouseMode = Input.MouseModeEnum.Visible;
         MoveToFront();
@@ -29,7 +29,7 @@ public partial class PauseMenu : Control
     public new void Hide()
     {
         SetVisible(false);
-        Input.MouseMode = mouseModeBefore;
+        Input.MouseMode = MouseModeBefore;
     }
 
     private void ToggleMenu()

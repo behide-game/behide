@@ -71,6 +71,8 @@ public partial class PropHuntSupervisor
     {
         InGameCountdown.TimeElapsed -= GameTimeout;
         gameFinished = true;
+        Input.MouseMode = Input.MouseModeEnum.Visible;
+        GameManager.PauseMenu.MouseModeBefore = Input.MouseModeEnum.Visible;
 
         // Change UI
         ShowEndGameUi(propsWon, timedOut);
