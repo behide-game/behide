@@ -21,7 +21,9 @@ public partial class PropHuntSupervisor
             }
             else
             {
-                Input.MouseMode = Input.MouseModeEnum.Captured;
+                if (GameManager.PauseMenu.Visible) GameManager.PauseMenu.MouseModeBefore = Input.MouseModeEnum.Captured;
+                else Input.MouseMode = Input.MouseModeEnum.Captured;
+
                 PreGameProp.CallDeferred(CanvasItem.MethodName.Show);
                 IsPropLabel.CallDeferred(CanvasItem.MethodName.Show);
             }
@@ -39,7 +41,10 @@ public partial class PropHuntSupervisor
             if (hunterPeerIds is null)
                 log.Error("Cannot determine if we are hunter, hunterPeerIds were null");
             else if (hunterPeerIds.Contains(Multiplayer.GetUniqueId()))
-                Input.MouseMode = Input.MouseModeEnum.Captured;
+            {
+                if (GameManager.PauseMenu.Visible) GameManager.PauseMenu.MouseModeBefore = Input.MouseModeEnum.Captured;
+                else Input.MouseMode = Input.MouseModeEnum.Captured;
+            }
         };
 
         InGameCountdown.TimeElapsed += GameTimeout;
