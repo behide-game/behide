@@ -1,5 +1,5 @@
+using System.Reactive.Subjects;
 using Godot;
-using System.Globalization;
 
 namespace Behide.UI.Controls;
 
@@ -9,10 +9,21 @@ public partial class SliderSetting : VBoxContainer
     private LineEdit LineEdit => _.Controls.LineEdit;
     private Slider Slider => _.Controls.Slider;
 
-    public float Value => (float)Slider.Value;
+    public readonly Subject<double> Changed = new();
+    public double Value => Slider.Value;
 
-    private void SliderValueChanged(float value) =>
+    public void SetValue(double value)
+    {
+        Slider.SetValueNoSignal(value);
         LineEdit.Text = value.ToString("0.00");
+    }
+
+
+    private void SliderValueChanged(double value)
+    {
+        LineEdit.Text = value.ToString("0.00");
+        Changed.OnNext(value);
+    }
 
     private void LineEditLostFocus()
     {
@@ -24,6 +35,7 @@ public partial class SliderSetting : VBoxContainer
         }
 
         Slider.Value = newValue;
+        Changed.OnNext(newValue);
     }
 
     public override void _Input(InputEvent rawEvent)
