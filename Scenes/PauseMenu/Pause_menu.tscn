@@ -44,18 +44,6 @@ grow_vertical = 2
 layout_mode = 2
 text = "Settings"
 
-[node name="Username" type="HBoxContainer" parent="Pause Menu" unique_id=914063615]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Label" type="Label" parent="Pause Menu/Username" unique_id=371479500]
-layout_mode = 2
-text = "Player name"
-
-[node name="LineEdit" type="LineEdit" parent="Pause Menu/Username" unique_id=573603014]
-layout_mode = 2
-size_flags_horizontal = 3
-
 [node name="Back" type="Button" parent="Pause Menu" unique_id=1526716928]
 layout_mode = 2
 text = "Back"

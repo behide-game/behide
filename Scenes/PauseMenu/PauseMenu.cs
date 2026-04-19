@@ -11,14 +11,6 @@ public partial class PauseMenu : Control
 
     private Input.MouseModeEnum mouseModeBefore;
 
-    public string? GetUsername()
-    {
-        var lineEditText = _.PauseMenu.Username.LineEdit.Text;
-        return string.IsNullOrWhiteSpace(lineEditText)
-            ? null
-            : lineEditText;
-    }
-
     public override void _EnterTree()
     {
         ShowBaseMenu();

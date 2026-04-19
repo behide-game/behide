@@ -15,6 +15,7 @@ autowrap_mode = 3
 
 [node name="Controls" type="HBoxContainer" parent="." unique_id=366113109]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="LineEdit" type="LineEdit" parent="Controls" unique_id=1293254684]
 layout_mode = 2
