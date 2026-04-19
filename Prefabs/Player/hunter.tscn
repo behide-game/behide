@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://luuofj7aqswe" path="res://Prefabs/Player/HunterBody.cs" id="1_w58js"]
 [ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crosshair.svg" id="2_qudki"]
 [ext_resource type="PackedScene" uid="uid://bbuv8m4lpdg1u" path="res://Assets/Models/Prefabs/gun.glb" id="2_svrpp"]
+[ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="3_1qbrv"]
 [ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="3_w58js"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_qudki"]
@@ -19,6 +20,10 @@ properties/1/replication_mode = 2
 properties/2/path = NodePath("Camera:rotation:x")
 properties/2/spawn = true
 properties/2/replication_mode = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_n8xxh"]
+font = ExtResource("3_1qbrv")
+font_size = 18
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1qbrv"]
 shader = ExtResource("3_w58js")
@@ -77,11 +82,13 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 mouse_filter = 1
+label_settings = SubResource("LabelSettings_n8xxh")
 horizontal_alignment = 1
 vertical_alignment = 1
 max_lines_visible = 1
 
 [node name="Crosshair" type="Control" parent="HUD/Center" unique_id=203865776]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -89,17 +96,10 @@ mouse_filter = 1
 
 [node name="Crosshair" type="TextureRect" parent="HUD/Center/Crosshair" unique_id=1502892851]
 material = SubResource("ShaderMaterial_1qbrv")
-custom_minimum_size = Vector2(30, 30)
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -15.0
-offset_top = -15.0
-offset_right = 15.0
-offset_bottom = 15.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
@@ -112,15 +112,9 @@ modulate = Color(1, 1, 1, 0)
 self_modulate = Color(1, 0, 0, 1)
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -15.0
-offset_top = -15.0
-offset_right = 15.0
-offset_bottom = 15.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 rotation = 0.7853982
@@ -135,6 +129,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 mouse_filter = 1
+label_settings = SubResource("LabelSettings_n8xxh")
 
 [node name="Health" type="MarginContainer" parent="HUD" unique_id=366987484]
 layout_mode = 2
