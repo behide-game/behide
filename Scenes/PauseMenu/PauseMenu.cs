@@ -19,21 +19,18 @@ public partial class PauseMenu : Control
 
     public void ToggleMenu()
     {
-        if (!SettingsMenuUi.Visible)
+        if (Visible)
         {
-            if (Visible)
-            {
-                SetVisible(false);
-                Input.MouseMode = mouseModeBefore;
-            }
-            else
-            {
-                SetVisible(true);
-                mouseModeBefore = Input.MouseMode;
-                if (Input.MouseMode != Input.MouseModeEnum.Visible)
-                    Input.MouseMode = Input.MouseModeEnum.Visible;
-                MoveToFront();
-            }
+            SetVisible(false);
+            Input.MouseMode = mouseModeBefore;
+        }
+        else
+        {
+            SetVisible(true);
+            mouseModeBefore = Input.MouseMode;
+            if (Input.MouseMode != Input.MouseModeEnum.Visible)
+                Input.MouseMode = Input.MouseModeEnum.Visible;
+            MoveToFront();
         }
         ShowBaseMenu();
     }
