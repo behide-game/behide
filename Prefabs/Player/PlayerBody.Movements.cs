@@ -8,8 +8,10 @@ public abstract partial class PlayerBody
 
     [ExportGroup("Camera rotation")]
     [Export] private float maxRotation = Mathf.DegToRad(90);
-    [Export] private float verticalSensitivity = 0.005f;
-    [Export] private float horizontalSensitivity = 0.005f;
+    [Export] private float baseVerticalSensitivity = 0.005f;
+    [Export] private float baseHorizontalSensitivity = 0.005f;
+    private float multiplierVerticalSensitivity = 1f;
+    private float multiplierHorizontalSensitivity = 1f;
 
     [ExportGroup("Movements")]
     private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -23,6 +25,16 @@ public abstract partial class PlayerBody
     private float rotationX;
     private float rotationY;
     private bool jumping;
+
+    private void on_vertical_sensitivity_value_changed(float value)
+    {
+        multiplierVerticalSensitivity = value;
+    }
+
+    private void on_horizontal_sensitivity_value_changed(float value)
+    {
+        multiplierHorizontalSensitivity = value;
+    }
 
     // --- Movements ---
     private void ProcessPhysics(double delta)
@@ -87,8 +99,8 @@ public abstract partial class PlayerBody
         // Rotation
         if (rawEvent is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
         {
-            rotationY -= mouseMotion.Relative.X * verticalSensitivity;
-            rotationX -= mouseMotion.Relative.Y * horizontalSensitivity;
+            rotationY -= mouseMotion.Relative.X * (baseVerticalSensitivity * multiplierVerticalSensitivity);
+            rotationX -= mouseMotion.Relative.Y * (baseHorizontalSensitivity * multiplierHorizontalSensitivity);
             rotationX = Math.Clamp(rotationX, -maxRotation, maxRotation);
         }
 
