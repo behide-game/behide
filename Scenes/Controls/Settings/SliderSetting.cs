@@ -37,16 +37,4 @@ public partial class SliderSetting : VBoxContainer
         Slider.Value = newValue;
         Changed.OnNext(newValue);
     }
-
-    public override void _Input(InputEvent rawEvent)
-    {
-        if (rawEvent is not InputEventMouseButton mouseEvent) return;
-        if (!mouseEvent.IsPressed()) return;
-        if (mouseEvent.ButtonIndex != MouseButton.Left) return;
-
-        var evLocal = (InputEventMouseButton)LineEdit.MakeInputLocal(mouseEvent);
-
-        if (new Rect2(Vector2.Zero, LineEdit.Size).HasPoint(evLocal.Position)) return;
-        LineEdit.ReleaseFocus();
-    }
 }

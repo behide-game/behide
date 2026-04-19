@@ -54,5 +54,9 @@ public partial class PauseMenu : Control
             ToggleMenu();
             GetViewport().SetInputAsHandled();
         }
+        else if (evt is InputEventMouseButton e && e.IsPressed() && e.ButtonIndex == MouseButton.Left)
+        {
+            GetViewport().GuiReleaseFocus();
+        }
     }
 }
