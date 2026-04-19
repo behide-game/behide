@@ -88,6 +88,6 @@ public abstract partial class PlayerBody
         }
 
         // Jump
-        if (Input.IsActionJustPressed(InputActions.Jump) && IsOnFloor()) jumping = true;
+        if (Input.IsActionPressed(InputActions.Jump) && IsOnFloor()) jumping = true;
     }
 }
