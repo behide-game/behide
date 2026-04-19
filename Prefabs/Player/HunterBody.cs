@@ -62,7 +62,7 @@ public partial class HunterBody : PlayerBody
             crosshairHitTween.TweenProperty(CrosshairHit, "modulate", new Color(0xFFFFFF00), crosshairHitDuration);
             CrosshairHit.Modulate = new Color(0xFFFFFFFF);
         }
-        else
+        else if (focusedObject is not null)
             Rpc(MethodName.PlayerMissRpc);
     }
 

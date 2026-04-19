@@ -184,9 +184,9 @@ size = Vector3(4, 8, 0.5)
 [sub_resource type="BoxShape3D" id="BoxShape3D_f8atq"]
 size = Vector3(2, 0.2, 0.5)
 
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_byl8j"]
-
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_hkla2"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_byl8j"]
 
 [node name="Dungeon" type="Node3D" unique_id=1145563756]
 
@@ -1841,6 +1841,12 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -41.75
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.25)
 shape = SubResource("BoxShape3D_f8atq")
 
+[node name="Floor" type="StaticBody3D" parent="." unique_id=1881614322]
+collision_layer = 17
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="Floor" unique_id=1966822865]
+shape = SubResource("WorldBoundaryShape3D_hkla2")
+
 [node name="Boundaries" type="StaticBody3D" parent="." unique_id=1957373727]
 collision_layer = 16
 
@@ -1859,9 +1865,6 @@ shape = SubResource("WorldBoundaryShape3D_byl8j")
 [node name="CollisionShape3D4" type="CollisionShape3D" parent="Boundaries" unique_id=1026363831]
 transform = Transform3D(4.371139e-08, 1, 8.742278e-08, 1, -4.371139e-08, 0, 3.821371e-15, 8.742278e-08, -1, -42.25, 0, 0)
 shape = SubResource("WorldBoundaryShape3D_byl8j")
-
-[node name="CollisionShape3D5" type="CollisionShape3D" parent="Boundaries" unique_id=1966822865]
-shape = SubResource("WorldBoundaryShape3D_hkla2")
 
 [node name="BehideObjects" type="Node3D" parent="." unique_id=1828677655]
 

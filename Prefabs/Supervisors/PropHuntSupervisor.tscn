@@ -73,7 +73,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
+mouse_filter = 1
 theme = ExtResource("5_sfeev")
 
 [node name="AdvancedLabelCountdown" type="Node" parent="UI" unique_id=1393435489 node_paths=PackedStringArray("labels")]
@@ -92,6 +92,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="HBoxContainer" type="VBoxContainer" parent="UI/Pre-game Prop" unique_id=550277550]
 layout_mode = 1
@@ -123,6 +124,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_w7xx4")
 
 [node name="BoxContainer" type="BoxContainer" parent="UI/Pre-game Hunter" unique_id=1578360035]
@@ -152,6 +154,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="IsProp" type="Label" parent="UI/In-game" unique_id=383943983]
 visible = false
