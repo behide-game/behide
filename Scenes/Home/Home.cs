@@ -13,8 +13,8 @@ public partial class Home : Node3D
 
     private void SettingsButtonPressed()
     {
-        GameManager.PauseMenu.ToggleMenu();
-        GameManager.PauseMenu.ShowSettingsMenu();
+        GameManager.PauseMenu.Show();
+        GameManager.PauseMenu.SwitchToSettingsMenu();
     }
 
     private async void QuitButtonPressed()

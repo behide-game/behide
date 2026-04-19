@@ -64,6 +64,8 @@ public partial class GameManager : Node
             _ => throw new Exception("Unexpected game state"),
         };
 
+        if (PauseMenu.Visible) PauseMenu.Hide();
+
         State = state;
         instance.GetTree().ChangeSceneToPacked(sceneToLoad);
         instance.log.Verbose("Changed game state to {state}", state);
