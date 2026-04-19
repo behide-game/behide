@@ -1,50 +1,66 @@
 using Godot;
-using System;
 
+namespace Behide.Game.UI.PauseMenu;
+
+[SceneTree("Pause_menu.tscn")]
 public partial class PauseMenu : Control
 {
-    [Export]
-    private Control MainButtons;
-    [Export]
-    private Control Settings;
-    [Export]
-    private Control TextHSlider;
-    [Export]
-    private Control TextVSlider;
+    private Control BaseMenuUi => _.PauseMenu;
+    private Settings SettingsMenuUi => _.SettingsMenu;
+    public Settings Settings => SettingsMenuUi;
 
-    private float multiplierHorizontalSensitivity;
-    private float multiplierVerticalSensitivity;
+    private Input.MouseModeEnum mouseModeBefore;
 
-	// Called when the node enters the scene tree for the first time.
+    public string? GetUsername()
+    {
+        var lineEditText = _.PauseMenu.Username.LineEdit.Text;
+        return string.IsNullOrWhiteSpace(lineEditText)
+            ? null
+            : lineEditText;
+    }
+
     public override void _EnterTree()
     {
-        base._EnterTree();
+        ShowBaseMenu();
         SetVisible(false);
     }
 
-    private void OnECHAPPressed()
-	{
-        MainButtons.SetVisible(true);
-        Settings.SetVisible(false);
-	}
-
-    private void OnSettingsPressed()
+    private void ToggleMenu()
     {
-        MainButtons.SetVisible(false);
-        Settings.SetVisible(true);
-        GD.PushWarning("Settings pressed");
+        if (Visible)
+        {
+            SetVisible(false);
+            Input.MouseMode = mouseModeBefore;
+        }
+        else
+        {
+            SetVisible(true);
+            mouseModeBefore = Input.MouseMode;
+            if (Input.MouseMode != Input.MouseModeEnum.Visible)
+                Input.MouseMode = Input.MouseModeEnum.Visible;
+            MoveToFront();
+        }
     }
 
-    private void OnApplyPressed()
+    private void ShowBaseMenu()
     {
-        MainButtons.SetVisible(true);
-        Settings.SetVisible(false);
-
-        GD.PushWarning("Apply pressed");
+        BaseMenuUi.SetVisible(true);
+        SettingsMenuUi.SetVisible(false);
     }
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
+    private void ShowSettingsMenu()
+    {
+        BaseMenuUi.SetVisible(false);
+        SettingsMenuUi.SetVisible(true);
+    }
+
+    public override void _Input(InputEvent evt)
+    {
+        if (evt.IsActionPressed(BuiltinInputActions.UiCancel))
+        {
+            if (!SettingsMenuUi.Visible) ToggleMenu();
+            ShowBaseMenu();
+            GetViewport().SetInputAsHandled();
+        }
+    }
 }

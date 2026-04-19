@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://mvi6mhwtencn"]
+
+[ext_resource type="Script" uid="uid://cltwxw8gox4fv" path="res://Scenes/Settings/Settings.cs" id="1_ytwd3"]
+
+[node name="Settings" type="VBoxContainer" unique_id=1584239507]
+anchors_preset = -1
+anchor_left = 0.35
+anchor_top = 0.15
+anchor_right = 0.65
+anchor_bottom = 0.85
+grow_vertical = 2
+script = ExtResource("1_ytwd3")
+
+[node name="Back" type="Button" parent="." unique_id=595488265]
+layout_mode = 2
+text = "Back"
+
+[node name="Vertical Sensitivity" type="VBoxContainer" parent="." unique_id=1647087359]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Vertical Sensitivity" unique_id=263524481]
+layout_mode = 2
+text = "Vertical sensitivity"
+
+[node name="Controls" type="HBoxContainer" parent="Vertical Sensitivity" unique_id=398808655]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="Vertical Sensitivity/Controls" unique_id=1611339095]
+layout_mode = 2
+text = "100"
+alignment = 1
+
+[node name="Slider" type="HSlider" parent="Vertical Sensitivity/Controls" unique_id=641547643]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 0.1
+max_value = 5.0
+step = 0.0
+value = 0.8
+
+[node name="Horizontal Sensitivity" type="VBoxContainer" parent="." unique_id=1902800816]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Horizontal Sensitivity" unique_id=657020202]
+layout_mode = 2
+text = "Horizontal sensitivity"
+
+[node name="Controls" type="HBoxContainer" parent="Horizontal Sensitivity" unique_id=778480791]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="Horizontal Sensitivity/Controls" unique_id=1950311239]
+layout_mode = 2
+text = "100"
+alignment = 1
+
+[node name="Slider" type="HSlider" parent="Horizontal Sensitivity/Controls" unique_id=794537177]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 0.1
+max_value = 5.0
+step = 0.0
+value = 0.8

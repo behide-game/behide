@@ -1,8 +1,18 @@
 [gd_scene format=3 uid="uid://dqn4mywiq71bc"]
 
-[ext_resource type="Script" path="res://Scenes/Controls/PauseMenu/PauseMenu.cs" id="1_vd4nb"]
+[ext_resource type="Script" uid="uid://bccs3yyeq7del" path="res://Scenes/PauseMenu/PauseMenu.cs" id="1_vd4nb"]
+[ext_resource type="PackedScene" uid="uid://mvi6mhwtencn" path="res://Scenes/Settings/Settings.tscn" id="2_jpxof"]
+[ext_resource type="Shader" uid="uid://baf1p55idhp1q" path="res://Scenes/PauseMenu/blur.gdshader" id="2_qu44q"]
 
-[node name="Pause Menu" type="Control" unique_id=1490677513 node_paths=PackedStringArray("MainButtons", "Settings")]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1g8c7"]
+shader = ExtResource("2_qu44q")
+shader_parameter/lod = 3.0000001425
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qu44q"]
+bg_color = Color(11.706441, 11.706441, 11.706441, 1)
+
+[node name="Pause Menu" type="Control" unique_id=1490677513]
+z_index = 10
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -10,97 +20,52 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_vd4nb")
-MainButtons = NodePath("VBoxContainer")
-Settings = NodePath("Settings Menu")
 
 [node name="Background" type="Panel" parent="." unique_id=53345119]
-visible = false
+material = SubResource("ShaderMaterial_1g8c7")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qu44q")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=107834565]
-visible = false
+[node name="Pause Menu" type="VBoxContainer" parent="." unique_id=107834565]
 layout_mode = 1
-anchors_preset = 13
-anchor_left = 0.5
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -150.0
-offset_top = 100.0
-offset_right = 150.0
-offset_bottom = -100.0
-grow_horizontal = 2
+anchors_preset = -1
+anchor_left = 0.35
+anchor_top = 0.15
+anchor_right = 0.65
+anchor_bottom = 0.85
 grow_vertical = 2
 
-[node name="Button" type="Button" parent="VBoxContainer" unique_id=1823169428]
+[node name="Settings" type="Button" parent="Pause Menu" unique_id=1823169428]
 layout_mode = 2
 text = "Settings"
 
-[node name="Settings Menu" type="Panel" parent="." unique_id=2079742307]
-modulate = Color(0.19256628, 0.7165939, 0.4571218, 1)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Button" type="Button" parent="Settings Menu" unique_id=2085122634]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -135.0
-offset_top = -65.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "Apply"
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Settings Menu" unique_id=413984524]
-layout_mode = 1
-anchors_preset = 9
-anchor_bottom = 1.0
-offset_left = 201.0
-offset_top = 78.75
-offset_right = 576.0
-offset_bottom = -77.0
-grow_vertical = 2
-theme_override_constants/separation = 21
-
-[node name="HSlider" type="HSlider" parent="Settings Menu/VBoxContainer" unique_id=654853379]
+[node name="Username" type="HBoxContainer" parent="Pause Menu" unique_id=914063615]
 layout_mode = 2
-size_flags_vertical = 8
-value = 100.0
+theme_override_constants/separation = 10
 
-[node name="HSlider2" type="HSlider" parent="Settings Menu/VBoxContainer" unique_id=432995181]
+[node name="Label" type="Label" parent="Pause Menu/Username" unique_id=371479500]
 layout_mode = 2
-value = 100.0
+text = "Player name"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Settings Menu" unique_id=2013236532]
+[node name="LineEdit" type="LineEdit" parent="Pause Menu/Username" unique_id=573603014]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Back" type="Button" parent="Pause Menu" unique_id=1526716928]
+layout_mode = 2
+text = "Back"
+
+[node name="Settings Menu" parent="." unique_id=1584239507 instance=ExtResource("2_jpxof")]
+visible = false
 layout_mode = 1
-anchors_preset = 9
-anchor_bottom = 1.0
-offset_left = 72.0
-offset_top = 78.75
-offset_right = 201.0
-offset_bottom = -77.0
-grow_vertical = 2
 
-[node name="LineEdit" type="LineEdit" parent="Settings Menu/VBoxContainer2" unique_id=999181268]
-layout_mode = 2
-placeholder_text = "100"
+[connection signal="pressed" from="Pause Menu/Settings" to="." method="ShowSettingsMenu"]
+[connection signal="pressed" from="Pause Menu/Back" to="." method="ToggleMenu"]
+[connection signal="pressed" from="Settings Menu/Back" to="." method="ShowBaseMenu"]
 
-[node name="LineEdit2" type="LineEdit" parent="Settings Menu/VBoxContainer2" unique_id=1615267218]
-layout_mode = 2
-placeholder_text = "100"
-
-[connection signal="pressed" from="VBoxContainer/Button" to="." method="on_settings_pressed"]
-[connection signal="pressed" from="Settings Menu/Button" to="." method="on_apply_pressed"]
-[connection signal="value_changed" from="Settings Menu/VBoxContainer/HSlider" to="." method="on_horizontal_sensitivity_value_changed"]
-[connection signal="value_changed" from="Settings Menu/VBoxContainer/HSlider2" to="." method="on_vertical_sensitivity_value_changed"]
+[editable path="Settings Menu"]

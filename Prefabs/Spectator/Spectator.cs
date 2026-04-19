@@ -27,9 +27,8 @@ public partial class Spectator : CharacterBody3D
             Input.MouseMode = Input.MouseModeEnum.Visible;
     }
 
-    public override void _Input(InputEvent rawEvent)
+    public override void _UnhandledInput(InputEvent rawEvent)
     {
-        base._Input(rawEvent);
         if (!enabled) return;
 
         // Escape

@@ -50,9 +50,9 @@ public partial class PropBody : PlayerBody
         focusedBehideObject = rayCast.GetCollider() as BehideObject;
     }
 
-    public override void _Input(InputEvent rawEvent)
+    public override void _UnhandledInput(InputEvent rawEvent)
     {
-        base._Input(rawEvent);
+        base._UnhandledInput(rawEvent);
         if (!IsMultiplayerAuthority()) return;
         if (!Alive) return;
         if (Input.IsActionJustPressed(InputActions.Morph) && focusedBehideObject is not null)

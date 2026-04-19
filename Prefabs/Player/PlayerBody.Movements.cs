@@ -8,10 +8,8 @@ public abstract partial class PlayerBody
 
     [ExportGroup("Camera rotation")]
     [Export] private float maxRotation = Mathf.DegToRad(90);
-    [Export] private float baseVerticalSensitivity = 0.005f;
-    [Export] private float baseHorizontalSensitivity = 0.005f;
-    private float multiplierVerticalSensitivity = 1f;
-    private float multiplierHorizontalSensitivity = 1f;
+    private static float HorizontalSensitivity => (float)(0.005 * GameManager.Settings.HorizontalSensitivity);
+    private static float VerticalSensitivity => (float)(0.005 * GameManager.Settings.VerticalSensitivity);
 
     [ExportGroup("Movements")]
     private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -25,16 +23,6 @@ public abstract partial class PlayerBody
     private float rotationX;
     private float rotationY;
     private bool jumping;
-
-    private void on_vertical_sensitivity_value_changed(float value)
-    {
-        multiplierVerticalSensitivity = value;
-    }
-
-    private void on_horizontal_sensitivity_value_changed(float value)
-    {
-        multiplierHorizontalSensitivity = value;
-    }
 
     // --- Movements ---
     private void ProcessPhysics(double delta)
@@ -85,7 +73,7 @@ public abstract partial class PlayerBody
         CameraDisk.SetRotation(new Vector3(rotationX, 0, 0)); // Up / Down (Rotate camera disk)
     }
     // Run only on the peer who has the authority.
-    public override void _Input(InputEvent rawEvent)
+    public override void _UnhandledInput(InputEvent rawEvent)
     {
         if (!IsMultiplayerAuthority()) return;
         if (!Alive || freeze) return;
@@ -99,8 +87,8 @@ public abstract partial class PlayerBody
         // Rotation
         if (rawEvent is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
         {
-            rotationY -= mouseMotion.Relative.X * (baseVerticalSensitivity * multiplierVerticalSensitivity);
-            rotationX -= mouseMotion.Relative.Y * (baseHorizontalSensitivity * multiplierHorizontalSensitivity);
+            rotationY -= mouseMotion.Relative.X * VerticalSensitivity;
+            rotationX -= mouseMotion.Relative.Y * HorizontalSensitivity;
             rotationX = Math.Clamp(rotationX, -maxRotation, maxRotation);
         }
 

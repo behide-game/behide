@@ -85,13 +85,6 @@ public abstract partial class Supervisor : Node
         BehideObjects.SetOwner(behideObjectsParent);
     }
 
-    public override void _Input(InputEvent @event)
-    {
-        if (!@event.IsAction(InputActions.OpenMenu, true)) return;
-        _ = GameManager.Room.LeaveRoom();
-        GameManager.SetGameState(GameManager.GameState.Lobby);
-    }
-
     public void PlayerSpawned(PlayerBody player) => PlayerBodies.Add(player);
 
     public virtual void PlayerDied(PlayerBody playerBody) { }

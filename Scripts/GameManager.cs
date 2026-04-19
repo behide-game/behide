@@ -1,4 +1,6 @@
+using Behide.Game;
 using Behide.Game.Supervisors;
+using Behide.Game.UI.PauseMenu;
 using Serilog;
 using Log = Behide.Logging.Log;
 
@@ -12,6 +14,7 @@ public partial class GameManager : Node
 
     public static RoomManager Room { get; private set; } = null!;
     public static TimeSynchronizer TimeSync { get; private set; } = null!;
+    public static Settings Settings { get; private set; } = null!;
 
     public enum GameState { Home, Lobby, Game }
     public static GameState State { get; private set; } = GameState.Home;
@@ -38,6 +41,7 @@ public partial class GameManager : Node
 
         Room = GetNode<RoomManager>("/root/RoomManager");
         TimeSync = GetNode<TimeSynchronizer>("/root/TimeSynchronizer");
+        Settings = GetNode<PauseMenu>("/root/PauseMenu").Settings;
     }
 
     public override void _Notification(int what)
