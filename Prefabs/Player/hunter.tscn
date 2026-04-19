@@ -72,11 +72,14 @@ layout_mode = 2
 size_flags_vertical = 4
 alignment = 1
 
-[node name="DummyLabel" type="Label" parent="HUD/Center" unique_id=92405162]
+[node name="PlayerUsername" type="Label" parent="HUD/Center" unique_id=1213078939]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 mouse_filter = 1
+horizontal_alignment = 1
+vertical_alignment = 1
+max_lines_visible = 1
 
 [node name="Crosshair" type="Control" parent="HUD/Center" unique_id=203865776]
 layout_mode = 2
@@ -127,14 +130,11 @@ size_flags_vertical = 4
 texture = ExtResource("2_qudki")
 expand_mode = 3
 
-[node name="PlayerUsername" type="Label" parent="HUD/Center" unique_id=1213078939]
+[node name="DummyLabel" type="Label" parent="HUD/Center" unique_id=92405162]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 mouse_filter = 1
-horizontal_alignment = 1
-vertical_alignment = 1
-max_lines_visible = 1
 
 [node name="Health" type="MarginContainer" parent="HUD" unique_id=366987484]
 layout_mode = 2

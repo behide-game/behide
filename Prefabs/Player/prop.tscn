@@ -71,11 +71,14 @@ layout_mode = 2
 size_flags_vertical = 4
 alignment = 1
 
-[node name="DummyLabel" type="Label" parent="HUD/Center" unique_id=1230624155]
+[node name="PlayerUsername" type="Label" parent="HUD/Center" unique_id=1933522964]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 mouse_filter = 1
+horizontal_alignment = 1
+vertical_alignment = 1
+max_lines_visible = 1
 
 [node name="Crosshair" type="TextureRect" parent="HUD/Center" unique_id=1741969151]
 material = SubResource("ShaderMaterial_7hld8")
@@ -86,14 +89,11 @@ size_flags_vertical = 4
 texture = SubResource("CompressedTexture2D_52r4e")
 expand_mode = 3
 
-[node name="PlayerUsername" type="Label" parent="HUD/Center" unique_id=1933522964]
+[node name="DummyLabel" type="Label" parent="HUD/Center" unique_id=1230624155]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 mouse_filter = 1
-horizontal_alignment = 1
-vertical_alignment = 1
-max_lines_visible = 1
 
 [node name="Health" type="MarginContainer" parent="HUD" unique_id=1322917847]
 layout_mode = 2
