@@ -1,29 +1,35 @@
 using Godot;
-using System;
-using System.Net.Mime;
+using System.Globalization;
+
+namespace Behide.UI.Controls;
 
 [SceneTree("Slider_setting.tscn")]
 public partial class SliderSetting : VBoxContainer
 {
-    private float Value => Convert.ToSingle(_.Controls.Slider.Value);
+    private LineEdit LineEdit => _.Controls.LineEdit;
+    private Slider Slider => _.Controls.Slider;
 
-    // public override void _EnterTree()
-    // {
-    //     _.Controls.LineEdit.Text = Value.ToString();
-    // }
+    public float Value => (float)Slider.Value;
 
-    public float GetValue()
+    private void SliderValueChanged(float value) =>
+        LineEdit.Text = value.ToString("0.00");
+
+    private void LineEditLostFocus()
     {
-        return Value;
+        var text = LineEdit.Text;
+        if (!double.TryParse(text, out var newValue)) return;
+        Slider.Value = newValue;
     }
 
-    private void OnValueChanged(float value)
+    public override void _Input(InputEvent rawEvent)
     {
-        _.Controls.LineEdit.Text = value.ToString();
-    }
+        if (rawEvent is not InputEventMouseButton mouseEvent) return;
+        if (!mouseEvent.IsPressed()) return;
+        if (mouseEvent.ButtonIndex != MouseButton.Left) return;
 
-    private void OnTextChanged(float value)
-    {
-        _.Controls.Slider.Value = value;
+        var evLocal = (InputEventMouseButton)LineEdit.MakeInputLocal(mouseEvent);
+
+        if (new Rect2(Vector2.Zero, LineEdit.Size).HasPoint(evLocal.Position)) return;
+        LineEdit.ReleaseFocus();
     }
 }
