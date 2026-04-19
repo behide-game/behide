@@ -47,7 +47,18 @@ public partial class PropBody : PlayerBody
     public override void _Process(double delta)
     {
         if (!IsMultiplayerAuthority()) return;
-        focusedBehideObject = rayCast.GetCollider() as BehideObject;
+        var focusedObject = rayCast.GetCollider();
+        focusedBehideObject = focusedObject as BehideObject;
+
+        // Set player name in HUD
+        if (focusedObject is PlayerBody body)
+        {
+            var ownerPeerId = body.GetMultiplayerAuthority();
+            var ownerName = Supervisor.Room.Players[ownerPeerId].Value.Username;
+            _.HUD.Center.PlayerUsername.Text = ownerName;
+        }
+        else
+            _.HUD.Center.PlayerUsername.Text = string.Empty;
     }
 
     public override void _UnhandledInput(InputEvent rawEvent)
@@ -55,6 +66,7 @@ public partial class PropBody : PlayerBody
         base._UnhandledInput(rawEvent);
         if (!IsMultiplayerAuthority()) return;
         if (!Alive) return;
+        if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
         if (Input.IsActionJustPressed(InputActions.Morph) && focusedBehideObject is not null)
             Rpc(nameof(Morph), focusedBehideObject.GetPath());
     }
