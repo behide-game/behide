@@ -59,6 +59,7 @@ public partial class Lobby
 
         // Add to global player list
         var node = playerListItemScene.Instantiate<PlayerListItem>();
+        node.Name = player.Value.PeerId.ToString();
         player.Subscribe(p =>
             {
                 node.SetPlayerName(p.Username);
@@ -80,6 +81,7 @@ public partial class Lobby
     private void AddPlayerToRolesList(BehaviorSubject<Player> player)
     {
         var node = playerListItemScene.Instantiate<PlayerListItem>();
+        node.Name = player.Value.PeerId.ToString();
 
         // Sync ready state
         player.Subscribe(

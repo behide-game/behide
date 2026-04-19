@@ -30,7 +30,7 @@ public partial class RoomManager : Node
         multiplayer.CreateMesh(playerId);
         Multiplayer.MultiplayerPeer = multiplayer;
 
-        var username = $"Player: {playerId}"; // TODO: Ask the player for his username
+        var username = GameManager.PauseMenu.GetUsername() ?? $"Player: {playerId}";
         var player = new Player(playerId, username, new PlayerStateInLobby(false));
         Room = new Room(roomId, player);
         AddChild(Room);
@@ -62,7 +62,7 @@ public partial class RoomManager : Node
         Multiplayer.MultiplayerPeer = multiplayer;
 
         // Create the room management object
-        var username = $"Player: {playerId}";
+        var username = GameManager.PauseMenu.GetUsername() ?? $"Player: {playerId}";
         var player = new Player(playerId, username, new PlayerStateInLobby(false));
         Room = new Room(roomId, player);
         AddChild(Room);
