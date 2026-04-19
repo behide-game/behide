@@ -17,7 +17,12 @@ public partial class SliderSetting : VBoxContainer
     private void LineEditLostFocus()
     {
         var text = LineEdit.Text;
-        if (!double.TryParse(text, out var newValue)) return;
+        if (!double.TryParse(text, out var newValue))
+        {
+            LineEdit.Text = Value.ToString("0.00");
+            return;
+        }
+
         Slider.Value = newValue;
     }
 
