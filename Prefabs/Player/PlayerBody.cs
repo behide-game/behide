@@ -53,8 +53,6 @@ public abstract partial class PlayerBody : CharacterBody3D
 
     public void Freeze()
     {
-        if (Input.MouseMode != Input.MouseModeEnum.Visible)
-            Input.MouseMode = Input.MouseModeEnum.Visible;
         freeze = true;
         Hud.Visible = false;
     }
@@ -79,11 +77,7 @@ public abstract partial class PlayerBody : CharacterBody3D
         Transform = transform;
 
         // Only when we are the authority
-        if (IsMultiplayerAuthority())
-        {
-            Camera.MakeCurrent();
-            Input.MouseMode = Input.MouseModeEnum.Captured;
-        }
+        if (IsMultiplayerAuthority()) Camera.MakeCurrent();
         else Hud.Visible = false;
     }
 

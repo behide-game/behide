@@ -15,30 +15,17 @@ public partial class Spectator : CharacterBody3D
     public void Enable()
     {
         _.Camera.MakeCurrent();
-        if (Input.MouseMode != Input.MouseModeEnum.Captured)
-            Input.MouseMode = Input.MouseModeEnum.Captured;
         enabled = true;
     }
 
-    public void Disable()
-    {
-        enabled = false;
-        if (Input.MouseMode != Input.MouseModeEnum.Visible)
-            Input.MouseMode = Input.MouseModeEnum.Visible;
-    }
+    public void Disable() => enabled = false;
 
     public override void _UnhandledInput(InputEvent rawEvent)
     {
         if (!enabled) return;
+        if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
-        // Escape
-        if (rawEvent.IsActionPressed(BuiltinInputActions.UiCancel))
-            Input.MouseMode = Input.MouseMode == Input.MouseModeEnum.Captured
-                ? Input.MouseModeEnum.Visible
-                : Input.MouseModeEnum.Captured;
-
-        if (rawEvent is InputEventMouseMotion mouseMotion
-            && Input.MouseMode == Input.MouseModeEnum.Captured)
+        if (rawEvent is InputEventMouseMotion mouseMotion)
         {
             RotateY(-mouseMotion.Relative.X * mouseSensitivity);
 
@@ -53,6 +40,7 @@ public partial class Spectator : CharacterBody3D
     {
         base._PhysicsProcess(delta);
         if (!enabled) return;
+        if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
         var horizontalDirection = Input.GetVector(
             InputActions.MoveLeft,

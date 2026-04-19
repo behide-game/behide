@@ -39,7 +39,7 @@ public abstract partial class PlayerBody
         }
 
         // Add movements
-        if (!Alive || freeze)
+        if (!Alive || freeze || Input.MouseMode != Input.MouseModeEnum.Captured)
         {
             Velocity = Vector3.Zero;
             return;
@@ -77,15 +77,10 @@ public abstract partial class PlayerBody
     {
         if (!IsMultiplayerAuthority()) return;
         if (!Alive || freeze) return;
-
-        // Escape
-        if (rawEvent.IsActionPressed(BuiltinInputActions.UiCancel))
-            Input.MouseMode = Input.MouseMode == Input.MouseModeEnum.Captured
-                ? Input.MouseModeEnum.Visible
-                : Input.MouseModeEnum.Captured;
+        if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
         // Rotation
-        if (rawEvent is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
+        if (rawEvent is InputEventMouseMotion mouseMotion)
         {
             rotationY -= mouseMotion.Relative.X * VerticalSensitivity;
             rotationX -= mouseMotion.Relative.Y * HorizontalSensitivity;

@@ -39,7 +39,7 @@
 [ext_resource type="PackedScene" uid="uid://tylqo4vstjk1" path="res://Assets/Models/Dungeon/Batiments/Floor/Dirt/floor_dirt_small_B.gltf" id="18_behv8"]
 [ext_resource type="PackedScene" uid="uid://bqidvylg2uf0o" path="res://Assets/Models/Dungeon/Batiments/Wall/wall_doorway.gltf" id="23_byl8j"]
 [ext_resource type="PackedScene" uid="uid://c0bfmbtopepup" path="res://Assets/Models/Dungeon/Batiments/Pillar/pillar.gltf" id="27_bo5kc"]
-[ext_resource type="PackedScene" uid="uid://dypyy7n77pte7" path="res://Assets/Models/Dungeon/Batiments/Wall/Wall Doorway Scaffold.tscn" id="34_byl8j"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Dungeon/Batiments/Wall/Wall Doorway Scaffold.tscn" id="34_byl8j"]
 [ext_resource type="PackedScene" uid="uid://c7gy4m7s4hgq6" path="res://Assets/Models/Dungeon/Batiments/Wall/wall_half_endcap.gltf" id="35_b5oh7"]
 [ext_resource type="PackedScene" uid="uid://rbffttemepqb" path="res://Assets/Models/Dungeon/Batiments/Wall/wall_archedwindow_open.gltf" id="36_lb4e7"]
 [ext_resource type="PackedScene" uid="uid://b6od36ufgc7qf" path="res://Prefabs/BehideObjects/Dungeon/Bottles/bottle_A_brown.tscn" id="36_o14ff"]
