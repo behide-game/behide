@@ -5,12 +5,10 @@ namespace Behide.Game.Player;
 [SceneTree("hunter.tscn")]
 public partial class HunterBody : PlayerBody
 {
-    private RayCast3D rayCastView = null!;
     private RayCast3D rayCastGun = null!;
-    private const float rayLength = 1000.0f;
 
     private Tween? crosshairHitTween;
-    private Control CrosshairHit => _.HUD.Crosshair.CrosshairHit;
+    private Control CrosshairHit => _.HUD.Center.Crosshair.CrosshairHit;
     private double crosshairHitDuration = 0.3;
 
     protected override void InitializeNodes()
@@ -31,23 +29,24 @@ public partial class HunterBody : PlayerBody
         base._PhysicsProcess(delta);
         if (!IsMultiplayerAuthority()) return;
         if (!Alive) return;
+        if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
+
+        var focusedObject = _.Camera.RayCast.GetCollider();
+
+        // Set player name in HUD
+        if (focusedObject is HunterBody hunterBody)
+        {
+            var ownerPeerId = hunterBody.GetMultiplayerAuthority();
+            var ownerName = Supervisor.Room.Players[ownerPeerId].Value.Username;
+            _.HUD.Center.PlayerUsername.Text = ownerName;
+        }
+        else
+            _.HUD.Center.PlayerUsername.Text = string.Empty;
+
+        // Listen shoot
         if (Input.IsActionJustPressed(InputActions.Shoot))
         {
-            var windowSize = GetViewport().GetVisibleRect().Size;
-            var spaceState = GetWorld3D().DirectSpaceState;
-
-            var from = Camera.ProjectRayOrigin(windowSize / 2);
-            var to = from + Camera.ProjectRayNormal(windowSize / 2) * rayLength;
-            const uint mask =
-                (uint)LayerNames.Physics3DLayerMask.Players
-                | (uint)LayerNames.Physics3DLayerMask.Props;
-
-            var query = PhysicsRayQueryParameters3D.Create(from, to, mask);
-            var result = spaceState.IntersectRay(query);
-
-            if (!result.TryGetValue("collider", out var collider)) return;
-
-            if (collider.AsGodotObject() is PropBody player)
+            if (focusedObject is PropBody player)
             {
                 Rpc(MethodName.PlayerHitRpc, player.GetPath());
 

@@ -88,7 +88,7 @@ public partial class PropHuntSupervisor
 
     private void ShowEndGameUi(bool propsWon, bool timedOut)
     {
-        foreach (var player in room.Players.Values)
+        foreach (var player in Room.Players.Values)
         {
             var body = PlayerBodies.Find(body => body.GetMultiplayerAuthority() == player.Value.PeerId);
             var node = playerListItem.Instantiate<PlayerListItem>();
@@ -129,7 +129,7 @@ public partial class PropHuntSupervisor
     private void UiRestart()
     {
         if (!gameFinished) return;
-        room.SetPlayerState(new PlayerStateInLobby(false));
+        Room.SetPlayerState(new PlayerStateInLobby(false));
         GameManager.SetGameState(GameManager.GameState.Lobby);
     }
 

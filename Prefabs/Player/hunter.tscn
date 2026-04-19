@@ -49,6 +49,11 @@ fov = 90.0
 [node name="Gun" parent="Camera" unique_id=1617225450 instance=ExtResource("2_svrpp")]
 transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0.491, -0.384, -0.949)
 
+[node name="RayCast" type="RayCast3D" parent="Camera" unique_id=1365758387]
+target_position = Vector3(0, 0, -1000)
+collision_mask = 23
+debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
+
 [node name="HUD" type="MarginContainer" parent="." unique_id=1893787552]
 anchors_preset = 15
 anchor_right = 1.0
@@ -62,13 +67,24 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="Crosshair" type="Control" parent="HUD" unique_id=203865776]
+[node name="Center" type="VBoxContainer" parent="HUD" unique_id=1992554452]
+layout_mode = 2
+size_flags_vertical = 4
+alignment = 1
+
+[node name="DummyLabel" type="Label" parent="HUD/Center" unique_id=92405162]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 1
+
+[node name="Crosshair" type="Control" parent="HUD/Center" unique_id=203865776]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 1
 
-[node name="Crosshair" type="TextureRect" parent="HUD/Crosshair" unique_id=1502892851]
+[node name="Crosshair" type="TextureRect" parent="HUD/Center/Crosshair" unique_id=1502892851]
 material = SubResource("ShaderMaterial_1qbrv")
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 1
@@ -88,7 +104,7 @@ size_flags_vertical = 4
 texture = ExtResource("2_qudki")
 expand_mode = 3
 
-[node name="CrosshairHit" type="TextureRect" parent="HUD/Crosshair" unique_id=1945299463]
+[node name="CrosshairHit" type="TextureRect" parent="HUD/Center/Crosshair" unique_id=1945299463]
 modulate = Color(1, 1, 1, 0)
 self_modulate = Color(1, 0, 0, 1)
 custom_minimum_size = Vector2(30, 30)
@@ -110,6 +126,15 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("2_qudki")
 expand_mode = 3
+
+[node name="PlayerUsername" type="Label" parent="HUD/Center" unique_id=1213078939]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 1
+horizontal_alignment = 1
+vertical_alignment = 1
+max_lines_visible = 1
 
 [node name="Health" type="MarginContainer" parent="HUD" unique_id=366987484]
 layout_mode = 2

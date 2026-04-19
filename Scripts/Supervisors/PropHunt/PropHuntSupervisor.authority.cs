@@ -20,20 +20,20 @@ public partial class PropHuntSupervisor
 
     private void ChooseHunters()
     {
-        if (room.Configuration.HunterCount > 0)
+        if (Room.Configuration.HunterCount > 0)
         {
-            var ids = room.Players.Keys.ToArray();
+            var ids = Room.Players.Keys.ToArray();
             Random.Shared.Shuffle(ids);
-            var hunterIds = ids[..room.Configuration.HunterCount];
+            var hunterIds = ids[..Room.Configuration.HunterCount];
             Rpc(nameof(RpcHuntersChose), hunterIds);
         }
         else
-            Rpc(nameof(RpcHuntersChose), room.Configuration.Hunters);
+            Rpc(nameof(RpcHuntersChose), Room.Configuration.Hunters);
     }
 
     private void SpawnProps(int[] hunters)
     {
-        foreach (var player in room.Players)
+        foreach (var player in Room.Players)
         {
             if (hunters.Contains(player.Key)) continue;
             Spawner.SpawnPlayer(player.Key, false); // TODO: Add spawn points

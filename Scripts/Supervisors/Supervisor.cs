@@ -18,7 +18,7 @@ public abstract partial class Supervisor : Node
     private Node behideObjectsParent = null!;
     [Export] protected PlayerSpawner Spawner = null!;
 
-    protected Room room = null!;
+    public Room Room = null!;
     protected readonly List<PlayerBody> PlayerBodies = [];
 
     public override void _EnterTree()
@@ -29,13 +29,13 @@ public abstract partial class Supervisor : Node
             log.Error("Cannot set up supervisor: Not in a room");
             return;
         }
-        room = GameManager.Room.Room;
+        Room = GameManager.Room.Room;
 
         // Set authority
         int firstPlayerToJoin;
         try
         {
-            firstPlayerToJoin = room.Players.Min(kv => kv.Key);
+            firstPlayerToJoin = Room.Players.Min(kv => kv.Key);
         }
         catch (Exception)
         {
@@ -58,7 +58,7 @@ public abstract partial class Supervisor : Node
         // Wait players to be ready
         Task.Run(async () =>
         {
-            var tasks = room.Players.Select(kv => kv.Value
+            var tasks = Room.Players.Select(kv => kv.Value
                 .Where(p => p.State is PlayerStateInGame)
                 .Take(1)
                 .ToTask()
@@ -74,8 +74,8 @@ public abstract partial class Supervisor : Node
     private void SetReadyWhenSceneLoaded()
     {
         var sceneNode = GetTree().CurrentScene;
-        if (sceneNode.IsNodeReady()) room.SetPlayerState(new PlayerStateInGame());
-        else sceneNode.Ready += () => room.SetPlayerState(new PlayerStateInGame());
+        if (sceneNode.IsNodeReady()) Room.SetPlayerState(new PlayerStateInGame());
+        else sceneNode.Ready += () => Room.SetPlayerState(new PlayerStateInGame());
     }
 
     protected virtual void PlayersReady()
