@@ -5,6 +5,6 @@ namespace Behide.Game;
 [SceneTree]
 public partial class Settings : VBoxContainer
 {
-    public double HorizontalSensitivity => _.HorizontalSensitivity.Controls.Slider.Value;
-    public double VerticalSensitivity => _.VerticalSensitivity.Controls.Slider.Value;
+    public double HorizontalSensitivity => _.HorizontalSensitivity.GetValue();
+    public double VerticalSensitivity => _.VerticalSensitivity.GetValue();
 }

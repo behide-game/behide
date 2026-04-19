@@ -8,7 +8,7 @@ public abstract partial class PlayerBody
 
     [ExportGroup("Camera rotation")]
     [Export] private float maxRotation = Mathf.DegToRad(90);
-    private static float HorizontalSensitivity => (float)(0.005 * GameManager.Settings.HorizontalSensitivity);
+    private static float HorizontalSensitivity => (float)(0.005 * (GameManager.Settings.HorizontalSensitivity) / 10);
     private static float VerticalSensitivity => (float)(0.005 * GameManager.Settings.VerticalSensitivity);
 
     [ExportGroup("Movements")]

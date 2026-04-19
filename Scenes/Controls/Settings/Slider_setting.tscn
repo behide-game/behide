@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://cjob1jiwft1io"]
+
+[ext_resource type="Script" uid="uid://c4yjku8x48nac" path="res://Scenes/Controls/Settings/SliderSetting.cs" id="1_eq0yt"]
+
+[node name="Slider Setting" type="VBoxContainer" unique_id=524009869]
+offset_right = 303.0
+offset_bottom = 58.0
+script = ExtResource("1_eq0yt")
+
+[node name="Name" type="Label" parent="." unique_id=1326298358]
+custom_minimum_size = Vector2(0, 23)
+layout_mode = 2
+text = "Placeholder"
+autowrap_mode = 3
+
+[node name="Controls" type="HBoxContainer" parent="." unique_id=366113109]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="Controls" unique_id=1293254684]
+layout_mode = 2
+alignment = 1
+virtual_keyboard_type = 2
+
+[node name="Slider" type="HSlider" parent="Controls" unique_id=1674503285]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+
+[connection signal="text_changed" from="Controls/LineEdit" to="." method="OnTextChanged"]
+[connection signal="value_changed" from="Controls/Slider" to="." method="OnValueChanged"]
