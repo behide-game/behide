@@ -65,12 +65,12 @@ public partial class Settings : VBoxContainer
             return;
         }
 
-        var hSensi = config.GetValue("Controls", "horizontal_sensitivity", 1);
-        var vSensi = config.GetValue("Controls", "vertical_sensitivity", 1);
-        var fov = config.GetValue("Controls", "fov", 90);
-        nodes.HorizontalSensitivity.SetValue((double)hSensi);
-        nodes.VerticalSensitivity.SetValue((double)vSensi);
-        nodes.FOV.SetValue((double)fov);
+        var hSensi = (double)config.GetValue("Controls", "horizontal_sensitivity", 1);
+        var vSensi = (double)config.GetValue("Controls", "vertical_sensitivity", 1);
+        var fov = (double)config.GetValue("Controls", "fov", 90);
+        nodes.HorizontalSensitivity.SetValue(hSensi);
+        nodes.VerticalSensitivity.SetValue(vSensi);
+        nodes.FOV.SetValue(fov);
 
         var username = (string?)config.GetValueOrDefault("User", "username");
         nodes.Username.LineEdit.Text = username;
