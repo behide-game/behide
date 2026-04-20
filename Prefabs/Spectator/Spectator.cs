@@ -19,9 +19,9 @@ public partial class Spectator : CharacterBody3D
     [Export] private float deceleration = 9;
     [Export] private float mouseSensitivity = 0.01f;
 
-    private readonly CancellationTokenSource nodeAliceCts = new();
-    private CancellationToken NodeAliceCt => nodeAliceCts.Token;
-    public override void _ExitTree() => nodeAliceCts.Cancel();
+    private readonly CancellationTokenSource nodeAliveCts = new();
+    private CancellationToken NodeAliveCt => nodeAliveCts.Token;
+    public override void _ExitTree() => nodeAliveCts.Cancel();
 
     public void Enable()
     {
@@ -39,7 +39,7 @@ public partial class Spectator : CharacterBody3D
         nodes.Camera.Get().Fov = (float)GameManager.Settings.Fov;
         GameManager.Settings.Changed.Subscribe(
             _ => nodes.Camera.Get().Fov = (float)GameManager.Settings.Fov,
-            NodeAliceCt
+            NodeAliveCt
         );
     }
 
