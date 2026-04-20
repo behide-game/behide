@@ -1,9 +1,18 @@
 [gd_scene format=3 uid="uid://1t0iy2imhdg4"]
 
 [ext_resource type="Script" uid="uid://cdmg4qsk6n7vj" path="res://Prefabs/Spectator/Spectator.cs" id="1_6po2o"]
+[ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="2_r1tvc"]
+[ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="3_bq1p5"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_6po2o"]
 radius = 0.57467264
+
+[sub_resource type="LabelSettings" id="LabelSettings_bi0sh"]
+font = ExtResource("2_r1tvc")
+font_size = 18
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bv34j"]
+shader = ExtResource("3_bq1p5")
 
 [node name="Spectator" type="CharacterBody3D" unique_id=195170206]
 collision_layer = 8
@@ -13,5 +22,59 @@ script = ExtResource("1_6po2o")
 [node name="Camera" type="Camera3D" parent="." unique_id=441094346]
 current = true
 
+[node name="RayCast" type="RayCast3D" parent="Camera" unique_id=1647716969]
+target_position = Vector3(0, 0, -1000)
+collision_mask = 7
+debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=338543086]
 shape = SubResource("SphereShape3D_6po2o")
+
+[node name="HUD" type="Control" parent="." unique_id=972443419]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+
+[node name="Center" type="VBoxContainer" parent="HUD" unique_id=79227349]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -40.5
+offset_bottom = 40.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+alignment = 1
+
+[node name="PlayerUsername" type="Label" parent="HUD/Center" unique_id=931648365]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 1
+label_settings = SubResource("LabelSettings_bi0sh")
+horizontal_alignment = 1
+vertical_alignment = 1
+max_lines_visible = 1
+
+[node name="Crosshair" type="Control" parent="HUD/Center" unique_id=1453797545]
+material = SubResource("ShaderMaterial_bv34j")
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 1
+
+[node name="DummyLabel" type="Label" parent="HUD/Center" unique_id=1289560690]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 1
+label_settings = SubResource("LabelSettings_bi0sh")

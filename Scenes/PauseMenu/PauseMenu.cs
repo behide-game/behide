@@ -9,39 +9,43 @@ public partial class PauseMenu : Control
     private Settings SettingsMenuUi => _.SettingsMenu;
     public Settings Settings => SettingsMenuUi;
 
-    private Input.MouseModeEnum mouseModeBefore;
+    public Input.MouseModeEnum MouseModeBefore;
 
     public override void _EnterTree()
     {
-        ShowBaseMenu();
+        SwitchToBaseMenu();
         SetVisible(false);
     }
 
-    public void ToggleMenu()
+    public new void Show()
     {
-        if (Visible)
-        {
-            SetVisible(false);
-            Input.MouseMode = mouseModeBefore;
-        }
-        else
-        {
-            SetVisible(true);
-            mouseModeBefore = Input.MouseMode;
-            if (Input.MouseMode != Input.MouseModeEnum.Visible)
-                Input.MouseMode = Input.MouseModeEnum.Visible;
-            MoveToFront();
-        }
-        ShowBaseMenu();
+        SetVisible(true);
+        MouseModeBefore = Input.MouseMode;
+        if (Input.MouseMode != Input.MouseModeEnum.Visible)
+            Input.MouseMode = Input.MouseModeEnum.Visible;
+        MoveToFront();
     }
 
-    private void ShowBaseMenu()
+    public new void Hide()
+    {
+        SetVisible(false);
+        Input.MouseMode = MouseModeBefore;
+    }
+
+    private void ToggleMenu()
+    {
+        if (Visible) Hide();
+        else Show();
+        SwitchToBaseMenu();
+    }
+
+    private void SwitchToBaseMenu()
     {
         BaseMenuUi.SetVisible(true);
         SettingsMenuUi.SetVisible(false);
     }
 
-    public void ShowSettingsMenu()
+    public void SwitchToSettingsMenu()
     {
         BaseMenuUi.SetVisible(false);
         SettingsMenuUi.SetVisible(true);

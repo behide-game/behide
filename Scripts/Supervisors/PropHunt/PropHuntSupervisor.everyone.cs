@@ -21,7 +21,9 @@ public partial class PropHuntSupervisor
             }
             else
             {
-                Input.MouseMode = Input.MouseModeEnum.Captured;
+                if (GameManager.PauseMenu.Visible) GameManager.PauseMenu.MouseModeBefore = Input.MouseModeEnum.Captured;
+                else Input.MouseMode = Input.MouseModeEnum.Captured;
+
                 PreGameProp.CallDeferred(CanvasItem.MethodName.Show);
                 IsPropLabel.CallDeferred(CanvasItem.MethodName.Show);
             }
@@ -39,7 +41,10 @@ public partial class PropHuntSupervisor
             if (hunterPeerIds is null)
                 log.Error("Cannot determine if we are hunter, hunterPeerIds were null");
             else if (hunterPeerIds.Contains(Multiplayer.GetUniqueId()))
-                Input.MouseMode = Input.MouseModeEnum.Captured;
+            {
+                if (GameManager.PauseMenu.Visible) GameManager.PauseMenu.MouseModeBefore = Input.MouseModeEnum.Captured;
+                else Input.MouseMode = Input.MouseModeEnum.Captured;
+            }
         };
 
         InGameCountdown.TimeElapsed += GameTimeout;
@@ -71,6 +76,8 @@ public partial class PropHuntSupervisor
     {
         InGameCountdown.TimeElapsed -= GameTimeout;
         gameFinished = true;
+        Input.MouseMode = Input.MouseModeEnum.Visible;
+        GameManager.PauseMenu.MouseModeBefore = Input.MouseModeEnum.Visible;
 
         // Change UI
         ShowEndGameUi(propsWon, timedOut);
@@ -88,7 +95,7 @@ public partial class PropHuntSupervisor
 
     private void ShowEndGameUi(bool propsWon, bool timedOut)
     {
-        foreach (var player in room.Players.Values)
+        foreach (var player in Room.Players.Values)
         {
             var body = PlayerBodies.Find(body => body.GetMultiplayerAuthority() == player.Value.PeerId);
             var node = playerListItem.Instantiate<PlayerListItem>();
@@ -129,7 +136,7 @@ public partial class PropHuntSupervisor
     private void UiRestart()
     {
         if (!gameFinished) return;
-        room.SetPlayerState(new PlayerStateInLobby(false));
+        Room.SetPlayerState(new PlayerStateInLobby(false));
         GameManager.SetGameState(GameManager.GameState.Lobby);
     }
 

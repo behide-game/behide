@@ -52,8 +52,8 @@ text = "Back"
 visible = false
 layout_mode = 1
 
-[connection signal="pressed" from="Pause Menu/Settings" to="." method="ShowSettingsMenu"]
+[connection signal="pressed" from="Pause Menu/Settings" to="." method="SwitchToSettingsMenu"]
 [connection signal="pressed" from="Pause Menu/Back" to="." method="ToggleMenu"]
-[connection signal="pressed" from="Settings Menu/Back" to="." method="ShowBaseMenu"]
+[connection signal="pressed" from="Settings Menu/Back" to="." method="SwitchToBaseMenu"]
 
 [editable path="Settings Menu"]

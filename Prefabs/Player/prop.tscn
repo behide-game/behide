@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://iwqa8xgo1ip3"]
 
+[ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="2_7hld8"]
 [ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="2_ky5tt"]
 [ext_resource type="Script" uid="uid://bnid2w67fk441" path="res://Prefabs/Player/PropBody.cs" id="2_m4go7"]
 
@@ -14,6 +15,10 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_j2ufq"]
+font = ExtResource("2_7hld8")
+font_size = 18
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7hld8"]
 shader = ExtResource("2_ky5tt")
@@ -66,14 +71,36 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="Crosshair" type="TextureRect" parent="HUD" unique_id=1741969151]
+[node name="Center" type="VBoxContainer" parent="HUD" unique_id=44179709]
+layout_mode = 2
+size_flags_vertical = 4
+alignment = 1
+
+[node name="PlayerUsername" type="Label" parent="HUD/Center" unique_id=907778670]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 1
+label_settings = SubResource("LabelSettings_j2ufq")
+horizontal_alignment = 1
+vertical_alignment = 1
+max_lines_visible = 1
+
+[node name="Crosshair" type="TextureRect" parent="HUD/Center" unique_id=1741969151]
 material = SubResource("ShaderMaterial_7hld8")
-custom_minimum_size = Vector2(30, 30)
+custom_minimum_size = Vector2(25, 25)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = SubResource("CompressedTexture2D_52r4e")
 expand_mode = 3
+
+[node name="DummyLabel" type="Label" parent="HUD/Center" unique_id=21930989]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 1
+label_settings = SubResource("LabelSettings_j2ufq")
 
 [node name="Health" type="MarginContainer" parent="HUD" unique_id=1322917847]
 layout_mode = 2

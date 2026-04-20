@@ -14,7 +14,7 @@ public abstract partial class PlayerBody : CharacterBody3D
     protected Control Hud = null!;
     protected ProgressBar HealthBar = null!;
     protected Label HealthLabel = null!;
-    private Supervisor supervisor = null!;
+    protected Supervisor Supervisor = null!;
     public MultiplayerSynchronizer PositionSynchronizer = null!;
 
     public double Health
@@ -51,8 +51,8 @@ public abstract partial class PlayerBody : CharacterBody3D
         SetVisible(false);
         Hud.Visible = false;
         SetProcessMode(ProcessModeEnum.Disabled); // Disable collisions
-        supervisor.PlayerDied(this);
-        if (IsMultiplayerAuthority()) supervisor.LocalPlayerDied(this);
+        Supervisor.PlayerDied(this);
+        if (IsMultiplayerAuthority()) Supervisor.LocalPlayerDied(this);
     }
 
     public void Freeze()
@@ -66,7 +66,7 @@ public abstract partial class PlayerBody : CharacterBody3D
     public override void _EnterTree()
     {
         if (GameManager.Supervisor is null) log.Error("Supervisor is null");
-        else supervisor = GameManager.Supervisor;
+        else Supervisor = GameManager.Supervisor;
 
         InitializeNodes();
         Health = 1;

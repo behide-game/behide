@@ -28,6 +28,11 @@ public abstract partial class PlayerBody
     private void ProcessPhysics(double delta)
     {
         if (!IsMultiplayerAuthority()) return;
+        if (!Alive || freeze)
+        {
+            Velocity = Vector3.Zero;
+            return;
+        }
         var velocity = Velocity;
 
         // Add the gravity.
@@ -39,9 +44,9 @@ public abstract partial class PlayerBody
         }
 
         // Add movements
-        if (!Alive || freeze || Input.MouseMode != Input.MouseModeEnum.Captured)
+        if (Input.MouseMode != Input.MouseModeEnum.Captured)
         {
-            Velocity = Vector3.Zero;
+            Velocity = velocity;
             return;
         }
 
