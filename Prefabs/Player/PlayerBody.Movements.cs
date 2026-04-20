@@ -22,6 +22,7 @@ public abstract partial class PlayerBody
     // Rotation accumulators
     private float rotationX;
     private float rotationY;
+    private float preLockRotationY;
     private bool jumping;
 
     // --- Movements ---
@@ -56,7 +57,11 @@ public abstract partial class PlayerBody
             InputActions.MoveForward,
             InputActions.MoveBack
         );
-        var direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+        var direction =
+            this is PropBody && Input.IsActionPressed(InputActions.Lock)
+                ? (CameraDisk.Transform.Rotated(new Vector3(0, 1, 0), Rotation.Y).Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized()
+                : (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+
         if (direction != Vector3.Zero)
         {
             velocity.X = direction.X * MoveSpeed * BaseMoveSpeed;
@@ -74,8 +79,16 @@ public abstract partial class PlayerBody
 
     private void ProcessRotation()
     {
-        SetRotation(new Vector3(0, rotationY, 0)); // Left / Right (rotate the whole player)
-        CameraDisk.SetRotation(new Vector3(rotationX, 0, 0)); // Up / Down (Rotate camera disk)
+        if (this is PropBody && Input.IsActionPressed(InputActions.Lock))
+        {
+            CameraDisk.SetRotation(new Vector3(rotationX, rotationY - preLockRotationY, 0)); // Not the visible body
+        }
+        else
+        {
+            SetRotation(new Vector3(0, rotationY, 0)); // Left / Right (rotate the whole player)
+            CameraDisk.SetRotation(new Vector3(rotationX, 0, 0)); // Up / Down (Rotate camera disk)
+            preLockRotationY = rotationY;
+        }
     }
     // Run only on the peer who has the authority.
     public override void _UnhandledInput(InputEvent rawEvent)
