@@ -47,6 +47,7 @@ public partial class Home : Node3D
         }
     }
 
+    private void RoomCodeSubmitted(string _) => JoinRoomButtonPressed();
     private async void JoinRoomButtonPressed()
     {
         try
