@@ -46,6 +46,7 @@ public partial class Settings : VBoxContainer
         ApplyConfig();
         nodes.HorizontalSensitivity.Changed.Subscribe(_ => changed.OnNext(Unit.Default));
         nodes.VerticalSensitivity.Changed.Subscribe(_ => changed.OnNext(Unit.Default));
+        nodes.Username.LineEdit.TextChanged += _ => changed.OnNext(Unit.Default);
 
         changed.Throttle(TimeSpan.FromSeconds(2)).Subscribe(_ => CallThreadSafe(nameof(Save)));
     }
