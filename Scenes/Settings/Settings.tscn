@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://mvi6mhwtencn"]
 
 [ext_resource type="Script" uid="uid://cltwxw8gox4fv" path="res://Scenes/Settings/Settings.cs" id="1_ytwd3"]
-[ext_resource type="PackedScene" uid="uid://cjob1jiwft1io" path="res://Scenes/Controls/Settings/Slider_setting.tscn" id="2_xlpa8"]
+[ext_resource type="PackedScene" uid="uid://cjob1jiwft1io" path="res://Scenes/Controls/Settings/SliderSetting.tscn" id="2_xlpa8"]
 
 [node name="Settings" type="VBoxContainer" unique_id=1584239507]
 anchors_preset = -1
