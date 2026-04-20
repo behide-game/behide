@@ -12,6 +12,7 @@
 [ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="10_c34b8"]
 [ext_resource type="PackedScene" uid="uid://c87ce673cqrsj" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.tscn" id="10_yncfe"]
 [ext_resource type="FontFile" uid="uid://xdtqfye7tlou" path="res://Assets/Fonts/Space Grotesk/SpaceGrotesk-VariableFont_wght.ttf" id="11_yncfe"]
+[ext_resource type="PackedScene" uid="uid://bneom7724ud4p" path="res://Prefabs/Supervisors/TabMenu.tscn" id="13_5do5a"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_6mxck"]
 font_size = 20
@@ -381,6 +382,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 flat = true
+
+[node name="TabMenu" parent="UI" unique_id=2035772765 instance=ExtResource("13_5do5a")]
+visible = false
+layout_mode = 1
 
 [connection signal="pressed" from="UI/End-game/Buttons/Restart/Button" to="." method="UiRestart"]
 [connection signal="pressed" from="UI/End-game/Buttons/Quit/Button" to="." method="UiQuit"]

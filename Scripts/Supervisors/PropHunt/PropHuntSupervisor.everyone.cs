@@ -12,7 +12,7 @@ public partial class PropHuntSupervisor
         base._EnterTree();
 
         // Show UI
-        huntersChose += (_, hunters) =>
+        HuntersChose += (_, hunters) =>
         {
             if (hunters.Contains(Multiplayer.GetUniqueId()))
             {
@@ -59,6 +59,7 @@ public partial class PropHuntSupervisor
 
     public override void LocalPlayerDied(PlayerBody playerBody)
     {
+        base.LocalPlayerDied(playerBody);
         if (gameFinished) return;
         Spectator.Enable();
     }
@@ -67,7 +68,7 @@ public partial class PropHuntSupervisor
     public void RpcHuntersChose(int[] peerIds)
     {
         hunterPeerIds = peerIds;
-        huntersChose?.Invoke(null, peerIds);
+        HuntersChose?.Invoke(null, peerIds);
         log.Information("Hunters were chose (PeerIds: {PeerIds})", peerIds);
     }
 
@@ -116,6 +117,7 @@ public partial class PropHuntSupervisor
         }
         InGame.Hide();
         EndGame.Show();
+        nodes.UI.TabMenu.QueueFree();
         if (timedOut) TimedOut.Show();
         if (propsWon) PropsWonLabel.Show();
         else HunterWinLabel.Show();

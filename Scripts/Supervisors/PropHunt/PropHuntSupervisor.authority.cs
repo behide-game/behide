@@ -9,7 +9,7 @@ public partial class PropHuntSupervisor
         base.PlayersReady();
         if (!IsMultiplayerAuthority()) return;
 
-        huntersChose += (_, hunters) =>
+        HuntersChose += (_, hunters) =>
         {
             SpawnProps(hunters);
             PreGameCountdown.StartCountdown(preGameDuration); // Start countdown
