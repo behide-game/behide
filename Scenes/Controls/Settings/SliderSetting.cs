@@ -14,10 +14,13 @@ public partial class SliderSetting : VBoxContainer
     public readonly Subject<double> Changed = new();
     public double Value => Slider.Value;
 
+    public override void _EnterTree() => LineEdit.Text = Slider.Value.ToString(numberFormat);
+
     public void SetValue(double value)
     {
-        Slider.SetValueNoSignal(value);
-        LineEdit.Text = value.ToString(numberFormat);
+        var clampedValue = Math.Clamp(value, Slider.MinValue, Slider.MaxValue);
+        Slider.SetValueNoSignal(clampedValue);
+        LineEdit.Text = clampedValue.ToString(numberFormat);
     }
 
 
@@ -37,6 +40,6 @@ public partial class SliderSetting : VBoxContainer
         }
 
         Slider.Value = newValue;
-        Changed.OnNext(newValue);
+        Changed.OnNext(Slider.Value);
     }
 }
