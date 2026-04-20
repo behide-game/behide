@@ -89,4 +89,12 @@ public abstract partial class Supervisor : Node
 
     public virtual void PlayerDied(PlayerBody playerBody) { }
     public virtual void LocalPlayerDied(PlayerBody playerBody) { }
+
+    public Player? GetBodyPlayer(PlayerBody playerBody)
+    {
+        var peerId = playerBody.GetMultiplayerAuthority();
+        return Room.Players.TryGetValue(peerId, out var player)
+            ? player.Value
+            : null;
+    }
 }

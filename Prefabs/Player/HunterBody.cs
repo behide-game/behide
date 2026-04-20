@@ -35,9 +35,8 @@ public partial class HunterBody : PlayerBody
         // Set player name in HUD
         if (focusedObject is HunterBody hunterBody)
         {
-            var ownerPeerId = hunterBody.GetMultiplayerAuthority();
-            var ownerName = Supervisor.Room.Players[ownerPeerId].Value.Username;
-            _.HUD.Center.PlayerUsername.Text = ownerName;
+            var owner = Supervisor.GetBodyPlayer(hunterBody);
+            _.HUD.Center.PlayerUsername.Text = owner?.Username;
         }
         else
             _.HUD.Center.PlayerUsername.Text = string.Empty;
