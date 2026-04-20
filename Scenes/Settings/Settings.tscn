@@ -54,8 +54,8 @@ numberFormat = "0"
 text = "Field of view"
 
 [node name="Slider" parent="FOV/Controls" parent_id_path=PackedInt32Array(251094587, 366113109) index="1" unique_id=1674503285]
-min_value = 70.0
-max_value = 180.0
+min_value = 1.0
+max_value = 179.0
 step = 1.0
 value = 90.0
 

@@ -88,6 +88,7 @@ public abstract partial class PlayerBody : CharacterBody3D
         }
 
         Camera.MakeCurrent();
+        Camera.Fov = (float)GameManager.Settings.Fov;
         GameManager.Settings.Changed.Subscribe(
             _ => Camera.Fov = (float)GameManager.Settings.Fov,
             NodeAliceCt

@@ -36,6 +36,7 @@ public partial class Spectator : CharacterBody3D
         if (GameManager.Supervisor is null) log.Error("Supervisor is null");
         else supervisor = GameManager.Supervisor;
 
+        nodes.Camera.Get().Fov = (float)GameManager.Settings.Fov;
         GameManager.Settings.Changed.Subscribe(
             _ => nodes.Camera.Get().Fov = (float)GameManager.Settings.Fov,
             NodeAliceCt
