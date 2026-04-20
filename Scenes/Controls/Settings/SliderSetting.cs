@@ -6,6 +6,8 @@ namespace Behide.UI.Controls;
 [SceneTree("Slider_setting.tscn")]
 public partial class SliderSetting : VBoxContainer
 {
+    [Export] private string numberFormat = "0.00";
+
     private LineEdit LineEdit => _.Controls.LineEdit;
     private Slider Slider => _.Controls.Slider;
 
@@ -15,13 +17,13 @@ public partial class SliderSetting : VBoxContainer
     public void SetValue(double value)
     {
         Slider.SetValueNoSignal(value);
-        LineEdit.Text = value.ToString("0.00");
+        LineEdit.Text = value.ToString(numberFormat);
     }
 
 
     private void SliderValueChanged(double value)
     {
-        LineEdit.Text = value.ToString("0.00");
+        LineEdit.Text = value.ToString(numberFormat);
         Changed.OnNext(value);
     }
 
@@ -30,7 +32,7 @@ public partial class SliderSetting : VBoxContainer
         var text = LineEdit.Text;
         if (!double.TryParse(text, out var newValue))
         {
-            LineEdit.Text = Value.ToString("0.00");
+            LineEdit.Text = Value.ToString(numberFormat);
             return;
         }
 

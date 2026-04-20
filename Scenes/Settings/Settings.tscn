@@ -30,9 +30,6 @@ layout_mode = 2
 [node name="Name" parent="Horizontal Sensitivity" index="0" unique_id=1326298358]
 text = "Horizontal sensitivity"
 
-[node name="LineEdit" parent="Horizontal Sensitivity/Controls" parent_id_path=PackedInt32Array(524009869, 366113109) index="0" unique_id=1293254684]
-text = "1"
-
 [node name="Slider" parent="Horizontal Sensitivity/Controls" parent_id_path=PackedInt32Array(524009869, 366113109) index="1" unique_id=1674503285]
 min_value = 0.1
 max_value = 2.0
@@ -44,13 +41,23 @@ layout_mode = 2
 [node name="Name" parent="Vertical Sensitivity" index="0" unique_id=1326298358]
 text = "Vertical sensitivity"
 
-[node name="LineEdit" parent="Vertical Sensitivity/Controls" parent_id_path=PackedInt32Array(1272801265, 366113109) index="0" unique_id=1293254684]
-text = "1"
-
 [node name="Slider" parent="Vertical Sensitivity/Controls" parent_id_path=PackedInt32Array(1272801265, 366113109) index="1" unique_id=1674503285]
 min_value = 0.1
 max_value = 2.0
 value = 1.0
+
+[node name="FOV" parent="." unique_id=251094587 instance=ExtResource("2_xlpa8")]
+layout_mode = 2
+numberFormat = "0"
+
+[node name="Name" parent="FOV" index="0" unique_id=1326298358]
+text = "Field of view"
+
+[node name="Slider" parent="FOV/Controls" parent_id_path=PackedInt32Array(251094587, 366113109) index="1" unique_id=1674503285]
+min_value = 70.0
+max_value = 180.0
+step = 1.0
+value = 90.0
 
 [node name="Back" type="Button" parent="." unique_id=595488265]
 layout_mode = 2
@@ -59,3 +66,4 @@ text = "Back"
 
 [editable path="Horizontal Sensitivity"]
 [editable path="Vertical Sensitivity"]
+[editable path="FOV"]

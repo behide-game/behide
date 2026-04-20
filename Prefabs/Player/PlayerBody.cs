@@ -41,11 +41,15 @@ public abstract partial class PlayerBody : CharacterBody3D
 
     private bool freeze;
     public bool Alive = true;
+    private readonly CancellationTokenSource nodeAliceCts = new();
+    private CancellationToken NodeAliceCt => nodeAliceCts.Token;
+    public override void _ExitTree() => nodeAliceCts.Cancel();
 
     private void Died()
     {
         Alive = false;
         SetVisible(false);
+        Hud.Visible = false;
         SetProcessMode(ProcessModeEnum.Disabled); // Disable collisions
         supervisor.PlayerDied(this);
         if (IsMultiplayerAuthority()) supervisor.LocalPlayerDied(this);
@@ -77,8 +81,17 @@ public abstract partial class PlayerBody : CharacterBody3D
         Transform = transform;
 
         // Only when we are the authority
-        if (IsMultiplayerAuthority()) Camera.MakeCurrent();
-        else Hud.Visible = false;
+        if (!IsMultiplayerAuthority())
+        {
+            Hud.Visible = false;
+            return;
+        }
+
+        Camera.MakeCurrent();
+        GameManager.Settings.Changed.Subscribe(
+            _ => Camera.Fov = (float)GameManager.Settings.Fov,
+            NodeAliceCt
+        );
     }
 
     // --- Movements ---

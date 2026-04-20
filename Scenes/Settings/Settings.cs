@@ -28,8 +28,6 @@ internal static class ConfigFileExtensions
 [SceneTree(root: "nodes")]
 public partial class Settings : VBoxContainer
 {
-    public double HorizontalSensitivity => nodes.HorizontalSensitivity.Value;
-    public double VerticalSensitivity => nodes.VerticalSensitivity.Value;
     public string? GetUsername()
     {
         var lineEditText = nodes.Username.LineEdit.Text;
@@ -37,18 +35,25 @@ public partial class Settings : VBoxContainer
             ? null
             : lineEditText;
     }
+    public double HorizontalSensitivity => nodes.HorizontalSensitivity.Value;
+    public double VerticalSensitivity => nodes.VerticalSensitivity.Value;
+    public double Fov => nodes.FOV.Value;
 
     private readonly ILogger log = Log.CreateLogger("Settings");
-    private readonly Subject<Unit> changed = new();
+    public readonly Subject<Unit> Changed = new();
 
     public override void _EnterTree()
     {
         ApplyConfig();
-        nodes.HorizontalSensitivity.Changed.Subscribe(_ => changed.OnNext(Unit.Default));
-        nodes.VerticalSensitivity.Changed.Subscribe(_ => changed.OnNext(Unit.Default));
-        nodes.Username.LineEdit.TextChanged += _ => changed.OnNext(Unit.Default);
 
-        changed.Throttle(TimeSpan.FromSeconds(2)).Subscribe(_ => CallThreadSafe(nameof(Save)));
+        var change = (double _) => Changed.OnNext(Unit.Default);
+
+        nodes.HorizontalSensitivity.Changed.Subscribe(change);
+        nodes.VerticalSensitivity.Changed.Subscribe(change);
+        nodes.FOV.Changed.Subscribe(change);
+        nodes.Username.LineEdit.TextChanged += _ => change.Invoke(0.0);
+
+        Changed.Throttle(TimeSpan.FromSeconds(2)).Subscribe(_ => CallThreadSafe(nameof(Save)));
     }
 
     private void ApplyConfig()
@@ -60,12 +65,14 @@ public partial class Settings : VBoxContainer
             return;
         }
 
-        var hSensi = config.GetValueOrDefault("Controls", "horizontal_sensitivity");
-        var vSensi = config.GetValueOrDefault("Controls", "vertical_sensitivity");
+        var hSensi = config.GetValue("Controls", "horizontal_sensitivity", 1);
+        var vSensi = config.GetValue("Controls", "vertical_sensitivity", 1);
+        var fov = config.GetValue("Controls", "fov", 90);
         nodes.HorizontalSensitivity.SetValue((double)hSensi);
         nodes.VerticalSensitivity.SetValue((double)vSensi);
+        nodes.FOV.SetValue((double)fov);
 
-        var username = (string)config.GetValueOrDefault("User", "username");
+        var username = (string?)config.GetValueOrDefault("User", "username");
         nodes.Username.LineEdit.Text = username;
     }
 
@@ -74,7 +81,8 @@ public partial class Settings : VBoxContainer
         var config = new ConfigFile();
         config.SetValue("Controls", "horizontal_sensitivity", HorizontalSensitivity);
         config.SetValue("Controls", "vertical_sensitivity", VerticalSensitivity);
-        if (GetUsername() is { } username) config.SetValue("User", "username", username);
+        config.SetValue("Controls", "fov", Fov);
+        config.SetValue("User", "username", GetUsername() ?? string.Empty);
 
         var err = config.Save("user://settings.cfg");
         if (err == Error.Ok) return;

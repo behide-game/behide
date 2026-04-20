@@ -3,7 +3,7 @@ using Godot;
 
 namespace Behide.Prefabs.Spectator;
 
-[SceneTree]
+[SceneTree(root: "nodes")]
 public partial class Spectator : CharacterBody3D
 {
     private bool enabled;
@@ -12,13 +12,25 @@ public partial class Spectator : CharacterBody3D
     [Export] private float deceleration = 9;
     [Export] private float mouseSensitivity = 0.01f;
 
+    private readonly CancellationTokenSource nodeAliceCts = new();
+    private CancellationToken NodeAliceCt => nodeAliceCts.Token;
+    public override void _ExitTree() => nodeAliceCts.Cancel();
+
     public void Enable()
     {
-        _.Camera.MakeCurrent();
+        nodes.Camera.MakeCurrent();
         enabled = true;
     }
 
     public void Disable() => enabled = false;
+
+    public override void _EnterTree()
+    {
+        GameManager.Settings.Changed.Subscribe(
+            _ => nodes.Camera.Fov = (float)GameManager.Settings.Fov,
+            NodeAliceCt
+        );
+    }
 
     public override void _UnhandledInput(InputEvent rawEvent)
     {
