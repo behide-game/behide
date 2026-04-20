@@ -13,7 +13,8 @@ public partial class Home : Node3D
 
     private void SettingsButtonPressed()
     {
-        log.Warning("Not implemented"); // TODO
+        GameManager.PauseMenu.ToggleMenu();
+        GameManager.PauseMenu.ShowSettingsMenu();
     }
 
     private async void QuitButtonPressed()

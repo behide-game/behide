@@ -3,7 +3,7 @@ using Godot;
 
 namespace Behide.Prefabs.Spectator;
 
-[SceneTree]
+[SceneTree(root: "nodes")]
 public partial class Spectator : CharacterBody3D
 {
     private bool enabled;
@@ -12,34 +12,32 @@ public partial class Spectator : CharacterBody3D
     [Export] private float deceleration = 9;
     [Export] private float mouseSensitivity = 0.01f;
 
+    private readonly CancellationTokenSource nodeAliceCts = new();
+    private CancellationToken NodeAliceCt => nodeAliceCts.Token;
+    public override void _ExitTree() => nodeAliceCts.Cancel();
+
     public void Enable()
     {
-        _.Camera.MakeCurrent();
-        if (Input.MouseMode != Input.MouseModeEnum.Captured)
-            Input.MouseMode = Input.MouseModeEnum.Captured;
+        nodes.Camera.MakeCurrent();
         enabled = true;
     }
 
-    public void Disable()
+    public void Disable() => enabled = false;
+
+    public override void _EnterTree()
     {
-        enabled = false;
-        if (Input.MouseMode != Input.MouseModeEnum.Visible)
-            Input.MouseMode = Input.MouseModeEnum.Visible;
+        GameManager.Settings.Changed.Subscribe(
+            _ => nodes.Camera.Fov = (float)GameManager.Settings.Fov,
+            NodeAliceCt
+        );
     }
 
-    public override void _Input(InputEvent rawEvent)
+    public override void _UnhandledInput(InputEvent rawEvent)
     {
-        base._Input(rawEvent);
         if (!enabled) return;
+        if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
-        // Escape
-        if (rawEvent.IsActionPressed(BuiltinInputActions.UiCancel))
-            Input.MouseMode = Input.MouseMode == Input.MouseModeEnum.Captured
-                ? Input.MouseModeEnum.Visible
-                : Input.MouseModeEnum.Captured;
-
-        if (rawEvent is InputEventMouseMotion mouseMotion
-            && Input.MouseMode == Input.MouseModeEnum.Captured)
+        if (rawEvent is InputEventMouseMotion mouseMotion)
         {
             RotateY(-mouseMotion.Relative.X * mouseSensitivity);
 
@@ -54,6 +52,7 @@ public partial class Spectator : CharacterBody3D
     {
         base._PhysicsProcess(delta);
         if (!enabled) return;
+        if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
         var horizontalDirection = Input.GetVector(
             InputActions.MoveLeft,

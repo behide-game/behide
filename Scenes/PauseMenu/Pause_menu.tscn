@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://dqn4mywiq71bc"]
+
+[ext_resource type="Script" uid="uid://bccs3yyeq7del" path="res://Scenes/PauseMenu/PauseMenu.cs" id="1_vd4nb"]
+[ext_resource type="PackedScene" uid="uid://mvi6mhwtencn" path="res://Scenes/Settings/Settings.tscn" id="2_jpxof"]
+[ext_resource type="Shader" uid="uid://baf1p55idhp1q" path="res://Scenes/PauseMenu/blur.gdshader" id="2_qu44q"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1g8c7"]
+shader = ExtResource("2_qu44q")
+shader_parameter/lod = 3.0000001425
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qu44q"]
+bg_color = Color(11.706441, 11.706441, 11.706441, 1)
+
+[node name="Pause Menu" type="Control" unique_id=1490677513]
+z_index = 10
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vd4nb")
+
+[node name="Background" type="Panel" parent="." unique_id=53345119]
+material = SubResource("ShaderMaterial_1g8c7")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qu44q")
+
+[node name="Pause Menu" type="VBoxContainer" parent="." unique_id=107834565]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.35
+anchor_top = 0.15
+anchor_right = 0.65
+anchor_bottom = 0.85
+grow_vertical = 2
+
+[node name="Settings" type="Button" parent="Pause Menu" unique_id=1823169428]
+layout_mode = 2
+text = "Settings"
+
+[node name="Back" type="Button" parent="Pause Menu" unique_id=1526716928]
+layout_mode = 2
+text = "Back"
+
+[node name="Settings Menu" parent="." unique_id=1584239507 instance=ExtResource("2_jpxof")]
+visible = false
+layout_mode = 1
+
+[connection signal="pressed" from="Pause Menu/Settings" to="." method="ShowSettingsMenu"]
+[connection signal="pressed" from="Pause Menu/Back" to="." method="ToggleMenu"]
+[connection signal="pressed" from="Settings Menu/Back" to="." method="ShowBaseMenu"]
+
+[editable path="Settings Menu"]

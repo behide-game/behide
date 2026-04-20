@@ -8,8 +8,8 @@ public abstract partial class PlayerBody
 
     [ExportGroup("Camera rotation")]
     [Export] private float maxRotation = Mathf.DegToRad(90);
-    [Export] private float verticalSensitivity = 0.005f;
-    [Export] private float horizontalSensitivity = 0.005f;
+    private static float HorizontalSensitivity => (float)(0.005 * GameManager.Settings.HorizontalSensitivity);
+    private static float VerticalSensitivity => (float)(0.005 * GameManager.Settings.VerticalSensitivity);
 
     [ExportGroup("Movements")]
     private float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
@@ -39,7 +39,7 @@ public abstract partial class PlayerBody
         }
 
         // Add movements
-        if (!Alive || freeze)
+        if (!Alive || freeze || Input.MouseMode != Input.MouseModeEnum.Captured)
         {
             Velocity = Vector3.Zero;
             return;
@@ -73,26 +73,21 @@ public abstract partial class PlayerBody
         CameraDisk.SetRotation(new Vector3(rotationX, 0, 0)); // Up / Down (Rotate camera disk)
     }
     // Run only on the peer who has the authority.
-    public override void _Input(InputEvent rawEvent)
+    public override void _UnhandledInput(InputEvent rawEvent)
     {
         if (!IsMultiplayerAuthority()) return;
         if (!Alive || freeze) return;
-
-        // Escape
-        if (rawEvent.IsActionPressed(BuiltinInputActions.UiCancel))
-            Input.MouseMode = Input.MouseMode == Input.MouseModeEnum.Captured
-                ? Input.MouseModeEnum.Visible
-                : Input.MouseModeEnum.Captured;
+        if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
         // Rotation
-        if (rawEvent is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
+        if (rawEvent is InputEventMouseMotion mouseMotion)
         {
-            rotationY -= mouseMotion.Relative.X * verticalSensitivity;
-            rotationX -= mouseMotion.Relative.Y * horizontalSensitivity;
+            rotationY -= mouseMotion.Relative.X * VerticalSensitivity;
+            rotationX -= mouseMotion.Relative.Y * HorizontalSensitivity;
             rotationX = Math.Clamp(rotationX, -maxRotation, maxRotation);
         }
 
         // Jump
-        if (Input.IsActionJustPressed(InputActions.Jump) && IsOnFloor()) jumping = true;
+        if (Input.IsActionPressed(InputActions.Jump) && IsOnFloor()) jumping = true;
     }
 }

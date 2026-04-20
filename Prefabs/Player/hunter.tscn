@@ -66,6 +66,7 @@ theme_override_constants/margin_bottom = 30
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_filter = 1
 
 [node name="Crosshair" type="TextureRect" parent="HUD/Crosshair" unique_id=1502892851]
 material = SubResource("ShaderMaterial_1qbrv")
@@ -118,11 +119,13 @@ size_flags_vertical = 8
 [node name="HealthBar" type="ProgressBar" parent="HUD/Health" unique_id=295005643]
 custom_minimum_size = Vector2(130, 30)
 layout_mode = 2
+mouse_filter = 1
 show_percentage = false
 
 [node name="HealthLabel" type="Label" parent="HUD/Health" unique_id=1444016133]
 layout_mode = 2
 size_flags_vertical = 1
+mouse_filter = 1
 text = "100"
 horizontal_alignment = 1
 vertical_alignment = 1

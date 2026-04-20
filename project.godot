@@ -21,6 +21,7 @@ GameManager="*res://Scripts/GameManager.cs"
 WebRtcSignaling="*res://Scripts/Networking/Signaling.cs"
 RoomManager="*res://Scripts/RoomManager.cs"
 TimeSynchronizer="*res://Scripts/TimeSynchronizer.cs"
+PauseMenu="*uid://dqn4mywiq71bc"
 
 [display]
 
