@@ -25,7 +25,7 @@ public partial class Spectator : CharacterBody3D
 
     public void Enable()
     {
-        nodes.Camera.MakeCurrent();
+        nodes.Camera.Get().MakeCurrent();
         enabled = true;
     }
 
@@ -37,7 +37,7 @@ public partial class Spectator : CharacterBody3D
         else supervisor = GameManager.Supervisor;
 
         GameManager.Settings.Changed.Subscribe(
-            _ => nodes.Camera.Fov = (float)GameManager.Settings.Fov,
+            _ => nodes.Camera.Get().Fov = (float)GameManager.Settings.Fov,
             NodeAliceCt
         );
     }
