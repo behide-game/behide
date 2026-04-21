@@ -20,4 +20,4 @@ public abstract partial record PlayerState;
 [MemoryPackable]
 public partial record PlayerStateInLobby(bool IsReady) : PlayerState;
 [MemoryPackable]
-public partial record PlayerStateInGame : PlayerState;
+public partial record PlayerStateInGame(bool Alive) : PlayerState;

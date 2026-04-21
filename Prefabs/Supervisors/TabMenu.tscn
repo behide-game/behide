@@ -1,0 +1,124 @@
+[gd_scene format=3 uid="uid://bneom7724ud4p"]
+
+[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="1_42ftn"]
+[ext_resource type="Script" uid="uid://cn50gp20kp6vr" path="res://Scripts/Supervisors/PropHunt/TabMenu.cs" id="1_x860b"]
+[ext_resource type="FontFile" uid="uid://xdtqfye7tlou" path="res://Assets/Fonts/Space Grotesk/SpaceGrotesk-VariableFont_wght.ttf" id="2_x860b"]
+[ext_resource type="PackedScene" uid="uid://c87ce673cqrsj" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.tscn" id="3_03gih"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j3km1"]
+bg_color = Color(0.21230507, 0.21230477, 0.21230483, 0.74509805)
+
+[sub_resource type="FontVariation" id="FontVariation_5do5a"]
+base_font = ExtResource("2_x860b")
+variation_opentype = {
+2003265652: 700
+}
+opentype_features = {
+1936928817: 0,
+1936928818: 0,
+1936928819: 0,
+1936928820: 0,
+1936928821: 0
+}
+
+[sub_resource type="LabelSettings" id="LabelSettings_gnyxa"]
+font = SubResource("FontVariation_5do5a")
+font_size = 24
+font_color = Color(0, 0.117647, 0.176471, 1)
+
+[node name="Panel" type="Panel" unique_id=2035772765]
+z_index = 9
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_j3km1")
+script = ExtResource("1_x860b")
+playerListItem = ExtResource("3_03gih")
+
+[node name="TabMenu" type="MarginContainer" parent="." unique_id=867546079]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="PlayersWithRole" type="ScrollContainer" parent="TabMenu" unique_id=1926024900]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/scroll_hint_vertical_color = Color(0.7921569, 0.8784314, 0.8980392, 1)
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+scroll_hint_mode = 1
+
+[node name="Players" type="VBoxContainer" parent="TabMenu/PlayersWithRole" unique_id=486223519]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+theme_override_constants/separation = -20
+
+[node name="Hunters" type="MarginContainer" parent="TabMenu/PlayersWithRole/Players" unique_id=937767619]
+z_index = 1
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+script = ExtResource("1_42ftn")
+BezelSize = 20
+BorderRadius = 0
+Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
+
+[node name="PlayerList" type="VBoxContainer" parent="TabMenu/PlayersWithRole/Players/Hunters" unique_id=1784305201]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Title" type="MarginContainer" parent="TabMenu/PlayersWithRole/Players/Hunters/PlayerList" unique_id=380780554]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="TabMenu/PlayersWithRole/Players/Hunters/PlayerList/Title" unique_id=1621531393]
+layout_mode = 2
+mouse_filter = 1
+text = "Hunters"
+label_settings = SubResource("LabelSettings_gnyxa")
+uppercase = true
+
+[node name="Props" type="MarginContainer" parent="TabMenu/PlayersWithRole/Players" unique_id=2013564326]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+script = ExtResource("1_42ftn")
+BezelSize = 20
+BorderRadius = 0
+Color = Color(0.7921569, 0.8784314, 0.8980392, 1)
+
+[node name="PlayerList" type="VBoxContainer" parent="TabMenu/PlayersWithRole/Players/Props" unique_id=1785195603]
+layout_mode = 2
+
+[node name="Title" type="MarginContainer" parent="TabMenu/PlayersWithRole/Players/Props/PlayerList" unique_id=251027539]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="TabMenu/PlayersWithRole/Players/Props/PlayerList/Title" unique_id=1663170427]
+layout_mode = 2
+mouse_filter = 1
+text = "Props"
+label_settings = SubResource("LabelSettings_gnyxa")
+uppercase = true

@@ -2,7 +2,7 @@ using Godot;
 
 namespace Behide.Game.UI.PauseMenu;
 
-[SceneTree("Pause_menu.tscn")]
+[SceneTree]
 public partial class PauseMenu : Control
 {
     private Control BaseMenuUi => _.PauseMenu;

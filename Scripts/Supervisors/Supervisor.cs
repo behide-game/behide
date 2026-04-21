@@ -74,8 +74,8 @@ public abstract partial class Supervisor : Node
     private void SetReadyWhenSceneLoaded()
     {
         var sceneNode = GetTree().CurrentScene;
-        if (sceneNode.IsNodeReady()) Room.SetPlayerState(new PlayerStateInGame());
-        else sceneNode.Ready += () => Room.SetPlayerState(new PlayerStateInGame());
+        if (sceneNode.IsNodeReady()) Room.SetPlayerState(new PlayerStateInGame(true));
+        else sceneNode.Ready += () => Room.SetPlayerState(new PlayerStateInGame(true));
     }
 
     protected virtual void PlayersReady()
@@ -88,7 +88,8 @@ public abstract partial class Supervisor : Node
     public void PlayerSpawned(PlayerBody player) => PlayerBodies.Add(player);
 
     public virtual void PlayerDied(PlayerBody playerBody) { }
-    public virtual void LocalPlayerDied(PlayerBody playerBody) { }
+
+    public virtual void LocalPlayerDied(PlayerBody playerBody) => Room.SetPlayerState(new PlayerStateInGame(false));
 
     public Player? GetBodyPlayer(PlayerBody playerBody)
     {

@@ -31,6 +31,7 @@ theme_override_constants/margin_bottom = 10
 
 [node name="Username" type="Label" parent="Container/MarginUsername" unique_id=1100396652]
 layout_mode = 2
+mouse_filter = 1
 text = "username"
 label_settings = SubResource("LabelSettings_mt0eq")
 
@@ -48,5 +49,6 @@ Color = Color(0.74902, 0.0901961, 0.419608, 1)
 
 [node name="Label" type="Label" parent="Container/Ready" unique_id=1041698326]
 layout_mode = 2
+mouse_filter = 1
 text = "Not ready"
 label_settings = SubResource("LabelSettings_url6u")
