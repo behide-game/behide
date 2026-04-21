@@ -9,7 +9,7 @@ size = Vector3(2, 2.7, 0.4)
 
 [node name="wall_doorway2" parent="." unique_id=286437834 instance=ExtResource("1_jugs2")]
 
-[node name="wall_doorway_door" parent="wall_doorway2/wall_doorway" parent_id_path=PackedInt32Array(286437834, 280757824) index="0" unique_id=294459232]
+[node name="wall_doorway_door" parent="wall_doorway2/wall_doorway" parent_id_path=PackedInt32Array(286437834, 1972273267) index="0" unique_id=1825867775]
 transform = Transform3D(-0.320613, 0, -0.94721, 0, 1, 0, 0.94721, 0, -0.320613, -0.820099, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=869828316]

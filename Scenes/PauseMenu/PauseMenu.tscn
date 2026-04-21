@@ -57,3 +57,6 @@ layout_mode = 1
 [connection signal="pressed" from="Settings Menu/Back" to="." method="SwitchToBaseMenu"]
 
 [editable path="Settings Menu"]
+[editable path="Settings Menu/Horizontal Sensitivity"]
+[editable path="Settings Menu/Vertical Sensitivity"]
+[editable path="Settings Menu/FOV"]
