@@ -30,8 +30,8 @@ public partial class PropBody : PlayerBody
         Camera = _.CameraDisk.SpringArm3D.Camera;
         PositionSynchronizer = _.PositionSynchronizer;
         Hud = _.HUD;
-        HealthBar = _.HUD.Health.HealthBar;
-        HealthLabel = _.HUD.Health.HealthLabel;
+        HealthBar = _.HUD.BottomLeft.Health.HealthBar;
+        HealthLabel = _.HUD.BottomLeft.Health.HealthLabel;
 
         // PropBody nodes
         currentVisualNode = _.MeshInstance3D;
@@ -41,7 +41,6 @@ public partial class PropBody : PlayerBody
         supervisor = GetNode<PropHuntSupervisor>("/root/multiplayer/Supervisor");
 
         ShowLockedLogo(false);
-
         AdjustProperties();
     }
 
@@ -150,8 +149,5 @@ public partial class PropBody : PlayerBody
         cameraAdjustTween.Parallel().TweenProperty(CameraDisk, "scale", newScaleVector, cameraAdjustDuration);
     }
 
-    public void ShowLockedLogo(bool show)
-    {
-        _.HUD.RotationLockedLogo.SetVisible(show);
-    }
+    public void ShowLockedLogo(bool show) => _.HUD.BottomLeft.RotationLockedLabel.SetVisible(show);
 }
