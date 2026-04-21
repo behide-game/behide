@@ -23,7 +23,6 @@ public abstract partial class PlayerBody
     private float rotationX;
     private float rotationY;
     private float preLockRotationY;
-    private bool jumping;
 
     // --- Movements ---
     private void ProcessPhysics(double delta)
@@ -38,29 +37,26 @@ public abstract partial class PlayerBody
 
         // Add the gravity.
         if (!IsOnFloor()) velocity += Vector3.Down * (float)(gravity * delta);
-        if (jumping)
-        {
-            velocity += Vector3.Up * (float)(jumpAcceleration * delta);
-            jumping = false;
-        }
 
-        // Add movements
+        // Cancel movements if in menu
         if (Input.MouseMode != Input.MouseModeEnum.Captured)
         {
             Velocity = velocity;
             return;
         }
 
+        // Jump
+        if (Input.IsActionPressed(InputActions.Jump) && IsOnFloor())
+            velocity += Vector3.Up * (float)(jumpAcceleration * delta);
+
+        // Movements
         var inputDir = Input.GetVector(
             InputActions.MoveLeft,
             InputActions.MoveRight,
             InputActions.MoveForward,
             InputActions.MoveBack
         );
-        var direction =
-            this is PropBody && Input.IsActionPressed(InputActions.Lock)
-                ? (CameraDisk.Transform.Rotated(new Vector3(0, 1, 0), Rotation.Y).Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized()
-                : (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+        var direction = (CameraDisk.Transform.Rotated(new Vector3(0, 1, 0), Rotation.Y).Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 
         if (direction != Vector3.Zero)
         {
@@ -90,9 +86,9 @@ public abstract partial class PlayerBody
             preLockRotationY = rotationY;
         }
     }
-    // Run only on the peer who has the authority.
     public override void _UnhandledInput(InputEvent rawEvent)
     {
+        // Run only on the peer who has the authority.
         if (!IsMultiplayerAuthority()) return;
         if (!Alive || freeze) return;
         if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
@@ -104,8 +100,5 @@ public abstract partial class PlayerBody
             rotationX -= mouseMotion.Relative.Y * HorizontalSensitivity;
             rotationX = Math.Clamp(rotationX, -maxRotation, maxRotation);
         }
-
-        // Jump
-        if (Input.IsActionPressed(InputActions.Jump) && IsOnFloor()) jumping = true;
     }
 }
