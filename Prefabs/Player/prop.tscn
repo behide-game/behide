@@ -28,6 +28,11 @@ shader = ExtResource("2_ky5tt")
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_52r4e"]
 load_path = "res://.godot/imported/cross-visor.svg-00ba57c13ac8beaa6b3e0195f079b92d.ctex"
 
+[sub_resource type="LabelSettings" id="LabelSettings_ky5tt"]
+font = ExtResource("2_7hld8")
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+
 [node name="Prop" type="CharacterBody3D" unique_id=486043969]
 collision_layer = 2
 collision_mask = 23
@@ -105,21 +110,35 @@ size_flags_vertical = 8
 mouse_filter = 1
 label_settings = SubResource("LabelSettings_j2ufq")
 
-[node name="Health" type="MarginContainer" parent="HUD" unique_id=1322917847]
+[node name="BottomLeft" type="HBoxContainer" parent="HUD" unique_id=789312261]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_constants/separation = 20
+
+[node name="Health" type="MarginContainer" parent="HUD/BottomLeft" unique_id=1322917847]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 
-[node name="HealthBar" type="ProgressBar" parent="HUD/Health" unique_id=1064215690]
+[node name="HealthBar" type="ProgressBar" parent="HUD/BottomLeft/Health" unique_id=1064215690]
 custom_minimum_size = Vector2(130, 30)
 layout_mode = 2
 mouse_filter = 1
 show_percentage = false
 
-[node name="HealthLabel" type="Label" parent="HUD/Health" unique_id=1288792058]
+[node name="HealthLabel" type="Label" parent="HUD/BottomLeft/Health" unique_id=1288792058]
 layout_mode = 2
 size_flags_vertical = 1
 mouse_filter = 1
 text = "100"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="RotationLockedLabel" type="Label" parent="HUD/BottomLeft" unique_id=1306155919]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 1
+text = "Rot. Lock"
+label_settings = SubResource("LabelSettings_ky5tt")

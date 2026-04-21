@@ -134,13 +134,22 @@ size = Vector3(24.3, 1.1, 0.5)
 size = Vector3(3, 0.769653, 7.55)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_utlgx"]
-size = Vector3(10.5, 4, 1)
+size = Vector3(6.2575684, 4, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1iqy6"]
 size = Vector3(2.75, 4, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_c1l3a"]
 size = Vector3(2, 1.1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_byl8j"]
+size = Vector3(3.0580444, 4, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xp1hu"]
+size = Vector3(1.2865448, 1.5795212, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_otoq5"]
+size = Vector3(1.2865448, 1.0577221, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ifpju"]
 size = Vector3(16, 0.25, 10.5)
@@ -1058,7 +1067,7 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -14, 4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 4, 16)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Little room/Walls" unique_id=1846389695]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.25, 6, 16)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.128784, 6, 16)
 shape = SubResource("BoxShape3D_utlgx")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="Little room/Walls" unique_id=1044728577]
@@ -1068,6 +1077,18 @@ shape = SubResource("BoxShape3D_1iqy6")
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="Little room/Walls" unique_id=983553894]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 7.45, 16)
 shape = SubResource("BoxShape3D_c1l3a")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Little room/Walls" unique_id=1208462346]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.027233, 5.9884953, 16)
+shape = SubResource("BoxShape3D_byl8j")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="Little room/Walls" unique_id=977252593]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.876401, 7.0473294, 16)
+shape = SubResource("BoxShape3D_xp1hu")
+
+[node name="CollisionShape3D6" type="CollisionShape3D" parent="Little room/Walls" unique_id=121867534]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.876401, 4.536938, 16)
+shape = SubResource("BoxShape3D_otoq5")
 
 [node name="Floor" type="StaticBody3D" parent="Little room" unique_id=835827733]
 

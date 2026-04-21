@@ -20,7 +20,7 @@ public partial class HunterBody : PlayerBody
         HealthBar = _.HUD.Health.HealthBar;
         HealthLabel = _.HUD.Health.HealthLabel;
 
-        MaxHealth = 150;
+        MaxHealth = 100;
         MoveSpeed = 1.2f;
     }
 
@@ -61,7 +61,7 @@ public partial class HunterBody : PlayerBody
             crosshairHitTween.TweenProperty(CrosshairHit, "modulate", new Color(0xFFFFFF00), crosshairHitDuration);
             CrosshairHit.Modulate = new Color(0xFFFFFFFF);
         }
-        else if (focusedObject is not null)
+        else if (focusedObject is BehideObject)
             Rpc(MethodName.PlayerMissRpc);
     }
 

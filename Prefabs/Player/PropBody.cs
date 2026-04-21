@@ -20,9 +20,8 @@ public partial class PropBody : PlayerBody
     private Vector3 initialCameraPosition = Vector3.Zero;
     private Tween? cameraAdjustTween;
 
-    private const float maxSpeed = 1.55f;
-    private const float minSpeed = 0.5f;
-    private static readonly double speedConstant = Math.Log((maxSpeed - minSpeed) / (1 - minSpeed));
+    private const float speed = 1.55f;
+    private const float slowSpeed = 0.3f;
 
     protected override void InitializeNodes()
     {
@@ -31,8 +30,8 @@ public partial class PropBody : PlayerBody
         Camera = _.CameraDisk.SpringArm3D.Camera;
         PositionSynchronizer = _.PositionSynchronizer;
         Hud = _.HUD;
-        HealthBar = _.HUD.Health.HealthBar;
-        HealthLabel = _.HUD.Health.HealthLabel;
+        HealthBar = _.HUD.BottomLeft.Health.HealthBar;
+        HealthLabel = _.HUD.BottomLeft.Health.HealthLabel;
 
         // PropBody nodes
         currentVisualNode = _.MeshInstance3D;
@@ -41,6 +40,7 @@ public partial class PropBody : PlayerBody
         rayCast = _.CameraDisk.SpringArm3D.Camera.RayCast;
         supervisor = GetNode<PropHuntSupervisor>("/root/multiplayer/Supervisor");
 
+        ShowLockedLogo(false);
         AdjustProperties();
     }
 
@@ -68,6 +68,11 @@ public partial class PropBody : PlayerBody
         if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
         if (Input.IsActionJustPressed(InputActions.Morph) && focusedBehideObject is not null)
             Rpc(nameof(Morph), focusedBehideObject.GetPath());
+        // Adjust speed
+        MoveSpeed =
+            Input.IsActionPressed(InputActions.Slow)
+                ? slowSpeed
+                : speed;
     }
 
     [Rpc(CallLocal = true)]
@@ -130,9 +135,6 @@ public partial class PropBody : PlayerBody
         var maxHealth = Math.Log(Math.Round(25 * volume), 1.096);
         MaxHealth = Math.Max(1, (int)maxHealth);
 
-        // Adjust speed
-        MoveSpeed = (maxSpeed - minSpeed) * (float)Math.Exp(-volume*speedConstant) + minSpeed;
-
         // Adjust camera position
         var newPosition = initialCameraPosition + aabb.GetCenter();
         var newScale = Math.Max(0.1f, Mathf.Sqrt((aabb.Size.X + aabb.Size.Y + aabb.Size.Z) / 3f));
@@ -146,4 +148,6 @@ public partial class PropBody : PlayerBody
         cameraAdjustTween.TweenProperty(CameraDisk, "position", newPosition, cameraAdjustDuration);
         cameraAdjustTween.Parallel().TweenProperty(CameraDisk, "scale", newScaleVector, cameraAdjustDuration);
     }
+
+    public void ShowLockedLogo(bool show) => _.HUD.BottomLeft.RotationLockedLabel.SetVisible(show);
 }
