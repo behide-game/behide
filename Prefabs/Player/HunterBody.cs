@@ -70,9 +70,9 @@ public partial class HunterBody : PlayerBody
     {
         var node = GetNode(playerPath);
         if (node is not PropBody player) return;
-        player.Health -= 10.0 / player.MaxHealth;
+        player.DecreaseHealth(this, 10);
     }
 
     [Rpc(CallLocal = true)]
-    private void PlayerMissRpc() => Health -= 2.0 / MaxHealth;
+    private void PlayerMissRpc() => DecreaseHealth(this, 2);
 }

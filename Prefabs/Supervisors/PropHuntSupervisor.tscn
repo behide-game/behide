@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dtyebxhht3m0b" path="res://Scripts/Supervisors/PropHunt/PropHuntSupervisor.cs" id="1_8yh7x"]
 [ext_resource type="PackedScene" uid="uid://1t0iy2imhdg4" path="res://Prefabs/Spectator/Spectator.tscn" id="2_8yh7x"]
 [ext_resource type="Script" uid="uid://dlbrls7b4x0kx" path="res://Scripts/Supervisors/PlayerSpawner.cs" id="3_l302j"]
+[ext_resource type="PackedScene" uid="uid://w6cbu00hn810" path="res://Prefabs/Supervisors/KillFieldItem.tscn" id="3_xer8t"]
 [ext_resource type="PackedScene" uid="uid://beaeb2uyytjul" path="res://Prefabs/Player/hunter.tscn" id="4_7hsgi"]
 [ext_resource type="PackedScene" uid="uid://iwqa8xgo1ip3" path="res://Prefabs/Player/prop.tscn" id="4_nsml5"]
 [ext_resource type="Script" uid="uid://sggdi83gahf1" path="res://Scenes/Controls/Countdown/AdvancedLabelCountdown.cs" id="5_7hsgi"]
@@ -57,6 +58,7 @@ font_size = 25
 [node name="Supervisor" type="Node3D" unique_id=2086486061 node_paths=PackedStringArray("Spawner")]
 script = ExtResource("1_8yh7x")
 playerListItem = ExtResource("10_yncfe")
+killFieldItem = ExtResource("3_xer8t")
 Spawner = NodePath("PlayerSpawner")
 
 [node name="Spectator" parent="." unique_id=195170206 instance=ExtResource("2_8yh7x")]
@@ -386,6 +388,20 @@ flat = true
 [node name="TabMenu" parent="UI" unique_id=2035772765 instance=ExtResource("13_5do5a")]
 visible = false
 layout_mode = 1
+
+[node name="KillField" type="MarginContainer" parent="UI" unique_id=1969148279]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+
+[node name="Elements" type="VBoxContainer" parent="UI/KillField" unique_id=17560602]
+layout_mode = 2
 
 [connection signal="pressed" from="UI/End-game/Buttons/Restart/Button" to="." method="UiRestart"]
 [connection signal="pressed" from="UI/End-game/Buttons/Quit/Button" to="." method="UiQuit"]

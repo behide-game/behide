@@ -21,12 +21,20 @@ properties/2/path = NodePath("Camera:rotation:x")
 properties/2/spawn = true
 properties/2/replication_mode = 2
 
-[sub_resource type="LabelSettings" id="LabelSettings_n8xxh"]
+[sub_resource type="LabelSettings" id="LabelSettings_1qbrv"]
 font = ExtResource("3_1qbrv")
 font_size = 18
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1qbrv"]
 shader = ExtResource("3_w58js")
+
+[sub_resource type="LabelSettings" id="LabelSettings_n8xxh"]
+font = ExtResource("3_1qbrv")
+font_size = 18
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
 
 [node name="Hunter" type="CharacterBody3D" unique_id=586848524]
 collision_layer = 2
@@ -82,7 +90,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 mouse_filter = 1
-label_settings = SubResource("LabelSettings_n8xxh")
+label_settings = SubResource("LabelSettings_1qbrv")
 horizontal_alignment = 1
 vertical_alignment = 1
 max_lines_visible = 1

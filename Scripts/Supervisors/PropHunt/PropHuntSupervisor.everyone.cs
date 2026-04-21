@@ -51,10 +51,23 @@ public partial class PropHuntSupervisor
     }
 
 
-    public override void PlayerDied(PlayerBody playerBody)
+    public override void PlayerDied(PlayerBody killerBody, PlayerBody deadBody)
     {
-        log.Information("{PlayerName} died", playerBody.Name);
-        CheckGameEnd(playerBody);
+        log.Information("{PlayerName} died", deadBody.Name);
+
+        var killFieldElement = killFieldItem.Instantiate<KillFieldItem>();
+        var killer = GetBodyPlayer(killerBody);
+        var killed = GetBodyPlayer(deadBody);
+        if (killer is null) { log.Error("Failed determine killer"); return; }
+        if (killed is null) { log.Error("Failed determine killed"); return; }
+
+        if (killer.PeerId == killed.PeerId)
+            killFieldElement.SetKilledThemself(killed);
+        else
+            killFieldElement.SetKillerAndKilled(killer, killed);
+
+        nodes.UI.KillField.Elements.AddChild(killFieldElement);
+        CheckGameEnd(deadBody);
     }
 
     public override void LocalPlayerDied(PlayerBody playerBody)

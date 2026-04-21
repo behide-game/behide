@@ -87,7 +87,7 @@ public abstract partial class Supervisor : Node
 
     public void PlayerSpawned(PlayerBody player) => PlayerBodies.Add(player);
 
-    public virtual void PlayerDied(PlayerBody playerBody) { }
+    public virtual void PlayerDied(PlayerBody killer, PlayerBody deadBody) { }
 
     public virtual void LocalPlayerDied(PlayerBody playerBody) => Room.SetPlayerState(new PlayerStateInGame(false));
 

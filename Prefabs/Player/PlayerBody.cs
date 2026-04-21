@@ -17,7 +17,7 @@ public abstract partial class PlayerBody : CharacterBody3D
     protected Supervisor Supervisor = null!;
     public MultiplayerSynchronizer PositionSynchronizer = null!;
 
-    public double Health
+    private double Health
     {
         get;
         set
@@ -25,14 +25,19 @@ public abstract partial class PlayerBody : CharacterBody3D
             field = Mathf.Clamp(value, 0, 1);
             HealthBar.Value = value * 100;
             HealthLabel.Text = ((int)Math.Ceiling(value * MaxHealth)).ToString();
-            if (field == 0) Died();
         }
     }
 
-    public int MaxHealth
+    public void DecreaseHealth(PlayerBody damager, int amount)
+    {
+        Health -= (double)amount / MaxHealth;
+        if (Health <= 0) Died(damager);
+    }
+
+    protected int MaxHealth
     {
         get;
-        protected set
+        set
         {
             field = value;
             HealthLabel.Text = ((int)Math.Ceiling(Health * field)).ToString();
@@ -45,13 +50,13 @@ public abstract partial class PlayerBody : CharacterBody3D
     private CancellationToken NodeAliveCt => nodeAliveCts.Token;
     public override void _ExitTree() => nodeAliveCts.Cancel();
 
-    private void Died()
+    private void Died(PlayerBody killer)
     {
         Alive = false;
         SetVisible(false);
         Hud.Visible = false;
         SetProcessMode(ProcessModeEnum.Disabled); // Disable collisions
-        Supervisor.PlayerDied(this);
+        Supervisor.PlayerDied(killer, this);
         if (IsMultiplayerAuthority()) Supervisor.LocalPlayerDied(this);
     }
 
