@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://w6cbu00hn810"]
+
+[ext_resource type="Script" uid="uid://b5js0tvepyssj" path="res://Scripts/Supervisors/PropHunt/KillFieldItem.cs" id="1_5hrj4"]
+[ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="1_cqgej"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_5hrj4"]
+font = ExtResource("1_cqgej")
+font_color = Color(1, 0.26999998, 0.26999998, 1)
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_m0ekm"]
+font = ExtResource("1_cqgej")
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_rpjk0"]
+font = ExtResource("1_cqgej")
+font_color = Color(0.26999998, 0.74450004, 1, 1)
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+
+[node name="KillFieldItem" type="HBoxContainer" unique_id=733379641]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -78.0
+offset_top = -10.5
+offset_right = 78.0
+offset_bottom = 10.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_5hrj4")
+
+[node name="Killer" type="Label" parent="." unique_id=131420745]
+layout_mode = 2
+mouse_filter = 1
+label_settings = SubResource("LabelSettings_5hrj4")
+
+[node name="Cause" type="Label" parent="." unique_id=880740592]
+layout_mode = 2
+mouse_filter = 1
+text = "killed"
+label_settings = SubResource("LabelSettings_m0ekm")
+
+[node name="Killed" type="Label" parent="." unique_id=940500550]
+layout_mode = 2
+mouse_filter = 1
+label_settings = SubResource("LabelSettings_rpjk0")

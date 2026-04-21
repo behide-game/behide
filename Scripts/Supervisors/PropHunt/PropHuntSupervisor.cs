@@ -21,6 +21,7 @@ public partial class PropHuntSupervisor : Supervisor
         set => ((Supervisor)this).BehideObjects = value;
     }
     [Export] private PackedScene playerListItem = null!;
+    [Export] private PackedScene killFieldItem = null!;
 
     private bool gameFinished;
 

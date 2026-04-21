@@ -21,6 +21,8 @@ properties/1/replication_mode = 1
 [sub_resource type="LabelSettings" id="LabelSettings_j2ufq"]
 font = ExtResource("2_7hld8")
 font_size = 18
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7hld8"]
 shader = ExtResource("2_ky5tt")
