@@ -8,6 +8,8 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rr4v2"]
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_ky5tt"]
+
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_n61o8"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
@@ -44,6 +46,7 @@ shape = SubResource("BoxShape3D_rr4v2")
 [node name="SpringArm3D" type="SpringArm3D" parent="CameraDisk" unique_id=1227372679]
 transform = Transform3D(1, 0, 0, 0, 0.996917, 0.0784591, 0, -0.0784591, 0.996917, 0, 1, 0)
 collision_mask = 17
+shape = SubResource("SphereShape3D_ky5tt")
 spring_length = 5.0
 
 [node name="Camera" type="Camera3D" parent="CameraDisk/SpringArm3D" unique_id=484317060]

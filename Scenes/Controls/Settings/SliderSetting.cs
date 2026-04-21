@@ -3,7 +3,7 @@ using Godot;
 
 namespace Behide.UI.Controls;
 
-[SceneTree("Slider_setting.tscn")]
+[SceneTree("SliderSetting.tscn")]
 public partial class SliderSetting : VBoxContainer
 {
     [Export] private string numberFormat = "0.00";
@@ -14,10 +14,13 @@ public partial class SliderSetting : VBoxContainer
     public readonly Subject<double> Changed = new();
     public double Value => Slider.Value;
 
+    public override void _EnterTree() => LineEdit.Text = Slider.Value.ToString(numberFormat);
+
     public void SetValue(double value)
     {
-        Slider.SetValueNoSignal(value);
-        LineEdit.Text = value.ToString(numberFormat);
+        var clampedValue = Math.Clamp(value, Slider.MinValue, Slider.MaxValue);
+        Slider.SetValueNoSignal(clampedValue);
+        LineEdit.Text = clampedValue.ToString(numberFormat);
     }
 
 
@@ -27,9 +30,9 @@ public partial class SliderSetting : VBoxContainer
         Changed.OnNext(value);
     }
 
-    private void LineEditLostFocus()
+    private void LineEditLostFocus() => SubmitLineEditText(LineEdit.Text);
+    private void SubmitLineEditText(string text)
     {
-        var text = LineEdit.Text;
         if (!double.TryParse(text, out var newValue))
         {
             LineEdit.Text = Value.ToString(numberFormat);
@@ -37,6 +40,6 @@ public partial class SliderSetting : VBoxContainer
         }
 
         Slider.Value = newValue;
-        Changed.OnNext(newValue);
+        Changed.OnNext(Slider.Value);
     }
 }
