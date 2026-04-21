@@ -24,6 +24,8 @@ public abstract partial class PlayerBody
     private float rotationY;
     private float preLockRotationY;
 
+    private bool isLocked;
+
     // --- Movements ---
     private void ProcessPhysics(double delta)
     {
@@ -56,7 +58,9 @@ public abstract partial class PlayerBody
             InputActions.MoveForward,
             InputActions.MoveBack
         );
-        var direction = (CameraDisk.Transform.Rotated(new Vector3(0, 1, 0), Rotation.Y).Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+
+        var basis = Basis.Rotated(Vector3.Up, CameraDisk.Rotation.Y);
+        var direction = (basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 
         if (direction != Vector3.Zero)
         {
@@ -75,16 +79,14 @@ public abstract partial class PlayerBody
 
     private void ProcessRotation()
     {
-        if (this is PropBody && Input.IsActionPressed(InputActions.Lock))
+        if (isLocked)
         {
             CameraDisk.SetRotation(new Vector3(rotationX, rotationY - preLockRotationY, 0)); // Not the visible body
+            return;
         }
-        else
-        {
-            SetRotation(new Vector3(0, rotationY, 0)); // Left / Right (rotate the whole player)
-            CameraDisk.SetRotation(new Vector3(rotationX, 0, 0)); // Up / Down (Rotate camera disk)
-            preLockRotationY = rotationY;
-        }
+        SetRotation(new Vector3(0, rotationY, 0)); // Left / Right (rotate the whole player)
+        CameraDisk.SetRotation(new Vector3(rotationX, 0, 0)); // Up / Down (Rotate camera disk)
+        preLockRotationY = rotationY;
     }
     public override void _UnhandledInput(InputEvent rawEvent)
     {
@@ -99,6 +101,14 @@ public abstract partial class PlayerBody
             rotationY -= mouseMotion.Relative.X * VerticalSensitivity;
             rotationX -= mouseMotion.Relative.Y * HorizontalSensitivity;
             rotationX = Math.Clamp(rotationX, -maxRotation, maxRotation);
+        }
+
+        // Locking
+        if (this is not PropBody prop) return;
+        if (rawEvent.IsActionPressed(InputActions.Lock) && !rawEvent.IsEcho())
+        {
+            isLocked = !isLocked;
+            prop.ShowLockedLogo(isLocked);
         }
     }
 }
