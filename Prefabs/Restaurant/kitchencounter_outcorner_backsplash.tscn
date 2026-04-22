@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://3s18asnulpuf"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_tir7i"]
+[ext_resource type="PackedScene" uid="uid://d18dgp0dyw8vr" path="res://Assets/Models/Restaurant/kitchencounter_outercorner_backsplash.gltf" id="2_is2h5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_45x8k"]
+size = Vector3(2, 0.2, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lxc2i"]
+size = Vector3(1.8000001, 0.8, 1.8000001)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rsbse"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_tir7i"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="kitchencounter_outcorner_backsplash" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_tir7i")
+VisualNode = NodePath("kitchencounter_outcorner_backsplash")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D3"), NodePath("CollisionShape3D4")]
+Mass = 1.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=900723449]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("BoxShape3D_45x8k")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=486930116]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.099999905, 0.4, -0.099999964)
+shape = SubResource("BoxShape3D_lxc2i")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="." unique_id=69304931]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.0999999, -0.90000004)
+shape = SubResource("BoxShape3D_rsbse")
+
+[node name="kitchencounter_outcorner_backsplash" parent="." unique_id=1338825283 instance=ExtResource("2_is2h5")]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=229149401]
+replication_config = SubResource("SceneReplicationConfig_tir7i")

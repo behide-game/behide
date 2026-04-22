@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://ctmiryyb70y5d"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_fvexp"]
+[ext_resource type="PackedScene" uid="uid://vepiuijium6r" path="res://Assets/Models/Restaurant/kitchencounter_straight_A_backsplash.gltf" id="2_vqqdv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lxc2i"]
+size = Vector3(2, 0.2, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b3iv4"]
+size = Vector3(2, 0.8, 1.8000001)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wpff3"]
+size = Vector3(1.8000001, 0.6, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5scm4"]
+size = Vector3(2, 0.3, 0.2)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_fvexp"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="kitchencounter_straight_a_backsplash" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_fvexp")
+VisualNode = NodePath("kitchencounter_straight_a_backsplash")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2"), NodePath("CollisionShape3D3"), NodePath("CollisionShape3D4")]
+Mass = 1.0
+
+[node name="kitchencounter_straight_a_backsplash" parent="." unique_id=319529346 instance=ExtResource("2_vqqdv")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=486930116]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9802322e-08, 0.9, -2.9802322e-08)
+shape = SubResource("BoxShape3D_lxc2i")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1996113860]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9802322e-08, 0.4, -0.099999994)
+shape = SubResource("BoxShape3D_b3iv4")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=445932825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9802322e-08, 0.40000004, 0.84999996)
+shape = SubResource("BoxShape3D_wpff3")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="." unique_id=1584659960]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9802322e-08, 1.0500001, -0.9000001)
+shape = SubResource("BoxShape3D_5scm4")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=100423355]
+replication_config = SubResource("SceneReplicationConfig_fvexp")
