@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://2nbmk13l7g2d"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_idtax"]
+[ext_resource type="PackedScene" uid="uid://8iejcahhmhlf" path="res://Assets/Models/Restaurant/food_ingredient_cheese.gltf" id="2_qlr1m"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_idtax"]
+points = PackedVector3Array(-0.32, 0, -0.35, -0.32, 0, 0.35, 0.65, 0, 0, -0.32, 0.5, -0.35, -0.32, 0.5, 0.35, 0.65, 0.5, 0)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_idtax"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="food_ingredient_cheese" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_idtax")
+VisualNode = NodePath("food_ingredient_cheese")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="food_ingredient_cheese" parent="." unique_id=746064418 instance=ExtResource("2_qlr1m")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2034349733]
+shape = SubResource("ConvexPolygonShape3D_idtax")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2137951746]
+replication_config = SubResource("SceneReplicationConfig_idtax")

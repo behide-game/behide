@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://53vdbioy7jcf"]
+
+[ext_resource type="PackedScene" uid="uid://c4dgwcldlyaei" path="res://Assets/Models/Restaurant/floor_kitchen.gltf" id="1_tqd0n"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0tou4"]
+size = Vector3(4.2000003, 0.5, 4.2000003)
+
+[node name="Floor_kitchen" type="StaticBody3D" unique_id=683709527]
+
+[node name="floor_kitchen" parent="." unique_id=987144716 instance=ExtResource("1_tqd0n")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=491857622]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25000006, 0)
+shape = SubResource("BoxShape3D_0tou4")

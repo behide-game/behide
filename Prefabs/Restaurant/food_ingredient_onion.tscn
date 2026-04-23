@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://c8viy7gp831kn"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_as3ex"]
+[ext_resource type="PackedScene" uid="uid://cp0ts5xdtovkv" path="res://Assets/Models/Restaurant/food_ingredient_onion.gltf" id="2_idxjx"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_vtlp5"]
+radius = 0.36083627
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_0g30i"]
+height = 0.16777343
+radius = 0.05
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_as3ex"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="food_ingredient_onion" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_as3ex")
+VisualNode = NodePath("food_ingredient_onion")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2")]
+Mass = 1.0
+
+[node name="food_ingredient_onion" parent="." unique_id=1678615185 instance=ExtResource("2_idxjx")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=835578849]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3562623, 0)
+shape = SubResource("SphereShape3D_vtlp5")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1306565788]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.740149, 0)
+shape = SubResource("CylinderShape3D_0g30i")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=661125851]
+replication_config = SubResource("SceneReplicationConfig_as3ex")

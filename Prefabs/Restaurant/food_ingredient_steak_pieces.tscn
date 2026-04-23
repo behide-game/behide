@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://cstu6cah6sefm"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_jadb7"]
+[ext_resource type="PackedScene" uid="uid://cayxqk12d16hv" path="res://Assets/Models/Restaurant/food_ingredient_steak_pieces.gltf" id="2_dqcjg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mukau"]
+size = Vector3(0.63288575, 0.3, 0.61884767)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jadb7"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="food_ingredient_steak_pieces" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_jadb7")
+VisualNode = NodePath("food_ingredient_steak_pieces")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="food_ingredient_steak_pieces" parent="." unique_id=1729703398 instance=ExtResource("2_dqcjg")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1362273269]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.016442865, 0.15, -0.009423822)
+shape = SubResource("BoxShape3D_mukau")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=956010681]
+replication_config = SubResource("SceneReplicationConfig_jadb7")

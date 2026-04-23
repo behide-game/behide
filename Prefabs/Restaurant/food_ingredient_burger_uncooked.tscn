@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://dgx5ru8hgr48k"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_ovy3s"]
+[ext_resource type="PackedScene" uid="uid://cpnyymmp0ftml" path="res://Assets/Models/Restaurant/food_ingredient_burger_uncooked.gltf" id="2_skirv"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_mt0bg"]
+height = 0.2
+radius = 0.35
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ovy3s"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="food_ingredient_burger_uncooked" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_ovy3s")
+VisualNode = NodePath("food_ingredient_burger_uncooked")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="food_ingredient_burger_uncooked" parent="." unique_id=568494500 instance=ExtResource("2_skirv")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2034349733]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0.1, 0)
+shape = SubResource("CylinderShape3D_mt0bg")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1546862051]
+replication_config = SubResource("SceneReplicationConfig_ovy3s")

@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bm6i2b7ip5xq6"]
+
+[ext_resource type="PackedScene" uid="uid://bg40uokmw2r05" path="res://Assets/Models/Restaurant/pillar_A.gltf" id="1_n24n4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0tou4"]
+size = Vector3(0.6, 4.2000003, 0.5)
+
+[node name="Pillar_A" type="StaticBody3D" unique_id=683709527]
+
+[node name="pillar_A" parent="." unique_id=451491689 instance=ExtResource("1_n24n4")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=491857622]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0000002, 0)
+shape = SubResource("BoxShape3D_0tou4")

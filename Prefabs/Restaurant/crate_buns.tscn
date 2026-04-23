@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://clt5xbqgwi6qj"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_t7dl2"]
+[ext_resource type="PackedScene" uid="uid://cyrw4b4ta3vti" path="res://Assets/Models/Restaurant/crate_buns.gltf" id="2_lfm8i"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8q857"]
+size = Vector3(2, 0.8, 2)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_t7dl2"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="crate_buns" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_t7dl2")
+VisualNode = NodePath("crate_buns")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="crate_buns" parent="." unique_id=1594214697 instance=ExtResource("2_lfm8i")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2034349733]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0.3975, 0)
+shape = SubResource("BoxShape3D_8q857")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=244361661]
+replication_config = SubResource("SceneReplicationConfig_t7dl2")

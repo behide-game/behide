@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://ddpb1xyo2hhi6"]
+
+[ext_resource type="PackedScene" uid="uid://d2mhf2torxfwy" path="res://Assets/Models/Restaurant/shelf_papertowel.gltf" id="1_gme0q"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0tou4"]
+size = Vector3(2, 0.75, 0.6)
+
+[node name="shelf_papertowel" type="StaticBody3D" unique_id=683709527]
+
+[node name="shelf_papertowel" parent="." unique_id=822224320 instance=ExtResource("1_gme0q")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=491857622]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.225, 0.3)
+shape = SubResource("BoxShape3D_0tou4")

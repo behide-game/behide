@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://cqdy2wy8l18b3"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_4phph"]
+[ext_resource type="PackedScene" uid="uid://blfi5hobvaxlg" path="res://Assets/Models/Restaurant/kitchencounter_straight_A.gltf" id="2_nmr82"]
+[ext_resource type="PackedScene" uid="uid://4qxil208tw50" path="res://Assets/Models/Restaurant/towelrail.gltf" id="3_nmr82"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lxc2i"]
+size = Vector3(2, 0.2, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b3iv4"]
+size = Vector3(2, 0.8, 1.8000001)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5scm4"]
+size = Vector3(1.8000001, 0.6, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dr6jd"]
+size = Vector3(1.6, 0.2, 0.5)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_nmr82"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="kitchencounter_straight_a_towel" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_4phph")
+VisualNode = NodePath("kitchencounter_straight_a_towel")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2"), NodePath("CollisionShape3D3"), NodePath("CollisionShape3D4")]
+Mass = 1.0
+
+[node name="kitchencounter_straight_a_towel" type="Node3D" parent="." unique_id=2087109799]
+
+[node name="kitchencounter_straight_A" parent="kitchencounter_straight_a_towel" unique_id=986360627 instance=ExtResource("2_nmr82")]
+
+[node name="towelrail2" parent="kitchencounter_straight_a_towel" unique_id=1923783981 instance=ExtResource("3_nmr82")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=486930116]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9802322e-08, 0.9, -2.9802322e-08)
+shape = SubResource("BoxShape3D_lxc2i")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1996113860]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9802322e-08, 0.4, -0.099999994)
+shape = SubResource("BoxShape3D_b3iv4")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=445932825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9802322e-08, 0.40000004, 0.84999996)
+shape = SubResource("BoxShape3D_5scm4")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="." unique_id=759641120]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9802322e-08, 0.75, 0.99999994)
+shape = SubResource("BoxShape3D_dr6jd")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1582263956]
+replication_config = SubResource("SceneReplicationConfig_nmr82")

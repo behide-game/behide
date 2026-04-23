@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://6vkca6df2pk1"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_8pojh"]
+[ext_resource type="PackedScene" uid="uid://m4h4ljuef44y" path="res://Assets/Models/Restaurant/pan_A.gltf" id="2_3smy7"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_nk4f8"]
+height = 0.25
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uosi5"]
+size = Vector3(0.2, 0.1, 0.6)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_8pojh"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="pan_a" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_8pojh")
+VisualNode = NodePath("pan_a")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2")]
+Mass = 1.0
+
+[node name="pan_a" parent="." unique_id=665069725 instance=ExtResource("2_3smy7")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2034349733]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0)
+shape = SubResource("CylinderShape3D_nk4f8")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1960586252]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0.70000005)
+shape = SubResource("BoxShape3D_uosi5")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=45061540]
+replication_config = SubResource("SceneReplicationConfig_8pojh")

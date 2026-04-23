@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://debjf31xjkkxg"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_x2dx5"]
+[ext_resource type="PackedScene" uid="uid://c30kwl3dy6t5" path="res://Assets/Models/Restaurant/knife.gltf" id="2_6sdfd"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x2dx5"]
+size = Vector3(1.1, 0.1, 0.25)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6sdfd"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="knife" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_x2dx5")
+VisualNode = NodePath("knife")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="knife" parent="." unique_id=156566987 instance=ExtResource("2_6sdfd")]
+transform = Transform3D(0, 1, -4.371139e-08, 4.371139e-08, -4.3711385e-08, -1, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=801284046]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 0, 0.075)
+shape = SubResource("BoxShape3D_x2dx5")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=695602178]
+replication_config = SubResource("SceneReplicationConfig_6sdfd")
