@@ -1901,26 +1901,8 @@ transform = Transform3D(-4.37114e-08, 1, 0, 0.707107, 3.09086e-08, -0.707107, -0
 [node name="candle_triple5" parent="BehideObjects" unique_id=1606023851 instance=ExtResource("43_avh5c")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -33, 0, 15)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_triple5" unique_id=2053322407]
-transform = Transform3D(1, 0, -2.98023e-08, 0, 1, 0, 0, 0, 1, 0.0223665, 0.859392, 0.038353)
-light_color = Color(1, 0.741769, 0.563201, 1)
-shadow_enabled = true
-shadow_blur = 2.0
-shadow_caster_mask = 4294967279
-distance_fade_shadow = 6.0
-omni_attenuation = 1.5
-
 [node name="candle_triple6" parent="BehideObjects" unique_id=1910055521 instance=ExtResource("43_avh5c")]
 transform = Transform3D(-0.866026, 0, -0.5, 0, 1, 0, 0.5, 0, -0.866026, -32.8, 0, 21.1)
-
-[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_triple6" unique_id=1750737805]
-transform = Transform3D(1, 0, -2.98023e-08, 0, 1, 0, 0, 0, 1, 0.0223665, 0.859392, 0.038353)
-light_color = Color(1, 0.741769, 0.563201, 1)
-shadow_enabled = true
-shadow_blur = 2.0
-shadow_caster_mask = 4294967279
-distance_fade_shadow = 6.0
-omni_attenuation = 1.5
 
 [node name="RigidBody3D" parent="BehideObjects" unique_id=2140154829 instance=ExtResource("43_aidiq")]
 transform = Transform3D(0.588209, 0, 0.808709, 0, 1, 0, -0.808709, 0, 0.588209, 0.35362747, 0.1, 21.355547)
@@ -1966,15 +1948,6 @@ transform = Transform3D(-0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, -0.258819
 
 [node name="candle_triple4" parent="BehideObjects" unique_id=1564743204 instance=ExtResource("43_avh5c")]
 transform = Transform3D(-0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, -0.258819, -12.3, 4, 17)
-
-[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_triple4" unique_id=1095393764]
-transform = Transform3D(1, 0, -2.98023e-08, 0, 1, 0, 0, 0, 1, 0.0223665, 0.859392, 0.038353)
-light_color = Color(1, 0.741769, 0.563201, 1)
-shadow_enabled = true
-shadow_blur = 2.0
-shadow_caster_mask = 4294967279
-distance_fade_shadow = 6.0
-omni_attenuation = 1.5
 
 [node name="barrel_small" parent="BehideObjects" unique_id=1562836261 instance=ExtResource("50_8yjie")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.98, 4.05, 17.2405)
@@ -2182,12 +2155,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.5, 0, 10.5)
 
 [node name="Arthur" parent="BehideObjects" unique_id=2056237435 instance=ExtResource("43_avh5c")]
 transform = Transform3D(-0.70710695, 0, -0.70710707, 0, 1, 0, 0.70710707, 0, -0.70710695, -8.815176, 0.049999952, 22.427284)
-
-[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/Arthur" unique_id=1482128844]
-transform = Transform3D(0.9999998, 0, 0, 0, 1, 0, 0, 0, 0.9999998, 0.096179485, 0.96387625, -0.024765015)
-light_color = Color(1, 0.7411765, 0.5647059, 1)
-light_energy = 1.3
-light_size = 0.05
-light_specular = 0.2
 
 [editable path="BehideObjects/Arthur"]
