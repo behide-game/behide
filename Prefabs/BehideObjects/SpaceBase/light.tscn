@@ -4,8 +4,12 @@
 [ext_resource type="PackedScene" uid="uid://bba32t6hvm313" path="res://Assets/Models/SpaceBase/lights.gltf" id="2_x4gbk"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_lt183"]
-height = 0.990479
-radius = 0.346191
+height = 1.0
+radius = 0.075
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ownsm"]
+height = 0.19999999
+radius = 0.3
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ownsm"]
 properties/0/path = NodePath(".:position")
@@ -23,17 +27,29 @@ properties/3/replication_mode = 2
 
 [node name="light" type="RigidBody3D" unique_id=816927906 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
 collision_layer = 4
-collision_mask = 23
+collision_mask = 7
 script = ExtResource("1_jsvj4")
 VisualNode = NodePath("light")
-CollisionNodes = [NodePath("CollisionShape3D")]
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2")]
 Mass = 1.0
 
-[node name="light" parent="." unique_id=1901467546 instance=ExtResource("2_x4gbk")]
+[node name="light" parent="." unique_id=965571101 instance=ExtResource("2_x4gbk")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1937827332]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.495239, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("CylinderShape3D_lt183")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1652139037]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=882806500]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CylinderShape3D_ownsm")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1958052765]
 replication_config = SubResource("SceneReplicationConfig_ownsm")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=360463542]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.9, 0)
+light_color = Color(1, 0.84313726, 0.4, 1)
+shadow_enabled = true
+shadow_caster_mask = 4294967279
+spot_range = 3.785931
+spot_angle = 72.46781

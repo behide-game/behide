@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://cgtsppv0xcktg"]
+
+[ext_resource type="PackedScene" uid="uid://emlfsc6ii1ko" path="res://Assets/Models/SpaceBase/rocks_B.gltf" id="1_4duec"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_t308v"]
+radius = 0.6729067
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_4duec"]
+radius = 0.33651775
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_dp8u4"]
+radius = 0.18812603
+
+[node name="rocks_b" type="StaticBody3D" unique_id=251572406]
+collision_layer = 4
+collision_mask = 7
+
+[node name="rocks_B2" parent="." unique_id=869644727 instance=ExtResource("1_4duec")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1988519601]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1777401, 0.29824203, -0.19280314)
+shape = SubResource("SphereShape3D_t308v")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=189268175]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6095513, 0.075078905, 0.25404406)
+shape = SubResource("SphereShape3D_4duec")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=228525429]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5510565, 0.044953465, 0.6532239)
+shape = SubResource("SphereShape3D_dp8u4")

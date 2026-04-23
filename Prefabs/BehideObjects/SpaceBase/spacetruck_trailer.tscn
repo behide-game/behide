@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://bsr2d2wo1sfrk"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_ew2wj"]
+[ext_resource type="PackedScene" uid="uid://p1uct7u1ddg4" path="res://Assets/Models/SpaceBase/spacetruck_trailer.gltf" id="2_viykv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3k6gv"]
+size = Vector3(0.5, 0.339917, 1)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ew2wj"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="spacetruck_trailer" type="RigidBody3D" unique_id=1873062943 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_ew2wj")
+VisualNode = NodePath("spacetruck_trailer")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="spacetruck_trailer" parent="." unique_id=670746775 instance=ExtResource("2_viykv")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=192157605]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.024353027, 0)
+shape = SubResource("BoxShape3D_3k6gv")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1542123632]
+replication_config = SubResource("SceneReplicationConfig_ew2wj")

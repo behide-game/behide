@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://cuseky4efh0t5"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_hohd8"]
+[ext_resource type="PackedScene" uid="uid://bm3d63cjag6wy" path="res://Assets/Models/SpaceBase/basemodule_E.gltf" id="2_vw0mo"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_p7187"]
+height = 1.0
+radius = 1.05
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hohd8"]
+radius = 0.78182817
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hohd8"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="basemodule_e" type="RigidBody3D" unique_id=303754115 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_hohd8")
+VisualNode = NodePath("basemodule_e")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2")]
+Mass = 1.0
+
+[node name="basemodule_e" parent="." unique_id=1171624628 instance=ExtResource("2_vw0mo")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=348722415]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_p7187")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1389703864]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.84026474, 0)
+shape = SubResource("SphereShape3D_hohd8")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=779655309]
+replication_config = SubResource("SceneReplicationConfig_hohd8")

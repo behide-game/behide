@@ -11,7 +11,7 @@ size = Vector3(3, 1.2, 0.5)
 [sub_resource type="BoxShape3D" id="BoxShape3D_x4eks"]
 size = Vector3(3, 0.2, 0.90000004)
 
-[node name="WallOrderwindow" type="StaticBody3D" unique_id=683709527]
+[node name="WallOrderWindow" type="StaticBody3D" unique_id=683709527]
 
 [node name="wall_orderwindow" parent="." unique_id=1436194391 instance=ExtResource("1_hqu4h")]
 
