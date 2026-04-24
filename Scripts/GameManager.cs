@@ -20,9 +20,9 @@ public partial class GameManager : Node
     public enum GameState { Home, Lobby, Game }
     public static GameState State { get; private set; } = GameState.Home;
 
-    private static readonly PackedScene homeScene = ResourceLoader.Load<PackedScene>("res://Scenes/Home/Home.tscn");
-    private static readonly PackedScene lobbyScene = ResourceLoader.Load<PackedScene>("res://Scenes/Lobby/Lobby.tscn");
-    private static readonly PackedScene gameScene = ResourceLoader.Load<PackedScene>("res://Scenes/Game/Game.tscn");
+    private static readonly PackedScene HomeScene = ResourceLoader.Load<PackedScene>("res://Scenes/Home/Home.tscn");
+    private static readonly PackedScene LobbyScene = ResourceLoader.Load<PackedScene>("res://Scenes/Lobby/Lobby.tscn");
+    private static readonly PackedScene GameScene = ResourceLoader.Load<PackedScene>("res://Scenes/Restaurant/Restaurant.tscn");
 
     private readonly ILogger log = Log.CreateLogger("GameManager");
 
@@ -58,9 +58,9 @@ public partial class GameManager : Node
     {
         var sceneToLoad = state switch
         {
-            GameState.Home => homeScene,
-            GameState.Lobby => lobbyScene,
-            GameState.Game => gameScene,
+            GameState.Home => HomeScene,
+            GameState.Lobby => LobbyScene,
+            GameState.Game => GameScene,
             _ => throw new Exception("Unexpected game state"),
         };
 

@@ -32,18 +32,18 @@ Mass = 1.0
 
 [node name="candle_triple" parent="." unique_id=278025502 instance=ExtResource("2_rkgqh")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=643986096]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0925112, 0.4, -0.00966072)
-shape = SubResource("CylinderShape3D_kcrxe")
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1186031209]
-replication_config = SubResource("SceneReplicationConfig_hdllg")
-
-[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=922791052]
-transform = Transform3D(1, 0, -2.98023e-08, 0, 1, 0, 0, 0, 1, 0.0223665, 0.859392, 0.038353)
+[node name="OmniLight3D" type="OmniLight3D" parent="candle_triple" unique_id=922791052]
+transform = Transform3D(0.9999998, 0, 0, 0, 1, 0, 0, 0, 0.9999998, 0.022366501, 0.859392, 0.038353004)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
 shadow_blur = 2.0
 shadow_caster_mask = 4294967279
 distance_fade_shadow = 6.0
 omni_attenuation = 1.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=643986096]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0925112, 0.4, -0.00966072)
+shape = SubResource("CylinderShape3D_kcrxe")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1186031209]
+replication_config = SubResource("SceneReplicationConfig_hdllg")

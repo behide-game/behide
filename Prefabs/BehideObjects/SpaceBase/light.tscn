@@ -35,6 +35,16 @@ Mass = 1.0
 
 [node name="light" parent="." unique_id=965571101 instance=ExtResource("2_x4gbk")]
 
+[node name="SpotLight3D" type="SpotLight3D" parent="light" unique_id=360463542]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.9, 0)
+light_color = Color(0.99999994, 0.86785364, 0.6317274, 1)
+light_energy = 1.6
+shadow_enabled = true
+shadow_caster_mask = 4294967279
+spot_range = 7.5940175
+spot_angle = 84.58
+spot_angle_attenuation = 0.277393
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1937827332]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("CylinderShape3D_lt183")
@@ -45,13 +55,3 @@ shape = SubResource("CylinderShape3D_ownsm")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1958052765]
 replication_config = SubResource("SceneReplicationConfig_ownsm")
-
-[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=360463542]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.9, 0)
-light_color = Color(0.99999994, 0.86785364, 0.6317274, 1)
-light_energy = 1.6
-shadow_enabled = true
-shadow_caster_mask = 4294967279
-spot_range = 7.5940175
-spot_angle = 84.58
-spot_angle_attenuation = 0.277393
