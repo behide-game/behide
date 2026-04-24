@@ -1,0 +1,131 @@
+[gd_scene format=3 uid="uid://duc1guf2tc711"]
+
+[ext_resource type="Script" uid="uid://dbnihpo335kug" path="res://Prefabs/Player/SubmachineGun.cs" id="1_8uwrk"]
+[ext_resource type="PackedScene" uid="uid://bbuv8m4lpdg1u" path="res://Assets/Models/Prefabs/gun.glb" id="1_i3wdl"]
+[ext_resource type="AudioStream" uid="uid://cbck1i0n0gpe7" path="res://Assets/Sounds/gunreload.mp3" id="2_1ol2f"]
+[ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="2_8uwrk"]
+[ext_resource type="AudioStream" uid="uid://b6e6bl5exr2jf" path="res://Assets/Sounds/gunshotjbudden.wav" id="2_abca7"]
+[ext_resource type="Shader" path="res://Prefabs/Player/crosshair.gdshader" id="3_lrncf"]
+[ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crosshair.svg" id="4_1ol2f"]
+
+[sub_resource type="AudioStream" id="AudioStream_8uwrk"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_abca7"]
+font = ExtResource("2_8uwrk")
+font_size = 18
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h7rq2"]
+shader = ExtResource("3_lrncf")
+
+[sub_resource type="LabelSettings" id="LabelSettings_c4dw2"]
+font = ExtResource("2_8uwrk")
+font_size = 18
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_8uwrk"]
+font = ExtResource("2_8uwrk")
+font_size = 30
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+
+[node name="SubmachineGun" type="Node3D" unique_id=411671082]
+script = ExtResource("1_8uwrk")
+shootSound = ExtResource("2_abca7")
+reloadSound = ExtResource("2_1ol2f")
+
+[node name="Model" parent="." unique_id=1920550007 instance=ExtResource("1_i3wdl")]
+transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0.491, -0.384, -0.949)
+
+[node name="RayCast" type="RayCast3D" parent="." unique_id=639134905]
+target_position = Vector3(0, 0, -1000)
+collision_mask = 7
+debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=1276327619]
+stream = SubResource("AudioStream_8uwrk")
+
+[node name="Hud" type="MarginContainer" parent="." unique_id=1922832746]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Center" type="VBoxContainer" parent="Hud" unique_id=597667144]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+
+[node name="PlayerUsername" type="Label" parent="Hud/Center" unique_id=1672662859]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 1
+label_settings = SubResource("LabelSettings_abca7")
+horizontal_alignment = 1
+vertical_alignment = 1
+max_lines_visible = 1
+
+[node name="Crosshair" type="Control" parent="Hud/Center" unique_id=1375605092]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 1
+
+[node name="Crosshair" type="TextureRect" parent="Hud/Center/Crosshair" unique_id=1102105657]
+material = SubResource("ShaderMaterial_h7rq2")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_1ol2f")
+expand_mode = 3
+
+[node name="CrosshairHit" type="TextureRect" parent="Hud/Center/Crosshair" unique_id=1225148083]
+modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 0, 0, 1)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_1ol2f")
+expand_mode = 3
+
+[node name="DummyLabel" type="Label" parent="Hud/Center" unique_id=1542335466]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 1
+label_settings = SubResource("LabelSettings_c4dw2")
+
+[node name="RBottom" type="HBoxContainer" parent="Hud" unique_id=1727923364]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="TextureRect" type="TextureRect" parent="Hud/RBottom" unique_id=646447357]
+layout_mode = 2
+
+[node name="Ammo" type="Label" parent="Hud/RBottom" unique_id=376044258]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_8uwrk")

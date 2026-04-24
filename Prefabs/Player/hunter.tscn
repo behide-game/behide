@@ -1,10 +1,7 @@
 [gd_scene format=3 uid="uid://beaeb2uyytjul"]
 
 [ext_resource type="Script" uid="uid://luuofj7aqswe" path="res://Prefabs/Player/HunterBody.cs" id="1_w58js"]
-[ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crosshair.svg" id="2_qudki"]
-[ext_resource type="PackedScene" uid="uid://bbuv8m4lpdg1u" path="res://Assets/Models/Prefabs/gun.glb" id="2_svrpp"]
-[ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="3_1qbrv"]
-[ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="3_w58js"]
+[ext_resource type="PackedScene" uid="uid://duc1guf2tc711" path="res://Prefabs/Player/SubmachineGun.tscn" id="2_1qbrv"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_qudki"]
 
@@ -20,21 +17,6 @@ properties/1/replication_mode = 2
 properties/2/path = NodePath("Camera:rotation:x")
 properties/2/spawn = true
 properties/2/replication_mode = 2
-
-[sub_resource type="LabelSettings" id="LabelSettings_1qbrv"]
-font = ExtResource("3_1qbrv")
-font_size = 18
-outline_size = 1
-outline_color = Color(0, 0, 0, 1)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1qbrv"]
-shader = ExtResource("3_w58js")
-
-[sub_resource type="LabelSettings" id="LabelSettings_n8xxh"]
-font = ExtResource("3_1qbrv")
-font_size = 18
-outline_size = 1
-outline_color = Color(0, 0, 0, 1)
 
 [node name="Hunter" type="CharacterBody3D" unique_id=586848524]
 collision_layer = 2
@@ -59,13 +41,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
 keep_aspect = 0
 fov = 90.0
 
-[node name="Gun" parent="Camera" unique_id=1617225450 instance=ExtResource("2_svrpp")]
-transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0.491, -0.384, -0.949)
-
-[node name="RayCast" type="RayCast3D" parent="Camera" unique_id=1365758387]
-target_position = Vector3(0, 0, -1000)
-collision_mask = 7
-debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
+[node name="SubmachineGun" parent="Camera" unique_id=411671082 instance=ExtResource("2_1qbrv")]
 
 [node name="HUD" type="MarginContainer" parent="." unique_id=1893787552]
 anchors_preset = 15
@@ -79,65 +55,6 @@ theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
-
-[node name="Center" type="VBoxContainer" parent="HUD" unique_id=1992554452]
-layout_mode = 2
-size_flags_vertical = 4
-alignment = 1
-
-[node name="PlayerUsername" type="Label" parent="HUD/Center" unique_id=1213078939]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-mouse_filter = 1
-label_settings = SubResource("LabelSettings_1qbrv")
-horizontal_alignment = 1
-vertical_alignment = 1
-max_lines_visible = 1
-
-[node name="Crosshair" type="Control" parent="HUD/Center" unique_id=203865776]
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-mouse_filter = 1
-
-[node name="Crosshair" type="TextureRect" parent="HUD/Center/Crosshair" unique_id=1502892851]
-material = SubResource("ShaderMaterial_1qbrv")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource("2_qudki")
-expand_mode = 3
-
-[node name="CrosshairHit" type="TextureRect" parent="HUD/Center/Crosshair" unique_id=1945299463]
-modulate = Color(1, 1, 1, 0)
-self_modulate = Color(1, 0, 0, 1)
-custom_minimum_size = Vector2(30, 30)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-rotation = 0.7853982
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource("2_qudki")
-expand_mode = 3
-
-[node name="DummyLabel" type="Label" parent="HUD/Center" unique_id=92405162]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-mouse_filter = 1
-label_settings = SubResource("LabelSettings_n8xxh")
 
 [node name="Health" type="MarginContainer" parent="HUD" unique_id=366987484]
 layout_mode = 2
