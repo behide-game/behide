@@ -6,7 +6,7 @@ using Serilog;
 
 namespace Behide.Prefabs.Player;
 
-[SceneTree("SubmachineGun.tscn")]
+[SceneTree]
 public partial class SubmachineGun : Gun
 {
     [Export] private AudioStream shootSound = null!;
@@ -33,7 +33,7 @@ public partial class SubmachineGun : Gun
         crosshairHitDuration = 0.3d;
     }
 
-    protected override Node3D? Shoot()
+    protected override NodePath? Shoot()
     {
         _.AudioStreamPlayer3D.Stream = shootSound;
         _.AudioStreamPlayer3D.Play();
