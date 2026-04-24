@@ -68,7 +68,7 @@ public abstract partial class Gun : Node3D
         timerReload -= delta;
     }
 
-    public Node3D? TryShoot()
+    public NodePath? TryShoot()
     {
         if (canShoot) return Shoot();
         if (timerFire <= 0 && timerReload <= 0 && ammoCount == 0)
@@ -76,7 +76,7 @@ public abstract partial class Gun : Node3D
         return null;
     }
 
-    protected virtual Node3D? Shoot()
+    protected virtual NodePath? Shoot()
     {
         timerFire = 1 / fireRate;
         ammoCount -= 1;
@@ -88,9 +88,9 @@ public abstract partial class Gun : Node3D
                 crosshairHitTween.SetEase(Tween.EaseType.In);
                 crosshairHitTween.TweenProperty(CrosshairHit, "modulate", new Color(0xFFFFFF00), crosshairHitDuration);
                 CrosshairHit.Modulate = new Color(0xFFFFFFFF);
-                return player;
+                return player.GetPath();
             case BehideObject behideObject:
-                return behideObject;
+                return behideObject.GetPath();
             default:
                 return null;
         }
