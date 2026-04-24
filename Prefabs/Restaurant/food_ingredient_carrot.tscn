@@ -35,5 +35,5 @@ Mass = 1.0
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0.045, 0)
 shape = SubResource("CapsuleShape3D_um6ee")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1342451657]
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=191058648]
 replication_config = SubResource("SceneReplicationConfig_b7ert")
