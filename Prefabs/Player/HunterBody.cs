@@ -1,3 +1,4 @@
+using Behide.Prefabs.Player;
 using Godot;
 
 namespace Behide.Game.Player;
@@ -5,23 +6,23 @@ namespace Behide.Game.Player;
 [SceneTree("hunter.tscn")]
 public partial class HunterBody : PlayerBody
 {
-    private Tween? crosshairHitTween;
-    private Control CrosshairHit => _.HUD.Center.Crosshair.CrosshairHit;
-    private double crosshairHitDuration = 0.3;
-
-    private GodotObject? focusedObject;
+    private SubmachineGun Gun => _.Camera.SubmachineGun;
 
     protected override void InitializeNodes()
     {
         CameraDisk = _.Camera;
         Camera = _.Camera;
         PositionSynchronizer = _.PositionSynchronizer;
-        Hud = _.HUD;
         HealthBar = _.HUD.Health.HealthBar;
         HealthLabel = _.HUD.Health.HealthLabel;
 
         MaxHealth = 100;
         MoveSpeed = 1.2f;
+
+        Gun.InitializeNodes(this);
+        Gun.InitializeProperties();
+
+        Huds = [_.HUD, Gun.Hud];
     }
 
     public override void _Process(double delta)
@@ -30,49 +31,35 @@ public partial class HunterBody : PlayerBody
         if (!Alive) return;
         if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
-        focusedObject = _.Camera.RayCast.GetCollider();
-
-        // Set player name in HUD
-        if (focusedObject is HunterBody hunterBody)
-        {
-            var owner = Supervisor.GetBodyPlayer(hunterBody);
-            _.HUD.Center.PlayerUsername.Text = owner?.Username;
-        }
-        else
-            _.HUD.Center.PlayerUsername.Text = string.Empty;
-    }
-
-    public override void _UnhandledInput(InputEvent rawEvent)
-    {
-        base._UnhandledInput(rawEvent);
-        if (!IsMultiplayerAuthority()) return;
-        if (!Alive) return;
-        if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
-
         // Listen shoot
-        if (!Input.IsActionJustPressed(InputActions.Shoot)) return;
-        if (focusedObject is PropBody player)
+        if (Input.IsActionPressed(InputActions.Shoot))
         {
-            Rpc(MethodName.PlayerHitRpc, player.GetPath());
-
-            crosshairHitTween?.Kill();
-            crosshairHitTween = CreateTween();
-            crosshairHitTween.SetEase(Tween.EaseType.In);
-            crosshairHitTween.TweenProperty(CrosshairHit, "modulate", new Color(0xFFFFFF00), crosshairHitDuration);
-            CrosshairHit.Modulate = new Color(0xFFFFFFFF);
+            var Object = Gun.TryShoot();
+            Rpc(nameof(ObjectHitRpc), Object, Gun.damagePerAmmo);
+            return;
         }
-        else if (focusedObject is BehideObject)
-            Rpc(MethodName.PlayerMissRpc);
+
+        // Listen reload
+        if (!Input.IsActionJustPressed(InputActions.Reload)) return;
+        Gun.TryReload();
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    private void PlayerHitRpc(NodePath playerPath)
+    public void ObjectHitRpc(Node3D? Object, int damageAmount)
     {
-        var node = GetNode(playerPath);
-        if (node is not PropBody player) return;
-        player.DecreaseHealth(this, 10);
+        switch (Object)
+        {
+            case BehideObject:
+                Rpc(nameof(HunterMissedRpc));
+                break;
+            case PropBody player:
+                player.DecreaseHealth(player, damageAmount);
+                break;
+            default:
+                return;
+        }
     }
 
     [Rpc(CallLocal = true)]
-    private void PlayerMissRpc() => DecreaseHealth(this, 2);
+    public void HunterMissedRpc() => DecreaseHealth(this, 2);
 }

@@ -28,7 +28,7 @@ public partial class PropBody : PlayerBody
         CameraDisk = _.CameraDisk;
         Camera = _.CameraDisk.SpringArm3D.Camera;
         PositionSynchronizer = _.PositionSynchronizer;
-        Hud = _.HUD;
+        Huds = [_.HUD];
         HealthBar = _.HUD.BottomLeft.Health.HealthBar;
         HealthLabel = _.HUD.BottomLeft.Health.HealthLabel;
 
