@@ -63,7 +63,7 @@ public partial class HunterBody : PlayerBody
                 Rpc(nameof(HunterMissedRpc));
                 break;
             case PropBody player:
-                player.DecreaseHealth(player, damageAmount);
+                player.DecreaseHealth(this, damageAmount);
                 break;
         }
     }

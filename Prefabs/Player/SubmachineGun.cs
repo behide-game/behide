@@ -1,8 +1,6 @@
 using Behide.Game;
 using Behide.Game.Player;
-using Behide.Game.Supervisors;
 using Godot;
-using Serilog;
 
 namespace Behide.Prefabs.Player;
 
@@ -12,7 +10,7 @@ public partial class SubmachineGun : Gun
     [Export] private AudioStream shootSound = null!;
     [Export] private AudioStream reloadSound = null!;
     private RayCast3D Raycast = null!;
-    protected override int magazineSize => 30;
+    protected override int magazineSize => 45;
     protected override float fireRate => 10f;
     protected override float reloadTime => 2.5f;
 
@@ -28,10 +26,10 @@ public partial class SubmachineGun : Gun
 
     public override void InitializeProperties()
     {
-        damagePerAmmo = 1;
-        totalAmmoCount = 40;
-        ammoCount = 30;
-        crosshairHitDuration = 0.3d;
+        damagePerAmmo = 2;
+        totalAmmoCount = 6667;
+        ammoCount = magazineSize;
+        crosshairHitDuration = 0.3;
     }
 
     protected override NodePath? Shoot()
