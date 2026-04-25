@@ -32,7 +32,7 @@ public partial class SubmachineGun : Gun
         crosshairHitDuration = 0.3;
     }
 
-    protected override NodePath? Shoot()
+    protected override Node3D? Shoot()
     {
         // Update properties
         base.Shoot();
@@ -50,9 +50,9 @@ public partial class SubmachineGun : Gun
                 crosshairHitTween.SetEase(Tween.EaseType.In);
                 crosshairHitTween.TweenProperty(CrosshairHit, "modulate", new Color(0xFFFFFF00), crosshairHitDuration);
                 CrosshairHit.Modulate = new Color(0xFFFFFFFF);
-                return player.GetPath();
+                return player;
             case BehideObject behideObject:
-                return behideObject.GetPath();
+                return behideObject;
             default:
                 return null;
         }
