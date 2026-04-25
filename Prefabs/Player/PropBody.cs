@@ -1,4 +1,3 @@
-using Behide.Game.Supervisors;
 using Godot;
 
 namespace Behide.Game.Player;

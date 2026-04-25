@@ -1,7 +1,5 @@
-using Behide.Game;
 using Behide.Game.Player;
 using Godot;
-using Godot.Collections;
 
 namespace Behide.Prefabs.Player;
 
