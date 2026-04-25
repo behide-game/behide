@@ -11,11 +11,15 @@ public abstract partial class PlayerBody : CharacterBody3D
 
     protected Node3D CameraDisk = null!;
     protected Camera3D Camera = null!;
+    protected RayCast3D RayCast = null!;
+    protected Label PlayerUsername = null!;
     protected List<Control> Huds = null!;
     protected ProgressBar HealthBar = null!;
     protected Label HealthLabel = null!;
-    public Supervisor Supervisor = null!;
+    private Supervisor Supervisor = null!;
     public MultiplayerSynchronizer PositionSynchronizer = null!;
+
+    protected GodotObject? focusedObject;
 
     private double Health
     {
@@ -98,6 +102,28 @@ public abstract partial class PlayerBody : CharacterBody3D
             _ => Camera.Fov = (float)GameManager.Settings.Fov,
             NodeAliveCt
         );
+    }
+
+    // Show players names
+    public override void _Process(double delta)
+    {
+        if (!IsMultiplayerAuthority()) return;
+        focusedObject = RayCast.GetCollider();
+
+        var canShow = this switch
+        {
+            PropBody => focusedObject is HunterBody or PropBody,
+            HunterBody => focusedObject is HunterBody,
+            _ => false
+        };
+
+        if (canShow)
+        {
+            var owner = Supervisor.GetBodyPlayer((PlayerBody) focusedObject);
+            PlayerUsername.Text = owner?.Username;
+        }
+        else
+            PlayerUsername.Text = string.Empty;
     }
 
     // --- Movements ---

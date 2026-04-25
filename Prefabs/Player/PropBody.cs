@@ -14,7 +14,6 @@ public partial class PropBody : PlayerBody
     [Export] private double cameraAdjustDuration = 0.4;
     [Export] private Tween.TransitionType cameraAdjustTransitionType = Tween.TransitionType.Bounce;
     [Export] private Tween.EaseType cameraAdjustEaseType = Tween.EaseType.Out;
-    private BehideObject? focusedBehideObject;
 
     private Vector3 initialCameraPosition = Vector3.Zero;
     private Tween? cameraAdjustTween;
@@ -27,10 +26,12 @@ public partial class PropBody : PlayerBody
         // PlayerBody nodes
         CameraDisk = _.CameraDisk;
         Camera = _.CameraDisk.SpringArm3D.Camera;
+        RayCast = _.CameraDisk.SpringArm3D.Camera.RayCast;
         PositionSynchronizer = _.PositionSynchronizer;
         Huds = [_.HUD];
         HealthBar = _.HUD.BottomLeft.Health.HealthBar;
         HealthLabel = _.HUD.BottomLeft.Health.HealthLabel;
+        PlayerUsername = _.HUD.Center.PlayerUsername;
 
         // PropBody nodes
         currentVisualNode = _.MeshInstance3D;
@@ -42,29 +43,13 @@ public partial class PropBody : PlayerBody
         AdjustProperties();
     }
 
-    public override void _Process(double delta)
-    {
-        if (!IsMultiplayerAuthority()) return;
-        var focusedObject = rayCast.GetCollider();
-        focusedBehideObject = focusedObject as BehideObject;
-
-        // Set player name in HUD
-        if (focusedObject is PlayerBody body)
-        {
-            var owner = Supervisor.GetBodyPlayer(body);
-            _.HUD.Center.PlayerUsername.Text = owner?.Username;
-        }
-        else
-            _.HUD.Center.PlayerUsername.Text = string.Empty;
-    }
-
     public override void _UnhandledInput(InputEvent rawEvent)
     {
         base._UnhandledInput(rawEvent);
         if (!IsMultiplayerAuthority()) return;
         if (!Alive) return;
         if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
-        if (Input.IsActionJustPressed(InputActions.Morph) && focusedBehideObject is not null)
+        if (Input.IsActionJustPressed(InputActions.Morph) && focusedObject is BehideObject focusedBehideObject)
             Rpc(nameof(Morph), focusedBehideObject.GetPath());
         // Adjust speed
         MoveSpeed =

@@ -1,7 +1,7 @@
 using Behide.Game;
 using Behide.Game.Player;
-using Behide.Game.Supervisors;
 using Godot;
+using Godot.Collections;
 
 namespace Behide.Prefabs.Player;
 
@@ -9,8 +9,7 @@ public abstract partial class Gun : Node3D
 {
     protected HunterBody Hunter = null!;
     public Control Hud = null!;
-    protected RayCast3D Raycast = null!;
-    protected Label PlayerUsername = null!;
+    public Label PlayerUsername = null!;
     protected Control CrosshairHit = null!;
     protected Label AmmoLabel = null!;
 
@@ -30,31 +29,19 @@ public abstract partial class Gun : Node3D
     protected int totalAmmoCount;
     protected internal int damagePerAmmo;
     protected double crosshairHitDuration;
+    protected Tween? crosshairHitTween;
 
     private bool canShoot => timerFire <= 0 && ammoCount > 0;
     private bool canReload => timerReload <= 0 && ammoCount < magazineSize && totalAmmoCount > 0;
 
-    private GodotObject? focusedObject;
-    private Tween? crosshairHitTween;
     private double timerFire;
     private double timerReload;
 
     public abstract void InitializeNodes(HunterBody hunter);
     public abstract void InitializeProperties();
 
-    public override void _Process(double delta)
+    public void TickGun(double delta)
     {
-        focusedObject = Raycast.GetCollider();
-
-        // Set player name in HUD
-        if (focusedObject is HunterBody hunterBody)
-        {
-            var owner = Hunter.Supervisor.GetBodyPlayer(hunterBody);
-            PlayerUsername.Text = owner?.Username;
-        }
-        else
-            PlayerUsername.Text = string.Empty;
-
         if (timerFire > 0) timerFire -= delta;
 
         if (timerReload <= 0) return;
@@ -80,20 +67,8 @@ public abstract partial class Gun : Node3D
     {
         timerFire = 1 / fireRate;
         ammoCount -= 1;
-        switch (focusedObject)
-        {
-            case PropBody player:
-                crosshairHitTween?.Kill();
-                crosshairHitTween = CreateTween();
-                crosshairHitTween.SetEase(Tween.EaseType.In);
-                crosshairHitTween.TweenProperty(CrosshairHit, "modulate", new Color(0xFFFFFF00), crosshairHitDuration);
-                CrosshairHit.Modulate = new Color(0xFFFFFFFF);
-                return player.GetPath();
-            case BehideObject behideObject:
-                return behideObject.GetPath();
-            default:
-                return null;
-        }
+        // TODO: Animations
+        return null;
     }
 
     public void TryReload()
@@ -106,6 +81,6 @@ public abstract partial class Gun : Node3D
     {
         timerReload = reloadTime;
         AmmoLabel.Text = "Reloading";
-        // + Animations
+        // TODO: Animations
     }
 }

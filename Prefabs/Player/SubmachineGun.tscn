@@ -27,7 +27,6 @@ outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_8uwrk"]
 font = ExtResource("2_8uwrk")
-font_size = 30
 outline_size = 1
 outline_color = Color(0, 0, 0, 1)
 
@@ -39,7 +38,7 @@ reloadSound = ExtResource("2_1ol2f")
 [node name="Model" parent="." unique_id=1920550007 instance=ExtResource("1_i3wdl")]
 transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0.491, -0.384, -0.949)
 
-[node name="RayCast" type="RayCast3D" parent="." unique_id=639134905]
+[node name="RayCast" type="RayCast3D" parent="." unique_id=314245295]
 target_position = Vector3(0, 0, -1000)
 collision_mask = 7
 debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
