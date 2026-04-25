@@ -43,6 +43,11 @@ fov = 90.0
 
 [node name="SubmachineGun" parent="Camera" unique_id=411671082 instance=ExtResource("2_1qbrv")]
 
+[node name="RayCast" type="RayCast3D" parent="Camera" unique_id=121293897]
+target_position = Vector3(0, 0, -1000)
+collision_mask = 7
+debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
+
 [node name="HUD" type="MarginContainer" parent="." unique_id=1893787552]
 anchors_preset = 15
 anchor_right = 1.0

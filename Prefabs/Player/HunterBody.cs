@@ -12,6 +12,7 @@ public partial class HunterBody : PlayerBody
     {
         CameraDisk = _.Camera;
         Camera = _.Camera;
+        RayCast = _.Camera.RayCast;
         PositionSynchronizer = _.PositionSynchronizer;
         HealthBar = _.HUD.Health.HealthBar;
         HealthLabel = _.HUD.Health.HealthLabel;
@@ -22,13 +23,21 @@ public partial class HunterBody : PlayerBody
         Gun.InitializeNodes(this);
         Gun.InitializeProperties();
 
+        PlayerUsername = Gun.PlayerUsername;
         Huds = [_.HUD, Gun.Hud];
     }
 
     public override void _Process(double delta)
     {
+        // Show players names
+        base._Process(delta);
+
         if (!IsMultiplayerAuthority()) return;
         if (!Alive) return;
+
+        // Update gun properties
+        Gun.TickGun(delta);
+
         if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
         // Listen shoot
