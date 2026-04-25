@@ -10,10 +10,12 @@ public abstract partial class Countdown : Node
     private DateTimeOffset? endDate;
     private bool timeElapsed;
 
+    public event Action? Started;
+    public event Action? OnReset;
     public event Action? TimeElapsed;
 
     protected abstract void Process(bool timeElapsed, TimeSpan remainingTime);
-    protected abstract void Reset();
+    protected virtual void Reset() => OnReset?.Invoke();
 
     public override void _Process(double delta)
     {
@@ -43,8 +45,11 @@ public abstract partial class Countdown : Node
 
 
     [Rpc(CallLocal = true)]
-    private void StartCountdownRpc(long endTimestamp) =>
+    private void StartCountdownRpc(long endTimestamp)
+    {
         endDate = DateTimeOffset.FromUnixTimeMilliseconds(endTimestamp);
+        Started?.Invoke();
+    }
 
     [Rpc(CallLocal = true)]
     private void ResetCountdownRpc()

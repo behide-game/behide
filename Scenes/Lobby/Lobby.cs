@@ -14,6 +14,8 @@ public partial class Lobby : Control
     private CancellationToken NodeAliveCt => nodeAliveCts.Token;
     private Room room = null!;
 
+    private bool configLocked;
+
     [Export] private PackedScene playerListItemScene = null!;
 #if DEBUG
     private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(0);
@@ -50,7 +52,11 @@ public partial class Lobby : Control
         {
             if (!IsMultiplayerAuthority()) return;
             CallDeferred(Node.MethodName.Rpc, nameof(StartGameRpc));
+            configLocked = false;
         };
+
+        Countdown.Started += () => configLocked = true;
+        Countdown.OnReset += () => configLocked = false;
 
         // Set room code in UI
         RoomCode.Text = room.RoomId.ToString();
@@ -65,6 +71,7 @@ public partial class Lobby : Control
         // Update UI according to initial room state
         ChangePlayerList();
         UpdateRoleButton();
+        ChangeMapName();
     }
 
     public override void _ExitTree()
@@ -79,7 +86,7 @@ public partial class Lobby : Control
         SetMultiplayerAuthority(minPeerId);
         Countdown.SetMultiplayerAuthority(minPeerId);
 
-        HunterCountSelector.SetVisible(IsMultiplayerAuthority());
+        HostPanel.SetVisible(IsMultiplayerAuthority());
     }
 
     private void RefreshCountdownState()

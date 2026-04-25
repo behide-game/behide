@@ -31,6 +31,17 @@ public partial class RoomConfiguration : Node
     private readonly HashSet<int> hunters = [];
     public int[] Hunters => hunters.ToArray();
 
+    private GameManager.GameMap map = GameManager.GameMap.Restaurant;
+    public GameManager.GameMap Map
+    {
+        get => map;
+        set
+        {
+            if (map == value) return;
+            Rpc(nameof(RpcSetMap), GameManager.Maps.IndexOf(value));
+        }
+    }
+
     private readonly Subject<Unit> changed = new();
     public IObservable<Unit> Changed => changed;
     public override void _ExitTree() => changed.OnCompleted();
@@ -61,6 +72,13 @@ public partial class RoomConfiguration : Node
     private void RpcRemoveHunter(int peerId)
     {
         hunters.Remove(peerId);
+        changed.OnNext(Unit.Default);
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+    private void RpcSetMap(int mapIdx)
+    {
+        map = GameManager.Maps[mapIdx];
         changed.OnNext(Unit.Default);
     }
 

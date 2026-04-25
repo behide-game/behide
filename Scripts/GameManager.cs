@@ -18,11 +18,14 @@ public partial class GameManager : Node
     public static Settings Settings { get; private set; } = null!;
 
     public enum GameState { Home, Lobby, Game }
+    public enum GameMap { Dungeon, Restaurant }
     public static GameState State { get; private set; } = GameState.Home;
+    public static GameMap[] Maps { get; private set; } = [GameMap.Restaurant, GameMap.Dungeon];
 
-    private static readonly PackedScene HomeScene = ResourceLoader.Load<PackedScene>("res://Scenes/Home/Home.tscn");
-    private static readonly PackedScene LobbyScene = ResourceLoader.Load<PackedScene>("res://Scenes/Lobby/Lobby.tscn");
-    private static readonly PackedScene GameScene = ResourceLoader.Load<PackedScene>("res://Scenes/Restaurant/Restaurant.tscn");
+    private static readonly PackedScene homeScene = ResourceLoader.Load<PackedScene>("res://Scenes/Home/Home.tscn");
+    private static readonly PackedScene lobbyScene = ResourceLoader.Load<PackedScene>("res://Scenes/Lobby/Lobby.tscn");
+    private static readonly PackedScene dungeonScene = ResourceLoader.Load<PackedScene>("res://Scenes/Dungeon/Dungeon.tscn");
+    private static readonly PackedScene restaurantScene = ResourceLoader.Load<PackedScene>("res://Scenes/Restaurant/Restaurant.tscn");
 
     private readonly ILogger log = Log.CreateLogger("GameManager");
 
@@ -53,15 +56,21 @@ public partial class GameManager : Node
         GetTree().Quit();
     }
 
-
     public static void SetGameState(GameState state)
     {
         var sceneToLoad = state switch
         {
-            GameState.Home => HomeScene,
-            GameState.Lobby => LobbyScene,
-            GameState.Game => GameScene,
-            _ => throw new Exception("Unexpected game state"),
+            GameState.Home => homeScene,
+            GameState.Lobby => lobbyScene,
+            GameState.Game when Room.Room is { } room =>
+                room.Configuration.Map switch
+                {
+                    GameMap.Dungeon => dungeonScene,
+                    GameMap.Restaurant => restaurantScene,
+                    _ => throw new Exception("Unexpected game map")
+                },
+            GameState.Game => throw new Exception("Not in a room"),
+            _ => throw new Exception("Unexpected game state")
         };
 
         if (PauseMenu.Visible) PauseMenu.Hide();

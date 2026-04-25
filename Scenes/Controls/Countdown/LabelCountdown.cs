@@ -20,6 +20,7 @@ public partial class LabelCountdown : Countdown
     }
     protected override void Reset()
     {
+        base.Reset();
         label.SetText(beforeRunningText);
     }
 }

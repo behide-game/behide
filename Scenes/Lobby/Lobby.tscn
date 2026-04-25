@@ -266,12 +266,15 @@ text = "Players"
 label_settings = SubResource("LabelSettings_1pw17")
 uppercase = true
 
-[node name="HunterCount" type="HBoxContainer" parent="Lobby/Boxes/LeftPanel" unique_id=1760482904]
+[node name="HostPanel" type="VBoxContainer" parent="Lobby/Boxes/LeftPanel" unique_id=1689947104]
+layout_mode = 2
+
+[node name="HunterCount" type="HBoxContainer" parent="Lobby/Boxes/LeftPanel/HostPanel" unique_id=1760482904]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_constants/separation = -20
 
-[node name="minus" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HunterCount" unique_id=1810148209]
+[node name="minus" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HostPanel/HunterCount" unique_id=1810148209]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -280,14 +283,14 @@ BezelSize = 15
 BorderRadius = 0
 Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HunterCount/minus" unique_id=1403053137]
+[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HostPanel/HunterCount/minus" unique_id=1403053137]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 15
 
-[node name="Label" type="Label" parent="Lobby/Boxes/LeftPanel/HunterCount/minus/MarginContainer" unique_id=758298321]
+[node name="Label" type="Label" parent="Lobby/Boxes/LeftPanel/HostPanel/HunterCount/minus/MarginContainer" unique_id=758298321]
 layout_mode = 2
 text = "-"
 label_settings = SubResource("LabelSettings_2dfve")
@@ -295,30 +298,25 @@ horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="Button" type="Button" parent="Lobby/Boxes/LeftPanel/HunterCount/minus" unique_id=929797701]
+[node name="Button" type="Button" parent="Lobby/Boxes/LeftPanel/HostPanel/HunterCount/minus" unique_id=929797701]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 flat = true
 
-[node name="Count" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HunterCount" unique_id=2118907587]
+[node name="Count" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HostPanel/HunterCount" unique_id=1436166245]
 z_index = 1
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-script = ExtResource("5_ew8go")
-BezelSize = 15
-BorderRadius = 0
-Color = Color(0.7921569, 0.8784314, 0.8980392, 1)
-
-[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HunterCount/Count" unique_id=1436166245]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 15
+script = ExtResource("5_ew8go")
+BezelSize = 15
+BorderRadius = 0
+Color = Color(0.7921569, 0.8784314, 0.8980392, 1)
 
-[node name="Label" type="Label" parent="Lobby/Boxes/LeftPanel/HunterCount/Count/MarginContainer" unique_id=1246240306]
+[node name="Label" type="Label" parent="Lobby/Boxes/LeftPanel/HostPanel/HunterCount/Count" unique_id=1246240306]
 layout_mode = 2
 text = "0"
 label_settings = SubResource("LabelSettings_2dfve")
@@ -326,13 +324,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="Button" type="Button" parent="Lobby/Boxes/LeftPanel/HunterCount/Count" unique_id=871630481]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-flat = true
-
-[node name="plus" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HunterCount" unique_id=282262520]
+[node name="plus" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HostPanel/HunterCount" unique_id=282262520]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -341,14 +333,14 @@ BezelSize = 15
 BorderRadius = 0
 Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HunterCount/plus" unique_id=775514861]
+[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HostPanel/HunterCount/plus" unique_id=775514861]
 layout_mode = 2
 theme_override_constants/margin_left = 40
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 15
 
-[node name="Label" type="Label" parent="Lobby/Boxes/LeftPanel/HunterCount/plus/MarginContainer" unique_id=878041476]
+[node name="Label" type="Label" parent="Lobby/Boxes/LeftPanel/HostPanel/HunterCount/plus/MarginContainer" unique_id=878041476]
 layout_mode = 2
 text = "+"
 label_settings = SubResource("LabelSettings_2dfve")
@@ -356,7 +348,92 @@ horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="Button" type="Button" parent="Lobby/Boxes/LeftPanel/HunterCount/plus" unique_id=2057835051]
+[node name="Button" type="Button" parent="Lobby/Boxes/LeftPanel/HostPanel/HunterCount/plus" unique_id=2057835051]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+flat = true
+
+[node name="SelectedMap" type="HBoxContainer" parent="Lobby/Boxes/LeftPanel/HostPanel" unique_id=889257006]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = -20
+
+[node name="left" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HostPanel/SelectedMap" unique_id=1957088131]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("5_ew8go")
+BezelSize = 15
+BorderRadius = 0
+Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HostPanel/SelectedMap/left" unique_id=1018467878]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="Lobby/Boxes/LeftPanel/HostPanel/SelectedMap/left/MarginContainer" unique_id=68284170]
+layout_mode = 2
+text = "<"
+label_settings = SubResource("LabelSettings_2dfve")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="Button" type="Button" parent="Lobby/Boxes/LeftPanel/HostPanel/SelectedMap/left" unique_id=1381500372]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+flat = true
+
+[node name="MapName" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HostPanel/SelectedMap" unique_id=495397520]
+z_index = 1
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 15
+script = ExtResource("5_ew8go")
+BezelSize = 15
+BorderRadius = 0
+Color = Color(0.7921569, 0.8784314, 0.8980392, 1)
+
+[node name="Label" type="Label" parent="Lobby/Boxes/LeftPanel/HostPanel/SelectedMap/MapName" unique_id=153931354]
+layout_mode = 2
+text = "Restaurant"
+label_settings = SubResource("LabelSettings_2dfve")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="right" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HostPanel/SelectedMap" unique_id=16437959]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("5_ew8go")
+BezelSize = 15
+BorderRadius = 0
+Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Lobby/Boxes/LeftPanel/HostPanel/SelectedMap/right" unique_id=1768284074]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="Lobby/Boxes/LeftPanel/HostPanel/SelectedMap/right/MarginContainer" unique_id=895818240]
+layout_mode = 2
+text = ">"
+label_settings = SubResource("LabelSettings_2dfve")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="Button" type="Button" parent="Lobby/Boxes/LeftPanel/HostPanel/SelectedMap/right" unique_id=944170566]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -468,8 +545,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 flat = true
 
-[connection signal="pressed" from="Lobby/Boxes/LeftPanel/HunterCount/minus/Button" to="." method="DecreaseHunterCount"]
-[connection signal="pressed" from="Lobby/Boxes/LeftPanel/HunterCount/plus/Button" to="." method="IncreaseHunterCount"]
+[connection signal="pressed" from="Lobby/Boxes/LeftPanel/HostPanel/HunterCount/minus/Button" to="." method="DecreaseHunterCount"]
+[connection signal="pressed" from="Lobby/Boxes/LeftPanel/HostPanel/HunterCount/plus/Button" to="." method="IncreaseHunterCount"]
+[connection signal="pressed" from="Lobby/Boxes/LeftPanel/HostPanel/SelectedMap/left/Button" to="." method="PreviousMap"]
+[connection signal="pressed" from="Lobby/Boxes/LeftPanel/HostPanel/SelectedMap/right/Button" to="." method="NextMap"]
 [connection signal="pressed" from="Lobby/Boxes/Buttons/Role/Button" to="." method="RoleButtonPressed"]
 [connection signal="pressed" from="Lobby/Boxes/Buttons/Ready/Button" to="." method="ReadyButtonPressed"]
 [connection signal="pressed" from="Lobby/Boxes/Buttons/Quit/Button" to="." method="QuitButtonPressed"]
