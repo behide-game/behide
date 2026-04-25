@@ -53,7 +53,7 @@ public abstract partial class Gun : Node3D
         timerReload -= delta;
     }
 
-    public NodePath? TryShoot()
+    public Node3D? TryShoot()
     {
         if (canShoot) return Shoot();
         if (timerFire <= 0 && timerReload <= 0 && ammoCount == 0)
@@ -61,7 +61,7 @@ public abstract partial class Gun : Node3D
         return null;
     }
 
-    protected virtual NodePath? Shoot()
+    protected virtual Node3D? Shoot()
     {
         timerFire = 1 / fireRate;
         ammoCount -= 1;

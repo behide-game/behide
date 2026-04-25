@@ -43,10 +43,16 @@ public partial class HunterBody : PlayerBody
         // Listen shoot
         if (Input.IsActionPressed(InputActions.Shoot))
         {
-            var objectPath = Gun.TryShoot();
-            if (objectPath == null) return;
-            Rpc(nameof(ObjectHitRpc), objectPath, Gun.damagePerAmmo);
-            return;
+            var shootObject = Gun.TryShoot();
+            switch (shootObject)
+            {
+                case BehideObject:
+                    Rpc(nameof(HunterMissedRpc));
+                    break;
+                case PropBody player:
+                    Rpc(nameof(PlayerHitRpc), player.GetPath(), Gun.damagePerAmmo);
+                    break;
+            }
         }
 
         // Listen reload
@@ -54,18 +60,12 @@ public partial class HunterBody : PlayerBody
         Gun.TryReload();
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    public void ObjectHitRpc(NodePath objectPath, int damageAmount)
+    [Rpc(CallLocal = true)]
+    public void PlayerHitRpc(NodePath playerPath, int damageAmount)
     {
-        switch (GetNode(objectPath))
-        {
-            case BehideObject:
-                Rpc(nameof(HunterMissedRpc));
-                break;
-            case PropBody player:
-                player.DecreaseHealth(this, damageAmount);
-                break;
-        }
+        var node = GetNode(playerPath);
+        if (node is not PropBody player) return;
+        player.DecreaseHealth(this, damageAmount);
     }
 
     [Rpc(CallLocal = true)]
