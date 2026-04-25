@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cva4wcyi4gv27"]
 
 [ext_resource type="Script" uid="uid://dcv2kk31wgoxq" path="res://Scenes/Home/Home.cs" id="1_6ww0f"]
-[ext_resource type="PackedScene" uid="uid://cfyb4305uyrca" path="res://Scenes/Dungeon/Dungeon.tscn" id="2_ydllb"]
+[ext_resource type="PackedScene" uid="uid://cfyb4305uyrca" path="res://Scenes/Dungeon/DungeonMap.tscn" id="2_ydllb"]
 [ext_resource type="PackedScene" uid="uid://dxmrf533plg67" path="res://Scenes/Controls/Logo.tscn" id="3_6di0c"]
 [ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="4_gv7h4"]
 [ext_resource type="PackedScene" uid="uid://ejs15n81bpnf" path="res://Prefabs/BehideObjects/Cube/yellow_cube.tscn" id="7_1ahje"]

@@ -2,7 +2,9 @@
 
 [ext_resource type="LightmapGIData" uid="uid://c4kh2ac6ajo2g" path="res://Scenes/Restaurant/Restaurant.lmbake" id="1_0mw8t"]
 [ext_resource type="PackedScene" uid="uid://cehw1sq4q5yu8" path="res://Prefabs/Supervisors/PropHuntSupervisor.tscn" id="1_mjx0q"]
+[ext_resource type="Environment" uid="uid://c8ttkksgix01d" path="res://Scenes/environment.tres" id="2_8qvsr"]
 [ext_resource type="PackedScene" uid="uid://ct5qmehvntla3" path="res://Prefabs/Restaurant/wall.tscn" id="3_8qvsr"]
+[ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Assets/Shaders/chromatic_aberration.tres" id="3_740en"]
 [ext_resource type="PackedScene" uid="uid://duj268bc1xnyq" path="res://Prefabs/Restaurant/wall_window_closed.tscn" id="4_740en"]
 [ext_resource type="PackedScene" uid="uid://c2gvul3ovhdff" path="res://Prefabs/Restaurant/wall_doorway.tscn" id="5_yic3s"]
 [ext_resource type="PackedScene" uid="uid://1d1e3hl1s7mg" path="res://Prefabs/Restaurant/wall_orderwindow.tscn" id="6_ggn37"]
@@ -183,6 +185,21 @@ BehideObjects = NodePath("../BehideObjects")
 BehideObjects = NodePath("../BehideObjects")
 
 [node name="Players" type="Node3D" parent="." unique_id=1372265819]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=126028616]
+environment = ExtResource("2_8qvsr")
+
+[node name="VisualEffectsLayer" type="CanvasLayer" parent="." unique_id=1234477127]
+layer = -1
+
+[node name="ChromaticAberration" type="ColorRect" parent="VisualEffectsLayer" unique_id=324684165]
+material = ExtResource("3_740en")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=1173480206]
 light_data = ExtResource("1_0mw8t")
