@@ -3,9 +3,15 @@
 [ext_resource type="Script" uid="uid://luuofj7aqswe" path="res://Prefabs/Player/HunterBody.cs" id="1_w58js"]
 [ext_resource type="PackedScene" uid="uid://duc1guf2tc711" path="res://Prefabs/Player/SubmachineGun.tscn" id="2_1qbrv"]
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_svrpp"]
+
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_qudki"]
+height = 1.0
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_svrpp"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qudki"]
+height = 1.0
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_n61o8"]
 properties/0/path = NodePath(".:position")
@@ -24,14 +30,22 @@ collision_mask = 23
 slide_on_ceiling = false
 script = ExtResource("1_w58js")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=640270493]
+[node name="MeshInstanceStanding2" type="MeshInstance3D" parent="." unique_id=1458553612]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+gi_mode = 2
+mesh = SubResource("CapsuleMesh_svrpp")
+
+[node name="MeshInstanceCrouching" type="MeshInstance3D" parent="." unique_id=640270493]
 gi_mode = 2
 mesh = SubResource("CapsuleMesh_qudki")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1277488484]
+[node name="CollisionShapeStanding" type="CollisionShape3D" parent="." unique_id=1277488484]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("CapsuleShape3D_svrpp")
+
+[node name="CollisionShapeCrouching" type="CollisionShape3D" parent="." unique_id=1732371043]
+shape = SubResource("CapsuleShape3D_qudki")
+disabled = true
 
 [node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1194212391]
 replication_config = SubResource("SceneReplicationConfig_n61o8")

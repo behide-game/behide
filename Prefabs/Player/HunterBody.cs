@@ -7,6 +7,10 @@ namespace Behide.Game.Player;
 public partial class HunterBody : PlayerBody
 {
     private SubmachineGun Gun => _.Camera.SubmachineGun;
+    private CollisionShape3D StandingShape => _.CollisionShapeStanding;
+    private MeshInstance3D StandingMesh => _.CollisionShapeStanding;
+    private CollisionShape3D CrouchingShape => _.CollisionShapeCrouching;
+    private MeshInstance3D CrouchingMesh => _.CollisionShapeCrouching;
 
     protected override void InitializeNodes()
     {
@@ -29,11 +33,11 @@ public partial class HunterBody : PlayerBody
 
     public override void _Process(double delta)
     {
-        // Show players names
-        base._Process(delta);
-
         if (!IsMultiplayerAuthority()) return;
         if (!Alive) return;
+
+        // Show players names
+        base._Process(delta);
 
         // Update gun properties
         Gun.TickGun(delta);
@@ -56,8 +60,15 @@ public partial class HunterBody : PlayerBody
         }
 
         // Listen reload
-        if (!Input.IsActionJustPressed(InputActions.Reload)) return;
-        Gun.TryReload();
+        if (Input.IsActionJustPressed(InputActions.Reload))
+            Gun.TryReload();
+        var tryingToCrouch = Input.IsActionPressed(InputActions.Crouch);
+        var cantStandUp = StandingShape.get;
+        StandingShape.SetDisabled(tryingToCrouch || cantStandUp);
+        StandingShape.SetDisabled(tryingToCrouch || cantStandUp);
+        CrouchingShape.SetDisabled(!tryingToCrouch || !cantStandUp);
+        CrouchingShape.SetDisabled(!tryingToCrouch || !cantStandUp);
+        CameraDisk.SetPosition(new Vector3(0, tryingToCrouch ? 0.45f : 1.05f, 0));
     }
 
     [Rpc(CallLocal = true)]
