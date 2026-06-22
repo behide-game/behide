@@ -8,9 +8,11 @@ public partial class HunterBody : PlayerBody
 {
     private SubmachineGun Gun => _.Camera.SubmachineGun;
     private CollisionShape3D StandingShape => _.CollisionShapeStanding;
-    private MeshInstance3D StandingMesh => _.CollisionShapeStanding;
+    private MeshInstance3D StandingMesh => _.MeshInstanceStanding;
     private CollisionShape3D CrouchingShape => _.CollisionShapeCrouching;
-    private MeshInstance3D CrouchingMesh => _.CollisionShapeCrouching;
+    private MeshInstance3D CrouchingMesh => _.MeshInstanceCrouching;
+
+    private bool isCrouching;
 
     protected override void InitializeNodes()
     {
@@ -62,13 +64,27 @@ public partial class HunterBody : PlayerBody
         // Listen reload
         if (Input.IsActionJustPressed(InputActions.Reload))
             Gun.TryReload();
-        var tryingToCrouch = Input.IsActionPressed(InputActions.Crouch);
-        var cantStandUp = StandingShape.get;
-        StandingShape.SetDisabled(tryingToCrouch || cantStandUp);
-        StandingShape.SetDisabled(tryingToCrouch || cantStandUp);
-        CrouchingShape.SetDisabled(!tryingToCrouch || !cantStandUp);
-        CrouchingShape.SetDisabled(!tryingToCrouch || !cantStandUp);
-        CameraDisk.SetPosition(new Vector3(0, tryingToCrouch ? 0.45f : 1.05f, 0));
+
+        // Listen crouch
+        if (Input.IsActionJustPressed(InputActions.Crouch))
+        {
+            var canStandUp = !_.Area3D.Get().HasOverlappingBodies();
+            if (!isCrouching || canStandUp && isCrouching)
+            {
+                ToggleCrouch(!isCrouching);
+            }
+        }
+    }
+
+    private void ToggleCrouch(bool wantsToCrouch)
+    {
+        isCrouching = wantsToCrouch;
+        StandingShape.SetDisabled(wantsToCrouch);
+        StandingMesh.SetVisible(!wantsToCrouch);
+        CrouchingShape.SetDisabled(!wantsToCrouch);
+        CrouchingMesh.SetVisible(wantsToCrouch);
+        _.Area3D.Get().SetDisableMode(wantsToCrouch ? DisableModeEnum.KeepActive : DisableModeEnum.Remove);
+        CameraDisk.SetPosition(new Vector3(0, wantsToCrouch ? 0.45f : 1.05f, 0));
     }
 
     [Rpc(CallLocal = true)]
