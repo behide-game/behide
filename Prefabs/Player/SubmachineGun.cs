@@ -29,8 +29,7 @@ public partial class SubmachineGun : Gun
     protected override Node3D? ShootCore()
     {
         // Play sounds
-        _.AudioStreamPlayer3D.Stream = shootSound;
-        _.AudioStreamPlayer3D.Play();
+        PlaySoundRpc();
 
         // Return + crosshair hit effect
         switch (Raycast.GetCollider())
@@ -53,6 +52,13 @@ public partial class SubmachineGun : Gun
     {
         // Play sounds
         _.AudioStreamPlayer3D.Stream = reloadSound;
+        _.AudioStreamPlayer3D.Play();
+    }
+
+    [Rpc(CallLocal =  true)]
+    private void PlaySound()
+    {
+        _.AudioStreamPlayer3D.Stream = shootSound;
         _.AudioStreamPlayer3D.Play();
     }
 }
