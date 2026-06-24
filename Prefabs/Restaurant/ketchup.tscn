@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://bmd2qmxstxpv7"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_ws87o"]
+[ext_resource type="PackedScene" uid="uid://ns7gny4yjyp3" path="res://Assets/Models/Restaurant/ketchup.gltf" id="2_0bppx"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_lm173"]
+height = 0.7749219
+radius = 0.15
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ws87o"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="ketchup" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_ws87o")
+VisualNode = NodePath("ketchup")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="ketchup" parent="." unique_id=273415284 instance=ExtResource("2_0bppx")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2034349733]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38796094, 0)
+shape = SubResource("CylinderShape3D_lm173")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=166310384]
+replication_config = SubResource("SceneReplicationConfig_ws87o")

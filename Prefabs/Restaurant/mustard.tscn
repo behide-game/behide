@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://dkkbux43whry8"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_0psl5"]
+[ext_resource type="PackedScene" uid="uid://ddjgi7h5rox8l" path="res://Assets/Models/Restaurant/mustard.gltf" id="2_l1ske"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_lm173"]
+height = 0.7749219
+radius = 0.15
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_0psl5"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="mustard" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_0psl5")
+VisualNode = NodePath("mustard")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="mustard" parent="." unique_id=1598683223 instance=ExtResource("2_l1ske")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2034349733]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38796094, 0)
+shape = SubResource("CylinderShape3D_lm173")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2068718337]
+replication_config = SubResource("SceneReplicationConfig_0psl5")

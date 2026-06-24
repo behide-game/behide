@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://c0p57xcpse6su"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_s4ina"]
+[ext_resource type="PackedScene" uid="uid://ddsy70mxqsp7x" path="res://Assets/Models/Restaurant/chair_A.gltf" id="2_28iw0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kvus5"]
+size = Vector3(0.6, 0.3, 0.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6cqxv"]
+size = Vector3(0.745, 0.2, 0.75)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_746a4"]
+size = Vector3(0.7, 0.2, 0.75)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_vilc0"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="chair_A" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_s4ina")
+VisualNode = NodePath("chair")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2"), NodePath("CollisionShape3D3")]
+Mass = 1.0
+
+[node name="chair" parent="." unique_id=563635803 instance=ExtResource("2_28iw0")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=193534454]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("BoxShape3D_kvus5")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=737799048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.40000004, 0)
+shape = SubResource("BoxShape3D_6cqxv")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=788768911]
+transform = Transform3D(1, 0, 0, 0, -0.1736482, 0.9848078, 0, -0.9848078, -0.1736482, 0, 0.8120116, -0.24211797)
+shape = SubResource("BoxShape3D_746a4")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=760928905]
+replication_config = SubResource("SceneReplicationConfig_vilc0")

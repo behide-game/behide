@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://b3it41ujrrb3a"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_ffibb"]
+[ext_resource type="PackedScene" uid="uid://cvhdiqsqq6vpj" path="res://Assets/Models/Restaurant/chair_stool.gltf" id="2_iskkr"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_72610"]
+height = 0.25
+radius = 0.375
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fum1e"]
+height = 0.08
+radius = 0.2
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_25gva"]
+height = 0.175
+radius = 0.068
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ffibb"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="chair_stool" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_ffibb")
+VisualNode = NodePath("chair_stool")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2"), NodePath("CollisionShape3D3")]
+Mass = 1.0
+
+[node name="chair_stool" parent="." unique_id=1642343882 instance=ExtResource("2_iskkr")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=737799048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.37500006, 0)
+shape = SubResource("CylinderShape3D_72610")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=325646874]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+shape = SubResource("CylinderShape3D_fum1e")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=1892815605]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.165, 0)
+shape = SubResource("CylinderShape3D_25gva")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=245733320]
+replication_config = SubResource("SceneReplicationConfig_ffibb")

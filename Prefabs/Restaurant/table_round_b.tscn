@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://cebv1uis6kaj6"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_5ek3l"]
+[ext_resource type="PackedScene" uid="uid://cxio7cwo62w01" path="res://Assets/Models/Restaurant/table_round_B.gltf" id="2_5ek3l"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_4fofe"]
+height = 0.19999999
+radius = 1.5
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_18ql4"]
+size = Vector3(0.2, 0.90000004, 0.2)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5ek3l"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="table_round_b" type="RigidBody3D" unique_id=756488518 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+mass = 10.0
+script = ExtResource("1_5ek3l")
+VisualNode = NodePath("table_round_b")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2"), NodePath("CollisionShape3D3"), NodePath("CollisionShape3D4"), NodePath("CollisionShape3D5")]
+Mass = 10.0
+
+[node name="table_round_b" parent="." unique_id=817188735 instance=ExtResource("2_5ek3l")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=646935069]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CylinderShape3D_4fofe")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=724206848]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.45, -0.8)
+shape = SubResource("BoxShape3D_18ql4")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=1184215262]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.45, 0.8)
+shape = SubResource("BoxShape3D_18ql4")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="." unique_id=637554750]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.45, 0.8)
+shape = SubResource("BoxShape3D_18ql4")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="." unique_id=1711136414]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.45, -0.8)
+shape = SubResource("BoxShape3D_18ql4")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1359607268]
+replication_config = SubResource("SceneReplicationConfig_5ek3l")

@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://dyr2m7wf4eow4"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_1exrt"]
+[ext_resource type="PackedScene" uid="uid://d5qqvgfk344w" path="res://Assets/Models/Restaurant/bowl_small.gltf" id="2_gfwag"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_3eeao"]
+height = 0.3
+radius = 0.375
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_1exrt"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="bowl_small" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_1exrt")
+VisualNode = NodePath("bowl_small")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="bowl_small" parent="." unique_id=1437024482 instance=ExtResource("2_gfwag")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=193534454]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("CylinderShape3D_3eeao")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=562588248]
+replication_config = SubResource("SceneReplicationConfig_1exrt")

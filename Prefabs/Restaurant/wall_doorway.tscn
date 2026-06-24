@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://c2gvul3ovhdff"]
+
+[ext_resource type="PackedScene" uid="uid://pw8xovlrhf7n" path="res://Assets/Models/Restaurant/wall_doorway.gltf" id="1_f7tkt"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0tou4"]
+size = Vector3(1.2, 3.1000001, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2fksg"]
+size = Vector3(4, 1.2, 0.5)
+
+[node name="Wall_doorway" type="StaticBody3D" unique_id=683709527]
+
+[node name="wall_doorway" parent="." unique_id=621767976 instance=ExtResource("1_f7tkt")]
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1436806130]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 1.4500002, 0)
+shape = SubResource("BoxShape3D_0tou4")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=1454748277]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.4500002, 0)
+shape = SubResource("BoxShape3D_0tou4")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="." unique_id=1213127047]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0)
+shape = SubResource("BoxShape3D_2fksg")

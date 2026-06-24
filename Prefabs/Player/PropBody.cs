@@ -9,7 +9,6 @@ public partial class PropBody : PlayerBody
     private Node3D currentVisualNode = null!;
     private CollisionShape3D[] collisionNodes = null!;
     private RayCast3D rayCast = null!;
-    private PropHuntSupervisor supervisor = null!;
 
     [ExportGroup("Camera adjust transition")]
     [Export] private double cameraAdjustDuration = 0.4;
@@ -38,7 +37,6 @@ public partial class PropBody : PlayerBody
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
         rayCast = _.CameraDisk.SpringArm3D.Camera.RayCast;
-        supervisor = GetNode<PropHuntSupervisor>("/root/multiplayer/Supervisor");
 
         ShowLockedLogo(false);
         AdjustProperties();

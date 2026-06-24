@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://b8p54w5yioqah"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_5rdiq"]
+[ext_resource type="PackedScene" uid="uid://da602juq12mrn" path="res://Assets/Models/Restaurant/plate_dirty.gltf" id="2_of2j3"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_8dm4l"]
+height = 0.1
+radius = 0.475
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5rdiq"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="plate_dirty" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_5rdiq")
+VisualNode = NodePath("plate_dirty")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="plate_dirty" parent="." unique_id=1411955416 instance=ExtResource("2_of2j3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=801284046]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+shape = SubResource("CylinderShape3D_8dm4l")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=673247074]
+replication_config = SubResource("SceneReplicationConfig_5rdiq")

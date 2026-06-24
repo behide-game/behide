@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://purq3pek41vb"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_pqefa"]
+[ext_resource type="PackedScene" uid="uid://ntc1sxi8bkyb" path="res://Assets/Models/Restaurant/food_ingredient_lettuce_chopped.gltf" id="2_lmi4c"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fwwbw"]
+size = Vector3(1, 0.725, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jhl2q"]
+size = Vector3(0.6, 0.3, 0.90000004)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_pqefa"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="food_ingredient_lettuce_chopped" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_pqefa")
+VisualNode = NodePath("food_ingredient_lettuce_chopped")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2")]
+Mass = 1.0
+
+[node name="food_ingredient_lettuce_chopped" parent="." unique_id=87619757 instance=ExtResource("2_lmi4c")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=782230410]
+transform = Transform3D(0.57357645, 0, 0.81915206, 0, 1, 0, -0.81915206, 0, 0.57357645, -0.123, 0.363, -0.086)
+shape = SubResource("BoxShape3D_fwwbw")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1856608433]
+transform = Transform3D(0.90630776, 0, -0.42261827, 0, 1, 0, 0.42261827, 0, 0.90630776, 0.78, 0.15, 0.14)
+shape = SubResource("BoxShape3D_jhl2q")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=319448677]
+replication_config = SubResource("SceneReplicationConfig_pqefa")

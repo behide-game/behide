@@ -51,7 +51,7 @@ public abstract partial class Supervisor : Node
         if (IsMultiplayerAuthority())
         {
             behideObjectsParent = BehideObjects.GetParent();
-            behideObjectsParent.RemoveChild(BehideObjects);
+            behideObjectsParent.CallDeferred(Node.MethodName.RemoveChild, BehideObjects);
             BehideObjects.SetOwner(null);
         }
 

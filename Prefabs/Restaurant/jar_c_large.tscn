@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://davg2lqka4ycw"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_vqkrk"]
+[ext_resource type="PackedScene" uid="uid://cx5vm5ayaqv0w" path="res://Assets/Models/Restaurant/jar_C_large.gltf" id="2_qbpba"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_lm173"]
+height = 0.75
+radius = 0.25
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_vqkrk"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="jar_c_large" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_vqkrk")
+VisualNode = NodePath("jar_c_large")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="jar_c_large" parent="." unique_id=1232408283 instance=ExtResource("2_qbpba")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2034349733]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
+shape = SubResource("CylinderShape3D_lm173")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1138227485]
+replication_config = SubResource("SceneReplicationConfig_vqkrk")

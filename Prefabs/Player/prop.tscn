@@ -52,7 +52,7 @@ shape = SubResource("BoxShape3D_rr4v2")
 
 [node name="SpringArm3D" type="SpringArm3D" parent="CameraDisk" unique_id=1227372679]
 transform = Transform3D(1, 0, 0, 0, 0.996917, 0.0784591, 0, -0.0784591, 0.996917, 0, 1, 0)
-collision_mask = 17
+collision_mask = 21
 shape = SubResource("SphereShape3D_ky5tt")
 spring_length = 5.0
 

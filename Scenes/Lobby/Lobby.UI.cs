@@ -8,7 +8,7 @@ using Types;
 
 public partial class Lobby
 {
-    private Control HunterCountSelector => nodes.Lobby.Boxes.LeftPanel.HunterCount;
+    private Control HostPanel => nodes.Lobby.Boxes.LeftPanel.HostPanel;
     private LabelCountdown Countdown => nodes.Countdown;
     private Label RoomCode => nodes.Lobby.Header.Code.Value.Value;
 
@@ -39,7 +39,7 @@ public partial class Lobby
     {
         var playersWithRole = (Control)nodes.Lobby.Boxes.LeftPanel.PlayersWithRole;
         var players = (Control)nodes.Lobby.Boxes.LeftPanel.Players;
-        var countLabel = nodes.Lobby.Boxes.LeftPanel.HunterCount.Count.MarginContainer.Label;
+        var countLabel = nodes.Lobby.Boxes.LeftPanel.HostPanel.HunterCount.Count.Label;
 
         playersWithRole.SetVisible(room.Configuration.HunterCount == 0);
         players.SetVisible(room.Configuration.HunterCount != 0);
@@ -129,5 +129,16 @@ public partial class Lobby
                 SortPlayerList(PropList);
             }
         }
+    }
+
+    private void ChangeMapName()
+    {
+        var label = nodes.Lobby.Boxes.LeftPanel.HostPanel.SelectedMap.MapName.Label;
+        label.Text = room.Configuration.Map switch
+        {
+            GameManager.GameMap.Dungeon => "Dungeon",
+            GameManager.GameMap.Restaurant => "Restaurant",
+            _ => throw new Exception("Invalid map")
+        };
     }
 }

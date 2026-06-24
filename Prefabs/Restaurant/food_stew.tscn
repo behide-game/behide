@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://1ofrr2a8q7f2"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_ap058"]
+[ext_resource type="PackedScene" uid="uid://bnp3o1fquhf3x" path="res://Assets/Models/Restaurant/food_stew.gltf" id="2_oh032"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_mt0bg"]
+height = 0.3
+radius = 0.45
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ap058"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="food_stew" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_ap058")
+VisualNode = NodePath("food_stew")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="food_stew" parent="." unique_id=993314218 instance=ExtResource("2_oh032")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2034349733]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0.15000004, 0)
+shape = SubResource("CylinderShape3D_mt0bg")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1338319073]
+replication_config = SubResource("SceneReplicationConfig_ap058")

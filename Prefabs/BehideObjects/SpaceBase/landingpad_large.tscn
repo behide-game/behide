@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://ceeohsryuowa0"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_uji5v"]
+[ext_resource type="PackedScene" uid="uid://76xq273i6yl5" path="res://Assets/Models/SpaceBase/landingpad_large.gltf" id="2_0vvh8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3k6gv"]
+size = Vector3(2.5, 0.5, 2.5)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_uji5v"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="landingpad_large" type="RigidBody3D" unique_id=1873062943 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_uji5v")
+VisualNode = NodePath("landingpad_large")
+CollisionNodes = [NodePath("CollisionShape3D")]
+Mass = 1.0
+
+[node name="landingpad_large" parent="." unique_id=49019433 instance=ExtResource("2_0vvh8")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=192157605]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.9604645e-08, 0.25, 5.9604645e-08)
+shape = SubResource("BoxShape3D_3k6gv")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1288220778]
+replication_config = SubResource("SceneReplicationConfig_uji5v")

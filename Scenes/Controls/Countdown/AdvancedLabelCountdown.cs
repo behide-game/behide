@@ -33,6 +33,7 @@ public partial class AdvancedLabelCountdown : Countdown
     }
     protected override void Reset()
     {
+        base.Reset();
         for (var i = 0; i < labels.Length; i++)
         {
             var label = labels[i];

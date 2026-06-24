@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://cmfmphvc25tkw"]
+
+[ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_dnj75"]
+[ext_resource type="PackedScene" uid="uid://banqlj4vgbv27" path="res://Assets/Models/Restaurant/food_ingredient_cheese_chopped.gltf" id="2_3oxr7"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_idtax"]
+points = PackedVector3Array(-0.32, 0, -0.35, -0.32, 0, 0.35, 0.2, 0, 0.2, 0.2, 0, -0.2, -0.32, 0.5, -0.35, -0.32, 0.5, 0.35, 0.2, 0.5, 0.2, 0.2, 0.5, -0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dnj75"]
+size = Vector3(0.5, 0.06, 0.4)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3oxr7"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[node name="food_ingredient_cheese_chopped" type="RigidBody3D" unique_id=1522609223 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_dnj75")
+VisualNode = NodePath("food_ingredient_cheese_chopped")
+CollisionNodes = [NodePath("CollisionShape3D"), NodePath("CollisionShape3D2")]
+Mass = 1.0
+
+[node name="food_ingredient_cheese_chopped" parent="." unique_id=923830290 instance=ExtResource("2_3oxr7")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2034349733]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 0, 0)
+shape = SubResource("ConvexPolygonShape3D_idtax")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=137342058]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.03, 0)
+shape = SubResource("BoxShape3D_dnj75")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=360903729]
+replication_config = SubResource("SceneReplicationConfig_3oxr7")
