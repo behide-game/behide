@@ -67,22 +67,26 @@ public partial class HunterBody : PlayerBody
         if (Input.IsActionJustPressed(InputActions.Crouch))
         {
             var canStandUp = !_.Area3D.Get().HasOverlappingBodies();
-            if (!isCrouching || canStandUp && isCrouching)
-            {
-                ToggleCrouch(!isCrouching);
-            }
+            if (!isCrouching || canStandUp && isCrouching) ToggleCrouch(!isCrouching);
         }
     }
 
     private void ToggleCrouch(bool wantsToCrouch)
     {
         isCrouching = wantsToCrouch;
+        _.Area3D.Get().SetDisableMode(wantsToCrouch ? DisableModeEnum.KeepActive : DisableModeEnum.Remove);
+
+        Rpc(nameof(VisuallyTriggerCrouchRpc), wantsToCrouch);
+    }
+
+    [Rpc(CallLocal = true)]
+    private void VisuallyTriggerCrouchRpc(bool wantsToCrouch)
+    {
+        CameraDisk.SetPosition(new Vector3(0, wantsToCrouch ? 0.45f : 1.05f, 0));
         StandingShape.SetDisabled(wantsToCrouch);
         StandingMesh.SetVisible(!wantsToCrouch);
         CrouchingShape.SetDisabled(!wantsToCrouch);
         CrouchingMesh.SetVisible(wantsToCrouch);
-        _.Area3D.Get().SetDisableMode(wantsToCrouch ? DisableModeEnum.KeepActive : DisableModeEnum.Remove);
-        CameraDisk.SetPosition(new Vector3(0, wantsToCrouch ? 0.45f : 1.05f, 0));
     }
 
     [Rpc(CallLocal = true)]
