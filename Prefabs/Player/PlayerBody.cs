@@ -9,15 +9,14 @@ public abstract partial class PlayerBody : CharacterBody3D
 {
     private readonly ILogger log = Log.CreateLogger("Player/Movements");
 
-    protected Node3D CameraDisk = null!;
-    protected Camera3D Camera = null!;
-    protected RayCast3D RayCast = null!;
-    protected Label PlayerUsername = null!;
-    protected List<Control> Huds = null!;
-    protected ProgressBar HealthBar = null!;
-    protected Label HealthLabel = null!;
-    private Supervisor Supervisor = null!;
-    public MultiplayerSynchronizer PositionSynchronizer = null!;
+    protected abstract Node3D CameraDisk { get; }
+    protected abstract Camera3D Camera { get; }
+    protected abstract RayCast3D RayCast { get; }
+    protected abstract Label PlayerUsername { get; }
+    protected abstract ProgressBar HealthBar { get; }
+    protected abstract Label HealthLabel { get; }
+    public abstract MultiplayerSynchronizer PositionSynchronizer { get; }
+    private Supervisor supervisor = null!;
 
     protected GodotObject? focusedObject;
 
@@ -60,8 +59,8 @@ public abstract partial class PlayerBody : CharacterBody3D
         SetVisible(false);
         SetHudsVisibility(false);
         SetProcessMode(ProcessModeEnum.Disabled); // Disable collisions
-        Supervisor.PlayerDied(killer, this);
-        if (IsMultiplayerAuthority()) Supervisor.LocalPlayerDied(this);
+        supervisor.PlayerDied(killer, this);
+        if (IsMultiplayerAuthority()) supervisor.LocalPlayerDied(this);
     }
 
     public void Freeze()
@@ -71,13 +70,11 @@ public abstract partial class PlayerBody : CharacterBody3D
     }
 
     // --- Initialization ---
-    protected abstract void InitializeNodes();
     public override void _EnterTree()
     {
         if (GameManager.Supervisor is null) log.Error("Supervisor is null");
-        else Supervisor = GameManager.Supervisor;
+        else supervisor = GameManager.Supervisor;
 
-        InitializeNodes();
         Health = 1;
 
         // Set authority
@@ -119,7 +116,7 @@ public abstract partial class PlayerBody : CharacterBody3D
 
         if (canShow)
         {
-            var owner = Supervisor.GetBodyPlayer((PlayerBody) focusedObject);
+            var owner = supervisor.GetBodyPlayer((PlayerBody) focusedObject);
             PlayerUsername.Text = owner?.Username;
         }
         else
@@ -136,12 +133,5 @@ public abstract partial class PlayerBody : CharacterBody3D
         MoveAndSlide();
     }
 
-    private void SetHudsVisibility(bool value)
-    {
-        foreach (var hud in Huds)
-        {
-            GD.Print(hud);
-            hud.Visible = value ;
-        }
-    }
+    protected abstract void SetHudsVisibility(bool value);
 }

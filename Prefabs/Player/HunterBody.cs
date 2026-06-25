@@ -14,23 +14,25 @@ public partial class HunterBody : PlayerBody
 
     private bool isCrouching;
 
-    protected override void InitializeNodes()
-    {
-        CameraDisk = _.Camera;
-        Camera = _.Camera;
-        RayCast = _.Camera.RayCast;
-        PositionSynchronizer = _.PositionSynchronizer;
-        HealthBar = _.HUD.Health.HealthBar;
-        HealthLabel = _.HUD.Health.HealthLabel;
+    protected override Node3D CameraDisk => _.Camera;
+    protected override Camera3D Camera => _.Camera;
+    protected override RayCast3D RayCast => _.Camera.RayCast;
+    protected override Label PlayerUsername => Gun.PlayerUsernameLabel;
+    protected override ProgressBar HealthBar => _.HUD.Health.HealthBar;
+    protected override Label HealthLabel => _.HUD.Health.HealthLabel;
+    public override MultiplayerSynchronizer PositionSynchronizer => _.PositionSynchronizer;
 
+    public override void _EnterTree()
+    {
         MaxHealth = 100;
         MoveSpeed = 1.2f;
+        base._EnterTree();
+    }
 
-        Gun.InitializeNodes(this);
-        Gun.InitializeProperties();
-
-        PlayerUsername = Gun.PlayerUsername;
-        Huds = [_.HUD, Gun.Hud];
+    protected override void SetHudsVisibility(bool value)
+    {
+        _.HUD.Get().SetVisible(value);
+        Gun.Hud.SetVisible(value);
     }
 
     public override void _Process(double delta)
@@ -40,9 +42,6 @@ public partial class HunterBody : PlayerBody
 
         // Show players names
         base._Process(delta);
-
-        // Update gun properties
-        Gun.TickGun(delta);
 
         if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
@@ -56,14 +55,13 @@ public partial class HunterBody : PlayerBody
                     Rpc(nameof(HunterMissedRpc));
                     break;
                 case PropBody player:
-                    Rpc(nameof(PlayerHitRpc), player.GetPath(), Gun.damagePerAmmo);
+                    Rpc(nameof(PlayerHitRpc), player.GetPath(), Gun.DamagePerAmmo);
                     break;
             }
         }
 
         // Listen reload
-        if (Input.IsActionJustPressed(InputActions.Reload))
-            Gun.TryReload();
+        if (Input.IsActionJustPressed(InputActions.Reload)) Gun.Reload();
 
         // Listen crouch
         if (Input.IsActionJustPressed(InputActions.Crouch))
