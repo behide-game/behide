@@ -1,5 +1,6 @@
 # Godot 4+ specific ignores
 .godot/
+*.TMP
 
 bin/
 obj/
@@ -23,4 +24,6 @@ target/
 *.bin
 *.gltf
 *.glb
+Assets/Sounds/**/*
+!Assets/Sounds/**/*.import
 Assets/Models/**/*.png

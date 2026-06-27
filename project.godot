@@ -149,6 +149,5 @@ common/physics_interpolation=true
 [rendering]
 
 textures/vram_compression/import_s3tc_bptc=true
-scaling_3d/mode=2
-scaling_3d/scale=0.6
+scaling_3d/mode=5
 occlusion_culling/use_occlusion_culling=true
