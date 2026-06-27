@@ -149,5 +149,6 @@ common/physics_interpolation=true
 [rendering]
 
 textures/vram_compression/import_s3tc_bptc=true
+anti_aliasing/quality/msaa_2d=1
 scaling_3d/mode=5
 occlusion_culling/use_occlusion_culling=true

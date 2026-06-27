@@ -4,7 +4,7 @@ using Godot;
 namespace Behide.UI.Controls;
 
 [SceneTree("SliderSetting.tscn")]
-public partial class SliderSetting : VBoxContainer
+public partial class SliderSetting : BoxContainer
 {
     [Export] private string numberFormat = "0.00";
 

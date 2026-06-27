@@ -1,91 +1,97 @@
-using System.Reactive;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using Godot;
 using Serilog;
 using Log = Behide.Logging.Log;
 
 namespace Behide.Game;
 
-internal static class ConfigFileExtensions
-{
-	extension(ConfigFile config)
-	{
-		public Variant GetValueOrDefault(string section, string key)
-		{
-			try
-			{
-				return config.GetValue(section, key);
-			}
-			catch (Exception)
-			{
-				return default;
-			}
-		}
-	}
-}
-
 [SceneTree(root: "nodes")]
-public partial class Settings : VBoxContainer
+public partial class Settings : Control
 {
-	public string? GetUsername()
-	{
-		var lineEditText = nodes.Username.LineEdit.Text;
-		return string.IsNullOrWhiteSpace(lineEditText)
-			? null
-			: lineEditText;
-	}
-	public double HorizontalSensitivity => nodes.HorizontalSensitivity.Value;
-	public double VerticalSensitivity => nodes.VerticalSensitivity.Value;
-	public double Fov => nodes.FOV.Value;
+    private readonly ILogger log = Log.CreateLogger("Settings");
 
-	private readonly ILogger log = Log.CreateLogger("Settings");
-	public readonly Subject<Unit> Changed = new();
+    #region SettingAccssors
+    private _SceneTree.__0_General.__1_VBox General => nodes.General.VBox;
+    private _SceneTree.__0_Graphics.__1_VBox Graphics => nodes.Graphics.VBox;
 
-	public override void _EnterTree()
-	{
-		ApplyConfig();
+    public string? GetUsername()
+    {
+        var lineEditText = General.Username.LineEdit.Text;
+        return string.IsNullOrWhiteSpace(lineEditText)
+            ? null
+            : lineEditText;
+    }
+    public double HorizontalSensitivity => General.HorizontalSensitivity.Value;
+    public double VerticalSensitivity => General.VerticalSensitivity.Value;
+    public double Fov => General.FOV.Value;
+    #endregion
 
-		var change = (double _) => Changed.OnNext(Unit.Default);
+    public override void _EnterTree()
+    {
+        LoadConfig();
+        SaveConfigOnChanged();
 
-		nodes.HorizontalSensitivity.Changed.Subscribe(change);
-		nodes.VerticalSensitivity.Changed.Subscribe(change);
-		nodes.FOV.Changed.Subscribe(change);
-		nodes.Username.LineEdit.TextChanged += _ => change.Invoke(0.0);
+        // Windowing
+        Graphics.WindowType.OptionButton.ItemSelected += selectedIdx =>
+        {
+            DisplayServer.WindowSetMode(
+                selectedIdx switch
+                {
+                    0 => DisplayServer.WindowMode.ExclusiveFullscreen,
+                    1 => DisplayServer.WindowMode.Windowed,
+                    2 => DisplayServer.WindowMode.Fullscreen,
+                    _ => DisplayServer.WindowMode.Windowed
+                }
+            );
+        };
 
-		Changed.Throttle(TimeSpan.FromSeconds(2)).Subscribe(_ => CallThreadSafe(nameof(Save)));
-	}
+        // Resolutions
+        // TODO: Update everytime the window changes screen
+        var resolutions = GetResolutions();
+        foreach (var (res, comment) in resolutions)
+            Graphics.Resolution.OptionButton.AddItem($"{res.X}x{res.Y} ({comment})", resolutions.Length-1);
 
-	private void ApplyConfig()
-	{
-		var config = new ConfigFile();
-		if (config.Load("user://settings.cfg") != Error.Ok)
-		{
-			log.Error("Failed to load settings");
-			return;
-		}
+        Graphics.Resolution.OptionButton.ItemSelected += selectedIdx =>
+            GetWindow().ContentScaleSize = resolutions[(int)selectedIdx].res;
 
-		var hSensi = (double)config.GetValue("Controls", "horizontal_sensitivity", 1);
-		var vSensi = (double)config.GetValue("Controls", "vertical_sensitivity", 1);
-		var fov = (double)config.GetValue("Controls", "fov", 90);
-		nodes.HorizontalSensitivity.SetValue(hSensi);
-		nodes.VerticalSensitivity.SetValue(vSensi);
-		nodes.FOV.SetValue(fov);
+        // UI Scaling
+        GetWindow().ContentScaleMode = Window.ContentScaleModeEnum.CanvasItems;
+        Graphics.UIScaling.SliderSetting.Changed.Subscribe(scale =>
+            GetWindow().ContentScaleFactor = (float)scale
+        );
 
-		var username = (string?)config.GetValueOrDefault("User", "username");
-		nodes.Username.LineEdit.Text = username;
-	}
+        // Render scale
+        Graphics.RenderScale.OptionButton.ItemSelected += selectedIdx =>
+        {
+            GetWindow().Scaling3DMode = selectedIdx switch
+            {
+                0 => Viewport.Scaling3DModeEnum.Nearest,
+                1 => Viewport.Scaling3DModeEnum.Fsr,
+                2 => Viewport.Scaling3DModeEnum.Fsr2,
+                _ => Viewport.Scaling3DModeEnum.Nearest
+            };
+        };
+        Graphics.RenderScale.SliderSetting.Changed.Subscribe(scale =>
+            GetWindow().Scaling3DScale = (float)scale / 100
+        );
+    }
 
-	private void Save()
-	{
-		var config = new ConfigFile();
-		config.SetValue("Controls", "horizontal_sensitivity", HorizontalSensitivity);
-		config.SetValue("Controls", "vertical_sensitivity", VerticalSensitivity);
-		config.SetValue("Controls", "fov", Fov);
-		config.SetValue("User", "username", GetUsername() ?? string.Empty);
+    private static (Vector2I res, string comment)[] GetResolutions()
+    {
+        var resolutions = new List<(Vector2I r, string c)>()
+        {
+            (new Vector2I(1280, 720), "16:9"),
+            (new Vector2I(1440, 810), "16:9"),
+            (new Vector2I(1600, 900), "16:9"),
+            (new Vector2I(1920, 1080), "16:9"),
+            (new Vector2I(2560, 1440), "16:9"),
+            (new Vector2I(3840, 2160), "16:9")
+        };
 
-		var err = config.Save("user://settings.cfg");
-		if (err == Error.Ok) return;
-		log.Error("Failed to save settings");
-	}
+        DisplayServer.ScreenGetSize().Deconstruct(out var width, out var height);
+        resolutions.Add((new Vector2I(width, height), "native"));
+        resolutions.RemoveAll(r => r.r.X > width || r.r.Y > height);
+        resolutions.Sort((a, b) => b.r.X.CompareTo(a.r.X));
+
+        return resolutions.ToArray();
+    }
 }
