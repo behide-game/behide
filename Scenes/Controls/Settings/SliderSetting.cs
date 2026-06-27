@@ -7,6 +7,7 @@ namespace Behide.UI.Controls;
 public partial class SliderSetting : BoxContainer
 {
     [Export] private string numberFormat = "0.00";
+    [Export] private bool fireChangedOnlyOnDragEnded;
 
     private LineEdit LineEdit => _.Controls.LineEdit;
     private Slider Slider => _.Controls.Slider;
@@ -23,11 +24,16 @@ public partial class SliderSetting : BoxContainer
         LineEdit.Text = clampedValue.ToString(numberFormat);
     }
 
-
+    private void SliderDragEnded(bool valueChanged)
+    {
+        if (!valueChanged) return;
+        LineEdit.Text = Slider.Value.ToString(numberFormat);
+        Changed.OnNext(Slider.Value);
+    }
     private void SliderValueChanged(double value)
     {
         LineEdit.Text = value.ToString(numberFormat);
-        Changed.OnNext(value);
+        if (!fireChangedOnlyOnDragEnded) Changed.OnNext(value);
     }
 
     private void LineEditLostFocus() => SubmitLineEditText(LineEdit.Text);

@@ -61,7 +61,6 @@ public partial class Settings : Control
 
         // Render scale
         Graphics.RenderScale.OptionButton.ItemSelected += selectedIdx =>
-        {
             GetWindow().Scaling3DMode = selectedIdx switch
             {
                 0 => Viewport.Scaling3DModeEnum.Nearest,
@@ -69,10 +68,28 @@ public partial class Settings : Control
                 2 => Viewport.Scaling3DModeEnum.Fsr2,
                 _ => Viewport.Scaling3DModeEnum.Nearest
             };
-        };
         Graphics.RenderScale.SliderSetting.Changed.Subscribe(scale =>
             GetWindow().Scaling3DScale = (float)scale / 100
         );
+
+        // Anti aliasing
+        Graphics.AntiAliasing.OptionButton.ItemSelected += selectedValue =>
+        {
+            GetWindow().Msaa3D = selectedValue switch
+            {
+                1 => Viewport.Msaa.Msaa2X,
+                2 => Viewport.Msaa.Msaa4X,
+                3 => Viewport.Msaa.Msaa8X,
+                _ => Viewport.Msaa.Disabled,
+            };
+            GetWindow().ScreenSpaceAA = selectedValue switch
+            {
+                4 => Viewport.ScreenSpaceAAEnum.Smaa,
+                5 => Viewport.ScreenSpaceAAEnum.Fxaa,
+                _ => Viewport.ScreenSpaceAAEnum.Disabled
+            };
+            GetWindow().UseTaa = selectedValue == 6;
+        };
     }
 
     private static (Vector2I res, string comment)[] GetResolutions()
