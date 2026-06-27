@@ -98,8 +98,8 @@ public abstract partial class PlayerBody
         // Rotation
         if (rawEvent is InputEventMouseMotion mouseMotion)
         {
-            rotationY -= mouseMotion.Relative.X * VerticalSensitivity;
-            rotationX -= mouseMotion.Relative.Y * HorizontalSensitivity;
+            rotationY -= mouseMotion.Relative.X * HorizontalSensitivity;
+            rotationX -= mouseMotion.Relative.Y * VerticalSensitivity;
             rotationX = Math.Clamp(rotationX, -maxRotation, maxRotation);
         }
 

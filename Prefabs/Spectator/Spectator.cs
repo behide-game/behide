@@ -17,7 +17,8 @@ public partial class Spectator : CharacterBody3D
     [Export] private float speed = 10;
     [Export] private float acceleration = 4;
     [Export] private float deceleration = 9;
-    [Export] private float mouseSensitivity = 0.01f;
+    private static float HorizontalSensitivity => (float)(0.005 * GameManager.Settings.HorizontalSensitivity);
+    private static float VerticalSensitivity => (float)(0.005 * GameManager.Settings.VerticalSensitivity);
 
     private readonly CancellationTokenSource nodeAliveCts = new();
     private CancellationToken NodeAliveCt => nodeAliveCts.Token;
@@ -50,10 +51,10 @@ public partial class Spectator : CharacterBody3D
 
         if (rawEvent is InputEventMouseMotion mouseMotion)
         {
-            RotateY(-mouseMotion.Relative.X * mouseSensitivity);
+            RotateY(-mouseMotion.Relative.X * HorizontalSensitivity);
 
             var rotation = Rotation;
-            rotation.X -= mouseMotion.Relative.Y * mouseSensitivity;
+            rotation.X -= mouseMotion.Relative.Y * VerticalSensitivity;
             rotation.X = Mathf.Clamp(rotation.X, -1.5f, 1.5f);
             Rotation = rotation;
         }

@@ -11,11 +11,15 @@ public abstract partial class PlayerBody : CharacterBody3D
 
     protected Node3D CameraDisk = null!;
     protected Camera3D Camera = null!;
-    protected Control Hud = null!;
+    protected RayCast3D RayCast = null!;
+    protected Label PlayerUsername = null!;
+    protected List<Control> Huds = null!;
     protected ProgressBar HealthBar = null!;
     protected Label HealthLabel = null!;
-    protected Supervisor Supervisor = null!;
+    private Supervisor Supervisor = null!;
     public MultiplayerSynchronizer PositionSynchronizer = null!;
+
+    protected GodotObject? focusedObject;
 
     private double Health
     {
@@ -54,7 +58,7 @@ public abstract partial class PlayerBody : CharacterBody3D
     {
         Alive = false;
         SetVisible(false);
-        Hud.Visible = false;
+        SetHudsVisibility(false);
         SetProcessMode(ProcessModeEnum.Disabled); // Disable collisions
         Supervisor.PlayerDied(killer, this);
         if (IsMultiplayerAuthority()) Supervisor.LocalPlayerDied(this);
@@ -63,7 +67,7 @@ public abstract partial class PlayerBody : CharacterBody3D
     public void Freeze()
     {
         freeze = true;
-        Hud.Visible = false;
+        SetHudsVisibility(false);
     }
 
     // --- Initialization ---
@@ -88,7 +92,7 @@ public abstract partial class PlayerBody : CharacterBody3D
         // Only when we are the authority
         if (!IsMultiplayerAuthority())
         {
-            Hud.Visible = false;
+            SetHudsVisibility(false);
             return;
         }
 
@@ -100,6 +104,28 @@ public abstract partial class PlayerBody : CharacterBody3D
         );
     }
 
+    // Show players names
+    public override void _Process(double delta)
+    {
+        if (!IsMultiplayerAuthority()) return;
+        focusedObject = RayCast.GetCollider();
+
+        var canShow = this switch
+        {
+            PropBody => focusedObject is HunterBody or PropBody,
+            HunterBody => focusedObject is HunterBody,
+            _ => false
+        };
+
+        if (canShow)
+        {
+            var owner = Supervisor.GetBodyPlayer((PlayerBody) focusedObject);
+            PlayerUsername.Text = owner?.Username;
+        }
+        else
+            PlayerUsername.Text = string.Empty;
+    }
+
     // --- Movements ---
     public override void _PhysicsProcess(double delta)
     {
@@ -108,5 +134,14 @@ public abstract partial class PlayerBody : CharacterBody3D
         ProcessRotation();
         PropagateCollision();
         MoveAndSlide();
+    }
+
+    private void SetHudsVisibility(bool value)
+    {
+        foreach (var hud in Huds)
+        {
+            GD.Print(hud);
+            hud.Visible = value ;
+        }
     }
 }
