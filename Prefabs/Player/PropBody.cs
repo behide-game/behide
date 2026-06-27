@@ -20,19 +20,17 @@ public partial class PropBody : PlayerBody
     private const float speed = 1.55f;
     private const float slowSpeed = 0.3f;
 
-    protected override void InitializeNodes()
-    {
-        // PlayerBody nodes
-        CameraDisk = _.CameraDisk;
-        Camera = _.CameraDisk.SpringArm3D.Camera;
-        RayCast = _.CameraDisk.SpringArm3D.Camera.RayCast;
-        PositionSynchronizer = _.PositionSynchronizer;
-        Huds = [_.HUD];
-        HealthBar = _.HUD.BottomLeft.Health.HealthBar;
-        HealthLabel = _.HUD.BottomLeft.Health.HealthLabel;
-        PlayerUsername = _.HUD.Center.PlayerUsername;
+    protected override Node3D CameraDisk => _.CameraDisk;
+    protected override Camera3D Camera => _.CameraDisk.SpringArm3D.Camera;
+    protected override RayCast3D RayCast => _.CameraDisk.SpringArm3D.Camera.RayCast;
+    protected override ProgressBar HealthBar => _.HUD.BottomLeft.Health.HealthBar;
+    protected override Label HealthLabel => _.HUD.BottomLeft.Health.HealthLabel;
+    protected override Label PlayerUsername => _.HUD.Center.PlayerUsername;
+    public override MultiplayerSynchronizer PositionSynchronizer => _.PositionSynchronizer;
 
-        // PropBody nodes
+    public override void _EnterTree()
+    {
+        base._EnterTree();
         currentVisualNode = _.MeshInstance3D;
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
@@ -41,6 +39,8 @@ public partial class PropBody : PlayerBody
         ShowLockedLogo(false);
         AdjustProperties();
     }
+
+    protected override void SetHudsVisibility(bool value) => _.HUD.Get().SetVisible(value);
 
     public override void _UnhandledInput(InputEvent rawEvent)
     {

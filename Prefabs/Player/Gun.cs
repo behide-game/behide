@@ -1,84 +1,73 @@
-using Behide.Game.Player;
 using Godot;
 
 namespace Behide.Prefabs.Player;
 
 public abstract partial class Gun : Node3D
 {
-    protected HunterBody Hunter = null!;
-    public Control Hud = null!;
-    public Label PlayerUsername = null!;
-    protected Control CrosshairHit = null!;
-    protected Label AmmoLabel = null!;
+    public abstract Control Hud { get; }
+    public abstract Label PlayerUsernameLabel { get; }
+    protected abstract Label AmmoLabel { get; }
 
-    protected abstract int magazineSize { get; }
-    protected abstract float reloadTime { get; }
-    protected abstract float fireRate { get; }
+    public abstract int DamagePerAmmo { get; }
+    protected abstract int TotalAmmoCount { get; set; }
+    protected abstract int MagazineSize { get; }
+    protected abstract float ReloadTime { get; }
+    protected abstract float FireRate { get; }
 
-    protected int ammoCount
+    private int AmmoCount
     {
         get;
         set
         {
             field = value;
-            AmmoLabel.Text = value + " / " + totalAmmoCount;
+            AmmoLabel.Text = value + " / " + TotalAmmoCount;
         }
     }
-    protected int totalAmmoCount;
-    protected internal int damagePerAmmo;
-    protected double crosshairHitDuration;
-    protected Tween? crosshairHitTween;
 
-    private bool canShoot => timerFire <= 0 && ammoCount > 0;
-    private bool canReload => timerReload <= 0 && ammoCount < magazineSize && totalAmmoCount > 0;
+    private double fireCooldownTime;
+    private double reloadTimeRemaining;
 
-    private double timerFire;
-    private double timerReload;
+    private bool CanShoot => fireCooldownTime <= 0 && AmmoCount > 0;
+    private bool CanReload => fireCooldownTime <= 0 && reloadTimeRemaining <= 0 && AmmoCount < MagazineSize && TotalAmmoCount > 0;
 
-    public abstract void InitializeNodes(HunterBody hunter);
-    public abstract void InitializeProperties();
+    public override void _EnterTree() => AmmoCount = MagazineSize;
 
-    public void TickGun(double delta)
+    public override void _Process(double delta)
     {
-        if (timerFire > 0) timerFire -= delta;
+        if (fireCooldownTime > 0) fireCooldownTime -= delta;
 
-        if (timerReload <= 0) return;
-        if (timerReload - delta <= 0)
+        if (reloadTimeRemaining <= 0) return;
+        if (reloadTimeRemaining - delta <= 0)
         {
-            var ammoDiff = magazineSize - ammoCount;
-            var realAmmoAmountAdded = int.Min(ammoDiff, totalAmmoCount);
-            totalAmmoCount -= realAmmoAmountAdded;
-            ammoCount += realAmmoAmountAdded;
+            var ammoDiff = MagazineSize - AmmoCount;
+            var realAmmoAmountAdded = int.Min(ammoDiff, TotalAmmoCount);
+            TotalAmmoCount -= realAmmoAmountAdded;
+            AmmoCount += realAmmoAmountAdded;
         }
-        timerReload -= delta;
+        reloadTimeRemaining -= delta;
     }
+
+    protected abstract Node3D? ShootCore();
+    protected abstract void ReloadCore();
 
     public Node3D? TryShoot()
     {
-        if (canShoot) return Shoot();
-        if (timerFire <= 0 && timerReload <= 0 && ammoCount == 0)
-            TryReload();
+        if (CanShoot)
+        {
+            fireCooldownTime = 1 / FireRate;
+            AmmoCount -= 1;
+            var shootObject = ShootCore();
+
+            return shootObject;
+        }
+        if (CanReload) Reload();
         return null;
     }
 
-    protected virtual Node3D? Shoot()
+    public void Reload()
     {
-        timerFire = 1 / fireRate;
-        ammoCount -= 1;
-        // TODO: Animations
-        return null;
-    }
-
-    public void TryReload()
-    {
-        if (!canReload) return;
-        Reload();
-    }
-
-    protected virtual void Reload()
-    {
-        timerReload = reloadTime;
+        reloadTimeRemaining = ReloadTime;
         AmmoLabel.Text = "Reloading";
-        // TODO: Animations
+        ReloadCore();
     }
 }

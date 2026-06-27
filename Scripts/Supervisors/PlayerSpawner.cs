@@ -55,6 +55,7 @@ public partial class PlayerSpawner : Node
 
         // Add node to the scene
         PlayersNode.AddChild(playerNode, true);
+        playerNode.SetGlobalPosition(new Vector3(playerNode.GetGlobalPosition().X, playerNode.GetGlobalPosition().Y + 1,  playerNode.GetGlobalPosition().Z));
 
         // Disable visibility if authority
         if (playerToSpawn.PeerId != room.LocalPlayer.Value.PeerId)

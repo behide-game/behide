@@ -7,36 +7,27 @@ namespace Behide.Prefabs.Player;
 [SceneTree]
 public partial class SubmachineGun : Gun
 {
+    public override int DamagePerAmmo => 2;
+    protected override int TotalAmmoCount { get; set; } = 6667;
+    protected override int MagazineSize => 45;
+    protected override float ReloadTime => 2.5f;
+    protected override float FireRate => 10f;
+
+    public override Control Hud => _.Hud;
+    public override Label PlayerUsernameLabel => _.Hud.Center.PlayerUsername;
+    protected override Label AmmoLabel => _.Hud.RBottom.Ammo;
+
+    private Control HitMark => _.Hud.Center.Crosshair.CrosshairHit;
+    private RayCast3D Raycast => _.RayCast;
+
     [Export] private AudioStream shootSound = null!;
     [Export] private AudioStream reloadSound = null!;
-    private RayCast3D Raycast = null!;
-    protected override int magazineSize => 45;
-    protected override float fireRate => 10f;
-    protected override float reloadTime => 2.5f;
 
-    public override void InitializeNodes(HunterBody hunter)
+    private double crosshairHitDuration = 0.3;
+    private Tween? crosshairHitTween;
+
+    protected override Node3D? ShootCore()
     {
-        Hunter = hunter;
-        Hud = _.Hud;
-        Raycast = _.RayCast;
-        PlayerUsername = _.Hud.Center.PlayerUsername;
-        CrosshairHit = _.Hud.Center.Crosshair.CrosshairHit;
-        AmmoLabel = _.Hud.RBottom.Ammo;
-    }
-
-    public override void InitializeProperties()
-    {
-        damagePerAmmo = 2;
-        totalAmmoCount = 6667;
-        ammoCount = magazineSize;
-        crosshairHitDuration = 0.3;
-    }
-
-    protected override Node3D? Shoot()
-    {
-        // Update properties
-        base.Shoot();
-
         // Play sounds
         _.AudioStreamPlayer3D.Stream = shootSound;
         _.AudioStreamPlayer3D.Play();
@@ -48,8 +39,8 @@ public partial class SubmachineGun : Gun
                 crosshairHitTween?.Kill();
                 crosshairHitTween = CreateTween();
                 crosshairHitTween.SetEase(Tween.EaseType.In);
-                crosshairHitTween.TweenProperty(CrosshairHit, "modulate", new Color(0xFFFFFF00), crosshairHitDuration);
-                CrosshairHit.Modulate = new Color(0xFFFFFFFF);
+                crosshairHitTween.TweenProperty(HitMark, "modulate", new Color(0xFFFFFF00), crosshairHitDuration);
+                HitMark.Modulate = new Color(0xFFFFFFFF);
                 return player;
             case BehideObject behideObject:
                 return behideObject;
@@ -58,11 +49,8 @@ public partial class SubmachineGun : Gun
         }
     }
 
-    protected override void Reload()
+    protected override void ReloadCore()
     {
-        // Update properties
-        base.Reload();
-
         // Play sounds
         _.AudioStreamPlayer3D.Stream = reloadSound;
         _.AudioStreamPlayer3D.Play();
