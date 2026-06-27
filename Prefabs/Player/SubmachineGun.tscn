@@ -4,8 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://bbuv8m4lpdg1u" path="res://Assets/Models/Prefabs/gun.glb" id="1_i3wdl"]
 [ext_resource type="AudioStream" uid="uid://cbck1i0n0gpe7" path="res://Assets/Sounds/gunreload.mp3" id="2_1ol2f"]
 [ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="2_8uwrk"]
-[ext_resource type="AudioStream" uid="uid://b6e6bl5exr2jf" path="res://Assets/Sounds/gunshotjbudden.wav" id="2_abca7"]
-[ext_resource type="Shader" path="res://Prefabs/Player/crosshair.gdshader" id="3_lrncf"]
+[ext_resource type="AudioStream" uid="uid://hlfi21tchdaj" path="res://Assets/Sounds/gunshoot.wav" id="2_abca7"]
+[ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="3_lrncf"]
 [ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crosshair.svg" id="4_1ol2f"]
 
 [sub_resource type="AudioStream" id="AudioStream_8uwrk"]

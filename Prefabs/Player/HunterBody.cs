@@ -76,11 +76,11 @@ public partial class HunterBody : PlayerBody
         isCrouching = wantsToCrouch;
         _.Area3D.Get().SetDisableMode(wantsToCrouch ? DisableModeEnum.KeepActive : DisableModeEnum.Remove);
 
-        Rpc(nameof(VisuallyTriggerCrouchRpc), wantsToCrouch);
+        VisuallyTriggerCrouchRpc(wantsToCrouch);
     }
 
     [Rpc(CallLocal = true)]
-    private void VisuallyTriggerCrouchRpc(bool wantsToCrouch)
+    private void VisuallyTriggerCrouch(bool wantsToCrouch)
     {
         CameraDisk.SetPosition(new Vector3(0, wantsToCrouch ? 0.45f : 1.05f, 0));
         StandingShape.SetDisabled(wantsToCrouch);

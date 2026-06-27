@@ -21,12 +21,11 @@ properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[node name="basemodule_garage" type="RigidBody3D" unique_id=303754115 node_paths=PackedStringArray("VisualNode", "CollisionNodes")]
+[node name="basemodule_garage" type="RigidBody3D" unique_id=303754115 node_paths=PackedStringArray("CollisionNodes")]
 collision_layer = 4
 collision_mask = 7
 script = ExtResource("1_f8ow4")
-VisualNode = NodePath("")
-CollisionNodes = [NodePath("CollisionShape3D"), NodePath("")]
+CollisionNodes = [NodePath("CollisionShape3D"), null]
 Mass = 1.0
 
 [node name="basemodule_garage2" parent="." unique_id=463543937 instance=ExtResource("2_iqlgk")]
