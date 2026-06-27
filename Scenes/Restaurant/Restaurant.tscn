@@ -228,7 +228,6 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=1173480206]
-quality = 0
 generate_probes_subdiv = 0
 light_data = ExtResource("1_0mw8t")
 
@@ -746,8 +745,16 @@ light_energy = 2.0
 [node name="Wall65" parent="Walls" unique_id=1212802045 instance=ExtResource("4_740en")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9999993, 0.39999998, 6.3)
 
+[node name="AreaLight3D" parent="Walls/Wall65" index="2" unique_id=1065227527]
+light_color = Color(0.93, 0.9755, 1, 1)
+light_energy = 2.0
+
 [node name="Wall66" parent="Walls" unique_id=45960606 instance=ExtResource("4_740en")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.183982e-07, 0.39999998, 6.3)
+
+[node name="AreaLight3D" parent="Walls/Wall66" index="2" unique_id=1065227527]
+light_color = Color(0.93, 0.9755, 1, 1)
+light_energy = 2.0
 
 [node name="Wall31" parent="Walls" unique_id=374596199 instance=ExtResource("3_8qvsr")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 22.900002, 0.39999998, -12.6)
@@ -953,7 +960,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.900001, 0.4, -8.9)
 [node name="Pillar_B" parent="Walls" unique_id=1883687638 instance=ExtResource("118_ix7vu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.6, 0.5, -18.6)
 
-[node name="pillar_B" parent="Walls/Pillar_B/pillar_B" parent_id_path=PackedInt32Array(1883687638, 1804709616) index="0" unique_id=302280779]
+[node name="pillar_B" parent="Walls/Pillar_B/pillar_B" parent_id_path=PackedInt32Array(1883687638, 1804709616) index="0" unique_id=1086129308]
 layers = 16
 
 [node name="WallOrderWindow" parent="Walls" unique_id=782528899 instance=ExtResource("6_ggn37")]
@@ -1705,7 +1712,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.3, -0.6, -24)
 [node name="drill_structure2" parent="BehideObjects" unique_id=414522038 instance=ExtResource("95_yk75b")]
 transform = Transform3D(0.9580929, 0, 0.28645766, 0, 1, 0, -0.28645766, 0, 0.9580929, -8.8, -0.6, -18.599998)
 
-[node name="drill_module" parent="BehideObjects/drill_structure2/drill_structure/drill_structure" parent_id_path=PackedInt32Array(414522038, 1065827109, 12476952) index="0" unique_id=1349781978]
+[node name="drill_module" parent="BehideObjects/drill_structure2/drill_structure/drill_structure" parent_id_path=PackedInt32Array(414522038, 1065827109, 1924143091) index="0" unique_id=431188857]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34523964, 0)
 
 [node name="solarpanel" parent="BehideObjects" unique_id=263903747 instance=ExtResource("96_5qqhn")]
@@ -2756,16 +2763,63 @@ omni_range = 6.273
 [node name="Corridor" type="Node3D" parent="Lights" unique_id=221162454]
 
 [node name="Node3D" type="Node3D" parent="Lights/Corridor" unique_id=1676564053]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9999994, 3, -14.900002)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9999994, 3, -11.900002)
 
 [node name="AreaLight3D" type="AreaLight3D" parent="Lights/Corridor/Node3D" unique_id=166351168 groups=["ShadowingLights"]]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.00044727325, 1.3468003, 0.0011735559)
 light_color = Color(1, 0.888, 0.79, 1)
-light_energy = 2.0
+light_energy = 2.5
 shadow_enabled = true
 area_range = 13.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Lights/Corridor/Node3D" unique_id=577932079]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00044727325, 1.3468003, 0.0011735559)
+mesh = SubResource("QuadMesh_7s4yq")
+surface_material_override/0 = SubResource("StandardMaterial3D_jodpc")
+
+[node name="Node3D3" type="Node3D" parent="Lights/Corridor" unique_id=1866222072]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9999994, 3, -21.900002)
+
+[node name="AreaLight3D" type="AreaLight3D" parent="Lights/Corridor/Node3D3" unique_id=1900566365 groups=["ShadowingLights"]]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.00044727325, 1.3468003, 0.0011735559)
+light_color = Color(1, 0.888, 0.79, 1)
+light_energy = 2.5
+shadow_enabled = true
+area_range = 13.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Lights/Corridor/Node3D3" unique_id=1059026882]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00044727325, 1.3468003, 0.0011735559)
+mesh = SubResource("QuadMesh_7s4yq")
+surface_material_override/0 = SubResource("StandardMaterial3D_jodpc")
+
+[node name="Node3D2" type="Node3D" parent="Lights/Corridor" unique_id=1636125666]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9999994, 3, -0.9000015)
+
+[node name="AreaLight3D" type="AreaLight3D" parent="Lights/Corridor/Node3D2" unique_id=593714316 groups=["ShadowingLights"]]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.00044727325, 1.3468003, 0.0011735559)
+light_color = Color(1, 0.888, 0.79, 1)
+light_energy = 2.5
+shadow_enabled = true
+area_range = 13.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Lights/Corridor/Node3D2" unique_id=1344698980]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00044727325, 1.3468003, 0.0011735559)
+mesh = SubResource("QuadMesh_7s4yq")
+surface_material_override/0 = SubResource("StandardMaterial3D_jodpc")
+
+[node name="Kitchen" type="Node3D" parent="Lights" unique_id=281634147]
+
+[node name="Node3D" type="Node3D" parent="Lights/Kitchen" unique_id=622398963]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.599999, 3, -2.000001)
+
+[node name="AreaLight3D" type="AreaLight3D" parent="Lights/Kitchen/Node3D" unique_id=1022032989 groups=["ShadowingLights"]]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.00044727325, 1.3468003, 0.0011735559)
+light_color = Color(1, 0.994, 0.99, 1)
+light_energy = 1.5
+shadow_enabled = true
+area_range = 13.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Lights/Kitchen/Node3D" unique_id=179320030]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00044727325, 1.3468003, 0.0011735559)
 mesh = SubResource("QuadMesh_7s4yq")
 surface_material_override/0 = SubResource("StandardMaterial3D_jodpc")
@@ -2932,6 +2986,8 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 21.6
 
 [editable path="Walls/Wall28"]
 [editable path="Walls/Wall48"]
+[editable path="Walls/Wall65"]
+[editable path="Walls/Wall66"]
 [editable path="Walls/Pillar_B"]
 [editable path="Walls/Pillar_B/pillar_B"]
 [editable path="BehideObjects/drill_structure2"]
