@@ -3,20 +3,23 @@
 [ext_resource type="Script" uid="uid://cltwxw8gox4fv" path="res://Scenes/Settings/Settings.cs" id="1_ytwd3"]
 [ext_resource type="PackedScene" uid="uid://cjob1jiwft1io" path="res://Scenes/Controls/Settings/SliderSetting.tscn" id="2_xlpa8"]
 
-[node name="Settings" type="TabContainer" unique_id=1544500053]
-anchors_preset = -1
+[node name="Settings" type="MarginContainer" unique_id=1597847842]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 80.0
-offset_top = 80.0
-offset_right = -80.0
-offset_bottom = -80.0
 grow_horizontal = 2
 grow_vertical = 2
-current_tab = 1
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_bottom = 80
 script = ExtResource("1_ytwd3")
 
-[node name="General" type="MarginContainer" parent="." unique_id=2018857125]
+[node name="TabContainer" type="TabContainer" parent="." unique_id=1344672762]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+current_tab = 2
+
+[node name="General" type="MarginContainer" parent="TabContainer" unique_id=2018857125]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 20
@@ -25,62 +28,63 @@ theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 metadata/_tab_index = 0
 
-[node name="VBox" type="VBoxContainer" parent="General" unique_id=855454343]
+[node name="VBox" type="VBoxContainer" parent="TabContainer/General" unique_id=855454343]
 layout_mode = 2
-theme_override_constants/separation = 15
+theme_override_constants/separation = 10
 
-[node name="Username" type="VBoxContainer" parent="General/VBox" unique_id=64548770]
+[node name="Username" type="VBoxContainer" parent="TabContainer/General/VBox" unique_id=64548770]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="General/VBox/Username" unique_id=474534871]
+[node name="Label" type="Label" parent="TabContainer/General/VBox/Username" unique_id=474534871]
 layout_mode = 2
 text = "Player name"
 
-[node name="LineEdit" type="LineEdit" parent="General/VBox/Username" unique_id=1567356240]
+[node name="LineEdit" type="LineEdit" parent="TabContainer/General/VBox/Username" unique_id=1567356240]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Horizontal Sensitivity" parent="General/VBox" unique_id=524009869 instance=ExtResource("2_xlpa8")]
+[node name="Horizontal Sensitivity" parent="TabContainer/General/VBox" unique_id=524009869 instance=ExtResource("2_xlpa8")]
 layout_mode = 2
 
-[node name="Name" parent="General/VBox/Horizontal Sensitivity" index="0" unique_id=1326298358]
+[node name="Name" parent="TabContainer/General/VBox/Horizontal Sensitivity" index="0" unique_id=1326298358]
 text = "Horizontal sensitivity"
 
-[node name="Slider" parent="General/VBox/Horizontal Sensitivity/Controls" parent_id_path=PackedInt32Array(524009869, 366113109) index="1" unique_id=1674503285]
+[node name="Slider" parent="TabContainer/General/VBox/Horizontal Sensitivity/Controls" parent_id_path=PackedInt32Array(524009869, 366113109) index="1" unique_id=1674503285]
 min_value = 0.1
 max_value = 2.0
 value = 1.0
 
-[node name="Vertical Sensitivity" parent="General/VBox" unique_id=1272801265 instance=ExtResource("2_xlpa8")]
+[node name="Vertical Sensitivity" parent="TabContainer/General/VBox" unique_id=1272801265 instance=ExtResource("2_xlpa8")]
 layout_mode = 2
 
-[node name="Name" parent="General/VBox/Vertical Sensitivity" index="0" unique_id=1326298358]
+[node name="Name" parent="TabContainer/General/VBox/Vertical Sensitivity" index="0" unique_id=1326298358]
 text = "Vertical sensitivity"
 
-[node name="Slider" parent="General/VBox/Vertical Sensitivity/Controls" parent_id_path=PackedInt32Array(1272801265, 366113109) index="1" unique_id=1674503285]
+[node name="Slider" parent="TabContainer/General/VBox/Vertical Sensitivity/Controls" parent_id_path=PackedInt32Array(1272801265, 366113109) index="1" unique_id=1674503285]
 min_value = 0.1
 max_value = 2.0
 value = 1.0
 
-[node name="FOV" parent="General/VBox" unique_id=251094587 instance=ExtResource("2_xlpa8")]
+[node name="FOV" parent="TabContainer/General/VBox" unique_id=251094587 instance=ExtResource("2_xlpa8")]
 layout_mode = 2
 numberFormat = "0"
 
-[node name="Name" parent="General/VBox/FOV" index="0" unique_id=1326298358]
+[node name="Name" parent="TabContainer/General/VBox/FOV" index="0" unique_id=1326298358]
 text = "Field of view"
 
-[node name="Slider" parent="General/VBox/FOV/Controls" parent_id_path=PackedInt32Array(251094587, 366113109) index="1" unique_id=1674503285]
+[node name="Slider" parent="TabContainer/General/VBox/FOV/Controls" parent_id_path=PackedInt32Array(251094587, 366113109) index="1" unique_id=1674503285]
 min_value = 1.0
 max_value = 179.0
 step = 1.0
 value = 90.0
 
-[node name="Back" type="Button" parent="General/VBox" unique_id=595488265]
+[node name="Back" type="Button" parent="TabContainer/General/VBox" unique_id=595488265]
 layout_mode = 2
 size_flags_vertical = 10
 text = "Back"
 
-[node name="Graphics" type="MarginContainer" parent="." unique_id=318587705]
+[node name="Video" type="MarginContainer" parent="TabContainer" unique_id=318587705]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
@@ -88,19 +92,19 @@ theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 metadata/_tab_index = 1
 
-[node name="VBox" type="VBoxContainer" parent="Graphics" unique_id=890361961]
+[node name="VBox" type="VBoxContainer" parent="TabContainer/Video" unique_id=890361961]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Window Type" type="HBoxContainer" parent="TabContainer/Video/VBox" unique_id=1865497338]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Window Type" type="HBoxContainer" parent="Graphics/VBox" unique_id=1865497338]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="Label" type="Label" parent="Graphics/VBox/Window Type" unique_id=235069266]
+[node name="Label" type="Label" parent="TabContainer/Video/VBox/Window Type" unique_id=235069266]
 layout_mode = 2
 text = "Window type"
 
-[node name="OptionButton" type="OptionButton" parent="Graphics/VBox/Window Type" unique_id=1380800861]
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/Window Type" unique_id=1380800861]
 layout_mode = 2
 selected = 2
 fit_to_longest_item = false
@@ -112,52 +116,52 @@ popup/item_1/id = 1
 popup/item_2/text = "Borderless"
 popup/item_2/id = 2
 
-[node name="Resolution" type="HBoxContainer" parent="Graphics/VBox" unique_id=69398329]
+[node name="Resolution" type="HBoxContainer" parent="TabContainer/Video/VBox" unique_id=69398329]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Label" type="Label" parent="Graphics/VBox/Resolution" unique_id=2062262825]
+[node name="Label" type="Label" parent="TabContainer/Video/VBox/Resolution" unique_id=2062262825]
 layout_mode = 2
 text = "Resolution"
 
-[node name="OptionButton" type="OptionButton" parent="Graphics/VBox/Resolution" unique_id=787377872]
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/Resolution" unique_id=787377872]
 layout_mode = 2
 fit_to_longest_item = false
 
-[node name="UI Scaling" type="HBoxContainer" parent="Graphics/VBox" unique_id=1261299447]
+[node name="UI Scaling" type="HBoxContainer" parent="TabContainer/Video/VBox" unique_id=1261299447]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Label" type="Label" parent="Graphics/VBox/UI Scaling" unique_id=17400335]
+[node name="Label" type="Label" parent="TabContainer/Video/VBox/UI Scaling" unique_id=17400335]
 layout_mode = 2
 text = "UI Scaling"
 
-[node name="Slider Setting" parent="Graphics/VBox/UI Scaling" unique_id=1336867766 instance=ExtResource("2_xlpa8")]
+[node name="Slider Setting" parent="TabContainer/Video/VBox/UI Scaling" unique_id=1336867766 instance=ExtResource("2_xlpa8")]
 layout_mode = 2
 vertical = false
 numberFormat = "0.0"
 fireChangedOnlyOnDragEnded = true
 
-[node name="Name" parent="Graphics/VBox/UI Scaling/Slider Setting" index="0" unique_id=1326298358]
+[node name="Name" parent="TabContainer/Video/VBox/UI Scaling/Slider Setting" index="0" unique_id=1326298358]
 visible = false
 text = ""
 
-[node name="Slider" parent="Graphics/VBox/UI Scaling/Slider Setting/Controls" parent_id_path=PackedInt32Array(1336867766, 366113109) index="1" unique_id=1674503285]
+[node name="Slider" parent="TabContainer/Video/VBox/UI Scaling/Slider Setting/Controls" parent_id_path=PackedInt32Array(1336867766, 366113109) index="1" unique_id=1674503285]
 custom_minimum_size = Vector2(250, 0)
 min_value = 0.6
 max_value = 3.0
 step = 0.1
 value = 1.0
 
-[node name="Render Scale" type="HBoxContainer" parent="Graphics/VBox" unique_id=396625022]
+[node name="Render Scale" type="HBoxContainer" parent="TabContainer/Video/VBox" unique_id=396625022]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Label" type="Label" parent="Graphics/VBox/Render Scale" unique_id=1960236901]
+[node name="Label" type="Label" parent="TabContainer/Video/VBox/Render Scale" unique_id=1960236901]
 layout_mode = 2
 text = "Render Scale"
 
-[node name="OptionButton" type="OptionButton" parent="Graphics/VBox/Render Scale" unique_id=1112912107]
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/Render Scale" unique_id=1112912107]
 layout_mode = 2
 selected = 0
 fit_to_longest_item = false
@@ -169,53 +173,30 @@ popup/item_1/id = 1
 popup/item_2/text = "FSR 2.2"
 popup/item_2/id = 3
 
-[node name="Slider Setting" parent="Graphics/VBox/Render Scale" unique_id=716018270 instance=ExtResource("2_xlpa8")]
+[node name="Slider Setting" parent="TabContainer/Video/VBox/Render Scale" unique_id=716018270 instance=ExtResource("2_xlpa8")]
 layout_mode = 2
 vertical = false
 numberFormat = "0'%'"
 
-[node name="Name" parent="Graphics/VBox/Render Scale/Slider Setting" index="0" unique_id=1326298358]
+[node name="Name" parent="TabContainer/Video/VBox/Render Scale/Slider Setting" index="0" unique_id=1326298358]
 visible = false
 text = ""
 
-[node name="Slider" parent="Graphics/VBox/Render Scale/Slider Setting/Controls" parent_id_path=PackedInt32Array(716018270, 366113109) index="1" unique_id=1674503285]
+[node name="Slider" parent="TabContainer/Video/VBox/Render Scale/Slider Setting/Controls" parent_id_path=PackedInt32Array(716018270, 366113109) index="1" unique_id=1674503285]
 custom_minimum_size = Vector2(250, 0)
 min_value = 1.0
 step = 1.0
 value = 100.0
 
-[node name="Shadows" type="HBoxContainer" parent="Graphics/VBox" unique_id=1552214572]
+[node name="Anti Aliasing" type="HBoxContainer" parent="TabContainer/Video/VBox" unique_id=272353419]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Label" type="Label" parent="Graphics/VBox/Shadows" unique_id=2018896875]
-layout_mode = 2
-text = "Enable shadows"
-
-[node name="Enabled" type="CheckButton" parent="Graphics/VBox/Shadows" unique_id=1680853523]
-layout_mode = 2
-button_pressed = true
-
-[node name="SSR" type="HBoxContainer" parent="Graphics/VBox" unique_id=1234982761]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="Label" type="Label" parent="Graphics/VBox/SSR" unique_id=2049011421]
-layout_mode = 2
-text = "Screen Space Reflection"
-
-[node name="Enabled" type="CheckButton" parent="Graphics/VBox/SSR" unique_id=245967275]
-layout_mode = 2
-
-[node name="Anti Aliasing" type="HBoxContainer" parent="Graphics/VBox" unique_id=272353419]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="Label" type="Label" parent="Graphics/VBox/Anti Aliasing" unique_id=371112462]
+[node name="Label" type="Label" parent="TabContainer/Video/VBox/Anti Aliasing" unique_id=371112462]
 layout_mode = 2
 text = "Anti Aliasing"
 
-[node name="OptionButton" type="OptionButton" parent="Graphics/VBox/Anti Aliasing" unique_id=1936851529]
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/Anti Aliasing" unique_id=1936851529]
 layout_mode = 2
 selected = 0
 fit_to_longest_item = false
@@ -235,13 +216,61 @@ popup/item_5/id = 5
 popup/item_6/text = "Temporal Anti Aliasing"
 popup/item_6/id = 6
 
-[node name="Back" type="Button" parent="Graphics/VBox" unique_id=838226937]
+[node name="Back" type="Button" parent="TabContainer/Video/VBox" unique_id=838226937]
 layout_mode = 2
 size_flags_vertical = 10
 text = "Back"
 
-[editable path="General/VBox/Horizontal Sensitivity"]
-[editable path="General/VBox/Vertical Sensitivity"]
-[editable path="General/VBox/FOV"]
-[editable path="Graphics/VBox/UI Scaling/Slider Setting"]
-[editable path="Graphics/VBox/Render Scale/Slider Setting"]
+[node name="Graphics" type="MarginContainer" parent="TabContainer" unique_id=2135901085]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+metadata/_tab_index = 2
+
+[node name="VBox" type="VBoxContainer" parent="TabContainer/Graphics" unique_id=1530006894]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Shadows" type="HBoxContainer" parent="TabContainer/Graphics/VBox" unique_id=94594226]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBox/Shadows" unique_id=8147104]
+layout_mode = 2
+text = "Enable shadows"
+
+[node name="Enabled" type="CheckButton" parent="TabContainer/Graphics/VBox/Shadows" unique_id=518905224]
+layout_mode = 2
+button_pressed = true
+
+[node name="SSR" type="HBoxContainer" parent="TabContainer/Graphics/VBox" unique_id=847343769]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBox/SSR" unique_id=1393591955]
+layout_mode = 2
+text = "Screen Space Reflection"
+
+[node name="Enabled" type="CheckButton" parent="TabContainer/Graphics/VBox/SSR" unique_id=1297201110]
+layout_mode = 2
+button_pressed = true
+
+[node name="Glow" type="HBoxContainer" parent="TabContainer/Graphics/VBox" unique_id=259368460]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBox/Glow" unique_id=1266465852]
+layout_mode = 2
+text = "Glow"
+
+[node name="Enabled" type="CheckButton" parent="TabContainer/Graphics/VBox/Glow" unique_id=595105172]
+layout_mode = 2
+button_pressed = true
+
+[editable path="TabContainer/General/VBox/Horizontal Sensitivity"]
+[editable path="TabContainer/General/VBox/Vertical Sensitivity"]
+[editable path="TabContainer/General/VBox/FOV"]
+[editable path="TabContainer/Video/VBox/UI Scaling/Slider Setting"]
+[editable path="TabContainer/Video/VBox/Render Scale/Slider Setting"]
