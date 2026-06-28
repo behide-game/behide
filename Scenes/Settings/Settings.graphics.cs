@@ -68,6 +68,11 @@ public partial class Settings
         Graphics.Shadows.Enabled.SetPressed(shadows);
         Graphics.SSR.Enabled.SetPressed(ssr);
         Graphics.ChromaticAberration.Enabled.SetPressed(chromaticAberration);
+
+        Graphics.Glow.Enabled.EmitSignal(BaseButton.SignalName.Toggled, glow);
+        Graphics.Shadows.Enabled.EmitSignal(BaseButton.SignalName.Toggled, shadows);
+        Graphics.SSR.Enabled.EmitSignal(BaseButton.SignalName.Toggled, ssr);
+        Graphics.ChromaticAberration.Enabled.EmitSignal(BaseButton.SignalName.Toggled, chromaticAberration);
     }
 
     private void GraphicsApplyToConfig(ConfigFile config)

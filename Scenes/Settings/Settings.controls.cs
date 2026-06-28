@@ -20,9 +20,9 @@ public partial class Settings
 
     private void ControlsApplyFromConfig(ConfigFile config)
     {
-        var hSensi = (double)config.GetValue("Controls", "horizontal-sensitivity", 1);
-        var vSensi = (double)config.GetValue("Controls", "vertical-sensitivity", 1);
-        var fov = (double)config.GetValue("Controls", "fov", 110);
+        var hSensi = config.GetValue("Controls", "horizontal-sensitivity", 1).AsDouble();
+        var vSensi = config.GetValue("Controls", "vertical-sensitivity", 1).AsDouble();
+        var fov = config.GetValue("Controls", "fov", 110).AsDouble();
         Controls.HorizontalSensitivity.SetValue(hSensi);
         Controls.VerticalSensitivity.SetValue(vSensi);
         Controls.FOV.SetValue(fov);
