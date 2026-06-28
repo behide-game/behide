@@ -17,6 +17,7 @@ script = ExtResource("1_ytwd3")
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_constants/side_margin = 0
 current_tab = 2
 
 [node name="General" type="MarginContainer" parent="TabContainer" unique_id=2018857125]
@@ -37,6 +38,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="TabContainer/General/VBox/Username" unique_id=474534871]
 layout_mode = 2
+size_flags_horizontal = 0
 text = "Player name"
 
 [node name="LineEdit" type="LineEdit" parent="TabContainer/General/VBox/Username" unique_id=1567356240]
@@ -102,6 +104,7 @@ theme_override_constants/separation = 15
 
 [node name="Label" type="Label" parent="TabContainer/Video/VBox/Window Type" unique_id=235069266]
 layout_mode = 2
+size_flags_horizontal = 2
 text = "Window type"
 
 [node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/Window Type" unique_id=1380800861]
@@ -122,6 +125,7 @@ theme_override_constants/separation = 15
 
 [node name="Label" type="Label" parent="TabContainer/Video/VBox/Resolution" unique_id=2062262825]
 layout_mode = 2
+size_flags_horizontal = 2
 text = "Resolution"
 
 [node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/Resolution" unique_id=787377872]
@@ -134,6 +138,7 @@ theme_override_constants/separation = 15
 
 [node name="Label" type="Label" parent="TabContainer/Video/VBox/UI Scaling" unique_id=17400335]
 layout_mode = 2
+size_flags_horizontal = 2
 text = "UI Scaling"
 
 [node name="Slider Setting" parent="TabContainer/Video/VBox/UI Scaling" unique_id=1336867766 instance=ExtResource("2_xlpa8")]
@@ -159,6 +164,7 @@ theme_override_constants/separation = 15
 
 [node name="Label" type="Label" parent="TabContainer/Video/VBox/Render Scale" unique_id=1960236901]
 layout_mode = 2
+size_flags_horizontal = 2
 text = "Render Scale"
 
 [node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/Render Scale" unique_id=1112912107]
@@ -194,6 +200,7 @@ theme_override_constants/separation = 15
 
 [node name="Label" type="Label" parent="TabContainer/Video/VBox/Anti Aliasing" unique_id=371112462]
 layout_mode = 2
+size_flags_horizontal = 2
 text = "Anti Aliasing"
 
 [node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/Anti Aliasing" unique_id=1936851529]
@@ -239,6 +246,7 @@ theme_override_constants/separation = 15
 
 [node name="Label" type="Label" parent="TabContainer/Graphics/VBox/Shadows" unique_id=8147104]
 layout_mode = 2
+size_flags_horizontal = 2
 text = "Enable shadows"
 
 [node name="Enabled" type="CheckButton" parent="TabContainer/Graphics/VBox/Shadows" unique_id=518905224]
@@ -251,6 +259,7 @@ theme_override_constants/separation = 15
 
 [node name="Label" type="Label" parent="TabContainer/Graphics/VBox/SSR" unique_id=1393591955]
 layout_mode = 2
+size_flags_horizontal = 2
 text = "Screen Space Reflection"
 
 [node name="Enabled" type="CheckButton" parent="TabContainer/Graphics/VBox/SSR" unique_id=1297201110]
@@ -263,6 +272,7 @@ theme_override_constants/separation = 15
 
 [node name="Label" type="Label" parent="TabContainer/Graphics/VBox/Glow" unique_id=1266465852]
 layout_mode = 2
+size_flags_horizontal = 2
 text = "Glow"
 
 [node name="Enabled" type="CheckButton" parent="TabContainer/Graphics/VBox/Glow" unique_id=595105172]
