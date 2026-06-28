@@ -150,7 +150,6 @@ common/physics_interpolation=true
 
 [rendering]
 
-rendering_device/driver.windows="d3d12"
 textures/vram_compression/import_s3tc_bptc=true
 scaling_3d/mode=5
 occlusion_culling/use_occlusion_culling=true

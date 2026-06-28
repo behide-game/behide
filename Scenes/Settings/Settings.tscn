@@ -256,6 +256,27 @@ text = "Show FPS"
 layout_mode = 2
 button_pressed = true
 
+[node name="Driver" type="HBoxContainer" parent="TabContainer/Video/VBox" unique_id=2095720641]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="TabContainer/Video/VBox/Driver" unique_id=87744357]
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Driver"
+
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/Driver" unique_id=1616580062]
+layout_mode = 2
+button_pressed = true
+fit_to_longest_item = false
+item_count = 3
+popup/item_0/text = "Vulkan"
+popup/item_0/id = 0
+popup/item_1/text = "DirectX 12"
+popup/item_1/id = 1
+popup/item_2/text = "OpenGL"
+popup/item_2/id = 2
+
 [node name="Back" type="Button" parent="TabContainer/Video/VBox" unique_id=838226937]
 layout_mode = 2
 size_flags_vertical = 10

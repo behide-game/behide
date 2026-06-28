@@ -1,6 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 *.TMP
+override.cfg
 
 bin/
 obj/

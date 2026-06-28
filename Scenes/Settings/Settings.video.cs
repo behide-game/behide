@@ -6,6 +6,7 @@ namespace Behide.Game;
 public partial class Settings
 {
     private _SceneTree.__0_TabContainer.__1_Video.__2_VBox Video => nodes.TabContainer.Video.VBox;
+    private ConfigFile settingsOverride = new();
 
     private void Video_SetDisplayMode(long displayMode) =>
         DisplayServer.WindowSetMode(
@@ -51,6 +52,40 @@ public partial class Settings
         GetWindow().UseTaa = mode == 6;
     }
 
+    private void Video_SetDriver(long driver)
+    {
+        settingsOverride.Clear();
+        settingsOverride.SetValue(
+            "rendering",
+            "renderer/rendering_method",
+            driver == 2 ? "gl_compatibility" : "forward_plus"
+        );
+
+        if (driver == 0)
+            settingsOverride.SetValue("rendering", "rendering_device/driver", "vulkan");
+        else if (driver == 1)
+            settingsOverride.SetValue("rendering", "rendering_device/driver.windows", "d3d12");
+
+        string overridePath;
+        if (OS.HasFeature("standalone"))
+        {
+            var exePath = OS.GetExecutablePath();
+            var exeDir = Path.GetDirectoryName(exePath);
+            if (exeDir is null)
+            {
+                log.Error("Cannot save settings override: Failed to retrieve executable directory from {ExePath}.", exePath);
+                return;
+            }
+
+            overridePath = Path.Combine(exeDir, "override.cfg");
+        }
+        else
+            overridePath = "./override.cfg";
+
+        var err = settingsOverride.Save(overridePath);
+        if (err != Error.Ok) log.Error("Failed to save settings override: {Error}", err);
+    }
+
 
     private void VideoListenSettings()
     {
@@ -71,6 +106,9 @@ public partial class Settings
 
         // FPS
         Video.FPS.Enabled.Toggled += GameManager.VisualEffectsLayer.EnableFpsDisplay;
+
+        // Driver
+        Video.Driver.OptionButton.ItemSelected += Video_SetDriver;
     }
 
     /// <summary>
@@ -122,6 +160,20 @@ public partial class Settings
             "taa" => 6,
             _ => 0
         });
+
+        var renderingMethod = RenderingServer.GetCurrentRenderingMethod();
+        var renderingDriver = RenderingServer.GetCurrentRenderingDriverName();
+        Video.Driver.OptionButton.Select(renderingMethod switch
+        {
+            "gl_compatibility" => 2,
+            _ => renderingDriver switch
+            {
+                "vulkan" => 0,
+                "d3d12" => 1,
+                _ => 0
+            }
+        });
+        Video.Driver.OptionButton.SetItemDisabled(1, !OperatingSystem.IsWindows());
 
         Video_SetDisplayMode(Video.DisplayMode.OptionButton.Selected);
         Video_SetUIScaling(Video.UIScaling.SliderSetting.Value);
