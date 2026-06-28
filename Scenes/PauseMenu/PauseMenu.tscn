@@ -4,12 +4,95 @@
 [ext_resource type="PackedScene" uid="uid://mvi6mhwtencn" path="res://Scenes/Settings/Settings.tscn" id="2_jpxof"]
 [ext_resource type="Shader" uid="uid://baf1p55idhp1q" path="res://Scenes/PauseMenu/blur.gdshader" id="2_qu44q"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1g8c7"]
-shader = ExtResource("2_qu44q")
-shader_parameter/lod = 3.0000001425
+[sub_resource type="Shader" id="Shader_4bayv"]
+code = "shader_type canvas_item;
+// shader by Pcniado
+uniform sampler2D screen_texture : hint_screen_texture, filter_linear_mipmap;
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qu44q"]
-bg_color = Color(11.706441, 11.706441, 11.706441, 1)
+uniform float u_roundness : hint_range(0.0, 1.0) = 1.0;
+
+uniform float u_distortion_intensity = 1.0;
+uniform float u_blur_intensity = 1.2;
+
+float sdf_box(vec2 p, vec2 b, float r) {
+    vec2 d = abs(p) - b + vec2(r);
+    return min(max(d.x, d.y), 0.0) + length(max(d, 0.0)) - r;
+}
+
+vec3 get_blurred_color(sampler2D tex, vec2 screen_uv, vec2 pixel_size, float blur_radius) {
+    vec3 color = vec3(0.0);
+    float total_weight = 0.0;
+
+    for (int x = -2; x <= 2; x++) {
+        for (int y = -2; y <= 2; y++) {
+            vec2 offset = vec2(float(x), float(y)) * blur_radius * pixel_size;
+            float weight = exp(-0.5 * (float(x*x + y*y)) / 2.0);
+
+            color += texture(tex, screen_uv + offset).rgb * weight;
+            total_weight += weight;
+        }
+    }
+    return color / total_weight;
+}
+
+void fragment() {
+    vec2 pixel_scale = fwidth(UV);
+    vec2 rect_size = 1.0 / pixel_scale;
+
+    vec2 local_pos = (UV - 0.5) * rect_size;
+    vec2 half_size = rect_size * 0.5;
+
+    float max_radius = min(rect_size.x, rect_size.y) * 0.5;
+    float current_radius = max_radius * u_roundness;
+
+    float dist = sdf_box(local_pos, half_size, current_radius);
+
+    if (dist > 0.0) {
+        discard;
+    }
+
+    float min_side = min(rect_size.x, rect_size.y);
+    float inversed_sdf = -dist / min_side;
+
+    vec2 normalized_glass_coord = normalize(local_pos);
+    float dist_from_center = 1.0 - clamp(inversed_sdf / 0.3, 0.0, 1.0);
+
+    float distortion = 1.0 - sqrt(1.0 - pow(dist_from_center, 2.0));
+
+    vec2 offset_pixels = distortion * normalized_glass_coord * half_size * u_distortion_intensity;
+    vec2 screen_uv_offset = offset_pixels * SCREEN_PIXEL_SIZE;
+    vec2 target_uv = SCREEN_UV - screen_uv_offset;
+    float current_blur_radius = u_blur_intensity * (1.0 - dist_from_center * 0.5);
+
+    float edge_factor = smoothstep(0.0, 0.02, inversed_sdf);
+    vec2 chromatic_shift = normalized_glass_coord * edge_factor * 3.0 * SCREEN_PIXEL_SIZE;
+
+    float r = get_blurred_color(screen_texture, target_uv - chromatic_shift, SCREEN_PIXEL_SIZE, current_blur_radius).r;
+    float g = get_blurred_color(screen_texture, target_uv, SCREEN_PIXEL_SIZE, current_blur_radius).g;
+    float b = get_blurred_color(screen_texture, target_uv + chromatic_shift, SCREEN_PIXEL_SIZE, current_blur_radius).b;
+
+    vec3 glass_color = vec3(r, g, b);
+    glass_color *= 0.9;
+
+    COLOR = vec4(glass_color, 1.0);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ceia4"]
+shader = SubResource("Shader_4bayv")
+shader_parameter/u_roundness = 1.0
+shader_parameter/u_distortion_intensity = 1.0
+shader_parameter/u_blur_intensity = 1.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4bayv"]
+shader = ExtResource("2_qu44q")
+shader_parameter/lod = 4.00000019
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_82qyg"]
+bg_color = Color(11.708403, 11.708403, 11.708403, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="Pause Menu" type="Control" unique_id=1490677513]
 z_index = 10
@@ -21,30 +104,36 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_vd4nb")
 
-[node name="Background" type="Panel" parent="." unique_id=53345119]
-material = SubResource("ShaderMaterial_1g8c7")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_qu44q")
-
-[node name="Pause Menu" type="VBoxContainer" parent="." unique_id=107834565]
+[node name="Pause Menu" type="MarginContainer" parent="." unique_id=654423276]
+material = SubResource("ShaderMaterial_ceia4")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.35
-anchor_top = 0.15
-anchor_right = 0.65
-anchor_bottom = 0.85
-grow_vertical = 2
+anchor_top = 0.2
+anchor_right = 0.64
+anchor_bottom = 0.2
 
-[node name="Settings" type="Button" parent="Pause Menu" unique_id=1823169428]
+[node name="Background" type="Panel" parent="Pause Menu" unique_id=100627987]
+material = SubResource("ShaderMaterial_4bayv")
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_82qyg")
+
+[node name="MarginContainer" type="MarginContainer" parent="Pause Menu" unique_id=1814557344]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Buttons" type="VBoxContainer" parent="Pause Menu/MarginContainer" unique_id=107834565]
+layout_mode = 2
+
+[node name="Settings" type="Button" parent="Pause Menu/MarginContainer/Buttons" unique_id=1823169428]
 layout_mode = 2
 text = "Settings"
 
-[node name="Back" type="Button" parent="Pause Menu" unique_id=1526716928]
+[node name="Back" type="Button" parent="Pause Menu/MarginContainer/Buttons" unique_id=1526716928]
 layout_mode = 2
 text = "Back"
 
@@ -52,11 +141,15 @@ text = "Back"
 visible = false
 layout_mode = 1
 
-[connection signal="pressed" from="Pause Menu/Settings" to="." method="SwitchToSettingsMenu"]
-[connection signal="pressed" from="Pause Menu/Back" to="." method="ToggleMenu"]
-[connection signal="pressed" from="Settings Menu/Back" to="." method="SwitchToBaseMenu"]
+[connection signal="pressed" from="Pause Menu/MarginContainer/Buttons/Settings" to="." method="SwitchToSettingsMenu"]
+[connection signal="pressed" from="Pause Menu/MarginContainer/Buttons/Back" to="." method="ToggleMenu"]
+[connection signal="pressed" from="Settings Menu/TabContainer/General/VBox/Back" to="." method="ToggleMenu"]
+[connection signal="pressed" from="Settings Menu/TabContainer/Controls/VBox/Back" to="." method="ToggleMenu"]
+[connection signal="pressed" from="Settings Menu/TabContainer/Video/VBox/Back" to="." method="ToggleMenu"]
 
 [editable path="Settings Menu"]
-[editable path="Settings Menu/Horizontal Sensitivity"]
-[editable path="Settings Menu/Vertical Sensitivity"]
-[editable path="Settings Menu/FOV"]
+[editable path="Settings Menu/TabContainer/Controls/VBox/Horizontal Sensitivity"]
+[editable path="Settings Menu/TabContainer/Controls/VBox/Vertical Sensitivity"]
+[editable path="Settings Menu/TabContainer/Controls/VBox/FOV"]
+[editable path="Settings Menu/TabContainer/Video/VBox/UI Scaling/Slider Setting"]
+[editable path="Settings Menu/TabContainer/Video/VBox/Render Scale/Slider Setting"]

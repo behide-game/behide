@@ -71,16 +71,6 @@ public abstract partial class Supervisor : Node
         SetReadyWhenSceneLoaded();
     }
 
-    public override void _Ready()
-    {
-        // Apply settings (TODO: Build shadows settings)
-        GetTree().CallGroup(
-            Groups.ShadowingLights,
-            Light3D.MethodName.SetShadow,
-            false
-        );
-    }
-
     private void SetReadyWhenSceneLoaded()
     {
         var sceneNode = GetTree().CurrentScene;

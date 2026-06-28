@@ -7,85 +7,69 @@ using Log = Behide.Logging.Log;
 
 namespace Behide.Game;
 
-internal static class ConfigFileExtensions
-{
-	extension(ConfigFile config)
-	{
-		public Variant GetValueOrDefault(string section, string key)
-		{
-			try
-			{
-				return config.GetValue(section, key);
-			}
-			catch (Exception)
-			{
-				return default;
-			}
-		}
-	}
-}
-
 [SceneTree(root: "nodes")]
-public partial class Settings : VBoxContainer
+public partial class Settings : Control
 {
-	public string? GetUsername()
-	{
-		var lineEditText = nodes.Username.LineEdit.Text;
-		return string.IsNullOrWhiteSpace(lineEditText)
-			? null
-			: lineEditText;
-	}
-	public double HorizontalSensitivity => nodes.HorizontalSensitivity.Value;
-	public double VerticalSensitivity => nodes.VerticalSensitivity.Value;
-	public double Fov => nodes.FOV.Value;
+    private readonly ILogger log = Log.CreateLogger("Settings");
 
-	private readonly ILogger log = Log.CreateLogger("Settings");
-	public readonly Subject<Unit> Changed = new();
+    public override void _Ready()
+    {
+        VideoListenSettings();
+        GraphicsListenSettings();
 
-	public override void _EnterTree()
-	{
-		ApplyConfig();
+        LoadConfig();
+        SaveConfigOnChanged();
 
-		var change = (double _) => Changed.OnNext(Unit.Default);
+        GeneralListenSettingsForSaving();
+        ControlsListenSettingsForSaving();
+        VideoListenSettingsForSaving();
+        GraphicsListenSettingsForSaving();
+    }
 
-		nodes.HorizontalSensitivity.Changed.Subscribe(change);
-		nodes.VerticalSensitivity.Changed.Subscribe(change);
-		nodes.FOV.Changed.Subscribe(change);
-		nodes.Username.LineEdit.TextChanged += _ => change.Invoke(0.0);
+    public readonly Subject<Unit> Changed = new();
 
-		Changed.Throttle(TimeSpan.FromSeconds(2)).Subscribe(_ => CallThreadSafe(nameof(Save)));
-	}
+    /// <summary>
+    /// Fire Changed when any settings changed
+    /// </summary>
+    private void SaveConfigOnChanged()
+    {
+        Changed
+            .Throttle(TimeSpan.FromMilliseconds(500))
+            .Subscribe(_ => CallThreadSafe(nameof(Save)));
+    }
 
-	private void ApplyConfig()
-	{
-		var config = new ConfigFile();
-		if (config.Load("user://settings.cfg") != Error.Ok)
-		{
-			log.Error("Failed to load settings");
-			return;
-		}
+    /// <summary>
+    /// Load settings saved and apply
+    /// </summary>
+    private void LoadConfig()
+    {
+        var config = new ConfigFile();
+        if (config.Load("user://settings.cfg") != Error.Ok)
+        {
+            log.Error("Failed to load settings");
+            return;
+        }
 
-		var hSensi = (double)config.GetValue("Controls", "horizontal_sensitivity", 1);
-		var vSensi = (double)config.GetValue("Controls", "vertical_sensitivity", 1);
-		var fov = (double)config.GetValue("Controls", "fov", 90);
-		nodes.HorizontalSensitivity.SetValue(hSensi);
-		nodes.VerticalSensitivity.SetValue(vSensi);
-		nodes.FOV.SetValue(fov);
+        GeneralApplyFromConfig(config);
+        ControlsApplyFromConfig(config);
+        VideoApplyFromConfig(config);
+        GraphicsApplyFromConfig(config);
+    }
 
-		var username = (string?)config.GetValueOrDefault("User", "username");
-		nodes.Username.LineEdit.Text = username;
-	}
+    /// <summary>
+    /// Save the settings to the file
+    /// </summary>
+    private void Save()
+    {
+        var config = new ConfigFile();
 
-	private void Save()
-	{
-		var config = new ConfigFile();
-		config.SetValue("Controls", "horizontal_sensitivity", HorizontalSensitivity);
-		config.SetValue("Controls", "vertical_sensitivity", VerticalSensitivity);
-		config.SetValue("Controls", "fov", Fov);
-		config.SetValue("User", "username", GetUsername() ?? string.Empty);
+        GeneralApplyToConfig(config);
+        ControlsApplyToConfig(config);
+        VideoApplyToConfig(config);
+        GraphicsApplyToConfig(config);
 
-		var err = config.Save("user://settings.cfg");
-		if (err == Error.Ok) return;
-		log.Error("Failed to save settings");
-	}
+        var err = config.Save("user://settings.cfg");
+        if (err == Error.Ok) return;
+        log.Error("Failed to save settings");
+    }
 }

@@ -1657,7 +1657,7 @@ omni_attenuation = 0.0
 [node name="torch_mounted2" parent="StaticProps" unique_id=1009907461 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.7, 2, 13)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted2" unique_id=514797046]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted2" unique_id=514797046 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -1669,7 +1669,7 @@ omni_attenuation = 1.5
 [node name="torch_mounted6" parent="StaticProps" unique_id=284519871 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -6, 6, 15.5)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted6" unique_id=1220587296]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted6" unique_id=1220587296 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -1681,7 +1681,7 @@ omni_attenuation = 1.5
 [node name="torch_mounted7" parent="StaticProps" unique_id=2141230082 instance=ExtResource("45_01r5e")]
 transform = Transform3D(1, 0, -5.96046e-08, 0, 1, 0, 5.96046e-08, 0, 1, -6, 6, 16.5)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted7" unique_id=1022988872]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted7" unique_id=1022988872 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -1693,7 +1693,7 @@ omni_attenuation = 1.5
 [node name="torch_mounted8" parent="StaticProps" unique_id=1675805326 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-1.03316e-07, 0, -1, 0, 1, 0, 1, 0, -1.03316e-07, 1.8, 6, 20)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted8" unique_id=502692714]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted8" unique_id=502692714 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -1705,7 +1705,7 @@ omni_attenuation = 1.5
 [node name="torch_mounted3" parent="StaticProps" unique_id=28944803 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.7, 2, 18)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted3" unique_id=613884998]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted3" unique_id=613884998 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -1717,7 +1717,7 @@ omni_attenuation = 1.5
 [node name="torch_mounted15" parent="StaticProps" unique_id=882638098 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-1, 0, 8.742279e-08, 0, 1, 0, -8.742279e-08, 0, -1, -6.3, 6, 23.800001)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted15" unique_id=77180427]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted15" unique_id=77180427 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -1729,7 +1729,7 @@ omni_attenuation = 1.5
 [node name="torch_mounted4" parent="StaticProps" unique_id=2079177310 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -13.7, 2, 19)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted4" unique_id=367718357]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted4" unique_id=367718357 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -1741,7 +1741,7 @@ omni_attenuation = 1.5
 [node name="torch_mounted5" parent="StaticProps" unique_id=1675883751 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -13.7, 2, 14)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted5" unique_id=1805073723]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted5" unique_id=1805073723 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -1762,7 +1762,7 @@ transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -14, 0, 
 [node name="torch_mounted9" parent="StaticProps" unique_id=626857896 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -38, 3.9, 23.5)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted9" unique_id=1970876345]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted9" unique_id=1970876345 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -1774,7 +1774,7 @@ omni_attenuation = 1.5
 [node name="torch_mounted14" parent="StaticProps" unique_id=921049866 instance=ExtResource("45_01r5e")]
 transform = Transform3D(1.3113419e-07, 0, 1, 0, 1, 0, -1, 0, 1.3113419e-07, -41.5, 3.9, 18.1)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted14" unique_id=837133035]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted14" unique_id=837133035 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -1786,7 +1786,7 @@ omni_attenuation = 1.5
 [node name="torch_mounted10" parent="StaticProps" unique_id=934990026 instance=ExtResource("45_01r5e")]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -38, 3.9, 12)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted10" unique_id=1915073071]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted10" unique_id=1915073071 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -1798,7 +1798,7 @@ omni_attenuation = 1.5
 [node name="torch_mounted11" parent="StaticProps" unique_id=1522406386 instance=ExtResource("45_01r5e")]
 transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -38, 3.9, 0.5)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted11" unique_id=1039498405]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted11" unique_id=1039498405 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -1810,7 +1810,7 @@ omni_attenuation = 1.5
 [node name="torch_mounted12" parent="StaticProps" unique_id=783056036 instance=ExtResource("45_01r5e")]
 transform = Transform3D(1.31135e-07, 0, 1, 0, 1, 0, -1, 0, 1.31135e-07, -41.5, 3.9, 6)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted12" unique_id=1449115684]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted12" unique_id=1449115684 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -1822,7 +1822,7 @@ omni_attenuation = 1.5
 [node name="torch_mounted13" parent="StaticProps" unique_id=222099704 instance=ExtResource("45_01r5e")]
 transform = Transform3D(-2.18558e-07, 0, -1, 0, 1, 0, 1, 0, -2.18558e-07, -34.5, 3.9, 6)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted13" unique_id=350525756]
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticProps/torch_mounted13" unique_id=350525756 groups=["ShadowingLights"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.5, 0.3)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -2078,7 +2078,7 @@ transform = Transform3D(0.985313, 0, 0.17076, 0, 1, 0, -0.17076, 0, 0.985313, -3
 [node name="candle_thin" parent="BehideObjects" unique_id=1050359694 instance=ExtResource("76_kcrxe")]
 transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -39.4114, 2.7, 12.6126)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin" unique_id=1488994367]
+[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin" unique_id=1488994367 groups=["ShadowingLights"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.866881, 0)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -2108,7 +2108,7 @@ transform = Transform3D(-0.886777, 0, 0.462198, 0, 1, 0, -0.462198, 0, -0.886777
 [node name="candle_thin2" parent="BehideObjects" unique_id=1624896744 instance=ExtResource("76_kcrxe")]
 transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -41.2852, 0.161767, 6.58024)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin2" unique_id=919823946]
+[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin2" unique_id=919823946 groups=["ShadowingLights"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.866881, 0)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -2120,7 +2120,7 @@ omni_attenuation = 1.5
 [node name="candle_thin3" parent="BehideObjects" unique_id=2046879200 instance=ExtResource("76_kcrxe")]
 transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -41.2852, 0.161767, 4.59899)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin3" unique_id=1329416832]
+[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin3" unique_id=1329416832 groups=["ShadowingLights"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.866881, 0)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
@@ -2132,7 +2132,7 @@ omni_attenuation = 1.5
 [node name="candle_thin4" parent="BehideObjects" unique_id=1201533949 instance=ExtResource("76_kcrxe")]
 transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -41.2852, 0.161767, 2.62653)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin4" unique_id=1301340166]
+[node name="OmniLight3D" type="OmniLight3D" parent="BehideObjects/candle_thin4" unique_id=1301340166 groups=["ShadowingLights"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.866881, 0)
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
