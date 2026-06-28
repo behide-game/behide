@@ -13,7 +13,7 @@ shape = SubResource("BoxShape3D_jugs2")
 
 [node name="wall_doorway_scaffold2" parent="." unique_id=626094836 instance=ExtResource("1_xwhcx")]
 
-[node name="wall_doorway_scaffold_door" parent="wall_doorway_scaffold2/wall_doorway_scaffold" parent_id_path=PackedInt32Array(626094836, 2133640166) index="0" unique_id=1998036779]
+[node name="wall_doorway_scaffold_door" parent="wall_doorway_scaffold2/wall_doorway_scaffold" parent_id_path=PackedInt32Array(626094836, 1219510930) index="0" unique_id=1526248143]
 transform = Transform3D(-0.32061303, 0, -0.94721025, 0, 1, 0, 0.94721025, 0, -0.32061303, -0.8200989, 0, 0)
 
 [editable path="wall_doorway_scaffold2"]

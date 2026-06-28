@@ -32,7 +32,7 @@ Mass = 1.0
 
 [node name="candle_thin" parent="." unique_id=1107089462 instance=ExtResource("2_bf74a")]
 
-[node name="candle_thin" parent="candle_thin" index="0" unique_id=982351639]
+[node name="candle_thin" parent="candle_thin" index="0" unique_id=1950967769]
 layers = 16
 
 [node name="OmniLight3D" type="OmniLight3D" parent="candle_thin" unique_id=382861156 groups=["ShadowingLights"]]
