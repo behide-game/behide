@@ -25,7 +25,8 @@ PauseMenu="*res://Scenes/PauseMenu/PauseMenu.tscn"
 
 [display]
 
-window/size/initial_position_type=2
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 window/vsync/vsync_mode=0
 window/transparent_background=false
 

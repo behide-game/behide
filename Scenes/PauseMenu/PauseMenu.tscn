@@ -56,8 +56,8 @@ layout_mode = 1
 [connection signal="pressed" from="Pause Menu/Back" to="." method="ToggleMenu"]
 
 [editable path="Settings Menu"]
-[editable path="Settings Menu/TabContainer/General/VBox/Horizontal Sensitivity"]
-[editable path="Settings Menu/TabContainer/General/VBox/Vertical Sensitivity"]
-[editable path="Settings Menu/TabContainer/General/VBox/FOV"]
+[editable path="Settings Menu/TabContainer/Controls/VBox/Horizontal Sensitivity"]
+[editable path="Settings Menu/TabContainer/Controls/VBox/Vertical Sensitivity"]
+[editable path="Settings Menu/TabContainer/Controls/VBox/FOV"]
 [editable path="Settings Menu/TabContainer/Video/VBox/UI Scaling/Slider Setting"]
 [editable path="Settings Menu/TabContainer/Video/VBox/Render Scale/Slider Setting"]
