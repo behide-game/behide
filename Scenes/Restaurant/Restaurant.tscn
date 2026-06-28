@@ -202,6 +202,33 @@ size = Vector3(2, 1, 10)
 [sub_resource type="BoxShape3D" id="BoxShape3D_n8q3x"]
 size = Vector3(2, 1, 6)
 
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_jaxhj"]
+size = Vector3(0.4, 4.2, 9.400001)
+
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_ix7vu"]
+size = Vector3(0.4, 4.2, 15.6)
+
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_w3pbc"]
+size = Vector3(0.4, 4.2, 10.6)
+
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_5mqqy"]
+size = Vector3(0.4, 4.2, 9)
+
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_3vpxk"]
+size = Vector3(0.4, 4.2, 4.8)
+
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_dpha8"]
+size = Vector3(0.4, 4.2, 9.400001)
+
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_ih5ia"]
+size = Vector3(0.4, 4, 15.2)
+
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_ktdb0"]
+size = Vector3(0.4, 4, 17.2)
+
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_ky4qh"]
+size = Vector3(0.4, 4, 16.800001)
+
 [node name="Restaurant" type="Node3D" unique_id=561802050]
 
 [node name="Supervisor" parent="." unique_id=2086486061 node_paths=PackedStringArray("PlayersNode", "BehideObjects", "BehideObjects") instance=ExtResource("1_mjx0q")]
@@ -2970,6 +2997,56 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 21.6
 
 [node name="kitchencounter_straight_A_backsplash5" parent="NonBehideObjects/Kitchen" unique_id=1852567450 instance=ExtResource("118_4l4as")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 21.6, 0.5, 3)
+
+[node name="Occluders" type="Node3D" parent="." unique_id=1824823784]
+
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="Occluders" unique_id=1859147414]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 2.4, 1.6999999)
+occluder = SubResource("BoxOccluder3D_jaxhj")
+
+[node name="OccluderInstance3D12" type="OccluderInstance3D" parent="Occluders" unique_id=1911636746]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.900001, 2.4, -1.1999999)
+occluder = SubResource("BoxOccluder3D_ix7vu")
+
+[node name="OccluderInstance3D2" type="OccluderInstance3D" parent="Occluders" unique_id=674084461]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2999997, 2.4, 1.6999999)
+occluder = SubResource("BoxOccluder3D_jaxhj")
+
+[node name="OccluderInstance3D3" type="OccluderInstance3D" parent="Occluders" unique_id=214390051]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2999997, 2.4, -10.299999)
+occluder = SubResource("BoxOccluder3D_w3pbc")
+
+[node name="OccluderInstance3D7" type="OccluderInstance3D" parent="Occluders" unique_id=821967909]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 18.6, 2.4, -10.299999)
+occluder = SubResource("BoxOccluder3D_5mqqy")
+
+[node name="OccluderInstance3D8" type="OccluderInstance3D" parent="Occluders" unique_id=1696626124]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 8.700001, 2.4, -10.299999)
+occluder = SubResource("BoxOccluder3D_3vpxk")
+
+[node name="OccluderInstance3D4" type="OccluderInstance3D" parent="Occluders" unique_id=1232713208]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2999997, 2.4, -26.900002)
+occluder = SubResource("BoxOccluder3D_dpha8")
+
+[node name="OccluderInstance3D5" type="OccluderInstance3D" parent="Occluders" unique_id=2063062879]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3000002, 2.4, -26.900002)
+occluder = SubResource("BoxOccluder3D_dpha8")
+
+[node name="OccluderInstance3D6" type="OccluderInstance3D" parent="Occluders" unique_id=168250580]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3000002, 2.4, -12.6)
+occluder = SubResource("BoxOccluder3D_ih5ia")
+
+[node name="OccluderInstance3D9" type="OccluderInstance3D" parent="Occluders" unique_id=1803041889]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -10.6, 2.4, -14.9)
+occluder = SubResource("BoxOccluder3D_ktdb0")
+
+[node name="OccluderInstance3D11" type="OccluderInstance3D" parent="Occluders" unique_id=1674078974]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -10.6, 2.4, -31.5)
+occluder = SubResource("BoxOccluder3D_ktdb0")
+
+[node name="OccluderInstance3D10" type="OccluderInstance3D" parent="Occluders" unique_id=1158909383]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.900002, 2.4, -23.199999)
+occluder = SubResource("BoxOccluder3D_ky4qh")
 
 [editable path="Walls/Wall28"]
 [editable path="Walls/Wall48"]
