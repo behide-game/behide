@@ -22,6 +22,7 @@ WebRtcSignaling="*res://Scripts/Networking/Signaling.cs"
 RoomManager="*res://Scripts/RoomManager.cs"
 TimeSynchronizer="*res://Scripts/TimeSynchronizer.cs"
 PauseMenu="*res://Scenes/PauseMenu/PauseMenu.tscn"
+VisualEffectsLayer="*res://Scenes/VisualEffectsLayer.tscn"
 
 [display]
 
@@ -149,6 +150,7 @@ common/physics_interpolation=true
 
 [rendering]
 
+rendering_device/driver.windows="d3d12"
 textures/vram_compression/import_s3tc_bptc=true
 anti_aliasing/quality/msaa_2d=1
 scaling_3d/mode=5

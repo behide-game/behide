@@ -18,10 +18,9 @@ custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/side_margin = 0
-current_tab = 2
+current_tab = 0
 
 [node name="General" type="MarginContainer" parent="TabContainer" unique_id=2018857125]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
@@ -104,6 +103,7 @@ size_flags_vertical = 10
 text = "Back"
 
 [node name="Video" type="MarginContainer" parent="TabContainer" unique_id=318587705]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
@@ -228,6 +228,19 @@ popup/item_5/id = 5
 popup/item_6/text = "Temporal Anti Aliasing"
 popup/item_6/id = 6
 
+[node name="FPS" type="HBoxContainer" parent="TabContainer/Video/VBox" unique_id=325118476]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="TabContainer/Video/VBox/FPS" unique_id=1499624184]
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Show FPS"
+
+[node name="Enabled" type="CheckButton" parent="TabContainer/Video/VBox/FPS" unique_id=983603608]
+layout_mode = 2
+button_pressed = true
+
 [node name="Back" type="Button" parent="TabContainer/Video/VBox" unique_id=838226937]
 layout_mode = 2
 size_flags_vertical = 10
@@ -282,6 +295,19 @@ size_flags_horizontal = 2
 text = "Screen Space Reflection"
 
 [node name="Enabled" type="CheckButton" parent="TabContainer/Graphics/VBox/SSR" unique_id=1297201110]
+layout_mode = 2
+button_pressed = true
+
+[node name="Chromatic Aberration" type="HBoxContainer" parent="TabContainer/Graphics/VBox" unique_id=893380115]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBox/Chromatic Aberration" unique_id=2133802144]
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Chromatic Aberration"
+
+[node name="Enabled" type="CheckButton" parent="TabContainer/Graphics/VBox/Chromatic Aberration" unique_id=2134119804]
 layout_mode = 2
 button_pressed = true
 

@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://cehw1sq4q5yu8" path="res://Prefabs/Supervisors/PropHuntSupervisor.tscn" id="1_mjx0q"]
 [ext_resource type="Environment" uid="uid://c8ttkksgix01d" path="res://Scenes/environment.tres" id="2_8qvsr"]
 [ext_resource type="PackedScene" uid="uid://ct5qmehvntla3" path="res://Prefabs/Restaurant/wall.tscn" id="3_8qvsr"]
-[ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Assets/Shaders/chromatic_aberration.tres" id="3_740en"]
 [ext_resource type="PackedScene" uid="uid://duj268bc1xnyq" path="res://Prefabs/Restaurant/wall_window_closed.tscn" id="4_740en"]
 [ext_resource type="Script" uid="uid://qiap5mw17kh1" path="res://addons/lightmap_probe_grid/lightmap_probe_grid.gd" id="5_ggn37"]
 [ext_resource type="PackedScene" uid="uid://c2gvul3ovhdff" path="res://Prefabs/Restaurant/wall_doorway.tscn" id="5_yic3s"]
@@ -214,18 +213,6 @@ BehideObjects = NodePath("../BehideObjects")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=126028616]
 environment = ExtResource("2_8qvsr")
-
-[node name="VisualEffectsLayer" type="CanvasLayer" parent="." unique_id=1234477127]
-layer = -1
-
-[node name="ChromaticAberration" type="ColorRect" parent="VisualEffectsLayer" unique_id=324684165]
-material = ExtResource("3_740en")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=1173480206]
 generate_probes_subdiv = 0
@@ -960,7 +947,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.900001, 0.4, -8.9)
 [node name="Pillar_B" parent="Walls" unique_id=1883687638 instance=ExtResource("118_ix7vu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.6, 0.5, -18.6)
 
-[node name="pillar_B" parent="Walls/Pillar_B/pillar_B" parent_id_path=PackedInt32Array(1883687638, 1804709616) index="0" unique_id=1086129308]
+[node name="pillar_B" parent="Walls/Pillar_B/pillar_B" parent_id_path=PackedInt32Array(1883687638, 1804709616) index="0" unique_id=1741219944]
 layers = 16
 
 [node name="WallOrderWindow" parent="Walls" unique_id=782528899 instance=ExtResource("6_ggn37")]
@@ -1712,7 +1699,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.3, -0.6, -24)
 [node name="drill_structure2" parent="BehideObjects" unique_id=414522038 instance=ExtResource("95_yk75b")]
 transform = Transform3D(0.9580929, 0, 0.28645766, 0, 1, 0, -0.28645766, 0, 0.9580929, -8.8, -0.6, -18.599998)
 
-[node name="drill_module" parent="BehideObjects/drill_structure2/drill_structure/drill_structure" parent_id_path=PackedInt32Array(414522038, 1065827109, 1924143091) index="0" unique_id=431188857]
+[node name="drill_module" parent="BehideObjects/drill_structure2/drill_structure/drill_structure" parent_id_path=PackedInt32Array(414522038, 1065827109, 859439876) index="0" unique_id=150794933]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34523964, 0)
 
 [node name="solarpanel" parent="BehideObjects" unique_id=263903747 instance=ExtResource("96_5qqhn")]

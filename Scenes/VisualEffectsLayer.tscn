@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://cy3ydfw6j04cl"]
+
+[ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Assets/Shaders/chromatic_aberration.tres" id="1_cbcyn"]
+[ext_resource type="Script" uid="uid://c0eqa73oatddt" path="res://Scenes/VisualEffectsLayer.cs" id="1_ukuqp"]
+[ext_resource type="FontFile" uid="uid://26b4v0rh3143" path="res://Assets/Fonts/Space Mono/SpaceMono-Bold.ttf" id="3_ukuqp"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ceia4"]
+font = ExtResource("3_ukuqp")
+font_size = 18
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+
+[node name="VisualEffectsLayer" type="CanvasLayer" unique_id=76769447]
+layer = -1
+script = ExtResource("1_ukuqp")
+
+[node name="ChromaticAberration" type="ColorRect" parent="." unique_id=1981636557]
+material = ExtResource("1_cbcyn")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FPS" type="MarginContainer" parent="." unique_id=388433411]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_override_constants/margin_right = 8
+
+[node name="Label" type="Label" parent="FPS" unique_id=1435800426]
+layout_mode = 2
+size_flags_vertical = 1
+text = "60"
+label_settings = SubResource("LabelSettings_ceia4")
+horizontal_alignment = 2

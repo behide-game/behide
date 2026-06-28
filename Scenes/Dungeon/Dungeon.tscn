@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://bh3nk67jxv7k"]
 
 [ext_resource type="PackedScene" uid="uid://cfyb4305uyrca" path="res://Scenes/Dungeon/DungeonMap.tscn" id="3_ln2h6"]
-[ext_resource type="Material" uid="uid://cyh1wuis74osj" path="res://Assets/Shaders/chromatic_aberration.tres" id="4_32cbu"]
 [ext_resource type="PackedScene" uid="uid://ejs15n81bpnf" path="res://Prefabs/BehideObjects/Cube/yellow_cube.tscn" id="8_bsqcq"]
 [ext_resource type="PackedScene" uid="uid://cwbve28vlg05s" path="res://Prefabs/BehideObjects/Cube/purple_cube.tscn" id="9_jf0ra"]
 [ext_resource type="PackedScene" uid="uid://cehw1sq4q5yu8" path="res://Prefabs/Supervisors/PropHuntSupervisor.tscn" id="9_m1o7v"]
@@ -18,18 +17,6 @@ BehideObjects = NodePath("../World/Dungeon/BehideObjects")
 BehideObjects = NodePath("../World/Dungeon/BehideObjects")
 
 [node name="Players" type="Node3D" parent="." unique_id=203314885]
-
-[node name="VisualEffectsLayer" type="CanvasLayer" parent="." unique_id=510708513]
-layer = -1
-
-[node name="ChromaticAberration" type="ColorRect" parent="VisualEffectsLayer" unique_id=1030768743]
-material = ExtResource("4_32cbu")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="World" type="Node3D" parent="." unique_id=1599630924]
 

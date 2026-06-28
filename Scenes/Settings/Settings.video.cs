@@ -68,6 +68,9 @@ public partial class Settings
 
         // Anti-aliasing
         Video.AntiAliasing.OptionButton.ItemSelected += Video_SetAntiAliasing;
+
+        // FPS
+        Video.FPS.Enabled.Toggled += GameManager.VisualEffectsLayer.EnableFpsDisplay;
     }
 
     /// <summary>
@@ -80,6 +83,7 @@ public partial class Settings
         Video.RenderScale.OptionButton.ItemSelected += _ => Changed.OnNext(Unit.Default);
         Video.RenderScale.SliderSetting.Changed.Subscribe(_ => Changed.OnNext(Unit.Default));
         Video.AntiAliasing.OptionButton.ItemSelected += _ => Changed.OnNext(Unit.Default);
+        Video.FPS.Enabled.Toggled += _ => Changed.OnNext(Unit.Default);
     }
 
     private void VideoApplyFromConfig(ConfigFile config)
@@ -89,6 +93,7 @@ public partial class Settings
         var renderScaleMode = config.GetValue(nameof(Video), "render-scale-mode", "normal").AsString();
         var renderScale = config.GetValue(nameof(Video), "render-scale", 100).AsInt32();
         var antiAliasing = config.GetValue(nameof(Video), "anti-aliasing", "none").AsString();
+        var displayFps = config.GetValue(nameof(Video), "display-fps", false).AsBool();
 
         Video.DisplayMode.OptionButton.Select(displayMode switch
         {
@@ -123,6 +128,7 @@ public partial class Settings
         Video_SetRenderScaleMode(Video.RenderScale.OptionButton.Selected);
         Video_SetRenderScale(Video.RenderScale.SliderSetting.Value);
         Video_SetAntiAliasing(Video.AntiAliasing.OptionButton.Selected);
+        GameManager.VisualEffectsLayer.EnableFpsDisplay(displayFps);
     }
 
     private void VideoApplyToConfig(ConfigFile config)
@@ -154,5 +160,6 @@ public partial class Settings
             6 => "taa",
             _ => "none"
         });
+        config.SetValue(nameof(Video), "display-fps", Video.FPS.Enabled.ButtonPressed);
     }
 }

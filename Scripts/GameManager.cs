@@ -16,6 +16,7 @@ public partial class GameManager : Node
     public static TimeSynchronizer TimeSync { get; private set; } = null!;
     public static PauseMenu PauseMenu { get; private set; } = null!;
     public static Settings Settings { get; private set; } = null!;
+    public static VisualEffectsLayer VisualEffectsLayer { get; private set; } = null!;
 
     public enum GameState { Home, Lobby, Game }
     public enum GameMap { Dungeon, Restaurant }
@@ -47,6 +48,7 @@ public partial class GameManager : Node
         TimeSync = GetNode<TimeSynchronizer>("/root/TimeSynchronizer");
         PauseMenu = GetNode<PauseMenu>("/root/PauseMenu");
         Settings = PauseMenu.Settings;
+        VisualEffectsLayer = GetNode<VisualEffectsLayer>("/root/VisualEffectsLayer");
     }
 
     public override void _Notification(int what)
