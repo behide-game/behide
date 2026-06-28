@@ -347,6 +347,11 @@ text = "Chromatic Aberration"
 layout_mode = 2
 button_pressed = true
 
+[node name="Back" type="Button" parent="TabContainer/Graphics/VBox" unique_id=1647153408]
+layout_mode = 2
+size_flags_vertical = 10
+text = "Back"
+
 [editable path="TabContainer/Controls/VBox/Horizontal Sensitivity"]
 [editable path="TabContainer/Controls/VBox/Vertical Sensitivity"]
 [editable path="TabContainer/Controls/VBox/FOV"]
