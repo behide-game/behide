@@ -1,22 +1,37 @@
 [gd_scene format=3 uid="uid://mvi6mhwtencn"]
 
 [ext_resource type="Script" uid="uid://cltwxw8gox4fv" path="res://Scenes/Settings/Settings.cs" id="1_ytwd3"]
+[ext_resource type="Shader" uid="uid://baf1p55idhp1q" path="res://Scenes/PauseMenu/blur.gdshader" id="2_swut7"]
 [ext_resource type="PackedScene" uid="uid://cjob1jiwft1io" path="res://Scenes/Controls/Settings/SliderSetting.tscn" id="2_xlpa8"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jaxhj"]
+shader = ExtResource("2_swut7")
+shader_parameter/lod = 4.00000019
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ceia4"]
+bg_color = Color(1, 1, 1, 1)
+
 [node name="Settings" type="MarginContainer" unique_id=1597847842]
-anchors_preset = 15
-anchor_right = 1.0
+anchors_preset = 9
 anchor_bottom = 1.0
-grow_horizontal = 2
+offset_right = 560.0
 grow_vertical = 2
+size_flags_horizontal = 0
+theme_override_constants/margin_left = 80
 theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 80
 theme_override_constants/margin_bottom = 80
 script = ExtResource("1_ytwd3")
+
+[node name="Background" type="Panel" parent="." unique_id=1953236760]
+material = SubResource("ShaderMaterial_jaxhj")
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ceia4")
 
 [node name="TabContainer" type="TabContainer" parent="." unique_id=1344672762]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 0
 theme_override_constants/side_margin = 0
 current_tab = 0
 

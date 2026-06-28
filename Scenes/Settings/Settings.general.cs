@@ -1,5 +1,5 @@
 using Godot;
-using Unit = System.Reactive.Unit;
+using System.Reactive;
 
 namespace Behide.Game;
 

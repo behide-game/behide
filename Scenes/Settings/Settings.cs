@@ -12,7 +12,7 @@ public partial class Settings : Control
 {
     private readonly ILogger log = Log.CreateLogger("Settings");
 
-    public override void _EnterTree()
+    public override void _Ready()
     {
         VideoListenSettings();
         GraphicsListenSettings();

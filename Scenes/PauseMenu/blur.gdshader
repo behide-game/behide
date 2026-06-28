@@ -4,5 +4,5 @@ uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
 uniform float lod: hint_range(0.0, 5) = 0.0;
 
 void fragment(){
-	COLOR = vec4(textureLod(SCREEN_TEXTURE, SCREEN_UV, lod).rgb, 1);
+	COLOR = vec4(textureLod(SCREEN_TEXTURE, SCREEN_UV, lod).rgb / 1.2, 1);
 }
