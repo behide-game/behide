@@ -106,6 +106,7 @@ public partial class Settings
 
         // FPS
         Video.FPS.Enabled.Toggled += GameManager.VisualEffectsLayer.EnableFpsDisplay;
+        Video.MaxFPS.SliderSetting.Changed.Subscribe(maxFps => Engine.SetMaxFps((int)maxFps));
 
         // Driver
         Video.Driver.OptionButton.ItemSelected += Video_SetDriver;
@@ -122,6 +123,7 @@ public partial class Settings
         Video.RenderScale.SliderSetting.Changed.Subscribe(_ => Changed.OnNext(Unit.Default));
         Video.Anti_aliasing.OptionButton.ItemSelected += _ => Changed.OnNext(Unit.Default);
         Video.FPS.Enabled.Toggled += _ => Changed.OnNext(Unit.Default);
+        Video.MaxFPS.SliderSetting.Changed.Subscribe(_ => Changed.OnNext(Unit.Default));
     }
 
     private void VideoApplyFromConfig(ConfigFile config)
@@ -132,6 +134,7 @@ public partial class Settings
         var renderScale = config.GetValue(nameof(Video), "render-scale", 100).AsInt32();
         var antiAliasing = config.GetValue(nameof(Video), "anti-aliasing", "none").AsString();
         var displayFps = config.GetValue(nameof(Video), "display-fps", false).AsBool();
+        var maxFps = config.GetValue(nameof(Video), "max-fps", 0).AsInt32();
 
         Video.DisplayMode.OptionButton.Select(displayMode switch
         {
@@ -160,6 +163,7 @@ public partial class Settings
             "taa" => 6,
             _ => 0
         });
+        Video.MaxFPS.SliderSetting.SetValue(maxFps);
 
         var renderingMethod = RenderingServer.GetCurrentRenderingMethod();
         var renderingDriver = RenderingServer.GetCurrentRenderingDriverName();
@@ -174,6 +178,11 @@ public partial class Settings
             }
         });
         Video.Driver.OptionButton.SetItemDisabled(1, !OperatingSystem.IsWindows());
+        Video.RenderScale.OptionButton.SetItemDisabled(1, renderingMethod != "forward_plus");
+        Video.RenderScale.OptionButton.SetItemDisabled(2, renderingMethod != "forward_plus");
+        Video.Anti_aliasing.OptionButton.SetItemDisabled(4, renderingMethod == "gl_compatibility");
+        Video.Anti_aliasing.OptionButton.SetItemDisabled(5, renderingMethod == "gl_compatibility");
+        Video.Anti_aliasing.OptionButton.SetItemDisabled(6, renderingMethod != "forward_plus");
 
         Video_SetDisplayMode(Video.DisplayMode.OptionButton.Selected);
         Video_SetUIScaling(Video.UIScaling.SliderSetting.Value);
@@ -181,6 +190,7 @@ public partial class Settings
         Video_SetRenderScale(Video.RenderScale.SliderSetting.Value);
         Video_SetAntiAliasing(Video.Anti_aliasing.OptionButton.Selected);
         GameManager.VisualEffectsLayer.EnableFpsDisplay(displayFps);
+        Engine.SetMaxFps(maxFps);
     }
 
     private void VideoApplyToConfig(ConfigFile config)
@@ -213,5 +223,6 @@ public partial class Settings
             _ => "none"
         });
         config.SetValue(nameof(Video), "display-fps", Video.FPS.Enabled.ButtonPressed);
+        config.SetValue(nameof(Video), "max-fps", Video.MaxFPS.SliderSetting.Value);
     }
 }

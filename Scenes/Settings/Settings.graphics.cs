@@ -21,18 +21,6 @@ public partial class Settings
             worldEnvironment.Environment.SetGlowEnabled(toggledOn);
         };
 
-        // Shadows
-        Graphics.Shadows.Enabled.Toggled += toggledOn => GetTree().CallGroup(
-            Groups.ShadowingLights,
-            Light3D.MethodName.SetShadow,
-            toggledOn
-        );
-        GetTree().SceneChanged += () => GetTree().CallGroup(
-            Groups.ShadowingLights,
-            Light3D.MethodName.SetShadow,
-            Graphics.Shadows.Enabled.ButtonPressed
-        );
-
         // SSR
         Graphics.SSR.Enabled.Toggled += toggledOn =>
         {
@@ -44,6 +32,31 @@ public partial class Settings
 
         // Chromatic Aberration
         Graphics.ChromaticAberration.Enabled.Toggled += GameManager.VisualEffectsLayer.EnableChromaticAberration;
+
+        // Shadows
+        Graphics.ShadowsQuality.OptionButton.ItemSelected += selectedIdx =>
+        {
+            RenderingServer.PositionalSoftShadowFilterSetQuality(selectedIdx switch
+            {
+                1 => RenderingServer.ShadowQuality.Hard,
+                2 => RenderingServer.ShadowQuality.SoftVeryLow,
+                3 => RenderingServer.ShadowQuality.SoftLow,
+                4 => RenderingServer.ShadowQuality.SoftMedium,
+                5 => RenderingServer.ShadowQuality.SoftHigh,
+                6 => RenderingServer.ShadowQuality.SoftUltra,
+                _ => RenderingServer.ShadowQuality.Hard
+            });
+            GetTree().CallGroup(
+                Groups.ShadowingLights,
+                Light3D.MethodName.SetShadow,
+                selectedIdx != 0
+            );
+        };
+        GetTree().SceneChanged += () => GetTree().CallGroup(
+            Groups.ShadowingLights,
+            Light3D.MethodName.SetShadow,
+            Graphics.ShadowsQuality.OptionButton.Selected != 0
+        );
     }
 
     /// <summary>
@@ -52,25 +65,35 @@ public partial class Settings
     private void GraphicsListenSettingsForSaving()
     {
         Graphics.Glow.Enabled.Toggled += _ => Changed.OnNext(Unit.Default);
-        Graphics.Shadows.Enabled.Toggled += _ => Changed.OnNext(Unit.Default);
         Graphics.SSR.Enabled.Toggled += _ => Changed.OnNext(Unit.Default);
         Graphics.ChromaticAberration.Enabled.Toggled += _ => Changed.OnNext(Unit.Default);
+        Graphics.ShadowsQuality.OptionButton.ItemSelected += _ => Changed.OnNext(Unit.Default);
     }
 
     private void GraphicsApplyFromConfig(ConfigFile config)
     {
         var glow = config.GetValue(nameof(Graphics), "glow", true).AsBool();
-        var shadows = config.GetValue(nameof(Graphics), "shadows", true).AsBool();
         var ssr = config.GetValue(nameof(Graphics), "ssr", true).AsBool();
         var chromaticAberration = config.GetValue(nameof(Graphics), "chromatic-aberration", true).AsBool();
+        var shadowsQuality = config.GetValue(nameof(Graphics), "shadows-quality", "soft-low").AsString() switch
+        {
+            "disabled" => 0,
+            "hard" => 1,
+            "soft-very-low" => 2,
+            "soft-low" => 3,
+            "soft-medium" => 4,
+            "soft-high" => 5,
+            "soft-ultra" => 6,
+            _ => 3
+        };
 
         Graphics.Glow.Enabled.SetPressed(glow);
-        Graphics.Shadows.Enabled.SetPressed(shadows);
+        Graphics.ShadowsQuality.OptionButton.Select(shadowsQuality);
         Graphics.SSR.Enabled.SetPressed(ssr);
         Graphics.ChromaticAberration.Enabled.SetPressed(chromaticAberration);
 
         Graphics.Glow.Enabled.EmitSignal(BaseButton.SignalName.Toggled, glow);
-        Graphics.Shadows.Enabled.EmitSignal(BaseButton.SignalName.Toggled, shadows);
+        Graphics.ShadowsQuality.OptionButton.EmitSignal(OptionButton.SignalName.ItemSelected, shadowsQuality);
         Graphics.SSR.Enabled.EmitSignal(BaseButton.SignalName.Toggled, ssr);
         Graphics.ChromaticAberration.Enabled.EmitSignal(BaseButton.SignalName.Toggled, chromaticAberration);
     }
@@ -78,8 +101,18 @@ public partial class Settings
     private void GraphicsApplyToConfig(ConfigFile config)
     {
         config.SetValue(nameof(Graphics), "glow", Graphics.Glow.Enabled.ButtonPressed);
-        config.SetValue(nameof(Graphics), "shadows", Graphics.Shadows.Enabled.ButtonPressed);
         config.SetValue(nameof(Graphics), "ssr", Graphics.SSR.Enabled.ButtonPressed);
         config.SetValue(nameof(Graphics), "chromatic-aberration", Graphics.ChromaticAberration.Enabled.ButtonPressed);
+        config.SetValue(nameof(Graphics), "shadows-quality", Graphics.ShadowsQuality.OptionButton.Selected switch
+        {
+            0 => "disabled",
+            1 => "hard",
+            2 => "soft-very-low",
+            3 => "soft-low",
+            4 => "soft-medium",
+            5 => "soft-high",
+            6 => "soft-ultra",
+            _ => "soft-low"
+        });
     }
 }

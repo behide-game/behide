@@ -130,6 +130,27 @@ metadata/_tab_index = 2
 layout_mode = 2
 theme_override_constants/separation = 15
 
+[node name="Driver" type="HBoxContainer" parent="TabContainer/Video/VBox" unique_id=2095720641]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="TabContainer/Video/VBox/Driver" unique_id=87744357]
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Driver"
+
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/Driver" unique_id=1616580062]
+layout_mode = 2
+button_pressed = true
+fit_to_longest_item = false
+item_count = 3
+popup/item_0/text = "Vulkan"
+popup/item_0/id = 0
+popup/item_1/text = "DirectX 12"
+popup/item_1/id = 1
+popup/item_2/text = "OpenGL"
+popup/item_2/id = 2
+
 [node name="Display Mode" type="HBoxContainer" parent="TabContainer/Video/VBox" unique_id=1865497338]
 layout_mode = 2
 theme_override_constants/separation = 15
@@ -256,26 +277,26 @@ text = "Show FPS"
 layout_mode = 2
 button_pressed = true
 
-[node name="Driver" type="HBoxContainer" parent="TabContainer/Video/VBox" unique_id=2095720641]
+[node name="Max FPS" type="VBoxContainer" parent="TabContainer/Video/VBox" unique_id=1729850791]
 layout_mode = 2
-theme_override_constants/separation = 15
 
-[node name="Label" type="Label" parent="TabContainer/Video/VBox/Driver" unique_id=87744357]
+[node name="Label" type="Label" parent="TabContainer/Video/VBox/Max FPS" unique_id=154252820]
 layout_mode = 2
 size_flags_horizontal = 2
-text = "Driver"
+text = "Max FPS"
 
-[node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/Driver" unique_id=1616580062]
+[node name="Slider Setting" parent="TabContainer/Video/VBox/Max FPS" unique_id=67646189 instance=ExtResource("2_xlpa8")]
 layout_mode = 2
-button_pressed = true
-fit_to_longest_item = false
-item_count = 3
-popup/item_0/text = "Vulkan"
-popup/item_0/id = 0
-popup/item_1/text = "DirectX 12"
-popup/item_1/id = 1
-popup/item_2/text = "OpenGL"
-popup/item_2/id = 2
+numberFormat = "0"
+fireChangedOnlyOnDragEnded = true
+
+[node name="Name" parent="TabContainer/Video/VBox/Max FPS/Slider Setting" index="0" unique_id=1326298358]
+visible = false
+
+[node name="Slider" parent="TabContainer/Video/VBox/Max FPS/Slider Setting/Controls" parent_id_path=PackedInt32Array(67646189, 366113109) index="1" unique_id=1674503285]
+max_value = 500.0
+step = 1.0
+value = 1.0
 
 [node name="Back" type="Button" parent="TabContainer/Video/VBox" unique_id=838226937]
 layout_mode = 2
@@ -308,19 +329,6 @@ text = "Glow"
 layout_mode = 2
 button_pressed = true
 
-[node name="Shadows" type="HBoxContainer" parent="TabContainer/Graphics/VBox" unique_id=94594226]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="Label" type="Label" parent="TabContainer/Graphics/VBox/Shadows" unique_id=8147104]
-layout_mode = 2
-size_flags_horizontal = 2
-text = "Shadows"
-
-[node name="Enabled" type="CheckButton" parent="TabContainer/Graphics/VBox/Shadows" unique_id=518905224]
-layout_mode = 2
-button_pressed = true
-
 [node name="SSR" type="HBoxContainer" parent="TabContainer/Graphics/VBox" unique_id=847343769]
 layout_mode = 2
 theme_override_constants/separation = 15
@@ -347,6 +355,34 @@ text = "Chromatic Aberration"
 layout_mode = 2
 button_pressed = true
 
+[node name="Shadows Quality" type="HBoxContainer" parent="TabContainer/Graphics/VBox" unique_id=1221886272]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="TabContainer/Graphics/VBox/Shadows Quality" unique_id=655873721]
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Shadows quality"
+
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Graphics/VBox/Shadows Quality" unique_id=2079600925]
+layout_mode = 2
+fit_to_longest_item = false
+item_count = 7
+popup/item_0/text = "Disabled"
+popup/item_0/id = 0
+popup/item_1/text = "Hard"
+popup/item_1/id = 1
+popup/item_2/text = "Soft Very Low"
+popup/item_2/id = 2
+popup/item_3/text = "Soft Low"
+popup/item_3/id = 3
+popup/item_4/text = "Soft Medium"
+popup/item_4/id = 4
+popup/item_5/text = "Soft High"
+popup/item_5/id = 5
+popup/item_6/text = "Soft Ultra"
+popup/item_6/id = 6
+
 [node name="Back" type="Button" parent="TabContainer/Graphics/VBox" unique_id=1647153408]
 layout_mode = 2
 size_flags_vertical = 10
@@ -357,3 +393,4 @@ text = "Back"
 [editable path="TabContainer/Controls/VBox/FOV"]
 [editable path="TabContainer/Video/VBox/UI Scaling/Slider Setting"]
 [editable path="TabContainer/Video/VBox/Render Scale/Slider Setting"]
+[editable path="TabContainer/Video/VBox/Max FPS/Slider Setting"]
