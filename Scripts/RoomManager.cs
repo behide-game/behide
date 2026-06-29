@@ -70,7 +70,8 @@ public partial class RoomManager : Node
         Room = new Room(roomId, player);
         AddChild(Room);
 
-        log.Debug("Joined room as {PeerId}. Already connected player count: {PlayerCount}", playerId, Room.Players.Count);
+        log.Debug("Joined room as {PeerId}. Already connected with {PlayerCount} players", playerId, Room.Players.Count-1);
+        log.Debug("Room node is ready: {IsReady}", Room.IsNodeReady());
 
         // Connect to other players
         var tasks =

@@ -51,7 +51,17 @@ public partial class RoomConfiguration : Node
 
     public bool IsHunter(int peerId) => hunters.Contains(peerId);
 
-    public void SendTo(long peerId) => RpcId(peerId, nameof(RpcSetAll), HunterCount, hunters.ToArray());
+    public void SendTo(long peerId) => RpcId(
+        peerId,
+        nameof(RpcSetAll),
+        HunterCount,
+        hunters.ToArray(),
+        map switch
+        {
+            GameManager.GameMap.Restaurant => 0,
+            GameManager.GameMap.Dungeon => 1,
+            _ => 0
+        });
 
     // RPCs
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
@@ -83,10 +93,11 @@ public partial class RoomConfiguration : Node
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-    private void RpcSetAll(int count, int[] hunterIds)
+    private void RpcSetAll(int count, int[] hunterIds, int mapIdx)
     {
         hunterCount = count;
         foreach (var id in hunterIds) hunters.Add(id);
+        map = GameManager.Maps[mapIdx];
         changed.OnNext(Unit.Default);
     }
 }
@@ -126,6 +137,7 @@ public partial class Room : Node
 
     public override void _EnterTree()
     {
+        GD.Print("Room entering tree");
         Multiplayer.PeerConnected += MultiplayerOnPeerConnected;
         Multiplayer.PeerDisconnected += MultiplayerOnPeerDisconnected;
 
@@ -137,13 +149,13 @@ public partial class Room : Node
 
     private void MultiplayerOnPeerConnected(long peerId)
     {
-        log.Debug("New peer connected, registering us with him: {Username}", LocalPlayer.Value.Username);
+        log.Debug("PeerId: {PeerId} connected", peerId);
         RpcId(peerId, nameof(RegisterPlayerRpc), LocalPlayer.Value);
     }
 
     private void MultiplayerOnPeerDisconnected(long peerId)
     {
-        log.Debug("Player {PeerId} left the room", peerId);
+        log.Debug("PeerId: {PeerId} disconnected", peerId);
         var playerObservable = Players.GetValueOrDefault((int)peerId);
         if (playerObservable is null) return;
 
@@ -190,6 +202,7 @@ public partial class Room : Node
             new BehaviorSubject<Player>(player)
         );
         playerJoined.OnNext(player);
+        log.Debug("PeerId: {PeerId} registered as \"{Username}\"", player.PeerId, player.Username);
 
         // Sync configuration
         if (Multiplayer.GetUniqueId() != player.PeerId

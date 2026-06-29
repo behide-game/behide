@@ -29,7 +29,9 @@ public static class Log
                     .MinimumLevel.Debug()
                     .WriteTo.Godot(consoleOutputFormat);
                 else
-                    cl.WriteTo.Console(outputTemplate: consoleOutputFormat + System.Environment.NewLine);
+                    cl
+                    .MinimumLevel.Debug()
+                    .WriteTo.Console(outputTemplate: consoleOutputFormat + System.Environment.NewLine);
             })
             // File logger
             .WriteTo.Logger(cl => cl
