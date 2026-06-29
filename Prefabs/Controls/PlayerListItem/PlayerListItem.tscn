@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c87ce673cqrsj"]
 
-[ext_resource type="Script" uid="uid://cnv83qrck0bgc" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.cs" id="1_e7184"]
-[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="2_vtxhq"]
+[ext_resource type="Script" uid="uid://cnv83qrck0bgc" path="res://Prefabs/Controls/PlayerListItem/PlayerListItem.cs" id="1_e7184"]
+[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Prefabs/Controls/BezelContainer.cs" id="2_vtxhq"]
 [ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="3_p8wd1"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_mt0eq"]

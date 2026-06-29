@@ -6,46 +6,89 @@ namespace Behide.Game.UI.Lobby;
 
 using Types;
 
+static class ControlExtensions
+{
+    extension(Control control)
+    {
+        public void SortChildren()
+        {
+            var nodes = control.GetChildren()
+                .Skip(1)
+                .OrderBy(n => n.Name.ToString())
+                .ToArray();
+
+            foreach (var n in nodes) {
+                control.RemoveChild(n);
+                n.SetOwner(null);
+            }
+
+            foreach (var n in nodes) control.AddChild(n);
+        }
+    }
+}
+
 public partial class Lobby
 {
-    private Control HostPanel => nodes.Lobby.Boxes.LeftPanel.HostPanel;
     private LabelCountdown Countdown => nodes.Countdown;
-    private Label RoomCode => nodes.Lobby.Header.Code.Value.Value;
+    private Label RoomCode => nodes.UI.Others.Info.Code.Value.Label;
 
-    private Control HunterList => nodes.Lobby.Boxes.LeftPanel.PlayersWithRole.Players.Hunters.PlayerList;
-    private Control PropList => nodes.Lobby.Boxes.LeftPanel.PlayersWithRole.Players.Props.PlayerList;
-    private Control PlayerList => nodes.Lobby.Boxes.LeftPanel.Players.Players.PlayerList;
+    private _SceneTree.__0_UI.__1_Players.__2_ScrollContainer.__3_MarginContainer.__4_Groups Groups =>
+        nodes.UI.Players.ScrollContainer.MarginContainer.Groups;
+    private Control HunterList => Groups.Hunters.VBox;
+    private Control PropList => Groups.Props.VBox;
+    private Control AllPlayerList => Groups.All;
 
-    private Label RoleButton => nodes.Lobby.Boxes.Buttons.Role.MarginContainer.Label;
-    private Label ReadyButton => nodes.Lobby.Boxes.Buttons.Ready.MarginContainer.Label;
+    private Label ReadyButton => nodes.UI.Others.Buttons.Ready.MarginContainer.Label;
+    private Label RoleButton => nodes.UI.Others.Buttons.Role.MarginContainer.Label;
 
-    private static void SortPlayerList(Control list)
-    {
-        var nodes = list.GetChildren()
-            .Skip(1)
-            .OrderBy(n => n.Name.ToString())
-            .ToArray();
-
-        foreach (var n in nodes) {
-            list.RemoveChild(n);
-            n.SetOwner(null);
-        }
-
-        foreach (var n in nodes) list.AddChild(n);
-    }
-
-
+    /// <summary>
+    /// Switch between the player groups view or the global view
+    /// </summary>
     private void ChangePlayerList()
     {
-        var playersWithRole = (Control)nodes.Lobby.Boxes.LeftPanel.PlayersWithRole;
-        var players = (Control)nodes.Lobby.Boxes.LeftPanel.Players;
-        var countLabel = nodes.Lobby.Boxes.LeftPanel.HostPanel.HunterCount.Count.Label;
+        var showGroups = room.Configuration.HunterCount == 0;
+        Groups.All.Get().Visible = !showGroups;
+        Groups.Hunters.Get().Visible = showGroups;
+        Groups.HuntersDelimitor.Get().Visible = showGroups;
+        Groups.Props.Get().Visible = showGroups;
+        Groups.PropsDelimitor.Get().Visible = showGroups;
 
-        playersWithRole.SetVisible(room.Configuration.HunterCount == 0);
-        players.SetVisible(room.Configuration.HunterCount != 0);
-        countLabel.Text = room.Configuration.HunterCount.ToString();
+        if (showGroups) RearrangePlayerLists();
     }
 
+    /// <summary>
+    /// Place player cards in the correct category
+    /// </summary>
+    private void RearrangePlayerLists()
+    {
+        foreach (var child in HunterList.GetChildren())
+        {
+            if (child is not PlayerCard card) continue;
+            card.GetParent().RemoveChild(card);
+
+            if (room.Configuration.IsHunter(card.PeerId))
+                HunterList.AddChild(card);
+            else
+                PropList.AddChild(card);
+        }
+        foreach (var child in PropList.GetChildren())
+        {
+            if (child is not PlayerCard card) continue;
+            card.GetParent().RemoveChild(card);
+
+            if (room.Configuration.IsHunter(card.PeerId))
+                HunterList.AddChild(card);
+            else
+                PropList.AddChild(card);
+        }
+
+        HunterList.SortChildren();
+        PropList.SortChildren();
+    }
+
+    /// <summary>
+    /// Change role button text according to game state
+    /// </summary>
     private void UpdateRoleButton()
     {
         var config = room.Configuration;
@@ -57,88 +100,33 @@ public partial class Lobby
     {
         AddPlayerToRolesList(player);
 
-        // Add to global player list
-        var node = playerListItemScene.Instantiate<PlayerListItem>();
-        node.Name = player.Value.PeerId.ToString();
-        player.Subscribe(p =>
-            {
-                node.SetPlayerName(p.Username);
-                node.SetStatus(p.State switch
-                {
-                    PlayerStateInLobby isReady => isReady.IsReady ? "Ready" : "Not ready",
-                    PlayerStateInGame => "In game",
-                    _ => "Gone"
-                });
-            },
-            onCompleted: node.QueueFree,
-            NodeAliveCt
-        );
+        // Create control
+        var card = playerCard.Instantiate<PlayerCard>();
+        card.Name = player.Value.PeerId.ToString();
+        card.BindPlayer(player);
 
-        PlayerList.AddChild(node);
-        SortPlayerList(PlayerList);
+        // Add to global player list
+        AllPlayerList.AddChild(card);
+        AllPlayerList.SortChildren();
     }
 
     private void AddPlayerToRolesList(BehaviorSubject<Player> player)
     {
-        var node = playerListItemScene.Instantiate<PlayerListItem>();
-        node.Name = player.Value.PeerId.ToString();
-
-        // Sync ready state
-        player.Subscribe(
-            p =>
-            {
-                node.SetPlayerName(p.Username);
-                node.SetStatus(p.State switch
-                {
-                    PlayerStateInLobby isReady => isReady.IsReady ? "Ready" : "Not ready",
-                    PlayerStateInGame => "In game",
-                    _ => "Gone"
-                });
-            },
-            onCompleted: () =>
-            {
-                if (room.Configuration.HunterCount > room.Players.Count)
-                    room.Configuration.HunterCount -= 1;
-                node.QueueFree();
-            },
-            NodeAliveCt
-        );
-
-        // Sync prop/hunter state
-        var sub = room.Configuration.Changed.Subscribe(_ => ChangePlayerRole());
-        NodeAliveCt.Register(sub.Dispose);
-        player.Subscribe(_ => { }, onCompleted: sub.Dispose);
-
-        ChangePlayerRole();
-        return;
-
-        void ChangePlayerRole()
-        {
-            if (room.Configuration.IsHunter(player.Value.PeerId))
-            {
-                if (node.GetParent() == PropList) PropList.RemoveChild(node);
-                if (node.GetParent() == HunterList) return;
-                HunterList.AddChild(node);
-                SortPlayerList(HunterList);
-            }
-            else
-            {
-                if (node.GetParent() == HunterList) HunterList.RemoveChild(node);
-                if (node.GetParent() == PropList) return;
-                PropList.AddChild(node);
-                SortPlayerList(PropList);
-            }
-        }
+        var card = playerCard.Instantiate<PlayerCard>();
+        card.Name = player.Value.PeerId.ToString();
+        card.BindPlayer(player);
+        PropList.AddChild(card);
+        // TODO: Rearrange lists
     }
 
-    private void ChangeMapName()
-    {
-        var label = nodes.Lobby.Boxes.LeftPanel.HostPanel.SelectedMap.MapName.Label;
-        label.Text = room.Configuration.Map switch
-        {
-            GameManager.GameMap.Dungeon => "Dungeon",
-            GameManager.GameMap.Restaurant => "Restaurant",
-            _ => throw new Exception("Invalid map")
-        };
-    }
+    // private void ChangeMapName()
+    // {
+    //     var label = nodes.UI.Boxes.LeftPanel.HostPanel.SelectedMap.MapName.Label;
+    //     label.Text = room.Configuration.Map switch
+    //     {
+    //         GameManager.GameMap.Dungeon => "Dungeon",
+    //         GameManager.GameMap.Restaurant => "Restaurant",
+    //         _ => throw new Exception("Invalid map")
+    //     };
+    // }
 }

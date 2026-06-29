@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bneom7724ud4p"]
 
-[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="1_42ftn"]
+[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Prefabs/Controls/BezelContainer.cs" id="1_42ftn"]
 [ext_resource type="Script" uid="uid://cn50gp20kp6vr" path="res://Scripts/Supervisors/PropHunt/TabMenu.cs" id="1_x860b"]
 [ext_resource type="FontFile" uid="uid://xdtqfye7tlou" path="res://Assets/Fonts/Space Grotesk/SpaceGrotesk-VariableFont_wght.ttf" id="2_x860b"]
-[ext_resource type="PackedScene" uid="uid://c87ce673cqrsj" path="res://Scenes/Controls/PlayerListItem/PlayerListItem.tscn" id="3_03gih"]
+[ext_resource type="PackedScene" uid="uid://c87ce673cqrsj" path="res://Prefabs/Controls/PlayerListItem/PlayerListItem.tscn" id="3_03gih"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j3km1"]
 bg_color = Color(0.21230507, 0.21230477, 0.21230483, 0.74509805)

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cltwxw8gox4fv" path="res://Scenes/Settings/Settings.cs" id="1_ytwd3"]
 [ext_resource type="Shader" uid="uid://baf1p55idhp1q" path="res://Scenes/PauseMenu/blur.gdshader" id="2_swut7"]
-[ext_resource type="PackedScene" uid="uid://cjob1jiwft1io" path="res://Scenes/Controls/Settings/SliderSetting.tscn" id="2_xlpa8"]
+[ext_resource type="PackedScene" uid="uid://cjob1jiwft1io" path="res://Prefabs/Controls/Settings/SliderSetting.tscn" id="2_xlpa8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jaxhj"]
 shader = ExtResource("2_swut7")

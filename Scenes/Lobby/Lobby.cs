@@ -16,7 +16,7 @@ public partial class Lobby : Control
 
     private bool configLocked;
 
-    [Export] private PackedScene playerListItemScene = null!;
+    [Export] private PackedScene playerCard = null!;
 #if DEBUG
     private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(0);
 #else
@@ -39,39 +39,44 @@ public partial class Lobby : Control
         room.PlayerJoined.Subscribe(_ => UpdateLobbyAuthority(), NodeAliveCt);
 
         // Update countdown state
-        room.PlayerStateChanged.Subscribe(p =>
+        if (IsMultiplayerAuthority())
         {
-            if (p.State is not PlayerStateInLobby) return;
-            RefreshCountdownState();
-        }, NodeAliveCt);
-        room.PlayerLeft.Subscribe(_ => RefreshCountdownState(), NodeAliveCt);
-        room.PlayerJoined.Subscribe(_ => RefreshCountdownState(), NodeAliveCt);
+            room.PlayerStateChanged.Subscribe(p =>
+            {
+                if (p.State is not PlayerStateInLobby) return;
+                RefreshCountdownState();
+            }, NodeAliveCt);
+            room.PlayerLeft.Subscribe(_ => RefreshCountdownState(), NodeAliveCt);
+            room.PlayerJoined.Subscribe(_ => RefreshCountdownState(), NodeAliveCt);
 
-        // Start game when countdown finished
-        Countdown.TimeElapsed += () =>
-        {
-            if (!IsMultiplayerAuthority()) return;
-            CallDeferred(Node.MethodName.Rpc, nameof(StartGameRpc));
-            configLocked = false;
-        };
+            // Start game when countdown finished
+            Countdown.TimeElapsed += () =>
+            {
+                CallDeferred(Node.MethodName.Rpc, nameof(StartGameRpc));
+                configLocked = false;
+            };
 
-        Countdown.Started += () => configLocked = true;
-        Countdown.OnReset += () => configLocked = false;
+            // Lock config when counting down
+            Countdown.Started += () => configLocked = true;
+            Countdown.OnReset += () => configLocked = false;
+        }
 
-        // Set room code in UI
+
+        // --- Apply game state to UI ---
+
+        // Room code
         RoomCode.Text = room.RoomId.ToString();
 
-        // Set players UI
+        // Players UI
         foreach (var player in room.Players.Values) AddPlayerToUi(player);
         room.PlayerJoined.Subscribe(p => AddPlayerToUi(room.Players[p.PeerId]), NodeAliveCt);
 
-        // Listen room configuration changes
+        // Bind room configuration
         room.Configuration.Changed.Subscribe(_ => ChangePlayerList(), NodeAliveCt);
 
-        // Update UI according to initial room state
         ChangePlayerList();
         UpdateRoleButton();
-        ChangeMapName();
+        // ChangeMapName();
     }
 
     public override void _ExitTree()
@@ -86,7 +91,7 @@ public partial class Lobby : Control
         SetMultiplayerAuthority(minPeerId);
         Countdown.SetMultiplayerAuthority(minPeerId);
 
-        HostPanel.SetVisible(IsMultiplayerAuthority());
+        // HostPanel.SetVisible(IsMultiplayerAuthority());
     }
 
     private void RefreshCountdownState()

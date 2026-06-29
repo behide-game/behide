@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cjob1jiwft1io"]
 
-[ext_resource type="Script" uid="uid://c4yjku8x48nac" path="res://Scenes/Controls/Settings/SliderSetting.cs" id="1_eq0yt"]
+[ext_resource type="Script" uid="uid://c4yjku8x48nac" path="res://Prefabs/Controls/Settings/SliderSetting.cs" id="1_eq0yt"]
 
 [node name="Slider Setting" type="BoxContainer" unique_id=716018270]
 offset_right = 303.0

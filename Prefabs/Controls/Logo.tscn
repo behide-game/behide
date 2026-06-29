@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dxmrf533plg67"]
 
-[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Scenes/Controls/BezelContainer.cs" id="1_crkf7"]
+[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Prefabs/Controls/BezelContainer.cs" id="1_crkf7"]
 [ext_resource type="Texture2D" uid="uid://b3lgwbn2cu3ao" path="res://Assets/Images/Behide-logo.svg" id="1_sevdp"]
 [ext_resource type="FontFile" uid="uid://cl6gjjopg1e7m" path="res://Assets/Fonts/Roboto Flex/RobotoFlex-VariableFont_GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC,opsz,slnt,wdth,wght.ttf" id="2_fi5at"]
 
