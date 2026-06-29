@@ -35,6 +35,9 @@ public partial class RoomManager : Node
         Room = new Room(roomId, player);
         AddChild(Room);
 
+        // Put room id in the clipboard
+        DisplayServer.ClipboardSet(roomId.ToString());
+
         // Not starting time sync because we are the time reference
         return roomId;
     }
