@@ -43,6 +43,8 @@ public partial class Lobby
     private _SceneTree.__0_UI.__1_Others.__2_Settings.__3_Margin.__4_VBox.__5_HunterSelection HunterSelection =>
         nodes.UI.Others.Settings.Margin.VBox.HunterSelection;
 
+    private Label UsernameLabel => nodes.UI.Players.LocalPlayer.MarginContainer.Label;
+
     /// <summary>
     /// Switch between the player groups view or the global view
     /// </summary>

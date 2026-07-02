@@ -64,6 +64,9 @@ public partial class Lobby : Control
 
         // --- Apply game state to UI ---
 
+        // Username
+        UsernameLabel.Text = GameManager.Settings.GetUsername();
+
         // Room code
         RoomCode.Text = room.RoomId.ToString();
 
