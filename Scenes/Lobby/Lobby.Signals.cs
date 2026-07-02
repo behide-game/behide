@@ -4,17 +4,17 @@ using Types;
 
 public partial class Lobby
 {
-    // private void DecreaseHunterCount()
-    // {
-    //     if (configLocked) return;
-    //     room.Configuration.HunterCount -= 1;
-    // }
-    // private void IncreaseHunterCount()
-    // {
-    //     if (configLocked) return;
-    //     if (room.Configuration.HunterCount >= room.Players.Count) return;
-    //     room.Configuration.HunterCount += 1;
-    // }
+    private void DecreaseHunterCount()
+    {
+        if (configLocked) return;
+        room.Configuration.HunterCount -= 1;
+    }
+    private void IncreaseHunterCount()
+    {
+        if (configLocked) return;
+        if (room.Configuration.HunterCount >= room.Players.Count) return;
+        room.Configuration.HunterCount += 1;
+    }
 
     // private void PreviousMap()
     // {

@@ -29,5 +29,10 @@ public partial class PlayerCard : BezelContainer
         _.Margin.VBox.Description.Text = "Owner";
     }
 
-    public override void _ExitTree() => subscription?.Dispose();
+    // Unsubscribe before the node is freed
+    public override void _Notification(int what)
+    {
+        if (what != NotificationPredelete) return;
+        subscription?.Dispose();
+    }
 }

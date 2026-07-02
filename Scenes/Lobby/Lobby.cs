@@ -46,7 +46,7 @@ public partial class Lobby : Control
                 if (p.State is not PlayerStateInLobby) return;
                 RefreshCountdownState();
             }, NodeAliveCt);
-            room.PlayerLeft.Subscribe(_ => RefreshCountdownState(), NodeAliveCt);
+            room.PlayerLeft.Subscribe(_ => RefreshCountdownState(), NodeAliveCt); // TODO: Also refresh hunter count state
             room.PlayerJoined.Subscribe(_ => RefreshCountdownState(), NodeAliveCt);
 
             // Start game when countdown finished
@@ -72,10 +72,15 @@ public partial class Lobby : Control
         room.PlayerJoined.Subscribe(p => AddPlayerToUi(room.Players[p.PeerId]), NodeAliveCt);
 
         // Bind room configuration
-        room.Configuration.Changed.Subscribe(_ => ChangePlayerList(), NodeAliveCt);
+        room.Configuration.Changed.Subscribe(_ =>
+        {
+            ChangePlayerList();
+            UpdateHunterCountInput();
+        }, NodeAliveCt);
 
         ChangePlayerList();
         UpdateRoleButton();
+        UpdateHunterCountInput();
         // ChangeMapName();
     }
 

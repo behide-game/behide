@@ -21,6 +21,12 @@ public partial class BezelContainer : Control
     [Export] private int BorderWidth { get => _borderWidth; set { _borderWidth = value; QueueRedraw(); } }
     [Export] private Color BackgroundColor { get => _backgroundColor; set { _backgroundColor = value; QueueRedraw(); } }
 
+    [ExportGroup("Corners")]
+    [Export] private bool topLeft = true;
+    [Export] private bool topRight = true;
+    [Export] private bool bottomRight = true;
+    [Export] private bool bottomLeft = true;
+
     public override void _Draw()
     {
         var normalOrientation = !InvertOrientation;
@@ -110,7 +116,7 @@ public partial class BezelContainer : Control
         var height = Size.Y - offset;
 
         // Top left
-        if (bezelSizes.X > 0)
+        if (bezelSizes.X > 0 && topLeft)
         {
             yield return new Vector2(offset, bezelSizes.X + offset);
             yield return new Vector2(bezelSizes.X + offset, offset);
@@ -118,7 +124,7 @@ public partial class BezelContainer : Control
         else yield return new Vector2(offset, offset);
 
         // Top right
-        if (bezelSizes.Y > 0)
+        if (bezelSizes.Y > 0 && topRight)
         {
             yield return new Vector2(width - bezelSizes.Y, offset);
             yield return new Vector2(width, bezelSizes.Y + offset);
@@ -126,7 +132,7 @@ public partial class BezelContainer : Control
         else yield return new Vector2(width, offset);
 
         // Bottom right
-        if (bezelSizes.Z > 0)
+        if (bezelSizes.Z > 0 && bottomRight)
         {
             yield return new Vector2(width, height - bezelSizes.Z);
             yield return new Vector2(width - bezelSizes.Z, height);
@@ -134,7 +140,7 @@ public partial class BezelContainer : Control
         else yield return new Vector2(width, height);
 
         // Bottom left
-        if (bezelSizes.W > 0)
+        if (bezelSizes.W > 0 && bottomLeft)
         {
             yield return new Vector2(bezelSizes.W + offset, height);
             yield return new Vector2(offset, height - bezelSizes.W);
@@ -142,7 +148,7 @@ public partial class BezelContainer : Control
         else yield return new Vector2(offset, height);
 
         // Top left
-        if (bezelSizes.X > 0)
+        if (bezelSizes.X > 0 && topLeft)
         {
             yield return new Vector2(offset, bezelSizes.X + offset);
             yield return new Vector2(bezelSizes.X + offset, offset);

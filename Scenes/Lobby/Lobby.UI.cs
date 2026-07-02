@@ -6,14 +6,13 @@ namespace Behide.Game.UI.Lobby;
 
 using Types;
 
-static class ControlExtensions
+internal static class ControlExtensions
 {
     extension(Control control)
     {
         public void SortChildren()
         {
             var nodes = control.GetChildren()
-                .Skip(1)
                 .OrderBy(n => n.Name.ToString())
                 .ToArray();
 
@@ -36,10 +35,13 @@ public partial class Lobby
         nodes.UI.Players.ScrollContainer.MarginContainer.Groups;
     private Control HunterList => Groups.Hunters.VBox;
     private Control PropList => Groups.Props.VBox;
-    private Control AllPlayerList => Groups.All;
+    private Control AllPlayerList => Groups.All.VBox;
 
     private Label ReadyButton => nodes.UI.Others.Buttons.Ready.MarginContainer.Label;
     private Label RoleButton => nodes.UI.Others.Buttons.Role.MarginContainer.Label;
+
+    private _SceneTree.__0_UI.__1_Others.__2_Settings.__3_Margin.__4_VBox.__5_HunterSelection HunterSelection =>
+        nodes.UI.Others.Settings.Margin.VBox.HunterSelection;
 
     /// <summary>
     /// Switch between the player groups view or the global view
@@ -96,6 +98,16 @@ public partial class Lobby
         RoleButton.Text = config.IsHunter(peerId) ? "Be prop" : "Be hunter";
     }
 
+    /// <summary>
+    /// Set the hunter count input text according to room configuration
+    /// </summary>
+    private void UpdateHunterCountInput() =>
+        HunterSelection.HBox.Input.Value.Label.Text = room.Configuration.HunterCount switch
+        {
+            0 => "Manual",
+            _ => $"Randomly {room.Configuration.HunterCount}"
+        };
+
     private void AddPlayerToUi(BehaviorSubject<Player> player)
     {
         AddPlayerToRolesList(player);
@@ -104,6 +116,7 @@ public partial class Lobby
         var card = playerCard.Instantiate<PlayerCard>();
         card.Name = player.Value.PeerId.ToString();
         card.BindPlayer(player);
+        card.SetOwner(room.IsPeerOwner(player.Value.PeerId));
 
         // Add to global player list
         AllPlayerList.AddChild(card);
@@ -115,8 +128,10 @@ public partial class Lobby
         var card = playerCard.Instantiate<PlayerCard>();
         card.Name = player.Value.PeerId.ToString();
         card.BindPlayer(player);
+        card.SetOwner(room.IsPeerOwner(player.Value.PeerId));
+
         PropList.AddChild(card);
-        // TODO: Rearrange lists
+        RearrangePlayerLists();
     }
 
     // private void ChangeMapName()

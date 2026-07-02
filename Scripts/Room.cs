@@ -109,6 +109,9 @@ public partial class Room : Node
     public readonly Dictionary<int, BehaviorSubject<Player>> Players = [];
     public readonly RoomConfiguration Configuration = new();
 
+    private bool IsOwner => Multiplayer.GetUniqueId() == Players.Keys.Min();
+    public bool IsPeerOwner(int peerId) => peerId == Players.Keys.Min();
+
     // Events
     private readonly Subject<Player> playerJoined = new();
     private readonly Subject<Player> playerLeft = new();
@@ -157,11 +160,18 @@ public partial class Room : Node
     {
         log.Debug("PeerId: {PeerId} disconnected", peerId);
         var playerObservable = Players.GetValueOrDefault((int)peerId);
-        if (playerObservable is null) return;
+        if (playerObservable is null)
+        {
+            log.Warning("Peer {PeerId} disconnected but was not registered", peerId);
+            return;
+        }
+
+        Configuration.HunterCount = Math.Min(Configuration.HunterCount, Players.Count-1);
 
         Players.Remove((int)peerId);
         playerLeft.OnNext(playerObservable.Value);
         playerObservable.OnCompleted();
+        log.Debug("Completed {PeerId}", peerId);
     }
 
     public void Leave()
@@ -205,8 +215,7 @@ public partial class Room : Node
         log.Debug("PeerId: {PeerId} registered as \"{Username}\"", player.PeerId, player.Username);
 
         // Sync configuration
-        if (Multiplayer.GetUniqueId() != player.PeerId
-            && Multiplayer.GetUniqueId() == Players.Keys.Min())
+        if (Multiplayer.GetUniqueId() != player.PeerId && IsOwner)
             Configuration.SendTo(player.PeerId);
     }
 
