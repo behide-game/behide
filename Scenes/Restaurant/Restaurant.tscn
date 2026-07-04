@@ -86,28 +86,28 @@
 [ext_resource type="PackedScene" uid="uid://cg8kl71f1b05g" path="res://Prefabs/BehideObjects/SpaceBase/light.tscn" id="105_s0ti4"]
 [ext_resource type="PackedScene" uid="uid://dqtpe0145c30q" path="res://Prefabs/BehideObjects/SpaceBase/Windturbine/windturbine_low.tscn" id="106_8upav"]
 [ext_resource type="PackedScene" uid="uid://b0sqq0qsqx7ww" path="res://Prefabs/BehideObjects/SpaceBase/spacetruck.tscn" id="107_uicac"]
-[ext_resource type="PackedScene" uid="uid://b7tav05ogy7aa" path="res://Assets/Models/Restaurant/stove_single.gltf" id="108_5mqqy"]
+[ext_resource type="PackedScene" uid="uid://b7tav05ogy7aa" path="res://Assets/Models/Restaurant/Props/stove_single.gltf" id="108_5mqqy"]
 [ext_resource type="PackedScene" uid="uid://dgx5ru8hgr48k" path="res://Prefabs/Restaurant/food_ingredient_burger_uncooked.tscn" id="108_dbhwa"]
-[ext_resource type="PackedScene" uid="uid://ddmrs5ik8qil3" path="res://Assets/Models/Restaurant/kitchencounter_straight_B.gltf" id="109_3vpxk"]
+[ext_resource type="PackedScene" uid="uid://ddmrs5ik8qil3" path="res://Assets/Models/Restaurant/Props/kitchencounter_straight_B.gltf" id="109_3vpxk"]
 [ext_resource type="PackedScene" uid="uid://c0bf6ohximvaf" path="res://Prefabs/Restaurant/food_ingredient_carrot_pieces.tscn" id="109_wk5jt"]
 [ext_resource type="PackedScene" uid="uid://dtw0corbcn4nw" path="res://Prefabs/Restaurant/food_ingredient_onion_ring.tscn" id="110_dkjbk"]
-[ext_resource type="PackedScene" uid="uid://bk2bbbwvilkgs" path="res://Assets/Models/Restaurant/kitchencounter_outercorner.gltf" id="110_ktdb0"]
+[ext_resource type="PackedScene" uid="uid://bk2bbbwvilkgs" path="res://Assets/Models/Restaurant/Props/kitchencounter_outercorner.gltf" id="110_ktdb0"]
 [ext_resource type="PackedScene" uid="uid://cpsqyuya6oc8p" path="res://Prefabs/Restaurant/food_ingredient_lettuce.tscn" id="111_2ab8x"]
-[ext_resource type="PackedScene" uid="uid://d0afqaiw5hs56" path="res://Assets/Models/Restaurant/kitchentable_B.gltf" id="111_ky4qh"]
-[ext_resource type="PackedScene" uid="uid://dja0bxx7xgb2k" path="res://Assets/Models/Restaurant/kitchentable_sink_large.gltf" id="112_0mw8t"]
+[ext_resource type="PackedScene" uid="uid://d0afqaiw5hs56" path="res://Assets/Models/Restaurant/Props/kitchentable_B.gltf" id="111_ky4qh"]
+[ext_resource type="PackedScene" uid="uid://dja0bxx7xgb2k" path="res://Assets/Models/Restaurant/Props/kitchentable_sink_large.gltf" id="112_0mw8t"]
 [ext_resource type="PackedScene" uid="uid://cd0vlxrc0afl3" path="res://Prefabs/Restaurant/food_ingredient_ham.tscn" id="112_0y16y"]
 [ext_resource type="PackedScene" uid="uid://d3dq3m4s845wp" path="res://Prefabs/Restaurant/food_ingredient_tomato_slices.tscn" id="113_km8e2"]
-[ext_resource type="PackedScene" uid="uid://c568tseput38a" path="res://Assets/Models/Restaurant/kitchentable_A.gltf" id="113_mjx0q"]
-[ext_resource type="PackedScene" uid="uid://dewx3t0hlf6na" path="res://Assets/Models/Restaurant/stove_multi.gltf" id="114_8qvsr"]
+[ext_resource type="PackedScene" uid="uid://c568tseput38a" path="res://Assets/Models/Restaurant/Props/kitchentable_A.gltf" id="113_mjx0q"]
+[ext_resource type="PackedScene" uid="uid://dewx3t0hlf6na" path="res://Assets/Models/Restaurant/Props/stove_multi.gltf" id="114_8qvsr"]
 [ext_resource type="PackedScene" uid="uid://bpof5is2eg4de" path="res://Assets/Models/Dungeon/Batiments/Stairs/stairs_wood.gltf" id="114_vox5s"]
 [ext_resource type="PackedScene" uid="uid://722k5yjawqx0" path="res://Assets/Models/Dungeon/Batiments/Floor/Wood/floor_wood_large_dark.gltf" id="115_8jij4"]
-[ext_resource type="PackedScene" uid="uid://do70n5ehdack7" path="res://Assets/Models/Restaurant/kitchencounter_innercorner_backsplash.gltf" id="115_740en"]
-[ext_resource type="PackedScene" uid="uid://bw3uluvynbvpv" path="res://Assets/Models/Restaurant/kitchencounter_sink_backsplash.gltf" id="116_yic3s"]
+[ext_resource type="PackedScene" uid="uid://do70n5ehdack7" path="res://Assets/Models/Restaurant/Props/kitchencounter_innercorner_backsplash.gltf" id="115_740en"]
+[ext_resource type="PackedScene" uid="uid://bw3uluvynbvpv" path="res://Assets/Models/Restaurant/Props/kitchencounter_sink_backsplash.gltf" id="116_yic3s"]
 [ext_resource type="PackedScene" uid="uid://85l42ussmrfn" path="res://Assets/Models/Dungeon/Batiments/Floor/Wood/floor_wood_small.gltf" id="116_ytvmy"]
 [ext_resource type="PackedScene" uid="uid://ba4iop8aui5h8" path="res://Prefabs/BehideObjects/Dungeon/Candles/candle_thin_light.tscn" id="117_dpha8"]
 [ext_resource type="PackedScene" uid="uid://kk8in3arsy8q" path="res://Assets/Models/Dungeon/Batiments/Floor/Wood/floor_wood_small_dark.gltf" id="117_g6ftx"]
-[ext_resource type="PackedScene" uid="uid://d18dgp0dyw8vr" path="res://Assets/Models/Restaurant/kitchencounter_outercorner_backsplash.gltf" id="117_ggn37"]
-[ext_resource type="PackedScene" uid="uid://vepiuijium6r" path="res://Assets/Models/Restaurant/kitchencounter_straight_A_backsplash.gltf" id="118_4l4as"]
+[ext_resource type="PackedScene" uid="uid://d18dgp0dyw8vr" path="res://Assets/Models/Restaurant/Props/kitchencounter_outercorner_backsplash.gltf" id="117_ggn37"]
+[ext_resource type="PackedScene" uid="uid://vepiuijium6r" path="res://Assets/Models/Restaurant/Props/kitchencounter_straight_A_backsplash.gltf" id="118_4l4as"]
 [ext_resource type="PackedScene" uid="uid://dpw4vivrvq8ky" path="res://Assets/Models/Dungeon/Batiments/Floor/Wood/floor_wood_large.gltf" id="118_h0cdd"]
 [ext_resource type="PackedScene" uid="uid://bf7nfm4rfetv0" path="res://Prefabs/Restaurant/pillar_b.tscn" id="118_ix7vu"]
 [ext_resource type="PackedScene" uid="uid://c4bu3fxq1kq5h" path="res://Assets/Models/SpaceBase/terrain_slope.gltf" id="119_lwdi3"]
@@ -747,28 +747,32 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.6, 0.39999998, -10.3)
 [node name="Wall28" parent="Walls" unique_id=988239430 instance=ExtResource("4_740en")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 22.9, 0.39999998, 0)
 
-[node name="AreaLight3D" parent="Walls/Wall28" index="2" unique_id=1065227527]
+[node name="AreaLight3D" parent="Walls/Wall28" index="2" unique_id=1065227527 groups=["ShadowingLights"]]
 light_energy = 2.0
+light_size = 0.0
 
 [node name="Wall48" parent="Walls" unique_id=876161779 instance=ExtResource("4_740en")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.599999, 0.39999998, 6.3)
 
-[node name="AreaLight3D" parent="Walls/Wall48" index="2" unique_id=1065227527]
+[node name="AreaLight3D" parent="Walls/Wall48" index="2" unique_id=1065227527 groups=["ShadowingLights"]]
 light_energy = 2.0
+light_size = 0.0
 
 [node name="Wall65" parent="Walls" unique_id=1212802045 instance=ExtResource("4_740en")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9999993, 0.39999998, 6.3)
 
-[node name="AreaLight3D" parent="Walls/Wall65" index="2" unique_id=1065227527]
+[node name="AreaLight3D" parent="Walls/Wall65" index="2" unique_id=1065227527 groups=["ShadowingLights"]]
 light_color = Color(0.93, 0.9755, 1, 1)
 light_energy = 2.0
+light_size = 0.0
 
 [node name="Wall66" parent="Walls" unique_id=45960606 instance=ExtResource("4_740en")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.183982e-07, 0.39999998, 6.3)
 
-[node name="AreaLight3D" parent="Walls/Wall66" index="2" unique_id=1065227527]
+[node name="AreaLight3D" parent="Walls/Wall66" index="2" unique_id=1065227527 groups=["ShadowingLights"]]
 light_color = Color(0.93, 0.9755, 1, 1)
 light_energy = 2.0
+light_size = 0.0
 
 [node name="Wall31" parent="Walls" unique_id=374596199 instance=ExtResource("3_8qvsr")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 22.900002, 0.39999998, -12.6)

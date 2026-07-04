@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c8viy7gp831kn"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_as3ex"]
-[ext_resource type="PackedScene" uid="uid://cp0ts5xdtovkv" path="res://Assets/Models/Restaurant/food_ingredient_onion.gltf" id="2_idxjx"]
+[ext_resource type="PackedScene" uid="uid://cp0ts5xdtovkv" path="res://Assets/Models/Restaurant/Props/food_ingredient_onion.gltf" id="2_idxjx"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_vtlp5"]
 radius = 0.36083627

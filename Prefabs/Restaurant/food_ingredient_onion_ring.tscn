@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dtw0corbcn4nw"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_ffc78"]
-[ext_resource type="PackedScene" uid="uid://b40jte7aff876" path="res://Assets/Models/Restaurant/food_ingredient_onion_rings.gltf" id="2_lpvxe"]
+[ext_resource type="PackedScene" uid="uid://b40jte7aff876" path="res://Assets/Models/Restaurant/Props/food_ingredient_onion_rings.gltf" id="2_lpvxe"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_xyb1x"]
 size = Vector3(0.5, 0.095898435, 0.8)

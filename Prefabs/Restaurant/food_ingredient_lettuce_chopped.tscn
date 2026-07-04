@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://purq3pek41vb"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_pqefa"]
-[ext_resource type="PackedScene" uid="uid://ntc1sxi8bkyb" path="res://Assets/Models/Restaurant/food_ingredient_lettuce_chopped.gltf" id="2_lmi4c"]
+[ext_resource type="PackedScene" uid="uid://ntc1sxi8bkyb" path="res://Assets/Models/Restaurant/Props/food_ingredient_lettuce_chopped.gltf" id="2_lmi4c"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fwwbw"]
 size = Vector3(1, 0.725, 0.7)

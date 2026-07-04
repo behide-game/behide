@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://pkwkfymru2af"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_ppwij"]
-[ext_resource type="PackedScene" uid="uid://3gofpmawj5" path="res://Assets/Models/Restaurant/food_ingredient_vegetableburger_cooked.gltf" id="2_gj6sx"]
+[ext_resource type="PackedScene" uid="uid://3gofpmawj5" path="res://Assets/Models/Restaurant/Props/food_ingredient_vegetableburger_cooked.gltf" id="2_gj6sx"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_mt0bg"]
 height = 0.2

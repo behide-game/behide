@@ -135,6 +135,8 @@ crouch={
 
 [layer_names]
 
+3d_render/layer_1="World"
+3d_render/layer_2="Props"
 3d_physics/layer_1="World"
 3d_physics/layer_2="Players"
 3d_physics/layer_3="Props"
