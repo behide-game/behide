@@ -33,9 +33,10 @@ custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/side_margin = 0
-current_tab = 0
+current_tab = 2
 
 [node name="General" type="MarginContainer" parent="TabContainer" unique_id=2018857125]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
@@ -118,7 +119,6 @@ size_flags_vertical = 10
 text = "Back"
 
 [node name="Video" type="MarginContainer" parent="TabContainer" unique_id=318587705]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
@@ -141,7 +141,6 @@ text = "Driver"
 
 [node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/Driver" unique_id=1616580062]
 layout_mode = 2
-button_pressed = true
 fit_to_longest_item = false
 item_count = 3
 popup/item_0/text = "Vulkan"
@@ -229,7 +228,10 @@ numberFormat = "0'%'"
 visible = false
 text = ""
 
-[node name="Slider" parent="TabContainer/Video/VBox/Render Scale/Slider Setting/Controls" parent_id_path=PackedInt32Array(221503009, 366113109) index="1" unique_id=1674503285]
+[node name="Controls" parent="TabContainer/Video/VBox/Render Scale/Slider Setting" index="1" unique_id=366113109]
+size_flags_horizontal = 3
+
+[node name="Slider" parent="TabContainer/Video/VBox/Render Scale/Slider Setting/Controls" index="1" unique_id=1674503285]
 custom_minimum_size = Vector2(250, 0)
 min_value = 1.0
 step = 1.0
