@@ -87,7 +87,7 @@ public partial class Lobby : Node3D
         ChangePlayerList();
         UpdateRoleButton();
         UpdateHunterCountInput();
-        presentationScenes = new Node3D?[presentationScenePaths.Length];
+        presentationScenes = new Node?[presentationScenePaths.Length];
         UpdateMap();
     }
 
@@ -96,6 +96,7 @@ public partial class Lobby : Node3D
         nodeAliveCts.Cancel();
         nodeAliveCts.Dispose();
         RemoveLoadedMap();
+        foreach (var node in presentationScenes) node?.QueueFree();
     }
 
     private void UpdateLobbyAuthority()
