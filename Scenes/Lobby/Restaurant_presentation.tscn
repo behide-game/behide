@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://b1xe7aq0ddqhu"]
 
 [ext_resource type="PackedScene" uid="uid://c4dgwcldlyaei" path="res://Assets/Models/Restaurant/floor_kitchen.gltf" id="1_vb74h"]
-[ext_resource type="Material" uid="uid://dh6ykun8bv60u" path="res://Assets/Sky/day_sky.tres" id="2_ylpo7"]
 [ext_resource type="PackedScene" uid="uid://cdoenxo2iwcke" path="res://Assets/Models/Restaurant/wall_decorated.gltf" id="3_fxwio"]
 [ext_resource type="PackedScene" uid="uid://bls5mil6fqvyl" path="res://Assets/Models/Restaurant/wall.gltf" id="4_vcipq"]
 [ext_resource type="PackedScene" uid="uid://bm6i2b7ip5xq6" path="res://Prefabs/Restaurant/pillar_a.tscn" id="5_bcne2"]
@@ -45,11 +44,7 @@ emission = Color(1, 0.6313726, 0.63529414, 1)
 emission_energy_multiplier = 1.71
 rim = 0.0
 
-[sub_resource type="Sky" id="Sky_0727a"]
-sky_material = ExtResource("2_ylpo7")
-
 [sub_resource type="Environment" id="Environment_8ygfl"]
-sky = SubResource("Sky_0727a")
 ambient_light_source = 1
 reflected_light_source = 1
 tonemap_mode = 2

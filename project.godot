@@ -137,6 +137,7 @@ crouch={
 
 3d_render/layer_1="World"
 3d_render/layer_2="Props"
+3d_render/layer_5="Light props"
 3d_physics/layer_1="World"
 3d_physics/layer_2="Players"
 3d_physics/layer_3="Props"
@@ -153,5 +154,6 @@ common/physics_interpolation=true
 [rendering]
 
 textures/vram_compression/import_s3tc_bptc=true
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
 scaling_3d/mode=5
 occlusion_culling/use_occlusion_culling=true

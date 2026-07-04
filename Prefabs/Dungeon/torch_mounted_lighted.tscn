@@ -4,6 +4,9 @@
 
 [node name="torch_mounted_with_light" unique_id=1317728564 instance=ExtResource("1_ygi67")]
 
+[node name="torch_mounted" parent="." index="0" unique_id=135786180]
+layers = 16
+
 [node name="OmniLight3D" type="OmniLight3D" parent="." index="1" unique_id=878820410 groups=["ShadowingLights"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0.29999995)
 light_color = Color(1, 0.7411765, 0.5647059, 1)

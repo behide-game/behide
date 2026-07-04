@@ -6,10 +6,13 @@ namespace Behide.Game.UI.Home;
 
 using Godot;
 
-[SceneTree]
+[SceneTree(root: "nodes", traverseInstancedScenes: true)]
 public partial class Home : Node3D
 {
     private readonly ILogger log = Log.CreateLogger("UI/Home");
+
+    // Remove supervisor as we just want to show the dungeon
+    public override void _EnterTree() => nodes.Dungeon.Supervisor.Get().Free();
 
     private void SettingsButtonPressed()
     {
@@ -52,7 +55,7 @@ public partial class Home : Node3D
     {
         try
         {
-            var lineEdit = _.UI.Content.Container.RoomButtons.Join.HBoxContainer.Input.Box.LineEdit;
+            var lineEdit = nodes.UI.Content.Container.RoomButtons.Join.HBoxContainer.Input.Box.LineEdit;
             var rawCode = lineEdit.Text;
             var code = RoomId.tryParse(rawCode).ToNullable();
             if (code is null)

@@ -1,17 +1,11 @@
 [gd_scene format=3 uid="uid://cva4wcyi4gv27"]
 
 [ext_resource type="Script" uid="uid://dcv2kk31wgoxq" path="res://Scenes/Home/Home.cs" id="1_6ww0f"]
-[ext_resource type="PackedScene" uid="uid://cfyb4305uyrca" path="res://Scenes/Dungeon/DungeonMap.tscn" id="2_ydllb"]
+[ext_resource type="PackedScene" uid="uid://bh3nk67jxv7k" path="res://Scenes/Dungeon/Dungeon.tscn" id="2_ydllb"]
 [ext_resource type="PackedScene" uid="uid://dxmrf533plg67" path="res://Prefabs/Controls/Logo.tscn" id="3_6di0c"]
 [ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Prefabs/Controls/BezelContainer.cs" id="4_gv7h4"]
-[ext_resource type="PackedScene" uid="uid://ejs15n81bpnf" path="res://Prefabs/BehideObjects/Cube/yellow_cube.tscn" id="7_1ahje"]
 [ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="7_xbfhp"]
-[ext_resource type="PackedScene" uid="uid://cwbve28vlg05s" path="res://Prefabs/BehideObjects/Cube/purple_cube.tscn" id="8_xbfhp"]
 [ext_resource type="FontFile" uid="uid://26b4v0rh3143" path="res://Assets/Fonts/Space Mono/SpaceMono-Bold.ttf" id="8_yypu2"]
-[ext_resource type="PackedScene" uid="uid://bq7j4kkgcstpo" path="res://Prefabs/BehideObjects/Cube/mirror_cube.tscn" id="9_yypu2"]
-[ext_resource type="PackedScene" uid="uid://xmljgt42lsch" path="res://Prefabs/BehideObjects/Cube/green_cube.tscn" id="10_lpr55"]
-[ext_resource type="PackedScene" uid="uid://ewhknfhtqscj" path="res://Prefabs/BehideObjects/Cube/blue_cube.tscn" id="11_yvac4"]
-[ext_resource type="PackedScene" uid="uid://damtas0dagou5" path="res://Prefabs/BehideObjects/Sphere/mirror_sphere.tscn" id="12_52d0w"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_5ug15"]
 font = ExtResource("7_xbfhp")
@@ -245,37 +239,19 @@ flat = true
 [node name="Dungeon" parent="." unique_id=1145563756 instance=ExtResource("2_ydllb")]
 
 [node name="Camera" type="Camera3D" parent="." unique_id=1548027102]
-transform = Transform3D(0.6507995, -0.18630573, 0.73603684, 0, 0.96942663, 0.2453814, -0.7592496, -0.15969409, 0.6309024, -14.851292, 4.4300385, 22.774435)
-
-[node name="BehideObjects" type="Node3D" parent="." unique_id=1314474833]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 15, 0, 12)
-
-[node name="BehideObject" parent="BehideObjects" unique_id=1347755166 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("7_1ahje")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -37)
-CollisionNodes = []
-
-[node name="BehideObject2" parent="BehideObjects" unique_id=1916946187 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("8_xbfhp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -40)
-CollisionNodes = []
-
-[node name="BehideObject3" parent="BehideObjects" unique_id=379343789 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("9_yypu2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -42)
-CollisionNodes = []
-
-[node name="BehideObject4" parent="BehideObjects" unique_id=759419184 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("10_lpr55")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -36)
-CollisionNodes = []
-
-[node name="BehideObject5" parent="BehideObjects" unique_id=2117437491 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("11_yvac4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -39)
-CollisionNodes = []
-
-[node name="BehideObject6" parent="BehideObjects" unique_id=1631732522 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("12_52d0w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -39)
-CollisionNodes = []
+transform = Transform3D(0.7592496, 0.1596941, -0.6309024, 0, 0.96942663, 0.2453814, 0.6507996, -0.18630573, 0.7360368, -16.774435, 4.4300385, -8.851292)
 
 [connection signal="pressed" from="UI/Content/Container/Global Buttons/Settings/Button" to="." method="SettingsButtonPressed"]
 [connection signal="pressed" from="UI/Content/Container/Global Buttons/Quit/Button" to="." method="QuitButtonPressed"]
 [connection signal="pressed" from="UI/Content/Container/RoomButtons/Create/Button" to="." method="CreateRoomButtonPressed"]
 [connection signal="text_submitted" from="UI/Content/Container/RoomButtons/Join/HBoxContainer/Input/Box/LineEdit" to="." method="RoomCodeSubmitted"]
 [connection signal="pressed" from="UI/Content/Container/RoomButtons/Join/HBoxContainer/Button/Join/Button" to="." method="JoinRoomButtonPressed"]
+
+[editable path="Dungeon"]
+[editable path="Dungeon/World/StaticProps/torch_mounted_with_light"]
+[editable path="Dungeon/World/StaticProps/torch_mounted_with_light2"]
+[editable path="Dungeon/World/StaticProps/torch_mounted_with_light3"]
+[editable path="Dungeon/World/StaticProps/torch_mounted_with_light4"]
+[editable path="Dungeon/World/BehideObjects/BehideObjects/BehideObject6"]
+[editable path="Dungeon/World/BehideObjects/Arthur"]
+[editable path="Dungeon/World/BehideObjects/Arthur/candle_triple"]

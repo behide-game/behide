@@ -33,12 +33,13 @@
 [ext_resource type="PackedScene" uid="uid://dn8y487aan6cm" path="res://Prefabs/BehideObjects/Dungeon/Coins/coin_stack_large.tscn" id="31_xn2sx"]
 [ext_resource type="PackedScene" uid="uid://damtas0dagou5" path="res://Prefabs/BehideObjects/Sphere/mirror_sphere.tscn" id="32_qhhyx"]
 [ext_resource type="LightmapGIData" uid="uid://gqnv4xv132l6" path="res://Scenes/Lobby/Dungeon_presentation.lmbake" id="33_a6dvx"]
-[ext_resource type="Material" uid="uid://dh6ykun8bv60u" path="res://Assets/Sky/day_sky.tres" id="34_vvxb4"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ceia4"]
 
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cclfe"]
+
 [sub_resource type="Sky" id="Sky_a6dvx"]
-sky_material = ExtResource("34_vvxb4")
+sky_material = SubResource("ProceduralSkyMaterial_cclfe")
 
 [sub_resource type="Environment" id="Environment_ceia4"]
 background_mode = 2
