@@ -145,17 +145,32 @@ public partial class Lobby
             nodes.Presentation.RemoveChild(nodes.Presentation.GetChild(0));
     }
 
+    private void EnableMapSelectionInput(bool enable)
+    {
+        var prev = MapSelection.HBox.Input.Pervious.Button;
+        var next = MapSelection.HBox.Input.Next.Button;
+
+        prev.SetDisabled(!enable);
+        next.SetDisabled(!enable);
+        MapSelection.HBox.Input.Value.Label.Text = !enable
+            ? "Loading..."
+            : room.Configuration.Map switch
+            {
+                GameManager.GameMap.Dungeon => "Dungeon",
+                GameManager.GameMap.Restaurant => "Restaurant",
+                _ => throw new Exception("Invalid map")
+            };
+    }
     private void LoadMap(GameManager.GameMap map)
     {
-        MapSelection.Get().SetVisible(false);
-
+        EnableMapSelectionInput(false);
         var mapIdx = GameManager.Maps.IndexOf(map);
         var cachedNode = presentationScenes[mapIdx];
 
         if (cachedNode is not null)
         {
             nodes.Presentation.AddChild(cachedNode);
-            MapSelection.Get().CallThreadSafe(CanvasItem.MethodName.SetVisible, true);
+            EnableMapSelectionInput(true);
             return;
         }
 
@@ -188,7 +203,7 @@ public partial class Lobby
                     uiNode.CallThreadSafe(CanvasItem.MethodName.MoveToFront);
 
                     // Show button
-                    MapSelection.Get().CallThreadSafe(CanvasItem.MethodName.SetVisible, true);
+                    CallThreadSafe(MethodName.EnableMapSelectionInput, true);
                     break;
                 }
 
@@ -200,13 +215,6 @@ public partial class Lobby
 
     private void UpdateMap()
     {
-        MapSelection.HBox.Input.Value.Label.Text = room.Configuration.Map switch
-        {
-            GameManager.GameMap.Dungeon => "Dungeon",
-            GameManager.GameMap.Restaurant => "Restaurant",
-            _ => throw new Exception("Invalid map")
-        };
-
         RemoveLoadedMap();
         LoadMap(room.Configuration.Map);
     }

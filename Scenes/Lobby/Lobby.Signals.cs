@@ -1,5 +1,3 @@
-using Godot;
-
 namespace Behide.Game.UI.Lobby;
 
 using Types;
