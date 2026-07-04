@@ -91,8 +91,8 @@ mat3 direction_to_matrix(vec3 direction) {
 }
 
 float cloud_density(vec3 p, float progress){
-	float t_o = TIME * 0.001;
-	float t_o_small = TIME * -0.005;
+	float t_o = /*TIME **/ 0.001;
+	float t_o_small = /*TIME **/ -0.005;
 	float noise = texture(cloud_noise_sampler, p.xy * 4.0 + t_o_small).x * 0.1 + 0.9;
 	float clouds_shape = texture(cloud_shape_sampler, (p.xy + t_o) * clouds_scale).x;
 	float height_curve = texture(cloud_curves, vec2(progress, 0.0)).x;
@@ -143,7 +143,7 @@ float get_shooting_star(vec3 eyedir){
 	float shooting_star = 0.0;
 	for(int i = 0; i < 4; i++){
 		float base_rand = rand(float(i));
-		float time = TIME + base_rand * 2.0;
+		float time = /*TIME*/ + base_rand * 2.0;
 		float duration = 0.5 + base_rand;
 		float seed = floor(time / duration) * duration + base_rand;
 		float progress = mod(time, duration) / duration;
@@ -191,7 +191,7 @@ void sky() {
 	
 	if(stars_intensity > 0.0){
 		vec2 stars = voronoi(EYEDIR * 25.0).xz;
-		sky_color += smoothstep(0.025 + ((1.0 + sin(TIME + stars.y)) / 2.0) * 0.05, 0.0, stars.x) * stars_intensity;
+		sky_color += smoothstep(0.025 + ((1.0 + sin(/*TIME +*/ stars.y)) / 2.0) * 0.05, 0.0, stars.x) * stars_intensity;
 	}
 	
 	// Add shooting stars
@@ -207,7 +207,7 @@ void sky() {
 	// Add high clouds
 	
 	if(high_clouds_density > 0.0){
-		vec2 high_clouds_uv = (EYEDIR.xz / clamp(EYEDIR.y, 0.0, 1.0)) * 0.25 + TIME * 0.001;
+		vec2 high_clouds_uv = (EYEDIR.xz / clamp(EYEDIR.y, 0.0, 1.0)) * 0.25 + /*TIME **/ 0.001;
 		float high_clouds_mask = texture(high_clouds_sampler, high_clouds_uv).x;
 		sky_color = mix(sky_color, clouds_light_color, smoothstep(0.0, 1.0, high_clouds_mask) * horizon_mask * bottom_mask * high_clouds_density);
 	}

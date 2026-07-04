@@ -29,21 +29,24 @@ internal static class ControlExtensions
 public partial class Lobby
 {
     private LabelCountdown Countdown => nodes.Countdown;
-    private Label RoomCode => nodes.UI.Others.Info.Code.Value.Label;
+    private Label RoomCode => nodes.UI.HBox.Others.Info.Code.Value.Label;
 
-    private _SceneTree.__0_UI.__1_Players.__2_ScrollContainer.__3_MarginContainer.__4_Groups Groups =>
-        nodes.UI.Players.ScrollContainer.MarginContainer.Groups;
+    private _SceneTree.__0_UI.__1_HBox.__2_Players.__3_ScrollContainer.__4_MarginContainer.__5_Groups Groups =>
+        nodes.UI.HBox.Players.ScrollContainer.MarginContainer.Groups;
     private Control HunterList => Groups.Hunters.VBox;
     private Control PropList => Groups.Props.VBox;
     private Control AllPlayerList => Groups.All.VBox;
 
-    private Label ReadyButton => nodes.UI.Others.Buttons.Ready.MarginContainer.Label;
-    private Label RoleButton => nodes.UI.Others.Buttons.Role.MarginContainer.Label;
+    private Label ReadyButton => nodes.UI.HBox.Others.Buttons.Ready.MarginContainer.Label;
+    private Label RoleButton => nodes.UI.HBox.Others.Buttons.Role.MarginContainer.Label;
 
-    private _SceneTree.__0_UI.__1_Others.__2_Settings.__3_Margin.__4_VBox.__5_HunterSelection HunterSelection =>
-        nodes.UI.Others.Settings.Margin.VBox.HunterSelection;
+    private _SceneTree.__0_UI.__1_HBox.__2_Others.__3_Settings.__4_Margin.__5_VBox.__6_HunterSelection HunterSelection =>
+        nodes.UI.HBox.Others.Settings.Margin.VBox.HunterSelection;
 
-    private Label UsernameLabel => nodes.UI.Players.LocalPlayer.MarginContainer.Label;
+    private _SceneTree.__0_UI.__1_HBox.__2_Others.__3_Settings.__4_Margin.__5_VBox.__6_MapSelection MapSelection =>
+        nodes.UI.HBox.Others.Settings.Margin.VBox.MapSelection;
+
+    private Label UsernameLabel => nodes.UI.HBox.Players.LocalPlayer.MarginContainer.Label;
 
     /// <summary>
     /// Switch between the player groups view or the global view
@@ -136,14 +139,75 @@ public partial class Lobby
         RearrangePlayerLists();
     }
 
-    // private void ChangeMapName()
-    // {
-    //     var label = nodes.UI.Boxes.LeftPanel.HostPanel.SelectedMap.MapName.Label;
-    //     label.Text = room.Configuration.Map switch
-    //     {
-    //         GameManager.GameMap.Dungeon => "Dungeon",
-    //         GameManager.GameMap.Restaurant => "Restaurant",
-    //         _ => throw new Exception("Invalid map")
-    //     };
-    // }
+    private void RemoveLoadedMap()
+    {
+        if (nodes.Presentation.GetChildCount() > 0)
+            nodes.Presentation.RemoveChild(nodes.Presentation.GetChild(0));
+    }
+
+    private void LoadMap(GameManager.GameMap map)
+    {
+        MapSelection.Get().SetVisible(false);
+
+        var mapIdx = GameManager.Maps.IndexOf(map);
+        var cachedNode = presentationScenes[mapIdx];
+
+        if (cachedNode is not null)
+        {
+            nodes.Presentation.AddChild(cachedNode);
+            MapSelection.Get().CallThreadSafe(CanvasItem.MethodName.SetVisible, true);
+            return;
+        }
+
+        var scenePath = presentationScenePaths[mapIdx];
+        var err = ResourceLoader.LoadThreadedRequest(scenePath);
+        if (err != Error.Ok)
+        {
+            log.Error("Failed to load map: {Error}", err);
+            return;
+        }
+
+        var uiNode = nodes.UI.Get();
+        var presentationNode = nodes.Presentation;
+        Task.Run(() =>
+        {
+            while (true)
+            {
+                var status = ResourceLoader.LoadThreadedGetStatus(scenePath);
+                if (status == ResourceLoader.ThreadLoadStatus.InProgress) continue;
+                if (status == ResourceLoader.ThreadLoadStatus.Loaded)
+                {
+                    // Retrieve scene
+                    var scene = (PackedScene)ResourceLoader.LoadThreadedGet(scenePath);
+                    var sceneNode = scene.Instantiate();
+                    sceneNode.Name = mapIdx.ToString();
+
+                    // Add scene to tree
+                    presentationScenes[mapIdx] = sceneNode;
+                    presentationNode.CallThreadSafe(Node.MethodName.AddChild, sceneNode);
+                    uiNode.CallThreadSafe(CanvasItem.MethodName.MoveToFront);
+
+                    // Show button
+                    MapSelection.Get().CallThreadSafe(CanvasItem.MethodName.SetVisible, true);
+                    break;
+                }
+
+                log.Error("Failed to load scene: {Status}", status);
+                break;
+            }
+        }, NodeAliveCt);
+    }
+
+    private void UpdateMap()
+    {
+        MapSelection.HBox.Input.Value.Label.Text = room.Configuration.Map switch
+        {
+            GameManager.GameMap.Dungeon => "Dungeon",
+            GameManager.GameMap.Restaurant => "Restaurant",
+            _ => throw new Exception("Invalid map")
+        };
+
+        RemoveLoadedMap();
+        LoadMap(room.Configuration.Map);
+    }
 }

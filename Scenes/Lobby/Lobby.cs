@@ -7,7 +7,7 @@ namespace Behide.Game.UI.Lobby;
 using Types;
 
 [SceneTree(root: "nodes")]
-public partial class Lobby : Control
+public partial class Lobby : Node3D
 {
     private readonly ILogger log = Log.CreateLogger("UI/Lobby");
     private readonly CancellationTokenSource nodeAliveCts = new();
@@ -17,6 +17,9 @@ public partial class Lobby : Control
     private bool configLocked;
 
     [Export] private PackedScene playerCard = null!;
+    [Export] private string[] presentationScenePaths = [];
+    private Node?[] presentationScenes = null!;
+
 #if DEBUG
     private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(0);
 #else
@@ -84,13 +87,15 @@ public partial class Lobby : Control
         ChangePlayerList();
         UpdateRoleButton();
         UpdateHunterCountInput();
-        // ChangeMapName();
+        presentationScenes = new Node3D?[presentationScenePaths.Length];
+        UpdateMap();
     }
 
     public override void _ExitTree()
     {
         nodeAliveCts.Cancel();
         nodeAliveCts.Dispose();
+        RemoveLoadedMap();
     }
 
     private void UpdateLobbyAuthority()
@@ -99,6 +104,7 @@ public partial class Lobby : Control
         SetMultiplayerAuthority(minPeerId);
         Countdown.SetMultiplayerAuthority(minPeerId);
 
+        // TODO: Block settings for non-owner
         // HostPanel.SetVisible(IsMultiplayerAuthority());
     }
 

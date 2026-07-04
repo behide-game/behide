@@ -75,7 +75,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("4_gv7h4")
 BezelSize = 20
-BorderRadius = 0
 Color = Color(0.039215688, 0.15686275, 0.32941177, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/Content/Container/Global Buttons/Settings" unique_id=1236848016]
@@ -104,7 +103,6 @@ size_flags_vertical = 3
 theme_override_constants/margin_left = 20
 script = ExtResource("4_gv7h4")
 BezelSize = 20
-BorderRadius = 0
 Color = Color(0.019607844, 0.105882354, 0.20784314, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/Content/Container/Global Buttons/Quit" unique_id=2023867399]
@@ -137,7 +135,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 script = ExtResource("4_gv7h4")
 BezelSize = 20
-BorderRadius = 0
 Color = Color(0.13333334, 0.34117648, 0.47843137, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/Content/Container/RoomButtons/Create" unique_id=1802404858]
@@ -172,7 +169,6 @@ size_flags_horizontal = 4
 size_flags_vertical = 3
 script = ExtResource("4_gv7h4")
 BezelSize = 20
-BorderRadius = 0
 Color = Color(0.7921569, 0.8784314, 0.8980392, 1)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UI/Content/Container/RoomButtons/Join" unique_id=97696599]
@@ -194,7 +190,6 @@ size_flags_horizontal = 3
 theme_override_constants/margin_right = 16
 script = ExtResource("4_gv7h4")
 BezelSize = 16
-BorderRadius = 0
 Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
 
 [node name="LineEdit" type="LineEdit" parent="UI/Content/Container/RoomButtons/Join/HBoxContainer/Input/Box" unique_id=17249999]
@@ -227,7 +222,6 @@ theme_override_constants/margin_left = 0
 theme_override_constants/margin_right = 0
 script = ExtResource("4_gv7h4")
 BezelSize = 16
-BorderRadius = 0
 Color = Color(1, 0, 0.45882353, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/Content/Container/RoomButtons/Join/HBoxContainer/Button/Join" unique_id=1355225278]

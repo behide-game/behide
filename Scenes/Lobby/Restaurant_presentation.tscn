@@ -1,0 +1,312 @@
+[gd_scene format=3 uid="uid://b1xe7aq0ddqhu"]
+
+[ext_resource type="PackedScene" uid="uid://c4dgwcldlyaei" path="res://Assets/Models/Restaurant/floor_kitchen.gltf" id="1_vb74h"]
+[ext_resource type="Material" uid="uid://dh6ykun8bv60u" path="res://Assets/Sky/day_sky.tres" id="2_ylpo7"]
+[ext_resource type="PackedScene" uid="uid://cdoenxo2iwcke" path="res://Assets/Models/Restaurant/wall_decorated.gltf" id="3_fxwio"]
+[ext_resource type="PackedScene" uid="uid://bls5mil6fqvyl" path="res://Assets/Models/Restaurant/wall.gltf" id="4_vcipq"]
+[ext_resource type="PackedScene" uid="uid://bm6i2b7ip5xq6" path="res://Prefabs/Restaurant/pillar_a.tscn" id="5_bcne2"]
+[ext_resource type="PackedScene" uid="uid://d1nar2bitcc46" path="res://Prefabs/Restaurant/kitchencounter_innercorner_backsplash.tscn" id="6_2qdhr"]
+[ext_resource type="PackedScene" uid="uid://ct5qmehvntla3" path="res://Prefabs/Restaurant/wall.tscn" id="6_8p65t"]
+[ext_resource type="PackedScene" uid="uid://ctmiryyb70y5d" path="res://Prefabs/Restaurant/kitchencounter_straight_a_backsplash.tscn" id="7_218ca"]
+[ext_resource type="PackedScene" uid="uid://dpw4vivrvq8ky" path="res://Assets/Models/Dungeon/Batiments/Floor/Wood/floor_wood_large.gltf" id="8_2qdhr"]
+[ext_resource type="PackedScene" uid="uid://bd5ehmn4f6ml6" path="res://Prefabs/Restaurant/kitchencounter_sink_backsplash.tscn" id="9_218ca"]
+[ext_resource type="PackedScene" uid="uid://dcex44w01fbkm" path="res://Prefabs/Restaurant/kitchentable_b.tscn" id="10_686m5"]
+[ext_resource type="PackedScene" uid="uid://3s18asnulpuf" path="res://Prefabs/Restaurant/kitchencounter_outcorner_backsplash.tscn" id="10_ua3ht"]
+[ext_resource type="PackedScene" uid="uid://bojscitykk4ag" path="res://Prefabs/Restaurant/kitchentable_a.tscn" id="11_j5140"]
+[ext_resource type="PackedScene" uid="uid://cqxsl7130b7ex" path="res://Prefabs/Restaurant/oven.tscn" id="13_8p65t"]
+[ext_resource type="PackedScene" uid="uid://d0dm6j24i53lx" path="res://Prefabs/Restaurant/fridge_a.tscn" id="14_arww6"]
+[ext_resource type="PackedScene" uid="uid://bmd2qmxstxpv7" path="res://Prefabs/Restaurant/ketchup.tscn" id="15_r6oea"]
+[ext_resource type="PackedScene" uid="uid://dkkbux43whry8" path="res://Prefabs/Restaurant/mustard.tscn" id="16_5uoy6"]
+[ext_resource type="PackedScene" uid="uid://bvywgrsndkq35" path="res://Prefabs/Restaurant/pot_a_stew.tscn" id="17_ikncq"]
+[ext_resource type="PackedScene" uid="uid://cqadtddmjsg7m" path="res://Prefabs/Restaurant/dishrack_plates.tscn" id="18_vhk0n"]
+[ext_resource type="PackedScene" uid="uid://b3it41ujrrb3a" path="res://Prefabs/Restaurant/chair_stool.tscn" id="19_nsb1k"]
+[ext_resource type="PackedScene" uid="uid://jdojle44wvv4" path="res://Prefabs/Restaurant/bowl_dirty.tscn" id="20_jkbry"]
+[ext_resource type="PackedScene" uid="uid://bg2xep1mnqbsa" path="res://Prefabs/Restaurant/food_burger.tscn" id="21_205jd"]
+[ext_resource type="PackedScene" uid="uid://cpsqyuya6oc8p" path="res://Prefabs/Restaurant/food_ingredient_lettuce.tscn" id="22_3dfas"]
+[ext_resource type="PackedScene" uid="uid://c8viy7gp831kn" path="res://Prefabs/Restaurant/food_ingredient_onion.tscn" id="23_81j1j"]
+[ext_resource type="PackedScene" uid="uid://ck6xsespkjt6f" path="res://Prefabs/Restaurant/food_ingredient_steak.tscn" id="24_4y3h6"]
+[ext_resource type="PackedScene" uid="uid://1ofrr2a8q7f2" path="res://Prefabs/Restaurant/food_stew.tscn" id="25_3qhix"]
+[ext_resource type="PackedScene" uid="uid://fgdx8n3uypyx" path="res://Prefabs/Restaurant/crate.tscn" id="26_87s32"]
+[ext_resource type="LightmapGIData" uid="uid://ch5e1q44l7si5" path="res://Scenes/Lobby/Restaurant_presentation.lmbake" id="27_j5140"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_2qdhr"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_j5140"]
+flip_faces = true
+size = Vector2(2, 2)
+orientation = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8p65t"]
+albedo_color = Color(1, 0.6313726, 0.63529414, 1)
+metallic = 0.23
+roughness = 0.36
+emission_enabled = true
+emission = Color(1, 0.6313726, 0.63529414, 1)
+emission_energy_multiplier = 1.71
+rim = 0.0
+
+[sub_resource type="Sky" id="Sky_0727a"]
+sky_material = ExtResource("2_ylpo7")
+
+[sub_resource type="Environment" id="Environment_8ygfl"]
+sky = SubResource("Sky_0727a")
+ambient_light_source = 1
+reflected_light_source = 1
+tonemap_mode = 2
+
+[node name="Restaurant" type="Node3D" unique_id=2105926180]
+
+[node name="Batiment" type="Node3D" parent="." unique_id=644426329]
+
+[node name="floor_kitchen2" parent="Batiment" unique_id=1549597055 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 2)
+
+[node name="floor_kitchen3" parent="Batiment" unique_id=851552542 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 2)
+
+[node name="floor_kitchen4" parent="Batiment" unique_id=1589574113 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 2)
+
+[node name="floor_kitchen5" parent="Batiment" unique_id=489746299 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 2)
+
+[node name="floor_kitchen6" parent="Batiment" unique_id=356775920 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 6)
+
+[node name="floor_kitchen7" parent="Batiment" unique_id=938744494 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 6)
+
+[node name="floor_kitchen8" parent="Batiment" unique_id=1124585757 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 6)
+
+[node name="floor_kitchen9" parent="Batiment" unique_id=1853781423 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 6)
+
+[node name="floor_kitchen10" parent="Batiment" unique_id=1052116626 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 10)
+
+[node name="floor_kitchen11" parent="Batiment" unique_id=321439325 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 10)
+
+[node name="floor_kitchen12" parent="Batiment" unique_id=1428053276 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 10)
+
+[node name="floor_kitchen13" parent="Batiment" unique_id=1899700809 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 10)
+
+[node name="floor_kitchen14" parent="Batiment" unique_id=974663118 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 14)
+
+[node name="floor_kitchen15" parent="Batiment" unique_id=1833195921 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 14)
+
+[node name="floor_kitchen16" parent="Batiment" unique_id=218926293 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 14)
+
+[node name="floor_kitchen17" parent="Batiment" unique_id=993669886 instance=ExtResource("1_vb74h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, 14)
+
+[node name="wall_decorated2" parent="Batiment" unique_id=1762927550 instance=ExtResource("3_fxwio")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.4901161e-08, 0.5, 6.3)
+
+[node name="wall4" parent="Batiment" unique_id=1471421767 instance=ExtResource("4_vcipq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.3, 0.5, 0)
+
+[node name="wall5" parent="Batiment" unique_id=162743722 instance=ExtResource("4_vcipq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.3, 0.5, 0)
+
+[node name="wall8" parent="Batiment" unique_id=1576268197 instance=ExtResource("4_vcipq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.3, 0.5, 0)
+
+[node name="wall3" parent="Batiment" unique_id=1408585437 instance=ExtResource("4_vcipq")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.5, 2.3000002)
+
+[node name="wall7" parent="Batiment" unique_id=1226203918 instance=ExtResource("4_vcipq")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.5, 14.3)
+
+[node name="Pillar_A" parent="Batiment" unique_id=683709527 instance=ExtResource("5_bcne2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="ceiling" parent="Batiment" unique_id=2096221629 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 2.0000014, 4.5000014, 1.9999988)
+
+[node name="ceiling2" parent="Batiment" unique_id=1346967862 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 2.0000014, 4.5000014, 5.999999)
+
+[node name="ceiling3" parent="Batiment" unique_id=1204961300 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 2.0000014, 4.5000014, 9.999999)
+
+[node name="ceiling4" parent="Batiment" unique_id=360560690 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 2.0000014, 4.5000014, 13.999999)
+
+[node name="ceiling5" parent="Batiment" unique_id=210374424 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 6.0000014, 4.5000014, 1.9999988)
+
+[node name="ceiling6" parent="Batiment" unique_id=1886237400 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 6.0000014, 4.5000014, 5.999999)
+
+[node name="ceiling7" parent="Batiment" unique_id=1338479230 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 6.0000014, 4.5000014, 9.999999)
+
+[node name="ceiling8" parent="Batiment" unique_id=1354105151 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 6.0000014, 4.5000014, 13.999999)
+
+[node name="ceiling9" parent="Batiment" unique_id=2129533971 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 10.000002, 4.5000014, 1.9999988)
+
+[node name="ceiling10" parent="Batiment" unique_id=1705192142 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 10.000002, 4.5000014, 5.999999)
+
+[node name="ceiling11" parent="Batiment" unique_id=144285807 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 10.000002, 4.5000014, 9.999999)
+
+[node name="ceiling12" parent="Batiment" unique_id=141524499 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 10.000002, 4.5000014, 13.999999)
+
+[node name="ceiling13" parent="Batiment" unique_id=663113284 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 14.000002, 4.5000014, 1.9999988)
+
+[node name="ceiling14" parent="Batiment" unique_id=82141209 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 14.000002, 4.5000014, 5.999999)
+
+[node name="ceiling15" parent="Batiment" unique_id=2065813908 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 14.000002, 4.5000014, 9.999999)
+
+[node name="ceiling16" parent="Batiment" unique_id=165477586 instance=ExtResource("8_2qdhr")]
+transform = Transform3D(-1, 8.742277e-08, -5.7731597e-15, -8.742279e-08, -1.0000001, 0, 0, 7.450581e-09, 1.0000004, 14.000002, 4.5000014, 13.999999)
+
+[node name="Wall" parent="Batiment" unique_id=51986328 instance=ExtResource("6_8p65t")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 0.5, 0)
+
+[node name="Wall2" parent="Batiment" unique_id=1725101704 instance=ExtResource("6_8p65t")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.9604645e-08, 0.5, 10.306251)
+
+[node name="Props" type="Node3D" parent="." unique_id=1561575415]
+
+[node name="kitchencounter_innercorner_backsplash" parent="Props" unique_id=1522609223 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("6_2qdhr")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.2499999, 0.5, 1.3)
+CollisionNodes = [null, null, null, null, null]
+
+[node name="kitchencounter_straight_a_backsplash" parent="Props" unique_id=1485015716 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("7_218ca")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.25, 0.5, 3.3)
+CollisionNodes = [null, null, null, null]
+
+[node name="kitchencounter_straight_a_backsplash2" parent="Props" unique_id=502573584 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("7_218ca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.25, 0.5, 1.3)
+CollisionNodes = [null, null, null, null]
+
+[node name="kitchencounter_sink_backsplash" parent="Props" unique_id=1026230288 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("9_218ca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.25, 0.5, 1.3)
+CollisionNodes = [null, null, null, null, null, null]
+
+[node name="kitchencounter_outcorner_backsplash" parent="Props" unique_id=940219065 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("10_ua3ht")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.25, 0.5, 1.3)
+CollisionNodes = [null, null, null]
+
+[node name="kitchentable_b" parent="Props" unique_id=403603285 instance=ExtResource("10_686m5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, 7)
+
+[node name="kitchentable_a" parent="Props" unique_id=2125544929 instance=ExtResource("11_j5140")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.5, 7)
+
+[node name="kitchentable_b4" parent="Props" unique_id=66951273 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("10_686m5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.5, 9)
+CollisionNodes = [NodePath("../kitchentable_b/CollisionShape3D")]
+
+[node name="kitchentable_a2" parent="Props" unique_id=842421415 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("11_j5140")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, 9)
+CollisionNodes = [NodePath("../kitchentable_a/CollisionShape3D")]
+
+[node name="kitchentable_a3" parent="Props" unique_id=1317356387 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("11_j5140")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.5, 9)
+CollisionNodes = [NodePath("../kitchentable_a/CollisionShape3D")]
+
+[node name="oven" parent="Props" unique_id=77457878 instance=ExtResource("13_8p65t")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.25, 0.5, 9.3)
+
+[node name="fridge_a" parent="Props" unique_id=379191425 instance=ExtResource("14_arww6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.25, 0.5, 1.3)
+
+[node name="ketchup" parent="Props" unique_id=1562936865 instance=ExtResource("15_r6oea")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4557083, 1.4999999, 0.9168453)
+
+[node name="mustard" parent="Props" unique_id=2072819015 instance=ExtResource("16_5uoy6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8899896, 1.4999998, 0.9348972)
+
+[node name="pot_a_stew" parent="Props" unique_id=1654987086 instance=ExtResource("17_ikncq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6523776, 1.4999999, 6.712377)
+
+[node name="dishrack_plates" parent="Props" unique_id=1739631622 instance=ExtResource("18_vhk0n")]
+transform = Transform3D(0.99391973, 0, -0.11010954, 0, 1, 0, 0.11010954, 0, 0.99391973, 6.8228955, 1.5000001, 1.3422875)
+
+[node name="chair_stool" parent="Props" unique_id=1836606601 instance=ExtResource("19_nsb1k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.128126, 0.5, 5.28813)
+
+[node name="chair_stool2" parent="Props" unique_id=1406746893 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("19_nsb1k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.910071, 0.5, 5.330594)
+CollisionNodes = [NodePath("../chair_stool/CollisionShape3D"), NodePath("../chair_stool/CollisionShape3D2"), NodePath("../chair_stool/CollisionShape3D3")]
+
+[node name="bowl" parent="Props" unique_id=1041994163 instance=ExtResource("20_jkbry")]
+transform = Transform3D(0.97326404, 0, -0.2296892, 0, 1, 0, 0.2296892, 0, 0.97326404, 3.5987675, 1.4999998, 1.1783996)
+
+[node name="food_burger" parent="Props" unique_id=1799450203 instance=ExtResource("21_205jd")]
+transform = Transform3D(0.9638372, 0, 0.2664917, 0, 1, 0, -0.2664917, 0, 0.9638372, 1.0380971, 1.4999995, 1.7065923)
+
+[node name="food_ingredient_lettuce" parent="Props" unique_id=752877328 instance=ExtResource("22_3dfas")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5165443, 1.510169, 8.053335)
+
+[node name="food_ingredient_onion" parent="Props" unique_id=537716396 instance=ExtResource("23_81j1j")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.825378, 1.5113341, 8.430347)
+
+[node name="food_ingredient_steak" parent="Props" unique_id=2064592665 instance=ExtResource("24_4y3h6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.720739, 1.5372205, 7.387973)
+
+[node name="food_stew" parent="Props" unique_id=697736190 instance=ExtResource("25_3qhix")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.1481223, 1.5, 7.737915)
+
+[node name="crate" parent="Props" unique_id=1839747499 instance=ExtResource("26_87s32")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 2.5, 9.3)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1173215445]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1825799514]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("WorldBoundaryShape3D_2qdhr")
+
+[node name="Lights" type="Node3D" parent="." unique_id=2084155913]
+
+[node name="Light" type="Node3D" parent="Lights" unique_id=1816548252]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5999994, 3.1, 7.999999)
+
+[node name="AreaLight3D" type="OmniLight3D" parent="Lights/Light" unique_id=1022840111 groups=["ShadowingLights"]]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.00044727325, 1.3468003, 0.0011735559)
+light_color = Color(0.9999997, 0.78693867, 0.784547, 1)
+light_energy = 1.5
+shadow_enabled = true
+omni_range = 9.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Lights/Light" unique_id=1264286170]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00044727325, 1.3468003, 0.0011735559)
+mesh = SubResource("QuadMesh_j5140")
+surface_material_override/0 = SubResource("StandardMaterial3D_8p65t")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=779141861]
+environment = SubResource("Environment_8ygfl")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1349824500]
+transform = Transform3D(0.42261598, -0.023003116, 0.9060168, 0, 0.99967784, 0.025381101, -0.9063088, -0.010726459, 0.42247984, 10.968718, 2.2389016, 7.1088085)
+fov = 80.0
+
+[node name="LightmapGI" type="LightmapGI" parent="." unique_id=644500981]
+supersampling = true
+environment_mode = 3
+environment_custom_color = Color(1, 0.8155, 0.59000003, 1)
+generate_probes_subdiv = 3
+light_data = ExtResource("27_j5140")
+
+[node name="ReflectionProbe" type="ReflectionProbe" parent="." unique_id=2112265937]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.3, 8)
+size = Vector3(18.7, 6.7000003, 18.6)
+origin_offset = Vector3(-0.26, 0.96, -2.59)
+enable_shadows = true
+ambient_color = Color(0.45712823, 0.32269853, 0.44005868, 1)
