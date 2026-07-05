@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ddpb1xyo2hhi6"]
 
-[ext_resource type="PackedScene" uid="uid://d2mhf2torxfwy" path="res://Assets/Models/Restaurant/Props/shelf_papertowel.gltf" id="1_gme0q"]
+[ext_resource type="PackedScene" uid="uid://d2mhf2torxfwy" path="res://Assets/Models/Restaurant/shelf_papertowel.gltf" id="1_gme0q"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0tou4"]
 size = Vector3(2, 0.75, 0.6)

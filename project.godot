@@ -156,4 +156,3 @@ common/physics_interpolation=true
 textures/vram_compression/import_s3tc_bptc=true
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
 scaling_3d/mode=5
-occlusion_culling/use_occlusion_culling=true
