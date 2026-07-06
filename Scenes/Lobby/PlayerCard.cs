@@ -1,11 +1,11 @@
 using System.Reactive.Subjects;
+using Behide.Types;
 using Godot;
-using Behide.UI.Controls;
 
 namespace Behide.Game.UI.Lobby;
 
 [SceneTree]
-public partial class PlayerCard : BezelContainer
+public partial class PlayerCard : Control
 {
     private IDisposable? subscription;
     public int PeerId;
@@ -17,15 +17,19 @@ public partial class PlayerCard : BezelContainer
             {
                 PeerId = p.PeerId;
                 _.Margin.VBox.Username.Text = p.Username;
-                _.Margin.VBox.Description.Visible = false;
+                _.Get().Modulate = p.State switch
+                {
+                    PlayerStateInLobby(IsReady: true) => Colors.White,
+                    _ => Color.Color8(255, 255, 255, 155),
+                };
             },
             onCompleted: QueueFree
         );
     }
 
-    public void SetOwner(bool isOwner)
+    public void RefreshOwner(Room room)
     {
-        _.Margin.VBox.Description.Visible = isOwner;
+        _.Margin.VBox.Description.Visible = room.IsPeerOwner(PeerId);
         _.Margin.VBox.Description.Text = "Owner";
     }
 

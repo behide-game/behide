@@ -106,10 +106,25 @@ public partial class Lobby : Node3D
         SetMultiplayerAuthority(minPeerId);
         Countdown.SetMultiplayerAuthority(minPeerId);
 
+        // Show/Hide settings inputs
         GetTree().SetGroup("OwnerOnlyInputs", CanvasItem.PropertyName.Visible, IsMultiplayerAuthority());
         HunterSelection.HBox.Input.Value.Get().TopRight = !IsMultiplayerAuthority();
         MapSelection.HBox.Input.Value.Get().TopRight = !IsMultiplayerAuthority();
         MapSelection.HBox.Input.Value.Get().BottomLeft = !IsMultiplayerAuthority();
+
+        // Update player cards
+        for (var i = 0; i < HunterList.GetChildCount(); i++)
+            HunterList
+                .GetChildOrNull<PlayerCard>(i)
+                .RefreshOwner(room);
+        for (var i = 0; i < PropList.GetChildCount(); i++)
+            PropList
+                .GetChildOrNull<PlayerCard>(i)
+                .RefreshOwner(room);
+        for (var i = 0; i < AllPlayerList.GetChildCount(); i++)
+            AllPlayerList
+                .GetChildOrNull<PlayerCard>(i)
+                .RefreshOwner(room);
     }
 
     private void RefreshCountdownState()

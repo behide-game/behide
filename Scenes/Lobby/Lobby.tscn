@@ -357,9 +357,11 @@ theme_override_constants/separation = 3
 custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
 script = ExtResource("5_ew8go")
-BezelSize = 5
+BezelSize = 6
 Color = Color(0.9098039, 0.87058824, 1, 1)
 TopRight = false
 
@@ -377,7 +379,7 @@ theme_override_constants/separation = 3
 [node name="Plus" type="MarginContainer" parent="UI/HBox/Others/Settings/Margin/VBox/Hunter Selection/HBox/Input/Buttons" unique_id=988242529]
 layout_mode = 2
 script = ExtResource("5_ew8go")
-BezelSize = 5
+BezelSize = 6
 Color = Color(0.38431373, 0.34901962, 0.4862745, 1)
 BottomLeft = false
 
@@ -454,7 +456,7 @@ theme_override_constants/separation = 3
 [node name="Pervious" type="MarginContainer" parent="UI/HBox/Others/Settings/Margin/VBox/Map Selection/HBox/Input" unique_id=1714691437 groups=["OwnerOnlyInputs"]]
 layout_mode = 2
 script = ExtResource("5_ew8go")
-BezelSize = 5
+BezelSize = 6
 Color = Color(0.38431373, 0.34901962, 0.4862745, 1)
 TopRight = false
 
@@ -484,7 +486,7 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 script = ExtResource("5_ew8go")
-BezelSize = 5
+BezelSize = 6
 Color = Color(0.9098039, 0.87058824, 1, 1)
 TopRight = false
 BottomLeft = false
@@ -499,7 +501,7 @@ uppercase = true
 [node name="Next" type="MarginContainer" parent="UI/HBox/Others/Settings/Margin/VBox/Map Selection/HBox/Input" unique_id=1256633830 groups=["OwnerOnlyInputs"]]
 layout_mode = 2
 script = ExtResource("5_ew8go")
-BezelSize = 5
+BezelSize = 6
 Color = Color(0.38431373, 0.34901962, 0.4862745, 1)
 BottomLeft = false
 

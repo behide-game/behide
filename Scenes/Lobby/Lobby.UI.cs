@@ -121,7 +121,7 @@ public partial class Lobby
         var card = playerCard.Instantiate<PlayerCard>();
         card.Name = player.Value.PeerId.ToString();
         card.BindPlayer(player);
-        card.SetOwner(room.IsPeerOwner(player.Value.PeerId));
+        card.RefreshOwner(room);
 
         // Add to global player list
         AllPlayerList.AddChild(card);
@@ -133,7 +133,7 @@ public partial class Lobby
         var card = playerCard.Instantiate<PlayerCard>();
         card.Name = player.Value.PeerId.ToString();
         card.BindPlayer(player);
-        card.SetOwner(room.IsPeerOwner(player.Value.PeerId));
+        card.RefreshOwner(room);
 
         PropList.AddChild(card);
         RearrangePlayerLists();
