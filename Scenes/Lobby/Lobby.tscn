@@ -344,7 +344,7 @@ theme_override_constants/separation = 30
 
 [node name="Label" type="Label" parent="UI/HBox/Others/Settings/Margin/VBox/Hunter Selection/HBox" unique_id=305398790]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 2
 text = "Hunter selection"
 label_settings = SubResource("LabelSettings_jaxhj")
 uppercase = true
@@ -370,7 +370,7 @@ label_settings = SubResource("LabelSettings_rxs5b")
 horizontal_alignment = 1
 uppercase = true
 
-[node name="Buttons" type="VBoxContainer" parent="UI/HBox/Others/Settings/Margin/VBox/Hunter Selection/HBox/Input" unique_id=479827277]
+[node name="Buttons" type="VBoxContainer" parent="UI/HBox/Others/Settings/Margin/VBox/Hunter Selection/HBox/Input" unique_id=479827277 groups=["OwnerOnlyInputs"]]
 layout_mode = 2
 theme_override_constants/separation = 3
 
@@ -448,10 +448,10 @@ uppercase = true
 
 [node name="Input" type="HBoxContainer" parent="UI/HBox/Others/Settings/Margin/VBox/Map Selection/HBox" unique_id=907130174]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 theme_override_constants/separation = 3
 
-[node name="Pervious" type="MarginContainer" parent="UI/HBox/Others/Settings/Margin/VBox/Map Selection/HBox/Input" unique_id=1714691437]
+[node name="Pervious" type="MarginContainer" parent="UI/HBox/Others/Settings/Margin/VBox/Map Selection/HBox/Input" unique_id=1714691437 groups=["OwnerOnlyInputs"]]
 layout_mode = 2
 script = ExtResource("5_ew8go")
 BezelSize = 5
@@ -484,7 +484,7 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 script = ExtResource("5_ew8go")
-BezelSize = 0
+BezelSize = 5
 Color = Color(0.9098039, 0.87058824, 1, 1)
 TopRight = false
 BottomLeft = false
@@ -496,7 +496,7 @@ label_settings = SubResource("LabelSettings_rxs5b")
 horizontal_alignment = 1
 uppercase = true
 
-[node name="Next" type="MarginContainer" parent="UI/HBox/Others/Settings/Margin/VBox/Map Selection/HBox/Input" unique_id=1256633830]
+[node name="Next" type="MarginContainer" parent="UI/HBox/Others/Settings/Margin/VBox/Map Selection/HBox/Input" unique_id=1256633830 groups=["OwnerOnlyInputs"]]
 layout_mode = 2
 script = ExtResource("5_ew8go")
 BezelSize = 5

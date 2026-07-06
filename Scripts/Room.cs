@@ -42,8 +42,8 @@ public partial class RoomConfiguration : Node
         }
     }
 
-    private readonly Subject<Unit> changed = new();
-    public IObservable<Unit> Changed => changed;
+    private readonly Subject<bool> changed = new();
+    public IObservable<bool> Changed => changed;
     public override void _ExitTree() => changed.OnCompleted();
 
     public void AddHunter(int peerId) => Rpc(nameof(RpcAddHunter), peerId);
@@ -68,28 +68,28 @@ public partial class RoomConfiguration : Node
     private void RpcSetHunterCount(int count)
     {
         hunterCount = count;
-        changed.OnNext(Unit.Default);
+        changed.OnNext(false);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void RpcAddHunter(int peerId)
     {
         hunters.Add(peerId);
-        changed.OnNext(Unit.Default);
+        changed.OnNext(false);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void RpcRemoveHunter(int peerId)
     {
         hunters.Remove(peerId);
-        changed.OnNext(Unit.Default);
+        changed.OnNext(false);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void RpcSetMap(int mapIdx)
     {
         map = GameManager.Maps[mapIdx];
-        changed.OnNext(Unit.Default);
+        changed.OnNext(true);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
@@ -97,8 +97,9 @@ public partial class RoomConfiguration : Node
     {
         hunterCount = count;
         foreach (var id in hunterIds) hunters.Add(id);
+        var oldMap = map;
         map = GameManager.Maps[mapIdx];
-        changed.OnNext(Unit.Default);
+        changed.OnNext(map != oldMap);
     }
 }
 
@@ -109,7 +110,7 @@ public partial class Room : Node
     public readonly Dictionary<int, BehaviorSubject<Player>> Players = [];
     public readonly RoomConfiguration Configuration = new();
 
-    private bool IsOwner => Multiplayer.GetUniqueId() == Players.Keys.Min();
+    public bool IsOwner => Multiplayer.GetUniqueId() == Players.Keys.Min();
     public bool IsPeerOwner(int peerId) => peerId == Players.Keys.Min();
 
     // Events

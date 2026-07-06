@@ -18,10 +18,10 @@ public partial class BezelContainer : Control
     private Color BackgroundColor { get; set { field = value; QueueRedraw(); } } = Color.Color8(0, 0, 0);
 
     [ExportGroup("Corners")]
-    [Export] private bool TopLeft { get; set { field = value; QueueRedraw(); } }
-    [Export] private bool TopRight { get; set { field = value; QueueRedraw(); } } = true;
-    [Export] private bool BottomRight { get; set { field = value; QueueRedraw(); } }
-    [Export] private bool BottomLeft { get; set { field = value; QueueRedraw(); } } = true;
+    [Export] public bool TopLeft { get; set { field = value; QueueRedraw(); } }
+    [Export] public bool TopRight { get; set { field = value; QueueRedraw(); } } = true;
+    [Export] public bool BottomRight { get; set { field = value; QueueRedraw(); } }
+    [Export] public bool BottomLeft { get; set { field = value; QueueRedraw(); } } = true;
 
     public override void _Draw()
     {

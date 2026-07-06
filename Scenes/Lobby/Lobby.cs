@@ -26,7 +26,7 @@ public partial class Lobby : Node3D
     private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(5);
 #endif
 
-    public override void _EnterTree()
+    public override void _Ready()
     {
         if (GameManager.Room.Room is null)
         {
@@ -78,11 +78,11 @@ public partial class Lobby : Node3D
         room.PlayerJoined.Subscribe(p => AddPlayerToUi(room.Players[p.PeerId]), NodeAliveCt);
 
         // Bind room configuration
-        room.Configuration.Changed.Subscribe(_ =>
+        room.Configuration.Changed.Subscribe(mapChanged =>
         {
             ChangePlayerList();
             UpdateHunterCountInput();
-            UpdateMap();
+            if (mapChanged) UpdateMap();
         }, NodeAliveCt);
 
         ChangePlayerList();
@@ -106,8 +106,10 @@ public partial class Lobby : Node3D
         SetMultiplayerAuthority(minPeerId);
         Countdown.SetMultiplayerAuthority(minPeerId);
 
-        // TODO: Block settings for non-owner
-        // HostPanel.SetVisible(IsMultiplayerAuthority());
+        GetTree().SetGroup("OwnerOnlyInputs", CanvasItem.PropertyName.Visible, IsMultiplayerAuthority());
+        HunterSelection.HBox.Input.Value.Get().TopRight = !IsMultiplayerAuthority();
+        MapSelection.HBox.Input.Value.Get().TopRight = !IsMultiplayerAuthority();
+        MapSelection.HBox.Input.Value.Get().BottomLeft = !IsMultiplayerAuthority();
     }
 
     private void RefreshCountdownState()
