@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://wjns4hr7bm0i"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_mjvlc"]
-[ext_resource type="PackedScene" uid="uid://b2q7nq1yl2jdl" path="res://Assets/Models/Restaurant/table_round_A_small.gltf" id="2_pad6j"]
+[ext_resource type="PackedScene" uid="uid://b2q7nq1yl2jdl" path="res://Assets/Models/Restaurant/Props/table_round_A_small.gltf" id="2_pad6j"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_4fofe"]
 height = 0.2

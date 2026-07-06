@@ -35,7 +35,7 @@ animation/fps=30
 animation/trimming=false
 animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
-import_script/path=""
+import_script/path="uid://cs51a5s1p6750"
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
@@ -46,8 +46,13 @@ _subresources={
 "use_external/fallback_path": "res://Assets/Models/Dungeon/Props/Coin/coin-material.tres",
 "use_external/path": "uid://7rh3qw7chtko"
 }
+},
+"nodes": {
+"PATH:coin": {
+"mesh_instance/layers": 2
 }
 }
-gltf/naming_version=1
+}
+gltf/naming_version=2
 gltf/embedded_image_handling=1
 gltf/texture_map_mode=0

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cqadtddmjsg7m"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_h2dw8"]
-[ext_resource type="PackedScene" uid="uid://bnjmtt0tpfixb" path="res://Assets/Models/Restaurant/dishrack_plates.gltf" id="2_8uvul"]
+[ext_resource type="PackedScene" uid="uid://bnjmtt0tpfixb" path="res://Assets/Models/Restaurant/Props/dishrack_plates.gltf" id="2_8uvul"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8q857"]
 size = Vector3(1.2, 0.6, 1.2)

@@ -6,6 +6,10 @@ namespace Behide.Game;
 public partial class Settings
 {
     private _SceneTree.__0_TabContainer.__1_Video.__2_VBox Video => nodes.TabContainer.Video.VBox;
+    private ConfigFile settingsOverride = new();
+
+    private string renderingMethod = RenderingServer.GetCurrentRenderingMethod();
+    private string renderingDriver = RenderingServer.GetCurrentRenderingDriverName();
 
     private void Video_SetDisplayMode(long displayMode) =>
         DisplayServer.WindowSetMode(
@@ -51,6 +55,46 @@ public partial class Settings
         GetWindow().UseTaa = mode == 6;
     }
 
+    private void Video_SetDriver(long driver)
+    {
+        settingsOverride.Clear();
+        settingsOverride.SetValue(
+            "rendering",
+            "renderer/rendering_method",
+            driver == 2 ? "gl_compatibility" : "forward_plus"
+        );
+
+        if (driver == 0)
+            settingsOverride.SetValue("rendering", "rendering_device/driver", "vulkan");
+        else if (driver == 1)
+            settingsOverride.SetValue("rendering", "rendering_device/driver.windows", "d3d12");
+
+        string overridePath;
+        if (OS.HasFeature("standalone"))
+        {
+            var exePath = OS.GetExecutablePath();
+            var exeDir = Path.GetDirectoryName(exePath);
+            if (exeDir is null)
+            {
+                log.Error("Cannot save settings override: Failed to retrieve executable directory from {ExePath}.", exePath);
+                return;
+            }
+
+            overridePath = Path.Combine(exeDir, "override.cfg");
+        }
+        else
+            overridePath = "./override.cfg";
+
+        var err = settingsOverride.Save(overridePath);
+        if (err != Error.Ok)
+        {
+            log.Error("Failed to save settings override: {Error}", err);
+            return;
+        }
+
+        RefreshRestartNeeded();
+    }
+
 
     private void VideoListenSettings()
     {
@@ -71,6 +115,10 @@ public partial class Settings
 
         // FPS
         Video.FPS.Enabled.Toggled += GameManager.VisualEffectsLayer.EnableFpsDisplay;
+        Video.MaxFPS.SliderSetting.Changed.Subscribe(maxFps => Engine.SetMaxFps((int)maxFps));
+
+        // Driver
+        Video.Driver.OptionButton.ItemSelected += Video_SetDriver;
     }
 
     /// <summary>
@@ -84,16 +132,33 @@ public partial class Settings
         Video.RenderScale.SliderSetting.Changed.Subscribe(_ => Changed.OnNext(Unit.Default));
         Video.Anti_aliasing.OptionButton.ItemSelected += _ => Changed.OnNext(Unit.Default);
         Video.FPS.Enabled.Toggled += _ => Changed.OnNext(Unit.Default);
+        Video.MaxFPS.SliderSetting.Changed.Subscribe(_ => Changed.OnNext(Unit.Default));
     }
 
     private void VideoApplyFromConfig(ConfigFile config)
     {
         var displayMode = config.GetValue(nameof(Video), "display-mode", "fullscreen").AsString();
         var uiScaling = config.GetValue(nameof(Video), "ui-scaling", 1).AsDouble();
-        var renderScaleMode = config.GetValue(nameof(Video), "render-scale-mode", "normal").AsString();
+        var renderScaleMode =
+            renderingMethod is "forward_plus"
+                ? config.GetValue(nameof(Video), "render-scale-mode", "normal").AsString()
+                : "normal";
+
         var renderScale = config.GetValue(nameof(Video), "render-scale", 100).AsInt32();
         var antiAliasing = config.GetValue(nameof(Video), "anti-aliasing", "none").AsString();
         var displayFps = config.GetValue(nameof(Video), "display-fps", false).AsBool();
+        var maxFps = config.GetValue(nameof(Video), "max-fps", 0).AsInt32();
+
+        Video.Driver.OptionButton.Select(renderingMethod switch
+        {
+            "gl_compatibility" => 2,
+            _ => renderingDriver switch
+            {
+                "vulkan" => 0,
+                "d3d12" => 1,
+                _ => 0
+            }
+        });
 
         Video.DisplayMode.OptionButton.Select(displayMode switch
         {
@@ -117,11 +182,19 @@ public partial class Settings
             "msaa2x" => 1,
             "msaa3x" => 2,
             "msaa4x" => 3,
-            "smaa" => 4,
-            "fxaa" => 5,
-            "taa" => 6,
+            "smaa" => renderingMethod is "forward_plus" or "mobile" ? 4 : 0,
+            "fxaa" => renderingMethod is "forward_plus" or "mobile" ? 5 : 0,
+            "taa" => renderingMethod == "forward_plus" ? 6 : 0,
             _ => 0
         });
+        Video.MaxFPS.SliderSetting.SetValue(maxFps);
+
+        Video.Driver.OptionButton.SetItemDisabled(1, !OperatingSystem.IsWindows());
+        Video.RenderScale.OptionButton.SetItemDisabled(1, renderingMethod is not "forward_plus" and not "mobile");
+        Video.RenderScale.OptionButton.SetItemDisabled(2, renderingMethod is not "forward_plus" and not "mobile");
+        Video.Anti_aliasing.OptionButton.SetItemDisabled(4, renderingMethod is "gl_compatibility");
+        Video.Anti_aliasing.OptionButton.SetItemDisabled(5, renderingMethod is "gl_compatibility");
+        Video.Anti_aliasing.OptionButton.SetItemDisabled(6, renderingMethod is not "forward_plus" and not "mobile");
 
         Video_SetDisplayMode(Video.DisplayMode.OptionButton.Selected);
         Video_SetUIScaling(Video.UIScaling.SliderSetting.Value);
@@ -129,6 +202,7 @@ public partial class Settings
         Video_SetRenderScale(Video.RenderScale.SliderSetting.Value);
         Video_SetAntiAliasing(Video.Anti_aliasing.OptionButton.Selected);
         GameManager.VisualEffectsLayer.EnableFpsDisplay(displayFps);
+        Engine.SetMaxFps(maxFps);
     }
 
     private void VideoApplyToConfig(ConfigFile config)
@@ -161,5 +235,6 @@ public partial class Settings
             _ => "none"
         });
         config.SetValue(nameof(Video), "display-fps", Video.FPS.Enabled.ButtonPressed);
+        config.SetValue(nameof(Video), "max-fps", Video.MaxFPS.SliderSetting.Value);
     }
 }

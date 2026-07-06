@@ -35,6 +35,9 @@ public partial class RoomManager : Node
         Room = new Room(roomId, player);
         AddChild(Room);
 
+        // Put room id in the clipboard
+        DisplayServer.ClipboardSet(roomId.ToString());
+
         // Not starting time sync because we are the time reference
         return roomId;
     }
@@ -67,7 +70,8 @@ public partial class RoomManager : Node
         Room = new Room(roomId, player);
         AddChild(Room);
 
-        log.Debug("Joined room as {PeerId}. Already connected player count: {PlayerCount}", playerId, Room.Players.Count);
+        log.Debug("Joined room as {PeerId}. Already connected with {PlayerCount} players", playerId, Room.Players.Count-1);
+        log.Debug("Room node is ready: {IsReady}", Room.IsNodeReady());
 
         // Connect to other players
         var tasks =
@@ -88,7 +92,6 @@ public partial class RoomManager : Node
         await Task.Run(() =>
         {
             while (Room.Players.Count <= numberOfPlayers) { }
-            // TODO: Room.Players.Count counts the local player, but numberOfPlayers doesn't (?)
             GameManager.TimeSync.Start();
         });
     }

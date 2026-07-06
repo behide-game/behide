@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cpsqyuya6oc8p"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_m4bv8"]
-[ext_resource type="PackedScene" uid="uid://cakrqin4fcnig" path="res://Assets/Models/Restaurant/food_ingredient_lettuce.gltf" id="2_exk7q"]
+[ext_resource type="PackedScene" uid="uid://cakrqin4fcnig" path="res://Assets/Models/Restaurant/Props/food_ingredient_lettuce.gltf" id="2_exk7q"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_m4bv8"]
 height = 0.75

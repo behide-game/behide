@@ -19,6 +19,7 @@ public partial class Settings : Control
 
         LoadConfig();
         SaveConfigOnChanged();
+        RefreshRestartNeeded();
 
         GeneralListenSettingsForSaving();
         ControlsListenSettingsForSaving();
@@ -71,5 +72,27 @@ public partial class Settings : Control
         var err = config.Save("user://settings.cfg");
         if (err == Error.Ok) return;
         log.Error("Failed to save settings");
+    }
+
+    private void RestartButtonPressed()
+    {
+        OS.SetRestartOnExit(true);
+        GetTree().Quit();
+    }
+
+    private void RefreshRestartNeeded()
+    {
+        var restartNeeded =
+            Video.Driver.OptionButton.Selected switch
+            {
+                0 => renderingDriver != "vulkan",
+                1 => renderingDriver != "d3d12",
+                2 => renderingDriver != "opengl3",
+                _ => true
+            };
+        nodes.TabContainer.Video.VBox.RestartNeeded.Get().Modulate =
+            restartNeeded
+                ? Colors.White
+                : Colors.Transparent;
     }
 }

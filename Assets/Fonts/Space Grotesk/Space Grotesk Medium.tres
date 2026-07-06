@@ -1,0 +1,13 @@
+[gd_resource type="FontVariation" format=3 uid="uid://bqpb46gqbs0cm"]
+
+[ext_resource type="FontFile" uid="uid://xdtqfye7tlou" path="res://Assets/Fonts/Space Grotesk/SpaceGrotesk-VariableFont_wght.ttf" id="1_5v5p0"]
+
+[resource]
+base_font = ExtResource("1_5v5p0")
+variation_opentype = {
+2003265652: 500
+}
+opentype_features = {
+1936928817: 1,
+1936928820: 1
+}

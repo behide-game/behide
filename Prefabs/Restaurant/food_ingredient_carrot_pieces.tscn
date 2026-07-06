@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c0bf6ohximvaf"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_12equ"]
-[ext_resource type="PackedScene" uid="uid://b5ijdymcm7y6w" path="res://Assets/Models/Restaurant/food_ingredient_carrot_pieces.gltf" id="2_q1o0t"]
+[ext_resource type="PackedScene" uid="uid://b5ijdymcm7y6w" path="res://Assets/Models/Restaurant/Props/food_ingredient_carrot_pieces.gltf" id="2_q1o0t"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_t6105"]
 size = Vector3(0.45214844, 0.3, 0.7)

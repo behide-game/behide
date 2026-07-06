@@ -6,46 +6,96 @@ namespace Behide.Game.UI.Lobby;
 
 using Types;
 
+internal static class ControlExtensions
+{
+    extension(Control control)
+    {
+        public void SortChildren()
+        {
+            var nodes = control.GetChildren()
+                .OrderBy(n => n.Name.ToString())
+                .ToArray();
+
+            foreach (var n in nodes) {
+                control.RemoveChild(n);
+                n.SetOwner(null);
+            }
+
+            foreach (var n in nodes) control.AddChild(n);
+        }
+    }
+}
+
 public partial class Lobby
 {
-    private Control HostPanel => nodes.Lobby.Boxes.LeftPanel.HostPanel;
     private LabelCountdown Countdown => nodes.Countdown;
-    private Label RoomCode => nodes.Lobby.Header.Code.Value.Value;
+    private Label RoomCode => nodes.UI.HBox.Others.Info.Code.Value.Label;
 
-    private Control HunterList => nodes.Lobby.Boxes.LeftPanel.PlayersWithRole.Players.Hunters.PlayerList;
-    private Control PropList => nodes.Lobby.Boxes.LeftPanel.PlayersWithRole.Players.Props.PlayerList;
-    private Control PlayerList => nodes.Lobby.Boxes.LeftPanel.Players.Players.PlayerList;
+    private _SceneTree.__0_UI.__1_HBox.__2_Players.__3_ScrollContainer.__4_MarginContainer.__5_Groups Groups =>
+        nodes.UI.HBox.Players.ScrollContainer.MarginContainer.Groups;
+    private Control HunterList => Groups.Hunters.VBox;
+    private Control PropList => Groups.Props.VBox;
+    private Control AllPlayerList => Groups.All.VBox;
 
-    private Label RoleButton => nodes.Lobby.Boxes.Buttons.Role.MarginContainer.Label;
-    private Label ReadyButton => nodes.Lobby.Boxes.Buttons.Ready.MarginContainer.Label;
+    private Label ReadyButton => nodes.UI.HBox.Others.Buttons.Ready.MarginContainer.Label;
+    private Label RoleButton => nodes.UI.HBox.Others.Buttons.Role.MarginContainer.Label;
 
-    private static void SortPlayerList(Control list)
-    {
-        var nodes = list.GetChildren()
-            .Skip(1)
-            .OrderBy(n => n.Name.ToString())
-            .ToArray();
+    private _SceneTree.__0_UI.__1_HBox.__2_Others.__3_Settings.__4_Margin.__5_VBox.__6_HunterSelection HunterSelection =>
+        nodes.UI.HBox.Others.Settings.Margin.VBox.HunterSelection;
 
-        foreach (var n in nodes) {
-            list.RemoveChild(n);
-            n.SetOwner(null);
-        }
+    private _SceneTree.__0_UI.__1_HBox.__2_Others.__3_Settings.__4_Margin.__5_VBox.__6_MapSelection MapSelection =>
+        nodes.UI.HBox.Others.Settings.Margin.VBox.MapSelection;
 
-        foreach (var n in nodes) list.AddChild(n);
-    }
+    private Label UsernameLabel => nodes.UI.HBox.Players.LocalPlayer.MarginContainer.Label;
 
-
+    /// <summary>
+    /// Switch between the player groups view or the global view
+    /// </summary>
     private void ChangePlayerList()
     {
-        var playersWithRole = (Control)nodes.Lobby.Boxes.LeftPanel.PlayersWithRole;
-        var players = (Control)nodes.Lobby.Boxes.LeftPanel.Players;
-        var countLabel = nodes.Lobby.Boxes.LeftPanel.HostPanel.HunterCount.Count.Label;
+        var showGroups = room.Configuration.HunterCount == 0;
+        Groups.All.Get().Visible = !showGroups;
+        Groups.Hunters.Get().Visible = showGroups;
+        Groups.HuntersDelimitor.Get().Visible = showGroups;
+        Groups.Props.Get().Visible = showGroups;
+        Groups.PropsDelimitor.Get().Visible = showGroups;
 
-        playersWithRole.SetVisible(room.Configuration.HunterCount == 0);
-        players.SetVisible(room.Configuration.HunterCount != 0);
-        countLabel.Text = room.Configuration.HunterCount.ToString();
+        if (showGroups) RearrangePlayerLists();
     }
 
+    /// <summary>
+    /// Place player cards in the correct category
+    /// </summary>
+    private void RearrangePlayerLists()
+    {
+        foreach (var child in HunterList.GetChildren())
+        {
+            if (child is not PlayerCard card) continue;
+            card.GetParent().RemoveChild(card);
+
+            if (room.Configuration.IsHunter(card.PeerId))
+                HunterList.AddChild(card);
+            else
+                PropList.AddChild(card);
+        }
+        foreach (var child in PropList.GetChildren())
+        {
+            if (child is not PlayerCard card) continue;
+            card.GetParent().RemoveChild(card);
+
+            if (room.Configuration.IsHunter(card.PeerId))
+                HunterList.AddChild(card);
+            else
+                PropList.AddChild(card);
+        }
+
+        HunterList.SortChildren();
+        PropList.SortChildren();
+    }
+
+    /// <summary>
+    /// Change role button text according to game state
+    /// </summary>
     private void UpdateRoleButton()
     {
         var config = room.Configuration;
@@ -53,92 +103,125 @@ public partial class Lobby
         RoleButton.Text = config.IsHunter(peerId) ? "Be prop" : "Be hunter";
     }
 
+    /// <summary>
+    /// Set the hunter count input text according to room configuration
+    /// </summary>
+    private void UpdateHunterCountInput() =>
+        HunterSelection.HBox.Input.Value.Label.Text = room.Configuration.HunterCount switch
+        {
+            0 => "Manual",
+            _ => $"Randomly {room.Configuration.HunterCount}"
+        };
+
     private void AddPlayerToUi(BehaviorSubject<Player> player)
     {
         AddPlayerToRolesList(player);
 
-        // Add to global player list
-        var node = playerListItemScene.Instantiate<PlayerListItem>();
-        node.Name = player.Value.PeerId.ToString();
-        player.Subscribe(p =>
-            {
-                node.SetPlayerName(p.Username);
-                node.SetStatus(p.State switch
-                {
-                    PlayerStateInLobby isReady => isReady.IsReady ? "Ready" : "Not ready",
-                    PlayerStateInGame => "In game",
-                    _ => "Gone"
-                });
-            },
-            onCompleted: node.QueueFree,
-            NodeAliveCt
-        );
+        // Create control
+        var card = playerCard.Instantiate<PlayerCard>();
+        card.Name = player.Value.PeerId.ToString();
+        card.BindPlayer(player);
+        card.SetOwner(room.IsPeerOwner(player.Value.PeerId));
 
-        PlayerList.AddChild(node);
-        SortPlayerList(PlayerList);
+        // Add to global player list
+        AllPlayerList.AddChild(card);
+        AllPlayerList.SortChildren();
     }
 
     private void AddPlayerToRolesList(BehaviorSubject<Player> player)
     {
-        var node = playerListItemScene.Instantiate<PlayerListItem>();
-        node.Name = player.Value.PeerId.ToString();
+        var card = playerCard.Instantiate<PlayerCard>();
+        card.Name = player.Value.PeerId.ToString();
+        card.BindPlayer(player);
+        card.SetOwner(room.IsPeerOwner(player.Value.PeerId));
 
-        // Sync ready state
-        player.Subscribe(
-            p =>
-            {
-                node.SetPlayerName(p.Username);
-                node.SetStatus(p.State switch
-                {
-                    PlayerStateInLobby isReady => isReady.IsReady ? "Ready" : "Not ready",
-                    PlayerStateInGame => "In game",
-                    _ => "Gone"
-                });
-            },
-            onCompleted: () =>
-            {
-                if (room.Configuration.HunterCount > room.Players.Count)
-                    room.Configuration.HunterCount -= 1;
-                node.QueueFree();
-            },
-            NodeAliveCt
-        );
-
-        // Sync prop/hunter state
-        var sub = room.Configuration.Changed.Subscribe(_ => ChangePlayerRole());
-        NodeAliveCt.Register(sub.Dispose);
-        player.Subscribe(_ => { }, onCompleted: sub.Dispose);
-
-        ChangePlayerRole();
-        return;
-
-        void ChangePlayerRole()
-        {
-            if (room.Configuration.IsHunter(player.Value.PeerId))
-            {
-                if (node.GetParent() == PropList) PropList.RemoveChild(node);
-                if (node.GetParent() == HunterList) return;
-                HunterList.AddChild(node);
-                SortPlayerList(HunterList);
-            }
-            else
-            {
-                if (node.GetParent() == HunterList) HunterList.RemoveChild(node);
-                if (node.GetParent() == PropList) return;
-                PropList.AddChild(node);
-                SortPlayerList(PropList);
-            }
-        }
+        PropList.AddChild(card);
+        RearrangePlayerLists();
     }
 
-    private void ChangeMapName()
+    private void RemoveLoadedMap()
     {
-        var label = nodes.Lobby.Boxes.LeftPanel.HostPanel.SelectedMap.MapName.Label;
-        label.Text = room.Configuration.Map switch
+        if (nodes.Presentation.GetChildCount() > 0)
+            nodes.Presentation.RemoveChild(nodes.Presentation.GetChild(0));
+    }
+
+    private void SetMapSelectionInputText(bool loading)
+    {
+        MapSelection.HBox.Input.Value.Label.Text = loading
+            ? "Loading..."
+            : room.Configuration.Map switch
+            {
+                GameManager.GameMap.Dungeon => "Dungeon",
+                GameManager.GameMap.Restaurant => "Restaurant",
+                _ => throw new Exception("Invalid map")
+            };
+    }
+
+    private CancellationTokenSource loadMapCts = new();
+
+    private void LoadMap(GameManager.GameMap map, CancellationToken ct)
+    {
+        SetMapSelectionInputText(true);
+        var mapIdx = GameManager.Maps.IndexOf(map);
+        var cachedNode = presentationScenes[mapIdx];
+
+        if (cachedNode is not null)
         {
-            GameManager.GameMap.Dungeon => "Dungeon",
-            GameManager.GameMap.Restaurant => "Restaurant",
-            _ => throw new Exception("Invalid map")
-        };
+            nodes.Presentation.AddChild(cachedNode);
+            SetMapSelectionInputText(false);
+            return;
+        }
+
+        var scenePath = presentationScenePaths[mapIdx];
+        var err = ResourceLoader.LoadThreadedRequest(scenePath);
+        if (err != Error.Ok)
+        {
+            log.Error("Failed to load map: {Error}", err);
+            return;
+        }
+
+        var uiNode = nodes.UI.Get();
+        var presentationNode = nodes.Presentation;
+        Task.Run(() =>
+        {
+            while (!ct.IsCancellationRequested)
+            {
+                var status = ResourceLoader.LoadThreadedGetStatus(scenePath);
+                if (status == ResourceLoader.ThreadLoadStatus.InProgress) continue;
+                if (status == ResourceLoader.ThreadLoadStatus.Loaded)
+                {
+                    // Retrieve scene
+                    var scene = (PackedScene)ResourceLoader.LoadThreadedGet(scenePath);
+                    var sceneNode = scene.Instantiate();
+                    sceneNode.Name = mapIdx.ToString();
+
+                    // Disable multiplayer synchronizers
+                    var synchronizers = sceneNode.FindChildren("*", nameof(MultiplayerSynchronizer), owned: false);
+                    foreach (var synchronizer in synchronizers) synchronizer.QueueFree();
+
+                    // Add scene to tree
+                    presentationScenes[mapIdx] = sceneNode;
+                    presentationNode.CallDeferred(Node.MethodName.AddChild, sceneNode);
+                    uiNode.CallDeferred(CanvasItem.MethodName.MoveToFront);
+
+                    // Show button
+                    CallDeferred(MethodName.SetMapSelectionInputText, false);
+                    break;
+                }
+
+                log.Error("Failed to load scene: {Status}", status);
+                break;
+            }
+        }, NodeAliveCt);
+    }
+
+    private void UpdateMap()
+    {
+        loadMapCts.Cancel();
+        loadMapCts.Dispose();
+        loadMapCts = new CancellationTokenSource();
+
+        RemoveLoadedMap();
+        LoadMap(room.Configuration.Map, loadMapCts.Token);
     }
 }

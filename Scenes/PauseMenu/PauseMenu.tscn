@@ -146,6 +146,7 @@ layout_mode = 1
 [connection signal="pressed" from="Settings Menu/TabContainer/General/VBox/Back" to="." method="ToggleMenu"]
 [connection signal="pressed" from="Settings Menu/TabContainer/Controls/VBox/Back" to="." method="ToggleMenu"]
 [connection signal="pressed" from="Settings Menu/TabContainer/Video/VBox/Back" to="." method="ToggleMenu"]
+[connection signal="pressed" from="Settings Menu/TabContainer/Graphics/VBox/Back" to="." method="ToggleMenu"]
 
 [editable path="Settings Menu"]
 [editable path="Settings Menu/TabContainer/Controls/VBox/Horizontal Sensitivity"]

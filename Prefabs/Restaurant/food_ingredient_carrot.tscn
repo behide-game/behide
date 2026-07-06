@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://csen45klkbfoc"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_b7ert"]
-[ext_resource type="PackedScene" uid="uid://b5tjn5l46cb40" path="res://Assets/Models/Restaurant/food_ingredient_carrot.gltf" id="2_7jvqc"]
+[ext_resource type="PackedScene" uid="uid://b5tjn5l46cb40" path="res://Assets/Models/Restaurant/Props/food_ingredient_carrot.gltf" id="2_7jvqc"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_um6ee"]
 radius = 0.275

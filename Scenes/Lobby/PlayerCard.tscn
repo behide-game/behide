@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://b7o2kx1g4xrsj"]
+
+[ext_resource type="Script" uid="uid://baxjp2x2dhln6" path="res://Scenes/Lobby/PlayerCard.cs" id="1_mnk65"]
+[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Prefabs/Controls/BezelContainer.cs" id="1_r0noc"]
+[ext_resource type="FontVariation" uid="uid://bqpb46gqbs0cm" path="res://Assets/Fonts/Space Grotesk/Space Grotesk Medium.tres" id="2_mnk65"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_5v5p0"]
+font = ExtResource("2_mnk65")
+font_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_ceia4"]
+font = ExtResource("2_mnk65")
+font_size = 14
+font_color = Color(0.7921569, 0.8784314, 0.8980392, 1)
+
+[node name="PlayerCard" type="MarginContainer" unique_id=675359814]
+custom_maximum_size = Vector2(-1, 57)
+offset_right = 138.0
+offset_bottom = 60.0
+script = ExtResource("1_mnk65")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1554600317]
+custom_minimum_size = Vector2(0, 60)
+custom_maximum_size = Vector2(-1, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 8
+script = ExtResource("1_r0noc")
+BezelSize = 15
+BorderRadius = 0
+Color = Color(0.13333334, 0.34117648, 0.47843137, 1)
+
+[node name="VBox" type="VBoxContainer" parent="Margin" unique_id=995709644]
+layout_mode = 2
+theme_override_constants/separation = -5
+alignment = 1
+
+[node name="Username" type="Label" parent="Margin/VBox" unique_id=2088783743]
+layout_mode = 2
+text = "Username"
+label_settings = SubResource("LabelSettings_5v5p0")
+
+[node name="Description" type="Label" parent="Margin/VBox" unique_id=980042122]
+layout_mode = 2
+text = "Description"
+label_settings = SubResource("LabelSettings_ceia4")

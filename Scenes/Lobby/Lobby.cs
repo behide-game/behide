@@ -7,7 +7,7 @@ namespace Behide.Game.UI.Lobby;
 using Types;
 
 [SceneTree(root: "nodes")]
-public partial class Lobby : Control
+public partial class Lobby : Node3D
 {
     private readonly ILogger log = Log.CreateLogger("UI/Lobby");
     private readonly CancellationTokenSource nodeAliveCts = new();
@@ -16,14 +16,17 @@ public partial class Lobby : Control
 
     private bool configLocked;
 
-    [Export] private PackedScene playerListItemScene = null!;
+    [Export] private PackedScene playerCard = null!;
+    [Export] private string[] presentationScenePaths = [];
+    private Node?[] presentationScenes = null!;
+
 #if DEBUG
     private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(0);
 #else
     private readonly TimeSpan countdownDuration = TimeSpan.FromSeconds(5);
 #endif
 
-    public override void _EnterTree()
+    public override void _Ready()
     {
         if (GameManager.Room.Room is null)
         {
@@ -39,45 +42,62 @@ public partial class Lobby : Control
         room.PlayerJoined.Subscribe(_ => UpdateLobbyAuthority(), NodeAliveCt);
 
         // Update countdown state
-        room.PlayerStateChanged.Subscribe(p =>
+        if (IsMultiplayerAuthority())
         {
-            if (p.State is not PlayerStateInLobby) return;
-            RefreshCountdownState();
-        }, NodeAliveCt);
-        room.PlayerLeft.Subscribe(_ => RefreshCountdownState(), NodeAliveCt);
-        room.PlayerJoined.Subscribe(_ => RefreshCountdownState(), NodeAliveCt);
+            room.PlayerStateChanged.Subscribe(p =>
+            {
+                if (p.State is not PlayerStateInLobby) return;
+                RefreshCountdownState();
+            }, NodeAliveCt);
+            room.PlayerLeft.Subscribe(_ => RefreshCountdownState(), NodeAliveCt); // TODO: Also refresh hunter count state
+            room.PlayerJoined.Subscribe(_ => RefreshCountdownState(), NodeAliveCt);
 
-        // Start game when countdown finished
-        Countdown.TimeElapsed += () =>
-        {
-            if (!IsMultiplayerAuthority()) return;
-            CallDeferred(Node.MethodName.Rpc, nameof(StartGameRpc));
-            configLocked = false;
-        };
+            // Start game when countdown finished
+            Countdown.TimeElapsed += () =>
+            {
+                CallDeferred(Node.MethodName.Rpc, nameof(StartGameRpc));
+                configLocked = false;
+            };
 
-        Countdown.Started += () => configLocked = true;
-        Countdown.OnReset += () => configLocked = false;
+            // Lock config when counting down
+            Countdown.Started += () => configLocked = true;
+            Countdown.OnReset += () => configLocked = false;
+        }
 
-        // Set room code in UI
+
+        // --- Apply game state to UI ---
+
+        // Username
+        UsernameLabel.Text = GameManager.Settings.GetUsername();
+
+        // Room code
         RoomCode.Text = room.RoomId.ToString();
 
-        // Set players UI
+        // Players UI
         foreach (var player in room.Players.Values) AddPlayerToUi(player);
         room.PlayerJoined.Subscribe(p => AddPlayerToUi(room.Players[p.PeerId]), NodeAliveCt);
 
-        // Listen room configuration changes
-        room.Configuration.Changed.Subscribe(_ => ChangePlayerList(), NodeAliveCt);
+        // Bind room configuration
+        room.Configuration.Changed.Subscribe(mapChanged =>
+        {
+            ChangePlayerList();
+            UpdateHunterCountInput();
+            if (mapChanged) UpdateMap();
+        }, NodeAliveCt);
 
-        // Update UI according to initial room state
         ChangePlayerList();
         UpdateRoleButton();
-        ChangeMapName();
+        UpdateHunterCountInput();
+        presentationScenes = new Node?[presentationScenePaths.Length];
+        UpdateMap();
     }
 
     public override void _ExitTree()
     {
         nodeAliveCts.Cancel();
         nodeAliveCts.Dispose();
+        RemoveLoadedMap();
+        foreach (var node in presentationScenes) node?.QueueFree();
     }
 
     private void UpdateLobbyAuthority()
@@ -86,7 +106,10 @@ public partial class Lobby : Control
         SetMultiplayerAuthority(minPeerId);
         Countdown.SetMultiplayerAuthority(minPeerId);
 
-        HostPanel.SetVisible(IsMultiplayerAuthority());
+        GetTree().SetGroup("OwnerOnlyInputs", CanvasItem.PropertyName.Visible, IsMultiplayerAuthority());
+        HunterSelection.HBox.Input.Value.Get().TopRight = !IsMultiplayerAuthority();
+        MapSelection.HBox.Input.Value.Get().TopRight = !IsMultiplayerAuthority();
+        MapSelection.HBox.Input.Value.Get().BottomLeft = !IsMultiplayerAuthority();
     }
 
     private void RefreshCountdownState()

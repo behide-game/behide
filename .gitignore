@@ -1,6 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 *.TMP
+override.cfg
 
 bin/
 obj/
@@ -27,3 +28,4 @@ target/
 Assets/Sounds/**/*
 !Assets/Sounds/**/*.import
 Assets/Models/**/*.png
+Assets/Models/**/*.meshlib

@@ -16,29 +16,17 @@ public partial class Lobby
         room.Configuration.HunterCount += 1;
     }
 
-    private void PreviousMap()
+    private void ChangeMap(int offset)
     {
         if (configLocked) return;
-        var newMap = GameManager.Maps[
-            Helpers.Math.MathMod(
-                GameManager.Maps.IndexOf(room.Configuration.Map) - 1,
-                GameManager.Maps.Length
-            )
-        ];
+        var newMapIdx = Helpers.Math.MathMod(
+            GameManager.Maps.IndexOf(room.Configuration.Map) + offset,
+            GameManager.Maps.Length
+        );
+        var newMap = GameManager.Maps[newMapIdx];
+
         room.Configuration.Map = newMap;
-        ChangeMapName();
-    }
-    private void NextMap()
-    {
-        if (configLocked) return;
-        var newMap = GameManager.Maps[
-            Helpers.Math.MathMod(
-                GameManager.Maps.IndexOf(room.Configuration.Map) + 1,
-                GameManager.Maps.Length
-            )
-        ];
-        room.Configuration.Map = newMap;
-        ChangeMapName();
+        UpdateMap();
     }
 
 
@@ -53,6 +41,7 @@ public partial class Lobby
             config.AddHunter(peerId);
 
         UpdateRoleButton();
+        RearrangePlayerLists();
     }
 
     private void ReadyButtonPressed()

@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://8fk3h7b4ospf"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_p3t8a"]
-[ext_resource type="PackedScene" uid="uid://vepiuijium6r" path="res://Assets/Models/Restaurant/kitchencounter_straight_A_backsplash.gltf" id="3_jqubi"]
-[ext_resource type="PackedScene" uid="uid://4qxil208tw50" path="res://Assets/Models/Restaurant/towelrail.gltf" id="3_u4w2s"]
+[ext_resource type="PackedScene" uid="uid://vepiuijium6r" path="res://Assets/Models/Restaurant/Props/kitchencounter_straight_A_backsplash.gltf" id="3_jqubi"]
+[ext_resource type="PackedScene" uid="uid://4qxil208tw50" path="res://Assets/Models/Restaurant/Props/towelrail.gltf" id="3_u4w2s"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lxc2i"]
 size = Vector3(2, 0.2, 2)

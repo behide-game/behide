@@ -72,27 +72,27 @@ public partial class PeerConnection : WebRtcPeerConnection
         {
             var connAttempt = await signaling.StartConnectionAttempt(new SdpDescription(type, sdp));
             tcs.TrySetResult(connAttempt.Id);
-            log.Debug("Connection attempt created: {ConnectionAttemptId}", connAttempt);
+            log.Verbose("Connection attempt created: {ConnectionAttemptId}", connAttempt);
 
             var answer = await connAttempt.WaitAnswer();
-            log.Debug("Answer received");
+            log.Verbose("Answer received");
             SetRemoteSdpDescription(answer);
 
             // Exchange ice candidates
             var sub1 = connAttempt.Candidates.Subscribe(AddIceCandidate);
             var sub2 = iceCandidates.Subscribe(connAttempt.SendIceCandidate);
-            log.Debug("Exchanging ice candidates");
+            log.Verbose("Exchanging ice candidates");
 
             await TaskEx.WaitUntil(IsConnected);
             sub1.Dispose();
             sub2.Dispose();
 
-            log.Information("Connection established, signaling the server");
+            log.Verbose("Connection established, signaling the server");
             connAttempt.End();
         };
 
         CreateOffer(); // Create offer and trigger the event
-        log.Debug("Creating offer");
+        log.Verbose("Creating offer");
         return tcs.Task;
     }
 
@@ -105,7 +105,7 @@ public partial class PeerConnection : WebRtcPeerConnection
         var tcs = new TaskCompletionSource();
 
         // Retrieve offer
-        log.Debug("Joining connection attempt {ConnectionAttemptId}", connectionAttemptId);
+        log.Verbose("Joining connection attempt {ConnectionAttemptId}", connectionAttemptId);
         var connAttempt = await signaling.JoinConnectionAttempt(connectionAttemptId);
 
         // Send answer when created
@@ -113,12 +113,12 @@ public partial class PeerConnection : WebRtcPeerConnection
         {
             var answer = new SdpDescription(type, sdp);
             connAttempt.SendAnswer(answer);
-            log.Debug("Answer sent");
+            log.Verbose("Answer sent");
 
             // Exchange ice candidates
             var sub1 = connAttempt.Candidates.Subscribe(AddIceCandidate);
             var sub2 = iceCandidates.Subscribe(connAttempt.SendIceCandidate);
-            log.Debug("Exchanging ice candidates");
+            log.Verbose("Exchanging ice candidates");
 
             // Await connection
             await TaskEx.WaitUntil(IsConnected);
@@ -129,6 +129,6 @@ public partial class PeerConnection : WebRtcPeerConnection
 
         SetRemoteSdpDescription(connAttempt.Offer);
         await tcs.Task;
-        log.Information("Connection established");
+        log.Verbose("Connection established");
     }
 }

@@ -42,8 +42,8 @@ public partial class RoomConfiguration : Node
         }
     }
 
-    private readonly Subject<Unit> changed = new();
-    public IObservable<Unit> Changed => changed;
+    private readonly Subject<bool> changed = new();
+    public IObservable<bool> Changed => changed;
     public override void _ExitTree() => changed.OnCompleted();
 
     public void AddHunter(int peerId) => Rpc(nameof(RpcAddHunter), peerId);
@@ -51,43 +51,55 @@ public partial class RoomConfiguration : Node
 
     public bool IsHunter(int peerId) => hunters.Contains(peerId);
 
-    public void SendTo(long peerId) => RpcId(peerId, nameof(RpcSetAll), HunterCount, hunters.ToArray());
+    public void SendTo(long peerId) => RpcId(
+        peerId,
+        nameof(RpcSetAll),
+        HunterCount,
+        hunters.ToArray(),
+        map switch
+        {
+            GameManager.GameMap.Restaurant => 0,
+            GameManager.GameMap.Dungeon => 1,
+            _ => 0
+        });
 
     // RPCs
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void RpcSetHunterCount(int count)
     {
         hunterCount = count;
-        changed.OnNext(Unit.Default);
+        changed.OnNext(false);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void RpcAddHunter(int peerId)
     {
         hunters.Add(peerId);
-        changed.OnNext(Unit.Default);
+        changed.OnNext(false);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void RpcRemoveHunter(int peerId)
     {
         hunters.Remove(peerId);
-        changed.OnNext(Unit.Default);
+        changed.OnNext(false);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void RpcSetMap(int mapIdx)
     {
         map = GameManager.Maps[mapIdx];
-        changed.OnNext(Unit.Default);
+        changed.OnNext(true);
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer)]
-    private void RpcSetAll(int count, int[] hunterIds)
+    private void RpcSetAll(int count, int[] hunterIds, int mapIdx)
     {
         hunterCount = count;
         foreach (var id in hunterIds) hunters.Add(id);
-        changed.OnNext(Unit.Default);
+        var oldMap = map;
+        map = GameManager.Maps[mapIdx];
+        changed.OnNext(map != oldMap);
     }
 }
 
@@ -97,6 +109,9 @@ public partial class Room : Node
     public readonly BehaviorSubject<Player> LocalPlayer;
     public readonly Dictionary<int, BehaviorSubject<Player>> Players = [];
     public readonly RoomConfiguration Configuration = new();
+
+    public bool IsOwner => Multiplayer.GetUniqueId() == Players.Keys.Min();
+    public bool IsPeerOwner(int peerId) => peerId == Players.Keys.Min();
 
     // Events
     private readonly Subject<Player> playerJoined = new();
@@ -126,6 +141,7 @@ public partial class Room : Node
 
     public override void _EnterTree()
     {
+        GD.Print("Room entering tree");
         Multiplayer.PeerConnected += MultiplayerOnPeerConnected;
         Multiplayer.PeerDisconnected += MultiplayerOnPeerDisconnected;
 
@@ -137,19 +153,26 @@ public partial class Room : Node
 
     private void MultiplayerOnPeerConnected(long peerId)
     {
-        log.Debug("New peer connected, registering us with him: {Username}", LocalPlayer.Value.Username);
+        log.Debug("PeerId: {PeerId} connected", peerId);
         RpcId(peerId, nameof(RegisterPlayerRpc), LocalPlayer.Value);
     }
 
     private void MultiplayerOnPeerDisconnected(long peerId)
     {
-        log.Debug("Player {PeerId} left the room", peerId);
+        log.Debug("PeerId: {PeerId} disconnected", peerId);
         var playerObservable = Players.GetValueOrDefault((int)peerId);
-        if (playerObservable is null) return;
+        if (playerObservable is null)
+        {
+            log.Warning("Peer {PeerId} disconnected but was not registered", peerId);
+            return;
+        }
+
+        Configuration.HunterCount = Math.Min(Configuration.HunterCount, Players.Count-1);
 
         Players.Remove((int)peerId);
         playerLeft.OnNext(playerObservable.Value);
         playerObservable.OnCompleted();
+        log.Debug("Completed {PeerId}", peerId);
     }
 
     public void Leave()
@@ -190,10 +213,10 @@ public partial class Room : Node
             new BehaviorSubject<Player>(player)
         );
         playerJoined.OnNext(player);
+        log.Debug("PeerId: {PeerId} registered as \"{Username}\"", player.PeerId, player.Username);
 
         // Sync configuration
-        if (Multiplayer.GetUniqueId() != player.PeerId
-            && Multiplayer.GetUniqueId() == Players.Keys.Min())
+        if (Multiplayer.GetUniqueId() != player.PeerId && IsOwner)
             Configuration.SendTo(player.PeerId);
     }
 

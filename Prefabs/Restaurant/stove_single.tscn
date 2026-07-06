@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://6tkamductrr7"]
 
 [ext_resource type="Script" uid="uid://bhu8g43f4kbj8" path="res://Prefabs/BehideObject/BehideObject.cs" id="1_ehrom"]
-[ext_resource type="PackedScene" uid="uid://b7tav05ogy7aa" path="res://Assets/Models/Restaurant/stove_single.gltf" id="2_8hf6o"]
+[ext_resource type="PackedScene" uid="uid://b7tav05ogy7aa" path="res://Assets/Models/Restaurant/Props/stove_single.gltf" id="2_8hf6o"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sxktm"]
 size = Vector3(2, 1.1, 2)
