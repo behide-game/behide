@@ -472,6 +472,9 @@ size = Vector3(12, 1, 13)
 [sub_resource type="BoxShape3D" id="BoxShape3D_ggn37"]
 size = Vector3(5, 1, 6)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_y37n2"]
+size = Vector3(1.8000001, 2.1000001, 1.8000001)
+
 [node name="Restaurant" type="Node3D" unique_id=561802050]
 
 [node name="Supervisor" parent="." unique_id=2086486061 node_paths=PackedStringArray("PlayersNode", "BehideObjects", "BehideObjects") instance=ExtResource("1_mjx0q")]
@@ -1608,14 +1611,16 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 14.2
 transform = Transform3D(0.70710707, 0, 0.70710695, 0, 1, 0, -0.70710695, 0, 0.70710707, 14.276736, 1.4999999, -23.929771)
 
 [node name="OmniLight3D" parent="BehideObjects/candle_thin/candle_thin" parent_id_path=PackedInt32Array(289228007, 1107089462) index="1" unique_id=382861156]
-light_energy = 0.3
+light_energy = 0.5
+light_specular = 3.0
 
 [node name="candle_thin3" parent="BehideObjects" unique_id=90432443 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("117_dpha8")]
 transform = Transform3D(0.70710707, 0, 0.70710695, 0, 1, 0, -0.70710695, 0, 0.70710707, 20.665874, 1.4999999, -23.027798)
 CollisionNodes = [NodePath("../candle_thin/CollisionShape3D")]
 
 [node name="OmniLight3D" parent="BehideObjects/candle_thin3/candle_thin" parent_id_path=PackedInt32Array(90432443, 1107089462) index="1" unique_id=382861156]
-light_energy = 0.3
+light_energy = 0.5
+light_specular = 3.0
 
 [node name="chair_A" parent="BehideObjects" unique_id=457201208 instance=ExtResource("48_xiraa")]
 transform = Transform3D(-0.15441716, 0, -0.98800576, 0, 1, 0, 0.98800576, 0, -0.15441716, 15.064657, 0.5, -23.873692)
@@ -1633,7 +1638,8 @@ transform = Transform3D(-0.6351369, 0, 0.7723999, 0, 1, 0, -0.7723999, 0, -0.635
 CollisionNodes = [NodePath("../candle_thin/CollisionShape3D")]
 
 [node name="OmniLight3D" parent="BehideObjects/candle_thin2/candle_thin" parent_id_path=PackedInt32Array(1963064160, 1107089462) index="1" unique_id=382861156]
-light_energy = 0.3
+light_energy = 0.5
+light_specular = 3.0
 
 [node name="chair_A4" parent="BehideObjects" unique_id=1107911262 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("48_xiraa")]
 transform = Transform3D(0.98350805, 0, 0.18086475, 0, 1, 0, -0.18086475, 0, 0.98350805, 20.76284, 0.5000001, -18.998426)
@@ -1982,6 +1988,10 @@ metadata/_edit_lock_ = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0.5, -11)
 shape = SubResource("BoxShape3D_ggn37")
 metadata/_edit_lock_ = true
+
+[node name="CollisionShape3D51" type="CollisionShape3D" parent="StaticBody3D" unique_id=11297762]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0.6, -5)
+shape = SubResource("BoxShape3D_y37n2")
 
 [node name="Lights" type="Node3D" parent="." unique_id=988166104]
 
