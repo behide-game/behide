@@ -92,7 +92,6 @@ public partial class RoomManager : Node
         await Task.Run(() =>
         {
             while (Room.Players.Count <= numberOfPlayers) { }
-            // TODO: Room.Players.Count counts the local player, but numberOfPlayers doesn't (?)
             GameManager.TimeSync.Start();
         });
     }

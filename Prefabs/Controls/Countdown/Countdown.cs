@@ -40,6 +40,7 @@ public abstract partial class Countdown : Node
     public void ResetCountdown()
     {
         if (!IsMultiplayerAuthority()) return;
+        if (!endDate.HasValue) return; // Don't reset if already reset
         Rpc(nameof(ResetCountdownRpc));
     }
 
