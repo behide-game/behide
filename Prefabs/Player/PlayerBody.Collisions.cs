@@ -10,7 +10,7 @@ public abstract partial class PlayerBody
         {
             var collision = GetSlideCollision(i);
             if (collision.GetCollider() is not RigidBody3D rb) continue;
-            if (!rb.IsMultiplayerAuthority()) Rpc(nameof(SetObjectAuthority), rb.GetPath());
+            if (!rb.IsMultiplayerAuthority()) SetObjectAuthorityRpc(rb.GetPath());
 
             var pushDirection = -collision.GetNormal();
             pushDirection.Y = 0; // Remove verticality
@@ -23,7 +23,7 @@ public abstract partial class PlayerBody
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
-    private void SetObjectAuthority(NodePath nodePath)
+    protected void SetObjectAuthority(NodePath nodePath)
     {
         var remoteId = Multiplayer.GetRemoteSenderId();
         GetNode<RigidBody3D>(nodePath).SetMultiplayerAuthority(remoteId);

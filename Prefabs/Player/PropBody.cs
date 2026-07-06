@@ -7,7 +7,8 @@ public partial class PropBody : PlayerBody
 {
     private Node3D currentVisualNode = null!;
     private CollisionShape3D[] collisionNodes = null!;
-    private RayCast3D rayCast = null!;
+
+    [Export] private float maxKickForce = 17f;
 
     [ExportGroup("Camera adjust transition")]
     [Export] private double cameraAdjustDuration = 0.4;
@@ -34,7 +35,6 @@ public partial class PropBody : PlayerBody
         currentVisualNode = _.MeshInstance3D;
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
-        rayCast = _.CameraDisk.SpringArm3D.Camera.RayCast;
 
         ShowLockedLogo(false);
         AdjustProperties();
@@ -48,8 +48,33 @@ public partial class PropBody : PlayerBody
         if (!IsMultiplayerAuthority()) return;
         if (!Alive) return;
         if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
-        if (Input.IsActionJustPressed(InputActions.Morph) && focusedObject is BehideObject focusedBehideObject)
+
+        // Morph
+        if (Input.IsActionJustPressed(InputActions.Morph) && FocusedObject is BehideObject focusedBehideObject)
             Rpc(nameof(Morph), focusedBehideObject.GetPath());
+
+        // Kick
+        if (Input.IsActionJustPressed(InputActions.Kick) && FocusedObject is BehideObject objectToKick)
+        {
+            var kickForce =
+                Input.IsActionPressed(InputActions.Slow)
+                    ? maxKickForce / 5
+                    : maxKickForce;
+
+            var distanceFade = (float)Math.Exp(-GlobalPosition.DistanceTo(FocusedPoint) / 3f);
+            var finalForce = kickForce * distanceFade;
+
+            var direction = -Camera.GlobalBasis.Z;
+            direction.Y = Math.Max(0, direction.Y);
+            direction = direction.Normalized();
+
+            SetObjectAuthorityRpc(objectToKick.GetPath());
+            objectToKick.ApplyImpulse(
+                finalForce * objectToKick.Mass * direction,
+                FocusedPoint - objectToKick.GlobalPosition
+            );
+        }
+
         // Adjust speed
         MoveSpeed =
             Input.IsActionPressed(InputActions.Slow)

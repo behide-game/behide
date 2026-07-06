@@ -18,7 +18,8 @@ public abstract partial class PlayerBody : CharacterBody3D
     public abstract MultiplayerSynchronizer PositionSynchronizer { get; }
     private Supervisor supervisor = null!;
 
-    protected GodotObject? focusedObject;
+    protected GodotObject? FocusedObject;
+    protected Vector3 FocusedPoint;
 
     private double Health
     {
@@ -105,18 +106,23 @@ public abstract partial class PlayerBody : CharacterBody3D
     public override void _Process(double delta)
     {
         if (!IsMultiplayerAuthority()) return;
-        focusedObject = RayCast.GetCollider();
 
-        var canShow = this switch
+        // Register focused object
+        FocusedObject = RayCast.GetCollider();
+        if (RayCast.IsColliding())
+            FocusedPoint = RayCast.GetCollisionPoint();
+
+        // Manage displayed username
+        var canShowUsername = this switch
         {
-            PropBody => focusedObject is HunterBody or PropBody,
-            HunterBody => focusedObject is HunterBody,
+            PropBody => FocusedObject is HunterBody or PropBody,
+            HunterBody => FocusedObject is HunterBody,
             _ => false
         };
 
-        if (canShow)
+        if (canShowUsername)
         {
-            var owner = supervisor.GetBodyPlayer((PlayerBody) focusedObject);
+            var owner = supervisor.GetBodyPlayer((PlayerBody)FocusedObject);
             PlayerUsername.Text = owner?.Username;
         }
         else

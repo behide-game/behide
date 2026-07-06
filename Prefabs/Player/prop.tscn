@@ -40,6 +40,7 @@ collision_layer = 2
 collision_mask = 23
 platform_on_leave = 2
 script = ExtResource("2_m4go7")
+maxKickForce = 17.5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=817965567]
 gi_mode = 2
