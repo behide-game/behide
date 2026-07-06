@@ -82,6 +82,7 @@ public partial class Lobby : Node3D
         {
             ChangePlayerList();
             UpdateHunterCountInput();
+            UpdateMap();
         }, NodeAliveCt);
 
         ChangePlayerList();

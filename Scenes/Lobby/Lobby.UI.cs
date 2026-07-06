@@ -145,14 +145,9 @@ public partial class Lobby
             nodes.Presentation.RemoveChild(nodes.Presentation.GetChild(0));
     }
 
-    private void EnableMapSelectionInput(bool enable)
+    private void SetMapSelectionInputText(bool loading)
     {
-        var prev = MapSelection.HBox.Input.Pervious.Button;
-        var next = MapSelection.HBox.Input.Next.Button;
-
-        prev.SetDisabled(!enable);
-        next.SetDisabled(!enable);
-        MapSelection.HBox.Input.Value.Label.Text = !enable
+        MapSelection.HBox.Input.Value.Label.Text = loading
             ? "Loading..."
             : room.Configuration.Map switch
             {
@@ -161,16 +156,19 @@ public partial class Lobby
                 _ => throw new Exception("Invalid map")
             };
     }
-    private void LoadMap(GameManager.GameMap map)
+
+    private CancellationTokenSource loadMapCts = new();
+
+    private void LoadMap(GameManager.GameMap map, CancellationToken ct)
     {
-        EnableMapSelectionInput(false);
+        SetMapSelectionInputText(true);
         var mapIdx = GameManager.Maps.IndexOf(map);
         var cachedNode = presentationScenes[mapIdx];
 
         if (cachedNode is not null)
         {
             nodes.Presentation.AddChild(cachedNode);
-            EnableMapSelectionInput(true);
+            SetMapSelectionInputText(false);
             return;
         }
 
@@ -186,7 +184,7 @@ public partial class Lobby
         var presentationNode = nodes.Presentation;
         Task.Run(() =>
         {
-            while (true)
+            while (!ct.IsCancellationRequested)
             {
                 var status = ResourceLoader.LoadThreadedGetStatus(scenePath);
                 if (status == ResourceLoader.ThreadLoadStatus.InProgress) continue;
@@ -197,13 +195,17 @@ public partial class Lobby
                     var sceneNode = scene.Instantiate();
                     sceneNode.Name = mapIdx.ToString();
 
+                    // Disable multiplayer synchronizers
+                    var synchronizers = sceneNode.FindChildren("*", nameof(MultiplayerSynchronizer), owned: false);
+                    foreach (var synchronizer in synchronizers) synchronizer.QueueFree();
+
                     // Add scene to tree
                     presentationScenes[mapIdx] = sceneNode;
-                    presentationNode.CallThreadSafe(Node.MethodName.AddChild, sceneNode);
-                    uiNode.CallThreadSafe(CanvasItem.MethodName.MoveToFront);
+                    presentationNode.CallDeferred(Node.MethodName.AddChild, sceneNode);
+                    uiNode.CallDeferred(CanvasItem.MethodName.MoveToFront);
 
                     // Show button
-                    CallThreadSafe(MethodName.EnableMapSelectionInput, true);
+                    CallDeferred(MethodName.SetMapSelectionInputText, false);
                     break;
                 }
 
@@ -215,7 +217,11 @@ public partial class Lobby
 
     private void UpdateMap()
     {
+        loadMapCts.Cancel();
+        loadMapCts.Dispose();
+        loadMapCts = new CancellationTokenSource();
+
         RemoveLoadedMap();
-        LoadMap(room.Configuration.Map);
+        LoadMap(room.Configuration.Map, loadMapCts.Token);
     }
 }
