@@ -2,7 +2,7 @@ namespace Behide.Helpers;
 
 using Godot;
 
-
+#if TOOLS
 [Tool]
 public partial class MeshLayerSetter : EditorScenePostImport
 {
@@ -20,3 +20,4 @@ public partial class MeshLayerSetter : EditorScenePostImport
         foreach (var child in node.GetChildren()) Iterate(child);
     }
 }
+#endif
