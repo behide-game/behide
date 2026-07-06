@@ -73,7 +73,7 @@ public partial class Settings
     private void GraphicsApplyFromConfig(ConfigFile config)
     {
         var glow = config.GetValue(nameof(Graphics), "glow", true).AsBool();
-        var ssr = config.GetValue(nameof(Graphics), "ssr", true).AsBool();
+        var ssr = renderingMethod is "forward_plus" && config.GetValue(nameof(Graphics), "ssr", true).AsBool();
         var chromaticAberration = config.GetValue(nameof(Graphics), "chromatic-aberration", true).AsBool();
         var shadowsQuality = config.GetValue(nameof(Graphics), "shadows-quality", "soft-low").AsString() switch
         {
@@ -91,6 +91,8 @@ public partial class Settings
         Graphics.ShadowsQuality.OptionButton.Select(shadowsQuality);
         Graphics.SSR.Enabled.SetPressed(ssr);
         Graphics.ChromaticAberration.Enabled.SetPressed(chromaticAberration);
+
+        Graphics.SSR.Enabled.SetDisabled(renderingMethod is not "forward_plus");
 
         Graphics.Glow.Enabled.EmitSignal(BaseButton.SignalName.Toggled, glow);
         Graphics.ShadowsQuality.OptionButton.EmitSignal(OptionButton.SignalName.ItemSelected, shadowsQuality);

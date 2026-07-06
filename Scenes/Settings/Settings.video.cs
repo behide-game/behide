@@ -8,6 +8,9 @@ public partial class Settings
     private _SceneTree.__0_TabContainer.__1_Video.__2_VBox Video => nodes.TabContainer.Video.VBox;
     private ConfigFile settingsOverride = new();
 
+    private string renderingMethod = RenderingServer.GetCurrentRenderingMethod();
+    private string renderingDriver = RenderingServer.GetCurrentRenderingDriverName();
+
     private void Video_SetDisplayMode(long displayMode) =>
         DisplayServer.WindowSetMode(
             displayMode switch
@@ -130,11 +133,26 @@ public partial class Settings
     {
         var displayMode = config.GetValue(nameof(Video), "display-mode", "fullscreen").AsString();
         var uiScaling = config.GetValue(nameof(Video), "ui-scaling", 1).AsDouble();
-        var renderScaleMode = config.GetValue(nameof(Video), "render-scale-mode", "normal").AsString();
+        var renderScaleMode =
+            renderingMethod is "forward_plus"
+                ? config.GetValue(nameof(Video), "render-scale-mode", "normal").AsString()
+                : "normal";
+
         var renderScale = config.GetValue(nameof(Video), "render-scale", 100).AsInt32();
         var antiAliasing = config.GetValue(nameof(Video), "anti-aliasing", "none").AsString();
         var displayFps = config.GetValue(nameof(Video), "display-fps", false).AsBool();
         var maxFps = config.GetValue(nameof(Video), "max-fps", 0).AsInt32();
+
+        Video.Driver.OptionButton.Select(renderingMethod switch
+        {
+            "gl_compatibility" => 2,
+            _ => renderingDriver switch
+            {
+                "vulkan" => 0,
+                "d3d12" => 1,
+                _ => 0
+            }
+        });
 
         Video.DisplayMode.OptionButton.Select(displayMode switch
         {
@@ -158,31 +176,19 @@ public partial class Settings
             "msaa2x" => 1,
             "msaa3x" => 2,
             "msaa4x" => 3,
-            "smaa" => 4,
-            "fxaa" => 5,
-            "taa" => 6,
+            "smaa" => renderingMethod is "forward_plus" or "mobile" ? 4 : 0,
+            "fxaa" => renderingMethod is "forward_plus" or "mobile" ? 5 : 0,
+            "taa" => renderingMethod == "forward_plus" ? 6 : 0,
             _ => 0
         });
         Video.MaxFPS.SliderSetting.SetValue(maxFps);
 
-        var renderingMethod = RenderingServer.GetCurrentRenderingMethod();
-        var renderingDriver = RenderingServer.GetCurrentRenderingDriverName();
-        Video.Driver.OptionButton.Select(renderingMethod switch
-        {
-            "gl_compatibility" => 2,
-            _ => renderingDriver switch
-            {
-                "vulkan" => 0,
-                "d3d12" => 1,
-                _ => 0
-            }
-        });
         Video.Driver.OptionButton.SetItemDisabled(1, !OperatingSystem.IsWindows());
-        Video.RenderScale.OptionButton.SetItemDisabled(1, renderingMethod != "forward_plus");
-        Video.RenderScale.OptionButton.SetItemDisabled(2, renderingMethod != "forward_plus");
-        Video.Anti_aliasing.OptionButton.SetItemDisabled(4, renderingMethod == "gl_compatibility");
-        Video.Anti_aliasing.OptionButton.SetItemDisabled(5, renderingMethod == "gl_compatibility");
-        Video.Anti_aliasing.OptionButton.SetItemDisabled(6, renderingMethod != "forward_plus");
+        Video.RenderScale.OptionButton.SetItemDisabled(1, renderingMethod is not "forward_plus" and not "mobile");
+        Video.RenderScale.OptionButton.SetItemDisabled(2, renderingMethod is not "forward_plus" and not "mobile");
+        Video.Anti_aliasing.OptionButton.SetItemDisabled(4, renderingMethod is "gl_compatibility");
+        Video.Anti_aliasing.OptionButton.SetItemDisabled(5, renderingMethod is "gl_compatibility");
+        Video.Anti_aliasing.OptionButton.SetItemDisabled(6, renderingMethod is not "forward_plus" and not "mobile");
 
         Video_SetDisplayMode(Video.DisplayMode.OptionButton.Selected);
         Video_SetUIScaling(Video.UIScaling.SliderSetting.Value);
