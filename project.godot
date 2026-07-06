@@ -28,8 +28,8 @@ VisualEffectsLayer="*res://Scenes/VisualEffectsLayer.tscn"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/mode=3
 window/vsync/vsync_mode=0
-window/transparent_background=false
 
 [dotnet]
 
