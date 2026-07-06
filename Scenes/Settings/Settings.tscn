@@ -33,10 +33,9 @@ custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/side_margin = 0
-current_tab = 2
+current_tab = 0
 
 [node name="General" type="MarginContainer" parent="TabContainer" unique_id=2018857125]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
@@ -119,6 +118,7 @@ size_flags_vertical = 10
 text = "Back"
 
 [node name="Video" type="MarginContainer" parent="TabContainer" unique_id=318587705]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
@@ -300,9 +300,22 @@ max_value = 500.0
 step = 1.0
 value = 1.0
 
-[node name="Back" type="Button" parent="TabContainer/Video/VBox" unique_id=838226937]
+[node name="RestartNeeded" type="HBoxContainer" parent="TabContainer/Video/VBox" unique_id=1447625891]
 layout_mode = 2
 size_flags_vertical = 10
+
+[node name="Label" type="Label" parent="TabContainer/Video/VBox/RestartNeeded" unique_id=2017424282]
+layout_mode = 2
+text = "Restart needed to apply settings"
+
+[node name="Button" type="Button" parent="TabContainer/Video/VBox/RestartNeeded" unique_id=1838132517]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Restart"
+
+[node name="Back" type="Button" parent="TabContainer/Video/VBox" unique_id=838226937]
+layout_mode = 2
+size_flags_vertical = 8
 text = "Back"
 
 [node name="Graphics" type="MarginContainer" parent="TabContainer" unique_id=2135901085]
@@ -389,6 +402,8 @@ popup/item_6/id = 6
 layout_mode = 2
 size_flags_vertical = 10
 text = "Back"
+
+[connection signal="pressed" from="TabContainer/Video/VBox/RestartNeeded/Button" to="." method="RestartButtonPressed"]
 
 [editable path="TabContainer/Controls/VBox/Horizontal Sensitivity"]
 [editable path="TabContainer/Controls/VBox/Vertical Sensitivity"]

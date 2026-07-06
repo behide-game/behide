@@ -86,7 +86,13 @@ public partial class Settings
             overridePath = "./override.cfg";
 
         var err = settingsOverride.Save(overridePath);
-        if (err != Error.Ok) log.Error("Failed to save settings override: {Error}", err);
+        if (err != Error.Ok)
+        {
+            log.Error("Failed to save settings override: {Error}", err);
+            return;
+        }
+
+        RefreshRestartNeeded();
     }
 
 
