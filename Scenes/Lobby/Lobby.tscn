@@ -71,7 +71,6 @@ font_size = 25
 [node name="Lobby" type="Node3D" unique_id=1575583449]
 script = ExtResource("1_vmtcs")
 playerCard = ExtResource("7_e46jn")
-presentationScenePaths = PackedStringArray("res://Scenes/Lobby/Restaurant_presentation.tscn", "res://Scenes/Lobby/Dungeon_presentation.tscn")
 
 [node name="Countdown" type="Node" parent="." unique_id=564553342 node_paths=PackedStringArray("label")]
 script = ExtResource("3_lj1ok")
@@ -404,10 +403,10 @@ flat = true
 [node name="Minus" type="MarginContainer" parent="UI/HBox/Others/Settings/Margin/VBox/Hunter Selection/HBox/Input/Buttons" unique_id=526128786]
 layout_mode = 2
 script = ExtResource("5_ew8go")
-BezelSize = 0
+BezelSize = 6
 Color = Color(0.38431373, 0.34901962, 0.4862745, 1)
-TopLeft = true
-BottomRight = true
+TopRight = false
+BottomLeft = false
 
 [node name="Margin" type="MarginContainer" parent="UI/HBox/Others/Settings/Margin/VBox/Hunter Selection/HBox/Input/Buttons/Minus" unique_id=1494505269]
 layout_mode = 2
@@ -621,8 +620,6 @@ flat = true
 
 [connection signal="pressed" from="UI/HBox/Others/Settings/Margin/VBox/Hunter Selection/HBox/Input/Buttons/Plus/Button" to="." method="IncreaseHunterCount"]
 [connection signal="pressed" from="UI/HBox/Others/Settings/Margin/VBox/Hunter Selection/HBox/Input/Buttons/Minus/Button" to="." method="DecreaseHunterCount"]
-[connection signal="pressed" from="UI/HBox/Others/Settings/Margin/VBox/Map Selection/HBox/Input/Pervious/Button" to="." method="ChangeMap" binds= [-1]]
-[connection signal="pressed" from="UI/HBox/Others/Settings/Margin/VBox/Map Selection/HBox/Input/Next/Button" to="." method="ChangeMap" binds= [1]]
 [connection signal="pressed" from="UI/HBox/Others/Buttons/Role/Button" to="." method="RoleButtonPressed"]
 [connection signal="pressed" from="UI/HBox/Others/Buttons/Ready/Button" to="." method="ReadyButtonPressed"]
 [connection signal="pressed" from="UI/HBox/Others/Buttons/Quit/Button" to="." method="QuitButtonPressed"]
