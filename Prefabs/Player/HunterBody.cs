@@ -1,4 +1,5 @@
 using Behide.Prefabs.Player;
+using Behide.UI.Controls;
 using Godot;
 
 namespace Behide.Game.Player;
@@ -18,8 +19,8 @@ public partial class HunterBody : PlayerBody
     protected override Camera3D Camera => _.Camera;
     protected override RayCast3D RayCast => _.Camera.RayCast;
     protected override Label PlayerUsername => Gun.PlayerUsernameLabel;
-    protected override ProgressBar HealthBar => _.HUD.Health.HealthBar;
-    protected override Label HealthLabel => _.HUD.Health.HealthLabel;
+    protected override BezelContainer HealthBar => _.HUD.Health.Border.GetNode<BezelContainer>("Mask/HealthBar");
+    protected override Label HealthLabel => _.HUD.Health.Border.GetNode<Label>("HealthLabel");
     public override MultiplayerSynchronizer PositionSynchronizer => _.PositionSynchronizer;
 
     public override void _EnterTree()

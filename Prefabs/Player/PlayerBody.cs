@@ -1,4 +1,5 @@
 using Behide.Game.Supervisors;
+using Behide.UI.Controls;
 using Godot;
 using Serilog;
 using Log = Behide.Logging.Log;
@@ -13,7 +14,7 @@ public abstract partial class PlayerBody : CharacterBody3D
     protected abstract Camera3D Camera { get; }
     protected abstract RayCast3D RayCast { get; }
     protected abstract Label PlayerUsername { get; }
-    protected abstract ProgressBar HealthBar { get; }
+    protected abstract BezelContainer HealthBar { get; }
     protected abstract Label HealthLabel { get; }
     public abstract MultiplayerSynchronizer PositionSynchronizer { get; }
     private Supervisor supervisor = null!;
@@ -27,7 +28,8 @@ public abstract partial class PlayerBody : CharacterBody3D
         set
         {
             field = Mathf.Clamp(value, 0, 1);
-            HealthBar.Value = value * 100;
+            Vector2 position = new Vector2((float)(value-1)*HealthBar.Size.X, 0);
+            HealthBar.Position = position;
             HealthLabel.Text = ((int)Math.Ceiling(value * MaxHealth)).ToString();
         }
     }
