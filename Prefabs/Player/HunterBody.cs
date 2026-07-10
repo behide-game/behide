@@ -4,7 +4,7 @@ using Godot;
 
 namespace Behide.Game.Player;
 
-[SceneTree("hunter.tscn")]
+[SceneTree("hunter.tscn", traverseInstancedScenes:true)]
 public partial class HunterBody : PlayerBody
 {
     private SubmachineGun Gun => _.Camera.SubmachineGun;
@@ -19,8 +19,8 @@ public partial class HunterBody : PlayerBody
     protected override Camera3D Camera => _.Camera;
     protected override RayCast3D RayCast => _.Camera.RayCast;
     protected override Label PlayerUsername => Gun.PlayerUsernameLabel;
-    protected override BezelContainer HealthBar => _.HUD.Health.Border.GetNode<BezelContainer>("Mask/HealthBar");
-    protected override Label HealthLabel => _.HUD.Health.Border.GetNode<Label>("HealthLabel");
+    protected override BezelContainer HealthBar => _.HUD.Health.Border.Mask.HealthBar;
+    protected override Label HealthLabel => _.HUD.Health.Border.HealthLabel;
     public override MultiplayerSynchronizer PositionSynchronizer => _.PositionSynchronizer;
 
     public override void _EnterTree()

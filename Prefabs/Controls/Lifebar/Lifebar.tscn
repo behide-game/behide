@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://nkor8n0q2s8j"]
 
 [ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Prefabs/Controls/BezelContainer.cs" id="1_ah5tn"]
+[ext_resource type="FontFile" uid="uid://dcigawgy4xed" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Medium.ttf" id="2_0x5gc"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6ah2n"]
 
 [node name="Lifebar" type="MarginContainer" unique_id=1371579750]
 offset_right = 146.0
@@ -38,6 +41,8 @@ Color = Color(0, 0.74509805, 0, 1)
 
 [node name="HealthLabel" type="Label" parent="." unique_id=1266037613]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_0x5gc")
 text = "100"
+label_settings = SubResource("LabelSettings_6ah2n")
 horizontal_alignment = 1
 vertical_alignment = 1

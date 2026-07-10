@@ -3,7 +3,7 @@ using Godot;
 
 namespace Behide.Game.Player;
 
-[SceneTree("prop.tscn")]
+[SceneTree("prop.tscn", traverseInstancedScenes:true)]
 public partial class PropBody : PlayerBody
 {
     private Node3D currentVisualNode = null!;
@@ -25,8 +25,8 @@ public partial class PropBody : PlayerBody
     protected override Node3D CameraDisk => _.CameraDisk;
     protected override Camera3D Camera => _.CameraDisk.SpringArm3D.Camera;
     protected override RayCast3D RayCast => _.CameraDisk.SpringArm3D.Camera.RayCast;
-    protected override BezelContainer HealthBar => _.HUD.BottomLeft.Health.Border.GetNode<BezelContainer>("Mask/HealthBar");
-    protected override Label HealthLabel => _.HUD.BottomLeft.Health.Border.GetNode<Label>("HealthLabel");
+    protected override BezelContainer HealthBar => _.HUD.BottomLeft.Health.Border.Mask.HealthBar;
+    protected override Label HealthLabel => _.HUD.BottomLeft.Health.Border.HealthLabel;
     protected override Label PlayerUsername => _.HUD.Center.PlayerUsername;
     public override MultiplayerSynchronizer PositionSynchronizer => _.PositionSynchronizer;
 
