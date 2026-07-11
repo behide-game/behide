@@ -49,11 +49,11 @@ bg_color = Color(0.38431373, 0.34901962, 0.4862745, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_jaxhj"]
 font = ExtResource("5_lj1ok")
 font_size = 18
-font_color = Color(0, 0, 0, 1)
+font_color = Color(0.019607844, 0.050980393, 0.09411765, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_rxs5b"]
 font = ExtResource("6_4hucq")
-font_color = Color(0, 0, 0, 1)
+font_color = Color(0.019607844, 0.050980393, 0.09411765, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_q0f47"]
 font = ExtResource("7_rk5ct")
@@ -242,7 +242,7 @@ theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 script = ExtResource("5_ew8go")
 BezelSize = 15
-Color = Color(1, 0, 0.458824, 1)
+Color = Color(1, 0, 0.45882353, 1)
 
 [node name="Countdown" type="Label" parent="UI/HBox/Others/Info/Room State" unique_id=1001992688]
 layout_mode = 2
@@ -268,7 +268,7 @@ theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 script = ExtResource("5_ew8go")
 BezelSize = 15
-Color = Color(0.878431, 0.878431, 0, 1)
+Color = Color(0.8784314, 0.8784314, 0, 1)
 
 [node name="Label" type="Label" parent="UI/HBox/Others/Info/Code/Label" unique_id=1429702073]
 layout_mode = 2
@@ -287,7 +287,7 @@ Color = Color(0.93333334, 0.96862745, 0.06666667, 1)
 
 [node name="Label" type="Label" parent="UI/HBox/Others/Info/Code/Value" unique_id=505538744]
 layout_mode = 2
-text = "abc01"
+text = "ab01"
 label_settings = SubResource("LabelSettings_8edeb")
 vertical_alignment = 1
 

@@ -37,6 +37,7 @@ public abstract partial class PlayerBody : CharacterBody3D
     public void DecreaseHealth(PlayerBody damager, int amount)
     {
         Health -= (double)amount / MaxHealth;
+        if (Health <= 0.1) HealthBar.Color = new Color (1f, 0f, 0f, 1f);;
         if (Health <= 0) Died(damager);
     }
 
@@ -79,6 +80,7 @@ public abstract partial class PlayerBody : CharacterBody3D
         else supervisor = GameManager.Supervisor;
 
         Health = 1;
+        HealthBar.Color = new Color (0f, 1f, 0f, 1f);
 
         // Set authority
         var ownerPeerId = int.Parse(Name);
