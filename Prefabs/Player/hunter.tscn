@@ -63,6 +63,7 @@ replication_config = SubResource("SceneReplicationConfig_n61o8")
 [node name="Camera" type="Camera3D" parent="." unique_id=1142722186]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
 keep_aspect = 0
+cull_mask = 1048571
 fov = 90.0
 
 [node name="SubmachineGun" parent="Camera" unique_id=411671082 instance=ExtResource("2_1qbrv")]
@@ -71,6 +72,28 @@ fov = 90.0
 target_position = Vector3(0, 0, -1000)
 collision_mask = 7
 debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1499854332]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=807578832]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="GunCamera" type="Camera3D" parent="SubViewportContainer/SubViewport" unique_id=22113589]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
+keep_aspect = 0
+cull_mask = 4
+fov = 90.0
 
 [node name="HUD" type="MarginContainer" parent="." unique_id=1893787552]
 anchors_preset = 15

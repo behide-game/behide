@@ -1,6 +1,7 @@
 using Behide.Prefabs.Player;
 using Behide.UI.Controls;
 using Godot;
+using GodotPlugins.Game;
 
 namespace Behide.Game.Player;
 
@@ -17,6 +18,8 @@ public partial class HunterBody : PlayerBody
 
     protected override Node3D CameraDisk => _.Camera;
     protected override Camera3D Camera => _.Camera;
+    protected Camera3D GunCamera => _.SubViewportContainer.SubViewport.GunCamera;
+    protected SubViewport SubViewport => _.SubViewportContainer.SubViewport;
     protected override RayCast3D RayCast => _.Camera.RayCast;
     protected override Label PlayerUsername => Gun.PlayerUsernameLabel;
     protected override BezelContainer HealthBar => _.HUD.Health.Border.Mask.HealthBar;
@@ -27,6 +30,8 @@ public partial class HunterBody : PlayerBody
     {
         MaxHealth = 100;
         MoveSpeed = 1.2f;
+        var MainEnv = Camera.GetEnvironment();
+        GunCamera.SetEnvironment(MainEnv);
         base._EnterTree();
     }
 
@@ -36,11 +41,17 @@ public partial class HunterBody : PlayerBody
         Gun.Hud.SetVisible(value);
     }
 
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+        GunCamera.GlobalTransform = Camera.GlobalTransform;
+        GunCamera.Fov = Camera.Fov;
+    }
+
     public override void _Process(double delta)
     {
         if (!IsMultiplayerAuthority()) return;
         if (!Alive) return;
-
         // Show players names
         base._Process(delta);
 
