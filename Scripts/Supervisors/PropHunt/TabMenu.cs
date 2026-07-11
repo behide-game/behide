@@ -51,9 +51,9 @@ public partial class TabMenu : Panel
                     node.SetPlayerName(player.Value.Username);
                     node.SetStatus(p.State switch
                     {
-                        PlayerStateInGame(true) => "Alive",
-                        PlayerStateInGame(false) => "Dead",
-                        _ => "Not in game"
+                        PlayerStateInGame(true) => true,
+                        PlayerStateInGame(false) => false,
+                        _ => false
                     });
                 },
                 NodeAliveCt

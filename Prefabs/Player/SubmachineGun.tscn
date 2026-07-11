@@ -128,6 +128,7 @@ size_flags_vertical = 8
 [node name="ReloadPicto" type="TextureRect" parent="Hud/RBottom" unique_id=1692347698]
 visible = false
 layout_mode = 2
+offset_transform_enabled = true
 texture = ExtResource("8_h7rq2")
 expand_mode = 2
 

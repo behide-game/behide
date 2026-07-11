@@ -118,10 +118,9 @@ public partial class PropHuntSupervisor
             if (body is null)
             {
                 log.Error("Failed to find player body: player = {Player}", player.Value);
-                node.SetStatus("Error");
             }
             else
-                node.SetStatus(body.Alive ? "Survived" : "Died");
+                node.SetStatus(body.Alive);
 
             if (hunterPeerIds.Contains(player.Value.PeerId))
                 HunterList.AddChild(node);

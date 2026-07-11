@@ -5,9 +5,18 @@ namespace Behide.UI.Controls;
 [Tool, SceneTree]
 public partial class PlayerListItem : Control
 {
-    private Label UsernameLabel => _.Container.MarginUsername.Username;
-    private Label StatusLabel => _.Container.Ready.Label;
+    private Label UsernameLabel => _.Autolayout.Container.MarginUsername.Username;
+    private TextureRect Logo => _.Autolayout.MarginContainer.TextureRect;
 
     public void SetPlayerName(string playerName) => UsernameLabel.Text = playerName;
-    public void SetStatus(string status) => StatusLabel.Text = status;
+    public void SetStatus(bool status) {
+        if(status)
+        {
+            Logo.Hide();
+        }
+        else
+        {
+            Logo.Show();
+        }
+    }
 }

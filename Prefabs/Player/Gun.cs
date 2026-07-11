@@ -44,6 +44,7 @@ public abstract partial class Gun : Node3D
             ReloadPicto.Hide();
             AmmoCount += MagazineSize;
         }
+        ReloadPicto.OffsetTransformRotation += (float)delta*10;
         reloadTimeRemaining -= delta;
     }
 
@@ -69,6 +70,7 @@ public abstract partial class Gun : Node3D
         reloadTimeRemaining = ReloadTime;
         AmmoPicto.Hide();
         ReloadPicto.Show();
+        ReloadPicto.OffsetTransformRotation = 0f;
         AmmoLabel.Text = "Reloading";
         ReloadCore();
     }
