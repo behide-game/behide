@@ -33,8 +33,8 @@ public partial class PropHuntSupervisor : Supervisor
     private Control InGame => nodes.UI.In_game;
     private Control EndGame => nodes.UI.End_game;
 
-    private Label IsPropLabel => nodes.UI.In_game.IsProp;
-    private Label IsHunterLabel => nodes.UI.In_game.IsHunter;
+    private MarginContainer IsPropContainer => nodes.UI.In_game.IsProp;
+    private MarginContainer IsHunterContainer => nodes.UI.In_game.IsHunter;
     private Label PropsWonLabel => nodes.UI.End_game.LeftPanel.Winner.PropsWin;
     private Label HunterWinLabel => nodes.UI.End_game.LeftPanel.Winner.HunterWins;
     private Control TimedOut => nodes.UI.End_game.TimedOut;

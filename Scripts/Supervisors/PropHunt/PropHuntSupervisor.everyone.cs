@@ -17,7 +17,7 @@ public partial class PropHuntSupervisor
             if (hunters.Contains(Multiplayer.GetUniqueId()))
             {
                 PreGameHunter.CallDeferred(CanvasItem.MethodName.Show);
-                IsHunterLabel.CallDeferred(CanvasItem.MethodName.Show);
+                IsHunterContainer.CallDeferred(CanvasItem.MethodName.Show);
             }
             else
             {
@@ -25,7 +25,7 @@ public partial class PropHuntSupervisor
                 else Input.MouseMode = Input.MouseModeEnum.Captured;
 
                 PreGameProp.CallDeferred(CanvasItem.MethodName.Show);
-                IsPropLabel.CallDeferred(CanvasItem.MethodName.Show);
+                IsPropContainer.CallDeferred(CanvasItem.MethodName.Show);
             }
         };
 
