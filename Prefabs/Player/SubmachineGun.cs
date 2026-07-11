@@ -8,7 +8,6 @@ namespace Behide.Prefabs.Player;
 public partial class SubmachineGun : Gun
 {
     public override int DamagePerAmmo => 2;
-    protected override int TotalAmmoCount { get; set; } = 6667;
     protected override int MagazineSize => 45;
     protected override float ReloadTime => 2.5f;
     protected override float FireRate => 10f;
@@ -16,6 +15,8 @@ public partial class SubmachineGun : Gun
     public override Control Hud => _.Hud;
     public override Label PlayerUsernameLabel => _.Hud.Center.PlayerUsername;
     protected override Label AmmoLabel => _.Hud.RBottom.Ammo;
+    protected override TextureRect AmmoPicto => _.Hud.RBottom.AmmoPicto;
+    protected override TextureRect ReloadPicto => _.Hud.RBottom.ReloadPicto;
 
     private Control HitMark => _.Hud.Center.Crosshair.CrosshairHit;
     private RayCast3D Raycast => _.RayCast;

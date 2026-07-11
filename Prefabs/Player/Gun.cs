@@ -7,9 +7,10 @@ public abstract partial class Gun : Node3D
     public abstract Control Hud { get; }
     public abstract Label PlayerUsernameLabel { get; }
     protected abstract Label AmmoLabel { get; }
+    protected abstract TextureRect AmmoPicto { get; }
+    protected abstract TextureRect ReloadPicto { get; }
 
     public abstract int DamagePerAmmo { get; }
-    protected abstract int TotalAmmoCount { get; set; }
     protected abstract int MagazineSize { get; }
     protected abstract float ReloadTime { get; }
     protected abstract float FireRate { get; }
@@ -20,7 +21,7 @@ public abstract partial class Gun : Node3D
         set
         {
             field = value;
-            AmmoLabel.Text = value + " / " + TotalAmmoCount;
+            AmmoLabel.Text = value + " | " + MagazineSize;
         }
     }
 
@@ -28,7 +29,7 @@ public abstract partial class Gun : Node3D
     private double reloadTimeRemaining;
 
     private bool CanShoot => fireCooldownTime <= 0 && AmmoCount > 0;
-    private bool CanReload => fireCooldownTime <= 0 && reloadTimeRemaining <= 0 && AmmoCount < MagazineSize && TotalAmmoCount > 0;
+    private bool CanReload => fireCooldownTime <= 0 && reloadTimeRemaining <= 0 && AmmoCount < MagazineSize;
 
     public override void _EnterTree() => AmmoCount = MagazineSize;
 
@@ -39,10 +40,9 @@ public abstract partial class Gun : Node3D
         if (reloadTimeRemaining <= 0) return;
         if (reloadTimeRemaining - delta <= 0)
         {
-            var ammoDiff = MagazineSize - AmmoCount;
-            var realAmmoAmountAdded = int.Min(ammoDiff, TotalAmmoCount);
-            TotalAmmoCount -= realAmmoAmountAdded;
-            AmmoCount += realAmmoAmountAdded;
+            AmmoPicto.Show();
+            ReloadPicto.Hide();
+            AmmoCount += MagazineSize;
         }
         reloadTimeRemaining -= delta;
     }
@@ -67,6 +67,8 @@ public abstract partial class Gun : Node3D
     public void Reload()
     {
         reloadTimeRemaining = ReloadTime;
+        AmmoPicto.Hide();
+        ReloadPicto.Show();
         AmmoLabel.Text = "Reloading";
         ReloadCore();
     }

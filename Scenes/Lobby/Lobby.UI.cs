@@ -37,14 +37,14 @@ public partial class Lobby
     private Control PropList => Groups.Props.VBox;
     private Control AllPlayerList => Groups.All.VBox;
 
-    private Label ReadyButton => nodes.UI.HBox.Others.Buttons.Ready.MarginContainer.Label;
-    private Label RoleButton => nodes.UI.HBox.Others.Buttons.Role.MarginContainer.Label;
+    private Label ReadyButton => nodes.UI.HBox.Others.Column.Buttons.Ready.MarginContainer.Label;
+    private Label RoleButton => nodes.UI.HBox.Others.Column.Buttons.Role.MarginContainer.Label;
 
-    private _SceneTree.__0_UI.__1_HBox.__2_Others.__3_Settings.__4_Margin.__5_VBox.__6_HunterSelection HunterSelection =>
-        nodes.UI.HBox.Others.Settings.Margin.VBox.HunterSelection;
+    private _SceneTree.__0_UI.__1_HBox.__2_Others.__3_Column.__4_Settings.__5_Margin.__6_VBox.__7_HunterSelection HunterSelection =>
+        nodes.UI.HBox.Others.Column.Settings.Margin.VBox.HunterSelection;
 
-    private _SceneTree.__0_UI.__1_HBox.__2_Others.__3_Settings.__4_Margin.__5_VBox.__6_MapSelection MapSelection =>
-        nodes.UI.HBox.Others.Settings.Margin.VBox.MapSelection;
+    private _SceneTree.__0_UI.__1_HBox.__2_Others.__3_Column.__4_Settings.__5_Margin.__6_VBox.__7_MapSelection MapSelection =>
+        nodes.UI.HBox.Others.Column.Settings.Margin.VBox.MapSelection;
 
     private Label UsernameLabel => nodes.UI.HBox.Players.LocalPlayer.MarginContainer.Label;
 
