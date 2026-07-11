@@ -632,6 +632,7 @@ environment = SubResource("Environment_n6ef1")
 
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=1443591995]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 6, 0, 6)
+layers = 7
 supersampling = true
 texel_scale = 2.0
 generate_probes_subdiv = 3
@@ -1802,6 +1803,7 @@ shape = SubResource("BoxShape3D_f8atq")
 transform = Transform3D(-1, 0, 1.509958e-07, 0, 1, 0, -1.509958e-07, 0, -1, -5.9999995, 6, 15.5)
 
 [node name="OmniLight3D" parent="World/StaticProps/torch_mounted_with_light" index="1" unique_id=878820410]
+layers = 7
 light_bake_mode = 1
 light_cull_mask = 4294967279
 distance_fade_enabled = true
@@ -1813,6 +1815,7 @@ omni_range = 10.0
 transform = Transform3D(-1, 0, 1.509958e-07, 0, 1, 0, -1.509958e-07, 0, -1, -5.999998, 6, 23.8)
 
 [node name="OmniLight3D" parent="World/StaticProps/torch_mounted_with_light2" index="1" unique_id=878820410]
+layers = 7
 light_indirect_energy = 2.0
 light_bake_mode = 1
 light_cull_mask = 4294967279
@@ -1826,6 +1829,7 @@ omni_attenuation = 0.5
 transform = Transform3D(-4.3711392e-08, 0, -1, 0, 1, 0, 1, 0, -4.3711392e-08, -6.5499997, 2, 16)
 
 [node name="OmniLight3D" parent="World/StaticProps/torch_mounted_with_light3" index="1" unique_id=878820410]
+layers = 7
 light_bake_mode = 1
 light_cull_mask = 4294967279
 distance_fade_enabled = true
@@ -1837,6 +1841,7 @@ omni_range = 9.5
 transform = Transform3D(4.5695568e-08, 0, 1, 0, 1, 0, -1, 0, 4.5695568e-08, -5.449998, 2, 16)
 
 [node name="OmniLight3D" parent="World/StaticProps/torch_mounted_with_light4" index="1" unique_id=878820410]
+layers = 7
 light_bake_mode = 1
 light_cull_mask = 4294967279
 distance_fade_enabled = true
@@ -1848,6 +1853,7 @@ omni_range = 9.5
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -38, 4, 23.500002)
 
 [node name="OmniLight3D" parent="World/StaticProps/torch_mounted_with_light5" index="1" unique_id=878820410]
+layers = 7
 light_indirect_energy = 2.0
 light_bake_mode = 1
 light_cull_mask = 4294967279
@@ -1860,6 +1866,7 @@ omni_range = 13.938019
 transform = Transform3D(1, 0, 2.0762417e-07, 0, 1, 0, -2.0762417e-07, 0, 1, -38, 4, 0.5000019)
 
 [node name="OmniLight3D" parent="World/StaticProps/torch_mounted_with_light6" index="1" unique_id=878820410]
+layers = 7
 light_indirect_energy = 2.0
 light_bake_mode = 1
 light_cull_mask = 4294967279

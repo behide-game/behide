@@ -30,8 +30,6 @@ public partial class HunterBody : PlayerBody
     {
         MaxHealth = 100;
         MoveSpeed = 1.2f;
-        var MainEnv = Camera.GetEnvironment();
-        GunCamera.SetEnvironment(MainEnv);
         base._EnterTree();
     }
 
@@ -44,6 +42,7 @@ public partial class HunterBody : PlayerBody
     public override void _PhysicsProcess(double delta)
     {
         base._PhysicsProcess(delta);
+        // done in physics process to avoid synchronisation lag between cameras
         GunCamera.GlobalTransform = Camera.GlobalTransform;
         GunCamera.Fov = Camera.Fov;
     }

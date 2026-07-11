@@ -488,6 +488,7 @@ BehideObjects = NodePath("../BehideObjects")
 environment = SubResource("Environment_cclfe")
 
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=1173480206]
+layers = 7
 quality = 2
 supersampling = true
 interior = true
@@ -1506,10 +1507,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2633133, -0.6, -23.927341)
 [node name="drill_structure2" parent="BehideObjects" unique_id=414522038 instance=ExtResource("95_yk75b")]
 transform = Transform3D(0.9580929, 0, 0.28645766, 0, 1, 0, -0.28645766, 0, 0.9580929, -8.8, -0.6, -18.599998)
 
-[node name="drill_structure" parent="BehideObjects/drill_structure2/drill_structure" parent_id_path=PackedInt32Array(414522038, 1065827109) index="0" unique_id=1668541799]
+[node name="drill_structure" parent="BehideObjects/drill_structure2/drill_structure" parent_id_path=PackedInt32Array(414522038, 1065827109) index="0" unique_id=975956148]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77742577, 0, -0.0020618439)
 
-[node name="drill_module" parent="BehideObjects/drill_structure2/drill_structure/drill_structure" index="0" unique_id=1133226769]
+[node name="drill_module" parent="BehideObjects/drill_structure2/drill_structure/drill_structure" index="0" unique_id=1019312915]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34523964, 0)
 
 [node name="solarpanel2" parent="BehideObjects" unique_id=1548592808 instance=ExtResource("96_5qqhn")]
@@ -2077,6 +2078,7 @@ omni_attenuation = 0.0
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -23.25, -1.6, -7.6)
 
 [node name="OmniLight3D" parent="Lights/torch_mounted_with_light" index="1" unique_id=878820410]
+layers = 7
 light_energy = 1.6
 light_bake_mode = 1
 distance_fade_enabled = true
@@ -2089,6 +2091,7 @@ omni_attenuation = 0.5
 transform = Transform3D(-1, 0, -2.9802322e-08, 0, 1, 0, 2.9802322e-08, 0, -1, -15.7, -1.6, -1.75)
 
 [node name="OmniLight3D" parent="Lights/torch_mounted_with_light2" index="1" unique_id=878820410]
+layers = 7
 light_energy = 1.6
 light_bake_mode = 1
 distance_fade_enabled = true
@@ -2101,6 +2104,7 @@ omni_attenuation = 0.5
 transform = Transform3D(1, 0, 1.172251e-07, 0, 1, 0, -1.172251e-07, 0, 1, -11.5, -1.6, -13.25)
 
 [node name="OmniLight3D" parent="Lights/torch_mounted_with_light3" index="1" unique_id=878820410]
+layers = 7
 light_energy = 1.6
 light_bake_mode = 1
 distance_fade_enabled = true
