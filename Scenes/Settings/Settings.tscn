@@ -266,6 +266,29 @@ popup/item_5/id = 5
 popup/item_6/text = "Temporal Anti-aliasing"
 popup/item_6/id = 6
 
+[node name="VSync" type="HBoxContainer" parent="TabContainer/Video/VBox" unique_id=883074179]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="TabContainer/Video/VBox/VSync" unique_id=1841727785]
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Vsync"
+
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/VSync" unique_id=1061910895]
+layout_mode = 2
+selected = 0
+fit_to_longest_item = false
+item_count = 4
+popup/item_0/text = "Disabled"
+popup/item_0/id = 0
+popup/item_1/text = "Enabled"
+popup/item_1/id = 1
+popup/item_2/text = "Adaptive"
+popup/item_2/id = 2
+popup/item_3/text = "Mailbox"
+popup/item_3/id = 3
+
 [node name="FPS" type="HBoxContainer" parent="TabContainer/Video/VBox" unique_id=325118476]
 layout_mode = 2
 theme_override_constants/separation = 15
