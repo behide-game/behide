@@ -24,6 +24,10 @@ public partial class PropBody : PlayerBody
 
     protected override Node3D CameraDisk => _.CameraDisk;
     protected override Camera3D Camera => _.CameraDisk.SpringArm3D.Camera;
+    protected Camera3D OutlineCamera => _.SubViewport.OutlineCamera;
+    protected SubViewport SubViewport => _.SubViewport;
+    protected ColorRect ColorRect => _.CanvasLayer.ColorRect;
+    protected ShaderMaterial material => (ShaderMaterial)ColorRect.GetMaterial();
     protected override RayCast3D RayCast => _.CameraDisk.SpringArm3D.Camera.RayCast;
     protected override BezelContainer HealthBar => _.HUD.BottomLeft.Health.Border.Mask.HealthBar;
     protected override Label HealthLabel => _.HUD.BottomLeft.Health.Border.HealthLabel;
@@ -33,12 +37,32 @@ public partial class PropBody : PlayerBody
     public override void _EnterTree()
     {
         base._EnterTree();
+
         currentVisualNode = _.MeshInstance3D;
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
 
         ShowLockedLogo(false);
         AdjustProperties();
+
+        if(!IsMultiplayerAuthority())
+        {
+            return;
+        }
+        OutlineCamera.MakeCurrent();
+        ColorRect.Show();
+        SubViewport.Size = GetWindow().Size;
+        material.SetShaderParameter("highlighted_depth_tex", SubViewport.GetTexture());
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+        // done in physics process to avoid synchronisation lag between cameras
+        OutlineCamera.GlobalTransform = Camera.GlobalTransform;
+        OutlineCamera.Fov = Camera.Fov;
+        OutlineCamera.Size = Camera.Size;
+        OutlineCamera.KeepAspect = Camera.KeepAspect;
     }
 
     protected override void SetHudsVisibility(bool value) => _.HUD.Get().SetVisible(value);

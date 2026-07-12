@@ -19,6 +19,7 @@ public partial class HunterBody : PlayerBody
     protected override Node3D CameraDisk => _.Camera;
     protected override Camera3D Camera => _.Camera;
     protected Camera3D GunCamera => _.SubViewportContainer.SubViewport.GunCamera;
+    protected SubViewportContainer SubViewportContainer => _.SubViewportContainer;
     protected SubViewport SubViewport => _.SubViewportContainer.SubViewport;
     protected override RayCast3D RayCast => _.Camera.RayCast;
     protected override Label PlayerUsername => Gun.PlayerUsernameLabel;
@@ -31,6 +32,13 @@ public partial class HunterBody : PlayerBody
         MaxHealth = 100;
         MoveSpeed = 1.2f;
         base._EnterTree();
+        if(!IsMultiplayerAuthority())
+        {
+            SubViewportContainer.Hide();
+            return;
+        }
+        SubViewport.Size = GetWindow().Size;
+        GunCamera.MakeCurrent();
     }
 
     protected override void SetHudsVisibility(bool value)
@@ -45,6 +53,8 @@ public partial class HunterBody : PlayerBody
         // done in physics process to avoid synchronisation lag between cameras
         GunCamera.GlobalTransform = Camera.GlobalTransform;
         GunCamera.Fov = Camera.Fov;
+        GunCamera.Size = Camera.Size;
+        GunCamera.KeepAspect = Camera.KeepAspect;
     }
 
     public override void _Process(double delta)

@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://iwqa8xgo1ip3"]
 
 [ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="2_7hld8"]
+[ext_resource type="Shader" uid="uid://cpic26ffvr8hs" path="res://Prefabs/Player/mask.gdshader" id="2_dg5hw"]
+[ext_resource type="Shader" uid="uid://dkdr6c6gyl14n" path="res://Prefabs/Player/outline.gdshader" id="2_j2ufq"]
 [ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="2_ky5tt"]
 [ext_resource type="Script" uid="uid://bnid2w67fk441" path="res://Prefabs/Player/PropBody.cs" id="2_m4go7"]
 [ext_resource type="PackedScene" uid="uid://nkor8n0q2s8j" path="res://Prefabs/Controls/Lifebar/Lifebar.tscn" id="4_7hld8"]
@@ -18,6 +20,17 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_w1hta"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j2ufq"]
+render_priority = 0
+shader = ExtResource("2_dg5hw")
+shader_parameter/colorID = Color(0.99553424, 0.615255, 0.41396073, 0.26666668)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w1hta"]
+shader = ExtResource("2_j2ufq")
+shader_parameter/outline_width = 5
 
 [sub_resource type="LabelSettings" id="LabelSettings_j2ufq"]
 font = ExtResource("2_7hld8")
@@ -60,6 +73,7 @@ spring_length = 5.0
 
 [node name="Camera" type="Camera3D" parent="CameraDisk/SpringArm3D" unique_id=484317060]
 keep_aspect = 0
+cull_mask = 1048567
 fov = 90.0
 
 [node name="RayCast" type="RayCast3D" parent="CameraDisk/SpringArm3D/Camera" unique_id=1015855657]
@@ -69,6 +83,31 @@ debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
 
 [node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=512832509]
 replication_config = SubResource("SceneReplicationConfig_n61o8")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1255137576]
+layers = 8
+mesh = SubResource("BoxMesh_w1hta")
+surface_material_override/0 = SubResource("ShaderMaterial_j2ufq")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=1030597066]
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="OutlineCamera" type="Camera3D" parent="SubViewport" unique_id=262317903]
+cull_mask = 8
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=182956634]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=1206307843]
+visible = false
+material = SubResource("ShaderMaterial_w1hta")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="HUD" type="MarginContainer" parent="." unique_id=858932803]
 anchors_preset = 15
