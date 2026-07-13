@@ -26,11 +26,13 @@ properties/1/replication_mode = 1
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_j2ufq"]
 render_priority = 0
 shader = ExtResource("2_dg5hw")
-shader_parameter/colorID = Color(0.99553424, 0.615255, 0.41396073, 0.26666668)
+shader_parameter/colorID = Color(1, 0.8, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w1hta"]
 shader = ExtResource("2_j2ufq")
 shader_parameter/outline_width = 5
+shader_parameter/inner_opacity = 0.5
+shader_parameter/outline_opacity = 1.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_j2ufq"]
 font = ExtResource("2_7hld8")
@@ -84,7 +86,7 @@ debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
 [node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=512832509]
 replication_config = SubResource("SceneReplicationConfig_n61o8")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1255137576]
+[node name="MeshInstance3DOutline" type="MeshInstance3D" parent="." unique_id=1255137576]
 layers = 8
 mesh = SubResource("BoxMesh_w1hta")
 surface_material_override/0 = SubResource("ShaderMaterial_j2ufq")

@@ -1,6 +1,8 @@
 shader_type canvas_item;
 
 uniform int outline_width = 3;
+uniform float inner_opacity : hint_range(0.0, 1.0, 0.01) = 0.5;
+uniform float outline_opacity : hint_range(0.0, 1.0, 0.01) = 1.;
 uniform sampler2D highlighted_depth_tex : repeat_disable, filter_nearest;
 
 void fragment() {
@@ -28,7 +30,7 @@ void fragment() {
 		}
 	}
 
-    if(is_inner) COLOR = vec4(temp_color.rgb/temp_color.a, temp_color.a);
-    else if(is_outline) COLOR = vec4(temp_color.rgb/temp_color.a, 1.);
+    if(is_inner) COLOR = vec4(temp_color.rgb, inner_opacity);
+    else if(is_outline) COLOR = vec4(temp_color.rgb, outline_opacity);
     else discard;
 }

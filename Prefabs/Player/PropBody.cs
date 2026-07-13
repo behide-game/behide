@@ -7,6 +7,7 @@ namespace Behide.Game.Player;
 public partial class PropBody : PlayerBody
 {
     private Node3D currentVisualNode = null!;
+    private Node3D currentOutlineNode = null!;
     private CollisionShape3D[] collisionNodes = null!;
 
     [Export] private float maxKickForce = 17f;
@@ -27,7 +28,9 @@ public partial class PropBody : PlayerBody
     protected Camera3D OutlineCamera => _.SubViewport.OutlineCamera;
     protected SubViewport SubViewport => _.SubViewport;
     protected ColorRect ColorRect => _.CanvasLayer.ColorRect;
-    protected ShaderMaterial material => (ShaderMaterial)ColorRect.GetMaterial();
+    protected Shader MaskShader => GD.Load<Shader>(GetSceneFilePath().GetBaseDir().PathJoin("mask.gdshader"));
+    protected ShaderMaterial MaskMaterial = null!;
+    protected ShaderMaterial OutlineMaterial => (ShaderMaterial)ColorRect.GetMaterial();
     protected override RayCast3D RayCast => _.CameraDisk.SpringArm3D.Camera.RayCast;
     protected override BezelContainer HealthBar => _.HUD.BottomLeft.Health.Border.Mask.HealthBar;
     protected override Label HealthLabel => _.HUD.BottomLeft.Health.Border.HealthLabel;
@@ -37,8 +40,10 @@ public partial class PropBody : PlayerBody
     public override void _EnterTree()
     {
         base._EnterTree();
-
         currentVisualNode = _.MeshInstance3D;
+        currentOutlineNode = _.MeshInstance3DOutline;
+        MaskMaterial = new ShaderMaterial();
+        MaskMaterial.SetShader(MaskShader);
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
 
@@ -52,7 +57,7 @@ public partial class PropBody : PlayerBody
         OutlineCamera.MakeCurrent();
         ColorRect.Show();
         SubViewport.Size = GetWindow().Size;
-        material.SetShaderParameter("highlighted_depth_tex", SubViewport.GetTexture());
+        OutlineMaterial.SetShaderParameter("highlighted_depth_tex", SubViewport.GetTexture());
     }
 
     public override void _PhysicsProcess(double delta)
@@ -113,9 +118,11 @@ public partial class PropBody : PlayerBody
         if (GetNode(behideObjectPath) is not BehideObject behideObject) return;
         if (behideObject.VisualNode.Duplicate() is not Node3D newVisualNode) return;
 
-        // Remove current visual node and collision nodes
+        // Remove current visual node, outline node and collision nodes
         currentVisualNode.QueueFree();
         RemoveChild(currentVisualNode);
+        currentOutlineNode.QueueFree();
+        RemoveChild(currentOutlineNode);
         foreach (var collisionNode in collisionNodes)
         {
             collisionNode.QueueFree();
@@ -126,7 +133,43 @@ public partial class PropBody : PlayerBody
         var initialVisualNodePos = newVisualNode.Position;
         currentVisualNode = newVisualNode;
         newVisualNode.Position = Vector3.Zero;
-        AddChild(newVisualNode);
+        currentOutlineNode = (Node3D)newVisualNode.Duplicate();
+        AddChild(currentVisualNode);
+        if(currentOutlineNode is MeshInstance3D currentOutlineMesh)
+        {
+            currentOutlineMesh.Name = "OutlineMesh";
+            currentOutlineMesh.SetLayerMaskValue(2, false);
+            currentOutlineMesh.SetLayerMaskValue(4, true);
+            for (int i = 0; i < currentOutlineMesh.Mesh.GetSurfaceCount(); i++)
+            {
+                currentOutlineMesh.SetSurfaceOverrideMaterial(i, MaskMaterial);
+            }
+            AddChild(currentOutlineMesh);
+            currentOutlineNode = currentOutlineMesh;
+        }
+        else
+        {
+            currentOutlineNode.Name = "OutlineGroup";
+            foreach (var meshCandidate in currentOutlineNode.FindChildren("", "MeshInstance3D", true, false))
+            {
+                if(meshCandidate is not MeshInstance3D mesh)
+                {
+                    GD.PushError("meshCandidate is not a MeshInstance3D");
+                    break;
+                }
+                mesh.SetLayerMaskValue(1, false);
+                mesh.SetLayerMaskValue(2, false);
+                mesh.SetLayerMaskValue(3, false);
+                mesh.SetLayerMaskValue(4, true);
+                for (int i = 0; i < mesh.Mesh.GetSurfaceCount(); i++)
+                {
+                    mesh.SetSurfaceOverrideMaterial(i, MaskMaterial);
+                }
+            }
+            GD.Print("not meshinstance3D");
+            AddChild(currentOutlineNode);
+        }
+
 
         // Set new collision shapes
         var newCollisionNodes = new List<CollisionShape3D>(behideObject.CollisionNodes.Length);

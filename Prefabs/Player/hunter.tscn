@@ -63,7 +63,7 @@ replication_config = SubResource("SceneReplicationConfig_n61o8")
 [node name="Camera" type="Camera3D" parent="." unique_id=1142722186]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
 keep_aspect = 0
-cull_mask = 1048571
+cull_mask = 1048563
 fov = 90.0
 
 [node name="SubmachineGun" parent="Camera" unique_id=411671082 instance=ExtResource("2_1qbrv")]
