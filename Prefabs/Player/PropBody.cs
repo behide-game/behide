@@ -22,6 +22,7 @@ public partial class PropBody : PlayerBody
 
     private const float speed = 1.55f;
     private const float slowSpeed = 0.3f;
+    private bool isOutlineVisible = false;
 
     protected override Node3D CameraDisk => _.CameraDisk;
     protected override Camera3D Camera => _.CameraDisk.SpringArm3D.Camera;
@@ -55,7 +56,8 @@ public partial class PropBody : PlayerBody
             return;
         }
         OutlineCamera.MakeCurrent();
-        ColorRect.Show();
+        currentOutlineNode.Hide();
+        if(isOutlineVisible) ColorRect.Show();
         SubViewport.Size = GetWindow().Size;
         OutlineMaterial.SetShaderParameter("highlighted_depth_tex", SubViewport.GetTexture());
     }
@@ -103,6 +105,20 @@ public partial class PropBody : PlayerBody
                 finalForce * objectToKick.Mass * direction,
                 FocusedPoint - objectToKick.GlobalPosition
             );
+        }
+
+        // Toggle outline
+        if(Input.IsActionJustPressed(InputActions.ToggleOutline))
+        {
+            if(isOutlineVisible)
+            {
+                ColorRect.Hide();
+            }
+            else
+            {
+                ColorRect.Show();
+            }
+            isOutlineVisible = !isOutlineVisible;
         }
 
         // Adjust speed
