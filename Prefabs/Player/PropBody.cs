@@ -182,9 +182,9 @@ public partial class PropBody : PlayerBody
                     mesh.SetSurfaceOverrideMaterial(i, MaskMaterial);
                 }
             }
-            GD.Print("not meshinstance3D");
             AddChild(currentOutlineNode);
         }
+        if(IsMultiplayerAuthority()) currentOutlineNode.Hide();
 
 
         // Set new collision shapes
