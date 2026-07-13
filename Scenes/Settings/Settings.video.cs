@@ -261,11 +261,11 @@ public partial class Settings
         });
         config.SetValue(nameof(Video), "vsync", Video.VSync.OptionButton.Selected switch
         {
-            0 => "enabled",
-            1 => "disabled",
+            0 => "disabled",
+            1 => "enabled",
             2 => "adaptive",
             3 => "mailbox",
-            _ => "enabled"
+            _ => "disabled"
         });
 
         config.SetValue(nameof(Video), "display-fps", Video.FPS.Enabled.ButtonPressed);

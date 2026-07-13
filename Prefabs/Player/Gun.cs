@@ -42,7 +42,7 @@ public abstract partial class Gun : Node3D
         {
             AmmoPicto.Show();
             ReloadPicto.Hide();
-            AmmoCount += MagazineSize;
+            AmmoCount = MagazineSize;
         }
         ReloadPicto.OffsetTransformRotation += (float)delta*10;
         reloadTimeRemaining -= delta;
