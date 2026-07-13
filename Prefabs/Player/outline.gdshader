@@ -18,7 +18,7 @@ void fragment() {
 	if (!is_inner) {
 		for (int x = -outline_width; x <= outline_width && !is_outline; ++x) {
 			for (int y = -outline_width; y <= outline_width && !is_outline; ++y) {
-				if (y == 0 && x == 0) { continue; }
+				if (y == 0 && x == 0 || (x+y)%2 == 1) { continue; }
 				ivec2 n_iuv = clamp(iuv + ivec2(x, y), ivec2(0), size-ivec2(1));
                 vec4 currentPixel = texelFetch(highlighted_depth_tex, n_iuv, 0);
                 float n_d_h = currentPixel.a;
