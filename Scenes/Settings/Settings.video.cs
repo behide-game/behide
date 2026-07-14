@@ -1,4 +1,5 @@
 using System.Reactive;
+using System.Reactive.Subjects;
 using Godot;
 
 namespace Behide.Game;
@@ -11,6 +12,8 @@ public partial class Settings
     private string renderingMethod = RenderingServer.GetCurrentRenderingMethod();
     private string renderingDriver = RenderingServer.GetCurrentRenderingDriverName();
 
+    public readonly Subject<Unit> ViewportSettingsChanged = new();
+
     private void Video_SetDisplayMode(long displayMode) =>
         DisplayServer.WindowSetMode(
             displayMode switch
@@ -22,10 +25,13 @@ public partial class Settings
             }
         );
 
-    private void Video_SetUIScaling(double scale) =>
+    private void Video_SetUIScaling(double scale)
+    {
         GetWindow().ContentScaleFactor = (float)scale;
+        ViewportSettingsChanged.OnNext(Unit.Default);
+    }
 
-    private void Video_SetRenderScaleMode(long mode) =>
+    private void Video_SetRenderScaleMode(long mode) {
         GetWindow().Scaling3DMode = mode switch
         {
             0 => Viewport.Scaling3DModeEnum.Nearest,
@@ -33,9 +39,14 @@ public partial class Settings
             2 => Viewport.Scaling3DModeEnum.Fsr2,
             _ => Viewport.Scaling3DModeEnum.Nearest
         };
+        ViewportSettingsChanged.OnNext(Unit.Default);
+    }
 
-    private void Video_SetRenderScale(double scale) =>
+    private void Video_SetRenderScale(double scale)
+    {
         GetWindow().Scaling3DScale = (float)scale / 100;
+        ViewportSettingsChanged.OnNext(Unit.Default);
+    }
 
     private void Video_SetAntiAliasing(long mode)
     {
@@ -53,6 +64,7 @@ public partial class Settings
             _ => Viewport.ScreenSpaceAAEnum.Disabled
         };
         GetWindow().UseTaa = mode == 6;
+        ViewportSettingsChanged.OnNext(Unit.Default);
     }
 
     private void Video_SetVSyncMode(long mode)
@@ -124,6 +136,7 @@ public partial class Settings
 
         // Anti-aliasing
         Video.Anti_aliasing.OptionButton.ItemSelected += Video_SetAntiAliasing;
+        // VSync
         Video.VSync.OptionButton.ItemSelected += Video_SetVSyncMode;
 
         // FPS

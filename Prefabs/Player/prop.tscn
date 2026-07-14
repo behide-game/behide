@@ -107,6 +107,7 @@ cull_mask = 8
 [node name="HorizontalViewport" type="SubViewport" parent="." unique_id=1074722499]
 transparent_bg = true
 handle_input_locally = false
+size_2d_override_stretch = true
 
 [node name="ColorRect" type="ColorRect" parent="HorizontalViewport" unique_id=1206307843]
 material = SubResource("ShaderMaterial_37tqn")
@@ -117,9 +118,21 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=182956634]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1724181968]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=783961637]
+[node name="VerticalViewport" type="SubViewport" parent="SubViewportContainer" unique_id=450090553]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+size_2d_override_stretch = true
+
+[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/VerticalViewport" unique_id=783961637]
 visible = false
 material = SubResource("ShaderMaterial_8fnhj")
 anchors_preset = 15
@@ -127,6 +140,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="HUD" type="MarginContainer" parent="." unique_id=858932803]

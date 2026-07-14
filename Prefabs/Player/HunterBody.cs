@@ -37,8 +37,10 @@ public partial class HunterBody : PlayerBody
             SubViewportContainer.Hide();
             return;
         }
-        SubViewport.Size = GetWindow().Size;
         GunCamera.MakeCurrent();
+        UpdateViewportSettingsOnChange();
+        UpdateViewportSettings();
+        SubViewport.Size = GetWindow().Size;
     }
 
     protected override void SetHudsVisibility(bool value)
@@ -90,6 +92,20 @@ public partial class HunterBody : PlayerBody
             var canStandUp = !_.Area3D.Get().HasOverlappingBodies();
             if (!isCrouching || canStandUp && isCrouching) ToggleCrouch(!isCrouching);
         }
+    }
+
+    private void UpdateViewportSettingsOnChange()
+    {
+        GameManager.Settings.ViewportSettingsChanged.Subscribe(_ => UpdateViewportSettings());
+    }
+
+    private void UpdateViewportSettings()
+    {
+        SubViewport.Scaling3DMode = GetWindow().Scaling3DMode;
+        SubViewport.Scaling3DScale = GetWindow().Scaling3DScale;
+        SubViewport.Msaa3D = GetWindow().Msaa3D;
+        SubViewport.ScreenSpaceAA = GetWindow().ScreenSpaceAA;
+        SubViewport.UseTaa = GetWindow().UseTaa;
     }
 
     private void ToggleCrouch(bool wantsToCrouch)

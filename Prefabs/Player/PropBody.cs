@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Behide.UI.Controls;
 using Godot;
 
@@ -29,9 +30,10 @@ public partial class PropBody : PlayerBody
     protected Camera3D OutlineCamera => _.SubViewport.OutlineCamera;
     protected SubViewport SubViewport => _.SubViewport;
     protected SubViewport HorizontalViewport => _.HorizontalViewport;
+    protected SubViewport VerticalViewport => _.SubViewportContainer.VerticalViewport;
     protected ColorRect ColorRectHorizontal => _.HorizontalViewport.ColorRect;
-    protected ColorRect ColorRectVertical => _.CanvasLayer.ColorRect;
-    protected Shader MaskShader => GD.Load<Shader>(GetSceneFilePath().GetBaseDir().PathJoin("mask.gdshader"));
+    protected ColorRect ColorRectVertical => _.SubViewportContainer.VerticalViewport.ColorRect;
+    private Shader MaskShader => GD.Load<Shader>(GetSceneFilePath().GetBaseDir().PathJoin("mask.gdshader"));
     protected ShaderMaterial MaskMaterial = null!;
     protected ShaderMaterial HorizontalMaterial => (ShaderMaterial)ColorRectHorizontal.GetMaterial();
     protected ShaderMaterial VerticalMaterial => (ShaderMaterial)ColorRectVertical.GetMaterial();
@@ -68,10 +70,20 @@ public partial class PropBody : PlayerBody
         {
             ColorRectVertical.Show();
         }
-        SubViewport.Size = GetWindow().Size;
-        HorizontalViewport.Size = GetWindow().Size; // TODO correct size when changing window size and also in HunterBody.cs
         HorizontalMaterial.SetShaderParameter("input_texture", SubViewport.GetTexture());
         VerticalMaterial.SetShaderParameter("input_texture", HorizontalViewport.GetTexture());
+        SubViewport.Size = GetWindow().Size;
+        HorizontalViewport.Size = GetWindow().Size; // TODO correct size when changing window size and also in HunterBody.cs
+        VerticalViewport.Size = GetWindow().Size;
+        UpdateViewportSettingsOnChange();
+        UpdateViewportSettings();
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+        UpdateViewportSettings();
+        VerticalViewport.Scaling3DScale = 0.5f;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -82,6 +94,20 @@ public partial class PropBody : PlayerBody
         OutlineCamera.Fov = Camera.Fov;
         OutlineCamera.Size = Camera.Size;
         OutlineCamera.KeepAspect = Camera.KeepAspect;
+    }
+
+    private void UpdateViewportSettingsOnChange()
+    {
+        GameManager.Settings.ViewportSettingsChanged.Subscribe(_ => UpdateViewportSettings());
+    }
+
+    private void UpdateViewportSettings()
+    {
+        SubViewport.Scaling3DMode = GetWindow().Scaling3DMode;
+        SubViewport.Scaling3DScale = GetWindow().Scaling3DScale;
+        SubViewport.Msaa3D = GetWindow().Msaa3D;
+        SubViewport.ScreenSpaceAA = GetWindow().ScreenSpaceAA;
+        SubViewport.UseTaa = GetWindow().UseTaa;
     }
 
     protected override void SetHudsVisibility(bool value) => _.HUD.Get().SetVisible(value);

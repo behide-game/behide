@@ -26,10 +26,10 @@ void fragment() {
 	}
 
     if(is_inner) {
-		COLOR = vec4(temp_color.rgb, 0.5);
+		COLOR = vec4(temp_color.rgb/temp_color.a, 0.5);
 	}
     else if(is_outline) {
-		COLOR = vec4(temp_color.rgb, 1.);
+		COLOR = vec4(temp_color.rgb/temp_color.a, 1.);
 	}
     else discard;
 }
