@@ -3,7 +3,6 @@
 [ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="2_7hld8"]
 [ext_resource type="Shader" uid="uid://buxh8r3j3w4yh" path="res://Prefabs/Player/outlineVertical.gdshader" id="2_7odvv"]
 [ext_resource type="Shader" uid="uid://cpic26ffvr8hs" path="res://Prefabs/Player/mask.gdshader" id="2_dg5hw"]
-[ext_resource type="Shader" uid="uid://dbijindjdxx3g" path="res://Prefabs/Player/outline.gdshader" id="2_j2ufq"]
 [ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="2_ky5tt"]
 [ext_resource type="Script" uid="uid://bnid2w67fk441" path="res://Prefabs/Player/PropBody.cs" id="2_m4go7"]
 [ext_resource type="Shader" uid="uid://cevjxarqmxigr" path="res://Prefabs/Player/outlineHorizontal.gdshader" id="3_dg5hw"]
@@ -25,13 +24,8 @@ properties/1/replication_mode = 1
 
 [sub_resource type="BoxMesh" id="BoxMesh_w1hta"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ak4nt"]
-render_priority = 0
-shader = ExtResource("2_j2ufq")
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_j2ufq"]
 render_priority = 0
-next_pass = SubResource("ShaderMaterial_ak4nt")
 shader = ExtResource("2_dg5hw")
 shader_parameter/colorID = Color(1, 0.8, 0, 1)
 
