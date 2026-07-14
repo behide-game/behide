@@ -1,11 +1,22 @@
 [gd_scene format=3 uid="uid://iwqa8xgo1ip3"]
 
 [ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="2_7hld8"]
-[ext_resource type="Shader" uid="uid://cpic26ffvr8hs" path="res://Prefabs/Player/mask.gdshader" id="2_dg5hw"]
-[ext_resource type="Shader" uid="uid://dkdr6c6gyl14n" path="res://Prefabs/Player/outline.gdshader" id="2_j2ufq"]
 [ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="2_ky5tt"]
 [ext_resource type="Script" uid="uid://bnid2w67fk441" path="res://Prefabs/Player/PropBody.cs" id="2_m4go7"]
+[ext_resource type="Shader" uid="uid://r5tibrhgeadm" path="res://Prefabs/Player/xray.gdshader" id="3_dg5hw"]
 [ext_resource type="PackedScene" uid="uid://nkor8n0q2s8j" path="res://Prefabs/Controls/Lifebar/Lifebar.tscn" id="4_7hld8"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j2ufq"]
+render_priority = 0
+shader = ExtResource("3_dg5hw")
+shader_parameter/albedo = Color(0, 1, 1, 1)
+shader_parameter/fresnel_power = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7odvv"]
+render_priority = 0
+shader = ExtResource("3_dg5hw")
+shader_parameter/albedo = Color(0, 1, 1, 0.41568628)
+shader_parameter/fresnel_power = 1.2
 
 [sub_resource type="BoxMesh" id="BoxMesh_x40yu"]
 
@@ -20,19 +31,6 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-
-[sub_resource type="BoxMesh" id="BoxMesh_w1hta"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_j2ufq"]
-render_priority = 0
-shader = ExtResource("2_dg5hw")
-shader_parameter/colorID = Color(1, 0.8, 0, 1)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_w1hta"]
-shader = ExtResource("2_j2ufq")
-shader_parameter/outline_width = 5
-shader_parameter/inner_opacity = 0.5
-shader_parameter/outline_opacity = 1.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_j2ufq"]
 font = ExtResource("2_7hld8")
@@ -57,8 +55,10 @@ collision_mask = 23
 platform_on_leave = 2
 script = ExtResource("2_m4go7")
 maxKickForce = 17.5
+outlineMaterial = SubResource("ShaderMaterial_j2ufq")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=817965567]
+material_overlay = SubResource("ShaderMaterial_7odvv")
 gi_mode = 2
 mesh = SubResource("BoxMesh_x40yu")
 
@@ -85,31 +85,6 @@ debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
 
 [node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=512832509]
 replication_config = SubResource("SceneReplicationConfig_n61o8")
-
-[node name="MeshInstance3DOutline" type="MeshInstance3D" parent="." unique_id=1255137576]
-layers = 8
-mesh = SubResource("BoxMesh_w1hta")
-surface_material_override/0 = SubResource("ShaderMaterial_j2ufq")
-
-[node name="SubViewport" type="SubViewport" parent="." unique_id=1030597066]
-transparent_bg = true
-handle_input_locally = false
-render_target_update_mode = 4
-
-[node name="OutlineCamera" type="Camera3D" parent="SubViewport" unique_id=262317903]
-cull_mask = 8
-
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=182956634]
-
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=1206307843]
-visible = false
-material = SubResource("ShaderMaterial_w1hta")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="HUD" type="MarginContainer" parent="." unique_id=858932803]
 anchors_preset = 15

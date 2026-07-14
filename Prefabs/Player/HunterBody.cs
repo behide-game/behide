@@ -1,7 +1,6 @@
 using Behide.Prefabs.Player;
 using Behide.UI.Controls;
 using Godot;
-using GodotPlugins.Game;
 
 namespace Behide.Game.Player;
 
@@ -18,9 +17,9 @@ public partial class HunterBody : PlayerBody
 
     protected override Node3D CameraDisk => _.Camera;
     protected override Camera3D Camera => _.Camera;
-    protected Camera3D GunCamera => _.SubViewportContainer.SubViewport.GunCamera;
-    protected SubViewportContainer SubViewportContainer => _.SubViewportContainer;
-    protected SubViewport SubViewport => _.SubViewportContainer.SubViewport;
+    private Camera3D GunCamera => _.SubViewportContainer.SubViewport.GunCamera;
+    private SubViewportContainer SubViewportContainer => _.SubViewportContainer;
+    private SubViewport SubViewport => _.SubViewportContainer.SubViewport;
     protected override RayCast3D RayCast => _.Camera.RayCast;
     protected override Label PlayerUsername => Gun.PlayerUsernameLabel;
     protected override BezelContainer HealthBar => _.HUD.Health.Border.Mask.HealthBar;

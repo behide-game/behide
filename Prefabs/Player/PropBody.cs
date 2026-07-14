@@ -7,10 +7,10 @@ namespace Behide.Game.Player;
 public partial class PropBody : PlayerBody
 {
     private Node3D currentVisualNode = null!;
-    private Node3D currentOutlineNode = null!;
     private CollisionShape3D[] collisionNodes = null!;
 
     [Export] private float maxKickForce = 17f;
+    [Export] private ShaderMaterial outlineMaterial = null!;
 
     [ExportGroup("Camera adjust transition")]
     [Export] private double cameraAdjustDuration = 0.4;
@@ -19,19 +19,13 @@ public partial class PropBody : PlayerBody
 
     private Vector3 initialCameraPosition = Vector3.Zero;
     private Tween? cameraAdjustTween;
+    private bool outlineEnabled;
 
     private const float speed = 1.55f;
     private const float slowSpeed = 0.3f;
-    private bool isOutlineVisible = false;
 
     protected override Node3D CameraDisk => _.CameraDisk;
     protected override Camera3D Camera => _.CameraDisk.SpringArm3D.Camera;
-    protected Camera3D OutlineCamera => _.SubViewport.OutlineCamera;
-    protected SubViewport SubViewport => _.SubViewport;
-    protected ColorRect ColorRect => _.CanvasLayer.ColorRect;
-    protected Shader MaskShader => GD.Load<Shader>(GetSceneFilePath().GetBaseDir().PathJoin("mask.gdshader"));
-    protected ShaderMaterial MaskMaterial = null!;
-    protected ShaderMaterial OutlineMaterial => (ShaderMaterial)ColorRect.GetMaterial();
     protected override RayCast3D RayCast => _.CameraDisk.SpringArm3D.Camera.RayCast;
     protected override BezelContainer HealthBar => _.HUD.BottomLeft.Health.Border.Mask.HealthBar;
     protected override Label HealthLabel => _.HUD.BottomLeft.Health.Border.HealthLabel;
@@ -42,34 +36,24 @@ public partial class PropBody : PlayerBody
     {
         base._EnterTree();
         currentVisualNode = _.MeshInstance3D;
-        currentOutlineNode = _.MeshInstance3DOutline;
-        MaskMaterial = new ShaderMaterial();
-        MaskMaterial.SetShader(MaskShader);
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
 
+        AddOutlineMaterial(currentVisualNode);
         ShowLockedLogo(false);
         AdjustProperties();
-
-        if(!IsMultiplayerAuthority())
-        {
-            return;
-        }
-        OutlineCamera.MakeCurrent();
-        currentOutlineNode.Hide();
-        if(isOutlineVisible) ColorRect.Show();
-        SubViewport.Size = GetWindow().Size;
-        OutlineMaterial.SetShaderParameter("highlighted_depth_tex", SubViewport.GetTexture());
     }
 
-    public override void _PhysicsProcess(double delta)
+    public override void _Process(double delta)
     {
-        base._PhysicsProcess(delta);
-        // done in physics process to avoid synchronisation lag between cameras
-        OutlineCamera.GlobalTransform = Camera.GlobalTransform;
-        OutlineCamera.Fov = Camera.Fov;
-        OutlineCamera.Size = Camera.Size;
-        OutlineCamera.KeepAspect = Camera.KeepAspect;
+        base._Process(delta);
+        var time = Time.GetTicksMsec()/1000.0;
+        outlineMaterial.SetShaderParameter("albedo", new Color(
+            (float)Math.Cos(time*2),
+            (float)Math.Sin(time),
+            (float)Math.Cos(time*4),
+            outlineEnabled ? 1f : 0f
+        ));
     }
 
     protected override void SetHudsVisibility(bool value) => _.HUD.Get().SetVisible(value);
@@ -77,6 +61,11 @@ public partial class PropBody : PlayerBody
     public override void _UnhandledInput(InputEvent rawEvent)
     {
         base._UnhandledInput(rawEvent);
+
+        // Toggle outline
+        if (Input.IsActionJustPressed(InputActions.ToggleOutline))
+            outlineEnabled = !outlineEnabled;
+
         if (!IsMultiplayerAuthority()) return;
         if (!Alive) return;
         if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
@@ -107,20 +96,6 @@ public partial class PropBody : PlayerBody
             );
         }
 
-        // Toggle outline
-        if(Input.IsActionJustPressed(InputActions.ToggleOutline))
-        {
-            if(isOutlineVisible)
-            {
-                ColorRect.Hide();
-            }
-            else
-            {
-                ColorRect.Show();
-            }
-            isOutlineVisible = !isOutlineVisible;
-        }
-
         // Adjust speed
         MoveSpeed =
             Input.IsActionPressed(InputActions.Slow)
@@ -137,8 +112,6 @@ public partial class PropBody : PlayerBody
         // Remove current visual node, outline node and collision nodes
         currentVisualNode.QueueFree();
         RemoveChild(currentVisualNode);
-        currentOutlineNode.QueueFree();
-        RemoveChild(currentOutlineNode);
         foreach (var collisionNode in collisionNodes)
         {
             collisionNode.QueueFree();
@@ -148,43 +121,9 @@ public partial class PropBody : PlayerBody
         // Set new visual node
         var initialVisualNodePos = newVisualNode.Position;
         currentVisualNode = newVisualNode;
-        newVisualNode.Position = Vector3.Zero;
-        currentOutlineNode = (Node3D)newVisualNode.Duplicate();
+        currentVisualNode.Position = Vector3.Zero;
+        AddOutlineMaterial(currentVisualNode);
         AddChild(currentVisualNode);
-        if(currentOutlineNode is MeshInstance3D currentOutlineMesh)
-        {
-            currentOutlineMesh.Name = "OutlineMesh";
-            currentOutlineMesh.SetLayerMaskValue(2, false);
-            currentOutlineMesh.SetLayerMaskValue(4, true);
-            for (int i = 0; i < currentOutlineMesh.Mesh.GetSurfaceCount(); i++)
-            {
-                currentOutlineMesh.SetSurfaceOverrideMaterial(i, MaskMaterial);
-            }
-            AddChild(currentOutlineMesh);
-            currentOutlineNode = currentOutlineMesh;
-        }
-        else
-        {
-            currentOutlineNode.Name = "OutlineGroup";
-            foreach (var meshCandidate in currentOutlineNode.FindChildren("", "MeshInstance3D", true, false))
-            {
-                if(meshCandidate is not MeshInstance3D mesh)
-                {
-                    GD.PushError("meshCandidate is not a MeshInstance3D");
-                    break;
-                }
-                mesh.SetLayerMaskValue(1, false);
-                mesh.SetLayerMaskValue(2, false);
-                mesh.SetLayerMaskValue(3, false);
-                mesh.SetLayerMaskValue(4, true);
-                for (int i = 0; i < mesh.Mesh.GetSurfaceCount(); i++)
-                {
-                    mesh.SetSurfaceOverrideMaterial(i, MaskMaterial);
-                }
-            }
-            AddChild(currentOutlineNode);
-        }
-        if(IsMultiplayerAuthority()) currentOutlineNode.Hide();
 
 
         // Set new collision shapes
@@ -217,7 +156,7 @@ public partial class PropBody : PlayerBody
         var aabb = currentVisualNode is MeshInstance3D meshInstance3D
             ? meshInstance3D.GetAabb()
             : currentVisualNode
-                .FindChildren("*", nameof(MeshInstance3D))
+                .FindChildren("*", nameof(MeshInstance3D), true, false)
                 .Select(mi3D => ((MeshInstance3D)mi3D).GetAabb())
                 .Aggregate(new Aabb(), (current, aabb) => current.Merge(aabb));
 
@@ -241,4 +180,20 @@ public partial class PropBody : PlayerBody
     }
 
     public void ShowLockedLogo(bool show) => _.HUD.BottomLeft.RotationLockedLabel.SetVisible(show);
+
+    private void AddOutlineMaterial(Node node)
+    {
+        if (node is MeshInstance3D mesh)
+        {
+            mesh.MaterialOverlay = outlineMaterial;
+            return;
+        }
+
+        foreach (var childNode in node.FindChildren("*", nameof(MeshInstance3D), true, false))
+        {
+            if (childNode is not MeshInstance3D childMesh) continue;
+            childMesh.MaterialOverlay = outlineMaterial;
+            AddOutlineMaterial(childMesh);
+        }
+    }
 }
