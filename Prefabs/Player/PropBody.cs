@@ -28,10 +28,13 @@ public partial class PropBody : PlayerBody
     protected override Camera3D Camera => _.CameraDisk.SpringArm3D.Camera;
     protected Camera3D OutlineCamera => _.SubViewport.OutlineCamera;
     protected SubViewport SubViewport => _.SubViewport;
-    protected ColorRect ColorRect => _.CanvasLayer.ColorRect;
+    protected SubViewport HorizontalViewport => _.HorizontalViewport;
+    protected ColorRect ColorRectHorizontal => _.HorizontalViewport.ColorRect;
+    protected ColorRect ColorRectVertical => _.CanvasLayer.ColorRect;
     protected Shader MaskShader => GD.Load<Shader>(GetSceneFilePath().GetBaseDir().PathJoin("mask.gdshader"));
     protected ShaderMaterial MaskMaterial = null!;
-    protected ShaderMaterial OutlineMaterial => (ShaderMaterial)ColorRect.GetMaterial();
+    protected ShaderMaterial HorizontalMaterial => (ShaderMaterial)ColorRectHorizontal.GetMaterial();
+    protected ShaderMaterial VerticalMaterial => (ShaderMaterial)ColorRectVertical.GetMaterial();
     protected override RayCast3D RayCast => _.CameraDisk.SpringArm3D.Camera.RayCast;
     protected override BezelContainer HealthBar => _.HUD.BottomLeft.Health.Border.Mask.HealthBar;
     protected override Label HealthLabel => _.HUD.BottomLeft.Health.Border.HealthLabel;
@@ -56,10 +59,19 @@ public partial class PropBody : PlayerBody
             return;
         }
         OutlineCamera.MakeCurrent();
-        currentOutlineNode.Hide();
-        if(isOutlineVisible) ColorRect.Show();
+        #if DEBUG
+
+        #else
+            currentOutlineNode.Hide();
+        #endif
+        if(isOutlineVisible)
+        {
+            ColorRectVertical.Show();
+        }
         SubViewport.Size = GetWindow().Size;
-        OutlineMaterial.SetShaderParameter("highlighted_depth_tex", SubViewport.GetTexture());
+        HorizontalViewport.Size = GetWindow().Size; // TODO correct size when changing window size and also in HunterBody.cs
+        HorizontalMaterial.SetShaderParameter("input_texture", SubViewport.GetTexture());
+        VerticalMaterial.SetShaderParameter("input_texture", HorizontalViewport.GetTexture());
     }
 
     public override void _PhysicsProcess(double delta)
@@ -112,11 +124,11 @@ public partial class PropBody : PlayerBody
         {
             if(isOutlineVisible)
             {
-                ColorRect.Hide();
+                ColorRectVertical.Hide();
             }
             else
             {
-                ColorRect.Show();
+                ColorRectVertical.Show();
             }
             isOutlineVisible = !isOutlineVisible;
         }
@@ -184,7 +196,12 @@ public partial class PropBody : PlayerBody
             }
             AddChild(currentOutlineNode);
         }
-        if(IsMultiplayerAuthority()) currentOutlineNode.Hide();
+        #if DEBUG
+
+        #else
+            if(IsMultiplayerAuthority()) currentOutlineNode.Hide();
+        #endif
+
 
 
         // Set new collision shapes
