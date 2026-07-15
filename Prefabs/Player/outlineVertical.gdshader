@@ -13,16 +13,19 @@ void fragment() {
 
     bool is_inner = temp_color.a > 0. && temp_color.a < 1.;
 	bool is_outline = temp_color.a > 0.;
+    vec3 mean_color = vec3(0.);
+    int weight_count = 0;
 
 	if (!is_inner) {
-		for (int y = -outline_width; y <= outline_width && !is_outline; ++y) {
-            if (y == 0) { continue; }
+		for (int y = -outline_width; y <= outline_width; ++y) {
             ivec2 n_iuv = clamp(iuv + ivec2(0, y), ivec2(0), size-ivec2(1));
             vec4 currentPixel = texelFetch(input_texture, n_iuv, 0);
             float n_d_h = currentPixel.a;
-            is_outline = n_d_h > 0.01;
-            if(is_outline) {
-                temp_color = currentPixel;
+            if(n_d_h > 0.01) {
+                int weight = outline_width - abs(y) + 1;
+                mean_color += currentPixel.rgb/currentPixel.a*float(weight);
+                weight_count += weight;
+                is_outline = true;
             }
 		}
 	}
@@ -31,7 +34,7 @@ void fragment() {
 		COLOR = vec4(temp_color.rgb/temp_color.a, inner_opacity);
 	}
     else if(is_outline) {
-		COLOR = vec4(temp_color.rgb/temp_color.a, outline_opacity);
+		COLOR = vec4(mean_color/float(weight_count), outline_opacity);
 	}
     else discard;
 }

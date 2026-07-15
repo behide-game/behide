@@ -48,8 +48,13 @@ public partial class PropBody : PlayerBody
         base._EnterTree();
         currentVisualNode = _.MeshInstance3D;
         currentOutlineNode = _.MeshInstance3DOutline;
+
         MaskMaterial = new ShaderMaterial();
+        MaskMaterial.SetShaderParameter("colorID", new Vector4 (GD.Randf(), GD.Randf(), GD.Randf(), 1f));
         MaskMaterial.SetShader(MaskShader);
+
+        ((MeshInstance3D)currentOutlineNode).SetSurfaceOverrideMaterial(0, MaskMaterial);
+
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
 
@@ -70,8 +75,11 @@ public partial class PropBody : PlayerBody
         {
             ColorRectVertical.Show();
         }
+
         HorizontalMaterial.SetShaderParameter("input_texture", SubViewport.GetTexture());
         VerticalMaterial.SetShaderParameter("input_texture", HorizontalViewport.GetTexture());
+
+        GetWindow().SizeChanged += ResizeViewports;
         ResizeViewports();
         UpdateViewportSettingsOnChange();
         UpdateViewportSettings();
