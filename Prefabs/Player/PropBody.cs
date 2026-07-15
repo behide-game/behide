@@ -47,13 +47,13 @@ public partial class PropBody : PlayerBody
     public override void _Process(double delta)
     {
         base._Process(delta);
-        var time = Time.GetTicksMsec()/1000.0;
-        outlineMaterial.SetShaderParameter("albedo", new Color(
-            (float)Math.Cos(time*2),
-            (float)Math.Sin(time),
-            (float)Math.Cos(time*4),
-            outlineEnabled ? 1f : 0f
-        ));
+        // var time = Time.GetTicksMsec()/1000.0;
+        // outlineMaterial.SetShaderParameter("albedo", new Color(
+        //     (float)Math.Cos(time*2),
+        //     (float)Math.Sin(time),
+        //     (float)Math.Cos(time*4),
+        //     outlineEnabled ? 1f : 0f
+        // ));
     }
 
     protected override void SetHudsVisibility(bool value) => _.HUD.Get().SetVisible(value);

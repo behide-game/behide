@@ -10,13 +10,8 @@
 render_priority = 0
 shader = ExtResource("3_dg5hw")
 shader_parameter/albedo = Color(0, 1, 1, 1)
+shader_parameter/albedoOther = Color(0, 0.70980394, 1, 1)
 shader_parameter/fresnel_power = 1.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_7odvv"]
-render_priority = 0
-shader = ExtResource("3_dg5hw")
-shader_parameter/albedo = Color(0, 1, 1, 0.41568628)
-shader_parameter/fresnel_power = 1.2
 
 [sub_resource type="BoxMesh" id="BoxMesh_x40yu"]
 
@@ -58,7 +53,7 @@ maxKickForce = 17.5
 outlineMaterial = SubResource("ShaderMaterial_j2ufq")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=817965567]
-material_overlay = SubResource("ShaderMaterial_7odvv")
+material_overlay = SubResource("ShaderMaterial_j2ufq")
 gi_mode = 2
 mesh = SubResource("BoxMesh_x40yu")
 
