@@ -11,8 +11,8 @@ void fragment() {
     ivec2 iuv = ivec2(suv*vec2(size));
     vec4 temp_color = texelFetch(input_texture, iuv, 0);
 
-    bool is_inner = temp_color.a > 0.0 && temp_color.a < 1.;
-	bool is_outline = temp_color.a > 0.0;
+    bool is_inner = temp_color.a > 0. && temp_color.a < 1.;
+	bool is_outline = temp_color.a > 0.;
 
 	if (!is_inner) {
 		for (int y = -outline_width; y <= outline_width && !is_outline; ++y) {

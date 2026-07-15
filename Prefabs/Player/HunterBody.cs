@@ -40,7 +40,6 @@ public partial class HunterBody : PlayerBody
         GunCamera.MakeCurrent();
         UpdateViewportSettingsOnChange();
         UpdateViewportSettings();
-        SubViewport.Size = GetWindow().Size;
     }
 
     protected override void SetHudsVisibility(bool value)

@@ -9,7 +9,7 @@ void fragment() {
     ivec2 iuv = ivec2(suv*vec2(size));
     vec4 temp_color = texelFetch(input_texture, iuv, 0);
 
-	bool is_inner = temp_color.a > 0.0;
+	bool is_inner = temp_color.a > 0.;
 	bool is_outline = false;
 
 	if (!is_inner || is_outline) {

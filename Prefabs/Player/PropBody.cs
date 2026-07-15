@@ -72,9 +72,7 @@ public partial class PropBody : PlayerBody
         }
         HorizontalMaterial.SetShaderParameter("input_texture", SubViewport.GetTexture());
         VerticalMaterial.SetShaderParameter("input_texture", HorizontalViewport.GetTexture());
-        SubViewport.Size = GetWindow().Size;
-        HorizontalViewport.Size = GetWindow().Size; // TODO correct size when changing window size and also in HunterBody.cs
-        VerticalViewport.Size = GetWindow().Size;
+        ResizeViewports();
         UpdateViewportSettingsOnChange();
         UpdateViewportSettings();
     }
@@ -108,6 +106,12 @@ public partial class PropBody : PlayerBody
         SubViewport.Msaa3D = GetWindow().Msaa3D;
         SubViewport.ScreenSpaceAA = GetWindow().ScreenSpaceAA;
         SubViewport.UseTaa = GetWindow().UseTaa;
+    }
+
+    private void ResizeViewports()
+    {
+        SubViewport.Size = GetWindow().Size;
+        HorizontalViewport.Size = GetWindow().Size;
     }
 
     protected override void SetHudsVisibility(bool value) => _.HUD.Get().SetVisible(value);
