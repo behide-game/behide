@@ -104,6 +104,9 @@ public abstract partial class PlayerBody : CharacterBody3D
             _ => Camera.Fov = (float)GameManager.Settings.Fov,
             NodeAliveCt
         );
+
+        // Ignore PlayerBody
+        RayCast.AddException(this);
     }
 
     // Show players names
