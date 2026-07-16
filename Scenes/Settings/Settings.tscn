@@ -59,6 +59,21 @@ text = "Player name"
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Color" type="HBoxContainer" parent="TabContainer/General/VBox" unique_id=288310400]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/General/VBox/Color" unique_id=1985173137]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Color"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="TabContainer/General/VBox/Color" unique_id=1827737492]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 10
+edit_alpha = false
+edit_intensity = false
+
 [node name="Back" type="Button" parent="TabContainer/General/VBox" unique_id=595488265]
 layout_mode = 2
 size_flags_vertical = 10

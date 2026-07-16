@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Behide.UI.Controls;
 using Godot;
+using Serilog.Debugging;
 
 namespace Behide.Game.Player;
 
@@ -50,8 +51,14 @@ public partial class PropBody : PlayerBody
         currentOutlineNode = _.MeshInstance3DOutline;
 
         MaskMaterial = new ShaderMaterial();
-        MaskMaterial.SetShaderParameter("colorID", new Vector4 (GD.Randf(), GD.Randf(), GD.Randf(), 1f));
         MaskMaterial.SetShader(MaskShader);
+        var room = GameManager.Room.Room;
+        var color = new Color(1f, 0.8f, 0f, 1f);
+        if(room?.Players.TryGetValue(GetMultiplayerAuthority(), out var playerObservable) ?? false)
+        {
+            color = playerObservable.Value.Color;
+        }
+        MaskMaterial.SetShaderParameter("colorID", color);
 
         ((MeshInstance3D)currentOutlineNode).SetSurfaceOverrideMaterial(0, MaskMaterial);
 
@@ -220,8 +227,8 @@ public partial class PropBody : PlayerBody
             {
                 if(meshCandidate is not MeshInstance3D mesh)
                 {
-                    GD.PushError("meshCandidate is not a MeshInstance3D");
-                    break;
+                    meshCandidate.QueueFree();
+                    continue;
                 }
                 mesh.SetLayerMaskValue(1, false);
                 mesh.SetLayerMaskValue(2, false);
