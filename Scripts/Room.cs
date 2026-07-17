@@ -264,7 +264,5 @@ public partial class Room : Node
 
         var newPlayer = player.Value with { Color = newColor };
         player.OnNext(newPlayer);
-        playerStateChanged.OnNext(newPlayer);
-        if (playerId == LocalPlayer.Value.PeerId) LocalPlayer.OnNext(newPlayer);
     }
 }

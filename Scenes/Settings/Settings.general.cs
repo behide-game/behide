@@ -47,7 +47,7 @@ public partial class Settings
         General.Username.LineEdit.TextChanged += _ => Changed.OnNext(Unit.Default);
         General.Color.ColorPickerButton.ColorChanged += _ => {
             Changed.OnNext(Unit.Default);
-            var color = General.Color.ColorPickerButton.GetPicker().Color;
+            var color = General.Color.ColorPickerButton.Color;
             var room = GameManager.Room.Room;
             room?.SetPlayerColor(color);
         };
