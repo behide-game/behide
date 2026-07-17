@@ -45,7 +45,12 @@ public partial class Settings
     private void GeneralListenSettingsForSaving()
     {
         General.Username.LineEdit.TextChanged += _ => Changed.OnNext(Unit.Default);
-        General.Color.ColorPickerButton.GetPicker().ColorChanged += _ => Changed.OnNext(Unit.Default);
+        General.Color.ColorPickerButton.ColorChanged += _ => {
+            Changed.OnNext(Unit.Default);
+            var color = General.Color.ColorPickerButton.GetPicker().Color;
+            var room = GameManager.Room.Room;
+            room?.SetPlayerColor(color);
+        };
     }
 
     private void GeneralApplyFromConfig(ConfigFile config)
@@ -62,7 +67,8 @@ public partial class Settings
             var r = int.Parse(colorString.Substr(0, 2), System.Globalization.NumberStyles.HexNumber);
             var g = int.Parse(colorString.Substr(2, 2), System.Globalization.NumberStyles.HexNumber);
             var b = int.Parse(colorString.Substr(4, 2), System.Globalization.NumberStyles.HexNumber);
-            General.Color.ColorPickerButton.Color = new Color ((float)r/255, (float)g/255, (float)b/255);
+            var color = new Color ((float)r/255, (float)g/255, (float)b/255);
+            General.Color.ColorPickerButton.Color = color;
         }
         catch (Exception) { General.Color.ColorPickerButton.Color = new Color(1f, 0.8f, 0f); }
     }

@@ -46,21 +46,20 @@ public partial class PropBody : PlayerBody
 
     public override void _EnterTree()
     {
-        base._EnterTree();
-        currentVisualNode = _.MeshInstance3D;
-        currentOutlineNode = _.MeshInstance3DOutline;
-
         MaskMaterial = new ShaderMaterial();
         MaskMaterial.SetShader(MaskShader);
-        var room = GameManager.Room.Room;
+        currentOutlineNode = _.MeshInstance3DOutline;
+        ((MeshInstance3D)currentOutlineNode).SetSurfaceOverrideMaterial(0, MaskMaterial);
+        base._EnterTree();
+        currentVisualNode = _.MeshInstance3D;
+
+        /*var room = GameManager.Room.Room;
         var color = new Color(1f, 0.8f, 0f, 1f);
         if(room?.Players.TryGetValue(GetMultiplayerAuthority(), out var playerObservable) ?? false)
         {
             color = playerObservable.Value.Color;
         }
-        MaskMaterial.SetShaderParameter("colorID", color);
-
-        ((MeshInstance3D)currentOutlineNode).SetSurfaceOverrideMaterial(0, MaskMaterial);
+        MaskMaterial.SetShaderParameter("colorID", color);*/
 
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
@@ -303,4 +302,36 @@ public partial class PropBody : PlayerBody
     }
 
     public void ShowLockedLogo(bool show) => _.HUD.BottomLeft.RotationLockedLabel.SetVisible(show);
+
+    protected override void UpdatePlayerProperties(Types.Player player)
+    {
+        base.UpdatePlayerProperties(player);
+        var color = player.Color;
+        if(currentOutlineNode is not null)
+        {
+            if(currentOutlineNode is MeshInstance3D currentOutlineMesh)
+            {
+                for (int i = 0; i < currentOutlineMesh.GetSurfaceOverrideMaterialCount(); i++)
+                {
+                    ((ShaderMaterial)currentOutlineMesh.GetSurfaceOverrideMaterial(i)).SetShaderParameter("colorID", color);
+                }
+            }
+            else
+            {
+                currentOutlineNode.Name = "OutlineGroup";
+                foreach (var meshCandidate in currentOutlineNode.FindChildren("", "MeshInstance3D", true, false))
+                {
+                    if(meshCandidate is not MeshInstance3D mesh)
+                    {
+                        meshCandidate.QueueFree();
+                        continue;
+                    }
+                    for (int i = 0; i < mesh.GetSurfaceOverrideMaterialCount(); i++)
+                    {
+                        ((ShaderMaterial)mesh.GetSurfaceOverrideMaterial(i)).SetShaderParameter("colorID", color);
+                    }
+                }
+            }
+        }
+    }
 }

@@ -197,6 +197,7 @@ public partial class Room : Node
 
     /// <summary>Update the player state locally and on the other peers</summary>
     public void SetPlayerState(PlayerState newState) => Rpc(nameof(SetPlayerStateRpc), newState);
+    public void SetPlayerColor(Color newColor) => Rpc(nameof(SetPlayerColorRpc), newColor);
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     private void RegisterPlayerRpc(Variant playerVariant)
@@ -242,6 +243,26 @@ public partial class Room : Node
         log.Debug("[RPC] Player {PlayerId} is now in state {State}", playerId, newState);
 
         var newPlayer = player.Value with { State = newState };
+        player.OnNext(newPlayer);
+        playerStateChanged.OnNext(newPlayer);
+        if (playerId == LocalPlayer.Value.PeerId) LocalPlayer.OnNext(newPlayer);
+    }
+
+    /// <summary>Set a player color (the color of the caller)</summary>
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+    private void SetPlayerColorRpc(Color newColor)
+    {
+        var playerId = Multiplayer.GetRemoteSenderId();
+        var player = Players.GetValueOrDefault(playerId);
+        if (player is null)
+        {
+            log.Warning("[SetPlayerStateRpc]: Player {PlayerId} not found", playerId);
+            return;
+        }
+
+        log.Debug("[RPC] Player {PlayerId} is now in Color {Color}", playerId, newColor);
+
+        var newPlayer = player.Value with { Color = newColor };
         player.OnNext(newPlayer);
         playerStateChanged.OnNext(newPlayer);
         if (playerId == LocalPlayer.Value.PeerId) LocalPlayer.OnNext(newPlayer);

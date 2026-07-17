@@ -79,6 +79,12 @@ public abstract partial class PlayerBody : CharacterBody3D
         if (GameManager.Supervisor is null) log.Error("Supervisor is null");
         else supervisor = GameManager.Supervisor;
 
+        if(GameManager.Room.Room is null) log.Error("Not in a room");
+        else if (GameManager.Room.Room.Players.TryGetValue(GetMultiplayerAuthority(), out var behaviorSubject))
+            {
+                behaviorSubject.Subscribe(_ => UpdatePlayerProperties(behaviorSubject.Value));
+            }
+
         Health = 1;
         HealthBar.Color = new Color (0f, 1f, 0f, 1f);
 
@@ -147,4 +153,9 @@ public abstract partial class PlayerBody : CharacterBody3D
     }
 
     protected abstract void SetHudsVisibility(bool value);
+
+    protected virtual void UpdatePlayerProperties(Types.Player player)
+    {
+
+    }
 }
