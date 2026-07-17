@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://d14u1u53pe8ce"]
+
+[ext_resource type="Script" uid="uid://geoefhmdomn8" path="res://Prefabs/Player/Prop/Sound/SoundButton.cs" id="1_rlewo"]
+[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Prefabs/Controls/BezelContainer.cs" id="1_uckv3"]
+[ext_resource type="FontVariation" uid="uid://bqpb46gqbs0cm" path="res://Assets/Fonts/Space Grotesk/Space Grotesk Medium.tres" id="2_rlewo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ceia4"]
+bg_color = Color(0.18860002, 0.35596332, 0.46, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_jaxhj"]
+font = ExtResource("2_rlewo")
+font_size = 18
+
+[node name="Container" type="MarginContainer" unique_id=613770651]
+offset_left = 15.0
+offset_top = 10.0
+offset_right = 349.0
+offset_bottom = 54.0
+size_flags_horizontal = 3
+script = ExtResource("1_rlewo")
+
+[node name="Content" type="MarginContainer" parent="." unique_id=1044684665]
+clip_children = 2
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+script = ExtResource("1_uckv3")
+BezelSize = 15
+Color = Color(0.25305256, 0.50219536, 0.66278523, 1)
+
+[node name="Progress" type="Panel" parent="Content" unique_id=677808213]
+layout_mode = 2
+offset_transform_enabled = true
+theme_override_styles/panel = SubResource("StyleBoxFlat_ceia4")
+
+[node name="Margin" type="MarginContainer" parent="Content" unique_id=708906864]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="Content/Margin" unique_id=401544816]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Label"
+label_settings = SubResource("LabelSettings_jaxhj")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Time" type="Label" parent="Content/Margin" unique_id=677009811]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "2s"
+label_settings = SubResource("LabelSettings_jaxhj")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="." unique_id=1478688422]
+layout_mode = 2
+flat = true

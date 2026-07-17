@@ -211,11 +211,9 @@ public partial class PropBody : PlayerBody
 
             AddChild(currentOutlineNode);
         }
-#if DEBUG
-
-#else
-            if(IsMultiplayerAuthority()) currentOutlineNode.Hide();
-#endif
+        #if !DEBUG
+        if (IsMultiplayerAuthority()) currentOutlineNode.Hide();
+        #endif
 
 
         // Set new collision shapes

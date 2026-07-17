@@ -104,6 +104,11 @@ remote_path = NodePath("../../../../SubViewport/OutlineCamera")
 [node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=512832509]
 replication_config = SubResource("SceneReplicationConfig_n61o8")
 
+[node name="MeshInstance3DOutline" type="MeshInstance3D" parent="." unique_id=1255137576]
+layers = 8
+mesh = SubResource("BoxMesh_w1hta")
+surface_material_override/0 = SubResource("ShaderMaterial_j2ufq")
+
 [node name="SubViewport" type="SubViewport" parent="." unique_id=1030597066]
 transparent_bg = true
 handle_input_locally = false

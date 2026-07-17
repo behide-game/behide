@@ -48,6 +48,7 @@ debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=1276327619]
 stream = SubResource("AudioStream_8uwrk")
+unit_size = 6.5
 
 [node name="Hud" type="MarginContainer" parent="." unique_id=1922832746]
 anchors_preset = 15

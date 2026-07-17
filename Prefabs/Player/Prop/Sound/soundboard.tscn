@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://bcxpltylg530k"]
+
+[ext_resource type="Script" uid="uid://bksfdy2krvi5b" path="res://Prefabs/Player/Prop/Sound/Soundboard.cs" id="1_rn5rn"]
+[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Prefabs/Controls/BezelContainer.cs" id="1_seyun"]
+[ext_resource type="AudioStream" uid="uid://diif355w38k28" path="res://Assets/Sounds/Soundboard/rawr_rawr.wav" id="2_3e2gy"]
+[ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="2_qqxr4"]
+[ext_resource type="AudioStream" uid="uid://ds2he73oixd6l" path="res://Assets/Sounds/Soundboard/cafard.wav" id="3_nssbk"]
+[ext_resource type="PackedScene" uid="uid://d14u1u53pe8ce" path="res://Prefabs/Player/Prop/Sound/sound_button.tscn" id="3_rn5rn"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ceia4"]
+font = ExtResource("2_qqxr4")
+font_size = 20
+
+[node name="Soundboard" type="MarginContainer" unique_id=82480036]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+size_flags_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+script = ExtResource("1_rn5rn")
+audioNames = PackedStringArray("Rawr RAWR", "Cafaard")
+audioStreams = [ExtResource("2_3e2gy"), ExtResource("3_nssbk")]
+soundButtonScene = ExtResource("3_rn5rn")
+
+[node name="Container" type="MarginContainer" parent="." unique_id=1277862446]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+script = ExtResource("1_seyun")
+BezelSize = 25
+Color = Color(0.7921569, 0.8784314, 0.8980392, 1)
+
+[node name="VBox" type="VBoxContainer" parent="Container" unique_id=1426750670]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="MarginContainer" parent="Container/VBox" unique_id=945238265]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_seyun")
+BezelSize = 15
+Color = Color(0.05882353, 0.21960784, 0.28627452, 1)
+
+[node name="Label" type="Label" parent="Container/VBox/Title" unique_id=195199279]
+layout_mode = 2
+text = "Soundboard"
+label_settings = SubResource("LabelSettings_ceia4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sounds" type="VBoxContainer" parent="Container/VBox" unique_id=840257938]
+layout_mode = 2
+theme_override_constants/separation = 6
