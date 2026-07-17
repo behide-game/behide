@@ -38,7 +38,7 @@ public partial class HunterBody : PlayerBody
             return;
         }
         GunCamera.MakeCurrent();
-        UpdateViewportSettingsOnChange();
+        GameManager.Settings.Changed.Subscribe(_ => UpdateViewportSettings());
         UpdateViewportSettings();
     }
 
@@ -46,16 +46,6 @@ public partial class HunterBody : PlayerBody
     {
         _.HUD.Get().SetVisible(value);
         Gun.Hud.SetVisible(value);
-    }
-
-    public override void _PhysicsProcess(double delta)
-    {
-        base._PhysicsProcess(delta);
-        // done in physics process to avoid synchronisation lag between cameras
-        GunCamera.GlobalTransform = Camera.GlobalTransform;
-        GunCamera.Fov = Camera.Fov;
-        GunCamera.Size = Camera.Size;
-        GunCamera.KeepAspect = Camera.KeepAspect;
     }
 
     public override void _Process(double delta)
@@ -115,11 +105,6 @@ public partial class HunterBody : PlayerBody
         }
     }
 
-    private void UpdateViewportSettingsOnChange()
-    {
-        GameManager.Settings.ViewportSettingsChanged.Subscribe(_ => UpdateViewportSettings());
-    }
-
     private void UpdateViewportSettings()
     {
         SubViewport.Scaling3DMode = GetWindow().Scaling3DMode;
@@ -127,6 +112,9 @@ public partial class HunterBody : PlayerBody
         SubViewport.Msaa3D = GetWindow().Msaa3D;
         SubViewport.ScreenSpaceAA = GetWindow().ScreenSpaceAA;
         SubViewport.UseTaa = GetWindow().UseTaa;
+        GunCamera.Fov = Camera.Fov;
+        GunCamera.Size = Camera.Size;
+        GunCamera.KeepAspect = Camera.KeepAspect;
     }
 
     private void ToggleCrouch(bool wantsToCrouch)

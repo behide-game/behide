@@ -88,6 +88,9 @@ target_position = Vector3(0, 0, -20)
 collision_mask = 23
 debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
 
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="CameraDisk/SpringArm3D/Camera" unique_id=657472308]
+remote_path = NodePath("../../../../SubViewport/OutlineCamera")
+
 [node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=512832509]
 replication_config = SubResource("SceneReplicationConfig_n61o8")
 
@@ -102,6 +105,7 @@ handle_input_locally = false
 render_target_update_mode = 4
 
 [node name="OutlineCamera" type="Camera3D" parent="SubViewport" unique_id=262317903]
+transform = Transform3D(1, 0, 0, 0, 0.99691737, 0.07845913, 0, -0.07845913, 0.99691737, 0, 1, 0)
 cull_mask = 8
 
 [node name="HorizontalViewport" type="SubViewport" parent="." unique_id=1074722499]

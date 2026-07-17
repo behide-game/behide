@@ -86,8 +86,8 @@ public partial class PropBody : PlayerBody
         VerticalMaterial.SetShaderParameter("input_texture", HorizontalViewport.GetTexture());
 
         GetWindow().SizeChanged += ResizeViewports;
+        GameManager.Settings.Changed.Subscribe(_ => UpdateViewportSettings());
         ResizeViewports();
-        UpdateViewportSettingsOnChange();
         UpdateViewportSettings();
     }
 
@@ -98,21 +98,6 @@ public partial class PropBody : PlayerBody
         VerticalViewport.Scaling3DScale = 0.5f;
     }
 
-    public override void _PhysicsProcess(double delta)
-    {
-        base._PhysicsProcess(delta);
-        // done in physics process to avoid synchronisation lag between cameras
-        OutlineCamera.GlobalTransform = Camera.GlobalTransform;
-        OutlineCamera.Fov = Camera.Fov;
-        OutlineCamera.Size = Camera.Size;
-        OutlineCamera.KeepAspect = Camera.KeepAspect;
-    }
-
-    private void UpdateViewportSettingsOnChange()
-    {
-        GameManager.Settings.ViewportSettingsChanged.Subscribe(_ => UpdateViewportSettings());
-    }
-
     private void UpdateViewportSettings()
     {
         SubViewport.Scaling3DMode = GetWindow().Scaling3DMode;
@@ -120,6 +105,9 @@ public partial class PropBody : PlayerBody
         SubViewport.Msaa3D = GetWindow().Msaa3D;
         SubViewport.ScreenSpaceAA = GetWindow().ScreenSpaceAA;
         SubViewport.UseTaa = GetWindow().UseTaa;
+        OutlineCamera.Fov = Camera.Fov;
+        OutlineCamera.Size = Camera.Size;
+        OutlineCamera.KeepAspect = Camera.KeepAspect;
     }
 
     private void ResizeViewports()
