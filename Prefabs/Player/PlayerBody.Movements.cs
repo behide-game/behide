@@ -43,7 +43,7 @@ public abstract partial class PlayerBody
         // Cancel movements if in menu
         if (Input.MouseMode != Input.MouseModeEnum.Captured)
         {
-            Velocity = velocity;
+            Velocity = new Vector3(0, velocity.Y, 0); // Only keep vertical component
             return;
         }
 
