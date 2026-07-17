@@ -33,9 +33,10 @@ custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/side_margin = 0
-current_tab = 0
+current_tab = 1
 
 [node name="General" type="MarginContainer" parent="TabContainer" unique_id=2018857125]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
@@ -80,7 +81,6 @@ size_flags_vertical = 10
 text = "Back"
 
 [node name="Controls" type="MarginContainer" parent="TabContainer" unique_id=712416793]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
@@ -126,6 +126,23 @@ min_value = 1.0
 max_value = 179.0
 step = 1.0
 value = 90.0
+
+[node name="Crouch" type="HBoxContainer" parent="TabContainer/Controls/VBox" unique_id=1853537923]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/Controls/VBox/Crouch" unique_id=105899445]
+layout_mode = 2
+text = "Crouch mode"
+
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Controls/VBox/Crouch" unique_id=1123010502]
+layout_mode = 2
+size_flags_horizontal = 10
+selected = 0
+item_count = 2
+popup/item_0/text = "Push"
+popup/item_0/id = 1
+popup/item_1/text = "Toggle"
+popup/item_1/id = 0
 
 [node name="Back" type="Button" parent="TabContainer/Controls/VBox" unique_id=130308000]
 layout_mode = 2

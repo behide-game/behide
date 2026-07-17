@@ -164,18 +164,8 @@ public partial class PropBody : PlayerBody
         }
 
         // Toggle outline
-        if(Input.IsActionJustPressed(InputActions.ToggleOutline))
-        {
-            if(isOutlineVisible)
-            {
-                ColorRectVertical.Hide();
-            }
-            else
-            {
-                ColorRectVertical.Show();
-            }
-            isOutlineVisible = !isOutlineVisible;
-        }
+        if(Input.IsActionPressed(InputActions.ToggleOutline)) ColorRectVertical.Show();
+        else ColorRectVertical.Hide();
 
         // Adjust speed
         MoveSpeed =
