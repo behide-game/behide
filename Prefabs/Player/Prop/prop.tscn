@@ -101,6 +101,11 @@ debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="CameraDisk/SpringArm3D/Camera" unique_id=657472308]
 remote_path = NodePath("../../../../SubViewport/OutlineCamera")
 
+[node name="AudioListener" type="AudioListener3D" parent="." unique_id=1523565194]
+
+[node name="AudioPlayer" type="AudioStreamPlayer3D" parent="." unique_id=1701150135]
+unit_size = 6.5
+
 [node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=512832509]
 replication_config = SubResource("SceneReplicationConfig_n61o8")
 

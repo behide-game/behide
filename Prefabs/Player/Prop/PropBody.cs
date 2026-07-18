@@ -66,7 +66,7 @@ public partial class PropBody : PlayerBody
         }
 
         MoveSpeed = speed;
-
+        _.AudioListener.MakeCurrent();
         OutlineCamera.MakeCurrent();
         #if !DEBUG
         currentOutlineNode.Hide();
