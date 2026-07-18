@@ -151,4 +151,12 @@ public abstract partial class PlayerBody : CharacterBody3D
 
     protected abstract void SetHudsVisibility(bool value);
     protected virtual void PlayerPropertiesChanged(Types.Player player) { }
+
+    public override void _Input(InputEvent rawEvent)
+    {
+        if (!IsMultiplayerAuthority()) return;
+        if (!rawEvent.IsActionPressed(BuiltinInputActions.UiCancel)) return;
+        GameManager.PauseMenu.ToggleMenu();
+        GetWindow().SetInputAsHandled();
+    }
 }

@@ -293,4 +293,24 @@ public partial class PropBody : PlayerBody
             }
         }
     }
+
+    public override void _Input(InputEvent evt)
+    {
+        if (!IsMultiplayerAuthority()) return;
+
+        var soundboard = _.Soundboard.Get();
+        if (evt.IsActionPressed(InputActions.Soundboard)
+            || (soundboard.Visible && evt.IsActionPressed(BuiltinInputActions.UiCancel)))
+        {
+            soundboard.SetVisible(!soundboard.Visible);
+            GetWindow().SetInputAsHandled();
+            return;
+        }
+
+        if (evt.IsActionPressed(BuiltinInputActions.UiCancel))
+        {
+            GameManager.PauseMenu.ToggleMenu();
+            GetWindow().SetInputAsHandled();
+        }
+    }
 }

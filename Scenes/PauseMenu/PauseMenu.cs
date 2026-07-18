@@ -32,7 +32,7 @@ public partial class PauseMenu : Control
         Input.MouseMode = MouseModeBefore;
     }
 
-    private void ToggleMenu()
+    public void ToggleMenu()
     {
         if (Visible) Hide();
         else Show();
@@ -55,6 +55,7 @@ public partial class PauseMenu : Control
     {
         if (evt.IsActionPressed(BuiltinInputActions.UiCancel))
         {
+            if (GameManager.State == GameManager.GameState.Game) return;
             ToggleMenu();
             GetViewport().SetInputAsHandled();
         }

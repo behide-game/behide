@@ -5,7 +5,7 @@ using Log = Behide.Logging.Log;
 namespace Behide.Game.Player.Prop;
 
 [SceneTree("soundboard.tscn")]
-public partial class Soundboard : MarginContainer
+public partial class Soundboard : Control
 {
     [Export] private string[] audioNames = [];
     [Export] private AudioStream[] audioStreams = [];
@@ -13,7 +13,7 @@ public partial class Soundboard : MarginContainer
     [Export] private AudioStreamPlayer3D soundPlayer = null!;
 
     private readonly ILogger log = Log.CreateLogger(nameof(Soundboard));
-    private VBoxContainer SoundsContainer => _.Container.VBox.Sounds;
+    private VBoxContainer SoundsContainer => _.Margin.Container.VBox.Sounds;
 
     public override void _EnterTree()
     {
@@ -53,18 +53,7 @@ public partial class Soundboard : MarginContainer
         soundPlayer.Play();
     }
 
-    public override void _Input(InputEvent rawEvent)
-    {
-        if (!IsMultiplayerAuthority()) return;
-        if (rawEvent.IsActionPressed(InputActions.Soundboard)
-            || (Visible && rawEvent.IsActionPressed(BuiltinInputActions.UiCancel)))
-        {
-            SetVisible(!Visible);
-            GetWindow().SetInputAsHandled();
-        }
-    }
-
-    private new void SetVisible(bool visible)
+    public new void SetVisible(bool visible)
     {
         Visible = visible;
         Input.MouseMode = visible

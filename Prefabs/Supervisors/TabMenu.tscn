@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c87ce673cqrsj" path="res://Prefabs/Controls/PlayerListItem/PlayerListItem.tscn" id="3_03gih"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j3km1"]
-bg_color = Color(0.21230507, 0.21230477, 0.21230483, 0.74509805)
+bg_color = Color(0.21176471, 0.21176471, 0.21176471, 0.627451)
 
 [sub_resource type="FontVariation" id="FontVariation_5do5a"]
 base_font = ExtResource("2_x860b")
@@ -73,7 +73,6 @@ theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 script = ExtResource("1_42ftn")
 BezelSize = 20
-BorderRadius = 0
 Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
 
 [node name="PlayerList" type="VBoxContainer" parent="TabMenu/PlayersWithRole/Players/Hunters" unique_id=1784305201]
@@ -103,7 +102,6 @@ theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 script = ExtResource("1_42ftn")
 BezelSize = 20
-BorderRadius = 0
 Color = Color(0.7921569, 0.8784314, 0.8980392, 1)
 
 [node name="PlayerList" type="VBoxContainer" parent="TabMenu/PlayersWithRole/Players/Props" unique_id=1785195603]
