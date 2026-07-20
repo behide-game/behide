@@ -132,12 +132,14 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="TabContainer/Controls/VBox/Crouch" unique_id=105899445]
 layout_mode = 2
+size_flags_horizontal = 2
 text = "Crouch mode"
 
 [node name="OptionButton" type="OptionButton" parent="TabContainer/Controls/VBox/Crouch" unique_id=1123010502]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 8
 selected = 0
+fit_to_longest_item = false
 item_count = 2
 popup/item_0/text = "Push"
 popup/item_0/id = 1
@@ -305,7 +307,7 @@ theme_override_constants/separation = 15
 [node name="Label" type="Label" parent="TabContainer/Video/VBox/VSync" unique_id=1841727785]
 layout_mode = 2
 size_flags_horizontal = 2
-text = "Vsync"
+text = "VSync"
 
 [node name="OptionButton" type="OptionButton" parent="TabContainer/Video/VBox/VSync" unique_id=1061910895]
 layout_mode = 2
