@@ -1,7 +1,6 @@
 using Behide.Prefabs.Player;
 using Behide.UI.Controls;
 using Godot;
-using GodotPlugins.Game;
 
 namespace Behide.Game.Player;
 
@@ -18,13 +17,10 @@ public partial class HunterBody : PlayerBody
 
     protected override Node3D CameraDisk => _.Camera;
     protected override Camera3D Camera => _.Camera;
-    protected Camera3D GunCamera => _.SubViewportContainer.SubViewport.GunCamera;
-    protected SubViewportContainer SubViewportContainer => _.SubViewportContainer;
-    protected SubViewport SubViewport => _.SubViewportContainer.SubViewport;
     protected override RayCast3D RayCast => _.Camera.RayCast;
     protected override Label PlayerUsername => Gun.PlayerUsernameLabel;
-    protected override BezelContainer HealthBar => _.HUD.Health.Border.Mask.HealthBar;
-    protected override Label HealthLabel => _.HUD.Health.Border.HealthLabel;
+    protected override BezelContainer HealthBar => _.HUD.Lifebar.Mask.HealthBar;
+    protected override Label HealthLabel => _.HUD.Lifebar.HealthLabel;
     public override MultiplayerSynchronizer PositionSynchronizer => _.PositionSynchronizer;
 
     public override void _EnterTree()
@@ -32,14 +28,6 @@ public partial class HunterBody : PlayerBody
         MaxHealth = 100;
         MoveSpeed = 1.2f;
         base._EnterTree();
-        if(!IsMultiplayerAuthority())
-        {
-            SubViewportContainer.Hide();
-            return;
-        }
-        GunCamera.MakeCurrent();
-        GameManager.Settings.Changed.Subscribe(_ => UpdateViewportSettings());
-        UpdateViewportSettings();
     }
 
     protected override void SetHudsVisibility(bool value)
@@ -103,18 +91,6 @@ public partial class HunterBody : PlayerBody
                 if (!isCrouching || canStandUp && isCrouching) ToggleCrouch(!isCrouching);
             }
         }
-    }
-
-    private void UpdateViewportSettings()
-    {
-        SubViewport.Scaling3DMode = GetWindow().Scaling3DMode;
-        SubViewport.Scaling3DScale = GetWindow().Scaling3DScale;
-        SubViewport.Msaa3D = GetWindow().Msaa3D;
-        SubViewport.ScreenSpaceAA = GetWindow().ScreenSpaceAA;
-        SubViewport.UseTaa = GetWindow().UseTaa;
-        GunCamera.Fov = Camera.Fov;
-        GunCamera.Size = Camera.Size;
-        GunCamera.KeepAspect = Camera.KeepAspect;
     }
 
     private void ToggleCrouch(bool wantsToCrouch)

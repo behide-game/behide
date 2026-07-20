@@ -73,9 +73,6 @@ target_position = Vector3(0, 0, -1000)
 collision_mask = 7
 debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
 
-[node name="RemoteTransform3D" type="RemoteTransform3D" parent="Camera" unique_id=774689068]
-remote_path = NodePath("../../SubViewportContainer/SubViewport/GunCamera")
-
 [node name="HUD" type="MarginContainer" parent="." unique_id=1893787552]
 anchors_preset = 15
 anchor_right = 1.0
@@ -89,35 +86,7 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="Health" type="MarginContainer" parent="HUD" unique_id=366987484]
+[node name="Lifebar" parent="HUD" unique_id=1371579750 instance=ExtResource("3_svrpp")]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
-
-[node name="Border" parent="HUD/Health" unique_id=1371579750 instance=ExtResource("3_svrpp")]
-layout_mode = 2
-
-[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1499854332]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-stretch = true
-
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=807578832]
-transparent_bg = true
-handle_input_locally = false
-size = Vector2i(1920, 1080)
-render_target_update_mode = 4
-
-[node name="GunCamera" type="Camera3D" parent="SubViewportContainer/SubViewport" unique_id=22113589]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
-keep_aspect = 0
-cull_mask = 4
-fov = 90.0
-
-[editable path="HUD/Health/Border"]
