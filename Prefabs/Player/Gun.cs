@@ -11,6 +11,7 @@ public abstract partial class Gun : Node3D
     protected abstract TextureRect ReloadIcon { get; }
 
     public abstract int DamagePerAmmo { get; }
+    protected abstract int TotalAmmoCount { get; set; }
     protected abstract int MagazineSize { get; }
     protected abstract float ReloadTime { get; }
     protected abstract float FireRate { get; }
@@ -21,7 +22,7 @@ public abstract partial class Gun : Node3D
         set
         {
             field = value;
-            AmmoLabel.Text = value + " | " + MagazineSize;
+            AmmoLabel.Text = value + " | " + TotalAmmoCount;
         }
     }
 
@@ -29,7 +30,7 @@ public abstract partial class Gun : Node3D
     private double reloadTimeRemaining;
 
     private bool CanShoot => fireCooldownTime <= 0 && AmmoCount > 0;
-    private bool CanReload => fireCooldownTime <= 0 && reloadTimeRemaining <= 0 && AmmoCount < MagazineSize;
+    private bool CanReload => fireCooldownTime <= 0 && reloadTimeRemaining <= 0 && AmmoCount < MagazineSize && TotalAmmoCount > 0;
 
     public override void _EnterTree() => AmmoCount = MagazineSize;
 
@@ -40,9 +41,13 @@ public abstract partial class Gun : Node3D
         if (reloadTimeRemaining <= 0) return;
         if (reloadTimeRemaining - delta <= 0)
         {
+            var ammoDiff = MagazineSize - AmmoCount;
+            var realAmmoAmountAdded = int.Min(ammoDiff, TotalAmmoCount);
+            TotalAmmoCount -= realAmmoAmountAdded;
+            AmmoCount += realAmmoAmountAdded;
+
             AmmoIcon.Show();
             ReloadIcon.Hide();
-            AmmoCount = MagazineSize;
         }
         ReloadIcon.OffsetTransformRotation += (float)delta*10;
         reloadTimeRemaining -= delta;
@@ -67,6 +72,8 @@ public abstract partial class Gun : Node3D
 
     public void Reload()
     {
+        if (!CanReload) return;
+
         reloadTimeRemaining = ReloadTime;
         AmmoIcon.Hide();
         ReloadIcon.Show();

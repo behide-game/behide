@@ -8,6 +8,7 @@ namespace Behide.Prefabs.Player;
 public partial class SubmachineGun : Gun
 {
     public override int DamagePerAmmo => 2;
+    protected override int TotalAmmoCount { get; set; } = 6667;
     protected override int MagazineSize => 45;
     protected override float ReloadTime => 2.5f;
     protected override float FireRate => 10f;
