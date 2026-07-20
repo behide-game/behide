@@ -95,11 +95,11 @@ public abstract partial class PlayerBody : CharacterBody3D
         SetMultiplayerAuthority(ownerPeerId);
 
         // Subscribe to color changes
-        var localPlayer = GameManager.Room.Room?.LocalPlayer;
-        if (localPlayer is null)
+        var players = GameManager.Room.Room?.Players;
+        if (players is null)
             log.Error("Could not get local player: Not in a room");
-        else
-            localPlayer.Subscribe(
+        else if (players.TryGetValue(ownerPeerId, out var player))
+            player.Subscribe(
                 PlayerPropertiesChanged,
                 NodeAliveCt
             );
