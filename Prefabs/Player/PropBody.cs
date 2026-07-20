@@ -1,11 +1,9 @@
-using System.Diagnostics;
 using Behide.UI.Controls;
 using Godot;
-using Serilog.Debugging;
 
 namespace Behide.Game.Player;
 
-[SceneTree("prop.tscn", traverseInstancedScenes:true)]
+[SceneTree("prop.tscn", traverseInstancedScenes: true)]
 public partial class PropBody : PlayerBody
 {
     private Node3D currentVisualNode = null!;
@@ -24,20 +22,20 @@ public partial class PropBody : PlayerBody
 
     private const float speed = 1.55f;
     private const float slowSpeed = 0.3f;
-    private bool isOutlineVisible = false;
+    private bool isOutlineVisible;
 
     protected override Node3D CameraDisk => _.CameraDisk;
     protected override Camera3D Camera => _.CameraDisk.SpringArm3D.Camera;
-    protected Camera3D OutlineCamera => _.SubViewport.OutlineCamera;
-    protected SubViewport SubViewport => _.SubViewport;
-    protected SubViewport HorizontalViewport => _.HorizontalViewport;
-    protected SubViewport VerticalViewport => _.SubViewportContainer.VerticalViewport;
-    protected ColorRect ColorRectHorizontal => _.HorizontalViewport.ColorRect;
-    protected ColorRect ColorRectVertical => _.SubViewportContainer.VerticalViewport.ColorRect;
+    private Camera3D OutlineCamera => _.SubViewport.OutlineCamera;
+    private SubViewport SubViewport => _.SubViewport;
+    private SubViewport HorizontalViewport => _.HorizontalViewport;
+    private SubViewport VerticalViewport => _.SubViewportContainer.VerticalViewport;
+    private ColorRect ColorRectHorizontal => _.HorizontalViewport.ColorRect;
+    private ColorRect ColorRectVertical => _.SubViewportContainer.VerticalViewport.ColorRect;
     private Shader MaskShader => GD.Load<Shader>(GetSceneFilePath().GetBaseDir().PathJoin("mask.gdshader"));
-    protected ShaderMaterial MaskMaterial = null!;
-    protected ShaderMaterial HorizontalMaterial => (ShaderMaterial)ColorRectHorizontal.GetMaterial();
-    protected ShaderMaterial VerticalMaterial => (ShaderMaterial)ColorRectVertical.GetMaterial();
+    private ShaderMaterial maskMaterial = null!;
+    private ShaderMaterial HorizontalMaterial => (ShaderMaterial)ColorRectHorizontal.GetMaterial();
+    private ShaderMaterial VerticalMaterial => (ShaderMaterial)ColorRectVertical.GetMaterial();
     protected override RayCast3D RayCast => _.CameraDisk.SpringArm3D.Camera.RayCast;
     protected override BezelContainer HealthBar => _.HUD.BottomLeft.Health.Border.Mask.HealthBar;
     protected override Label HealthLabel => _.HUD.BottomLeft.Health.Border.HealthLabel;
@@ -46,10 +44,10 @@ public partial class PropBody : PlayerBody
 
     public override void _EnterTree()
     {
-        MaskMaterial = new ShaderMaterial();
-        MaskMaterial.SetShader(MaskShader);
+        maskMaterial = new ShaderMaterial();
+        maskMaterial.SetShader(MaskShader);
         currentOutlineNode = _.MeshInstance3DOutline;
-        ((MeshInstance3D)currentOutlineNode).SetSurfaceOverrideMaterial(0, MaskMaterial);
+        ((MeshInstance3D)currentOutlineNode).SetSurfaceOverrideMaterial(0, maskMaterial);
         base._EnterTree();
         currentVisualNode = _.MeshInstance3D;
 
@@ -67,17 +65,18 @@ public partial class PropBody : PlayerBody
         ShowLockedLogo(false);
         AdjustProperties();
 
-        if(!IsMultiplayerAuthority())
+        if (!IsMultiplayerAuthority())
         {
             return;
         }
-        OutlineCamera.MakeCurrent();
-        #if DEBUG
 
-        #else
+        OutlineCamera.MakeCurrent();
+#if DEBUG
+
+#else
             currentOutlineNode.Hide();
-        #endif
-        if(isOutlineVisible)
+#endif
+        if (isOutlineVisible)
         {
             ColorRectVertical.Show();
         }
@@ -86,7 +85,10 @@ public partial class PropBody : PlayerBody
         VerticalMaterial.SetShaderParameter("input_texture", HorizontalViewport.GetTexture());
 
         GetWindow().SizeChanged += ResizeViewports;
-        GameManager.Settings.Changed.Subscribe(_ => UpdateViewportSettings());
+        GameManager.Settings.Changed.Subscribe(
+            _ => UpdateViewportSettings(),
+            NodeAliveCt
+        );
         ResizeViewports();
         UpdateViewportSettings();
     }
@@ -152,7 +154,7 @@ public partial class PropBody : PlayerBody
         }
 
         // Toggle outline
-        if(Input.IsActionPressed(InputActions.ToggleOutline)) ColorRectVertical.Show();
+        if (Input.IsActionPressed(InputActions.ToggleOutline)) ColorRectVertical.Show();
         else ColorRectVertical.Hide();
 
         // Adjust speed
@@ -185,15 +187,14 @@ public partial class PropBody : PlayerBody
         newVisualNode.Position = Vector3.Zero;
         currentOutlineNode = (Node3D)newVisualNode.Duplicate();
         AddChild(currentVisualNode);
-        if(currentOutlineNode is MeshInstance3D currentOutlineMesh)
+        if (currentOutlineNode is MeshInstance3D currentOutlineMesh)
         {
             currentOutlineMesh.Name = "OutlineMesh";
             currentOutlineMesh.SetLayerMaskValue(2, false);
             currentOutlineMesh.SetLayerMaskValue(4, true);
-            for (int i = 0; i < currentOutlineMesh.Mesh.GetSurfaceCount(); i++)
-            {
-                currentOutlineMesh.SetSurfaceOverrideMaterial(i, MaskMaterial);
-            }
+            for (var i = 0; i < currentOutlineMesh.Mesh.GetSurfaceCount(); i++)
+                currentOutlineMesh.SetSurfaceOverrideMaterial(i, maskMaterial);
+
             AddChild(currentOutlineMesh);
             currentOutlineNode = currentOutlineMesh;
         }
@@ -202,28 +203,27 @@ public partial class PropBody : PlayerBody
             currentOutlineNode.Name = "OutlineGroup";
             foreach (var meshCandidate in currentOutlineNode.FindChildren("", "MeshInstance3D", true, false))
             {
-                if(meshCandidate is not MeshInstance3D mesh)
+                if (meshCandidate is not MeshInstance3D mesh)
                 {
                     meshCandidate.QueueFree();
                     continue;
                 }
+
                 mesh.SetLayerMaskValue(1, false);
                 mesh.SetLayerMaskValue(2, false);
                 mesh.SetLayerMaskValue(3, false);
                 mesh.SetLayerMaskValue(4, true);
-                for (int i = 0; i < mesh.Mesh.GetSurfaceCount(); i++)
-                {
-                    mesh.SetSurfaceOverrideMaterial(i, MaskMaterial);
-                }
+                for (var i = 0; i < mesh.Mesh.GetSurfaceCount(); i++)
+                    mesh.SetSurfaceOverrideMaterial(i, maskMaterial);
             }
+
             AddChild(currentOutlineNode);
         }
-        #if DEBUG
+#if DEBUG
 
-        #else
+#else
             if(IsMultiplayerAuthority()) currentOutlineNode.Hide();
-        #endif
-
+#endif
 
 
         // Set new collision shapes
@@ -281,34 +281,25 @@ public partial class PropBody : PlayerBody
 
     public void ShowLockedLogo(bool show) => _.HUD.BottomLeft.RotationLockedLabel.SetVisible(show);
 
-    protected override void UpdatePlayerProperties(Types.Player player)
+    protected override void PlayerPropertiesChanged(Types.Player player)
     {
-        base.UpdatePlayerProperties(player);
         var color = player.Color;
-        if(currentOutlineNode is not null)
+        if (currentOutlineNode is MeshInstance3D currentOutlineMesh)
+            for (var i = 0; i < currentOutlineMesh.GetSurfaceOverrideMaterialCount(); i++)
+                ((ShaderMaterial)currentOutlineMesh.GetSurfaceOverrideMaterial(i)).SetShaderParameter("colorID", color);
+        else
         {
-            if(currentOutlineNode is MeshInstance3D currentOutlineMesh)
+            currentOutlineNode.Name = "OutlineGroup";
+            foreach (var meshCandidate in currentOutlineNode.FindChildren("", nameof(MeshInstance3D), true, false))
             {
-                for (int i = 0; i < currentOutlineMesh.GetSurfaceOverrideMaterialCount(); i++)
+                if (meshCandidate is not MeshInstance3D mesh)
                 {
-                    ((ShaderMaterial)currentOutlineMesh.GetSurfaceOverrideMaterial(i)).SetShaderParameter("colorID", color);
+                    meshCandidate.QueueFree();
+                    continue;
                 }
-            }
-            else
-            {
-                currentOutlineNode.Name = "OutlineGroup";
-                foreach (var meshCandidate in currentOutlineNode.FindChildren("", "MeshInstance3D", true, false))
-                {
-                    if(meshCandidate is not MeshInstance3D mesh)
-                    {
-                        meshCandidate.QueueFree();
-                        continue;
-                    }
-                    for (int i = 0; i < mesh.GetSurfaceOverrideMaterialCount(); i++)
-                    {
-                        ((ShaderMaterial)mesh.GetSurfaceOverrideMaterial(i)).SetShaderParameter("colorID", color);
-                    }
-                }
+
+                for (var i = 0; i < mesh.GetSurfaceOverrideMaterialCount(); i++)
+                    ((ShaderMaterial)mesh.GetSurfaceOverrideMaterial(i)).SetShaderParameter("colorID", color);
             }
         }
     }

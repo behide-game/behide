@@ -62,7 +62,7 @@ public abstract partial class PlayerBody : CharacterBody3D
     private bool freeze;
     public bool Alive = true;
     private readonly CancellationTokenSource nodeAliveCts = new();
-    private CancellationToken NodeAliveCt => nodeAliveCts.Token;
+    protected CancellationToken NodeAliveCt => nodeAliveCts.Token;
     public override void _ExitTree() => nodeAliveCts.Cancel();
 
     private void Died(PlayerBody killer)
@@ -94,12 +94,15 @@ public abstract partial class PlayerBody : CharacterBody3D
         var ownerPeerId = int.Parse(Name);
         SetMultiplayerAuthority(ownerPeerId);
 
-        // Subscribe to change color
-        if(GameManager.Room.Room is null) log.Error("Not in a room");
-        else if (GameManager.Room.Room.Players.TryGetValue(GetMultiplayerAuthority(), out var behaviorSubject))
-            {
-                behaviorSubject.Subscribe(_ => UpdatePlayerProperties(behaviorSubject.Value));
-            }
+        // Subscribe to color changes
+        var localPlayer = GameManager.Room.Room?.LocalPlayer;
+        if (localPlayer is null)
+            log.Error("Could not get local player: Not in a room");
+        else
+            localPlayer.Subscribe(
+                PlayerPropertiesChanged,
+                NodeAliveCt
+            );
 
         // Set spawn position
         var transform = Transform;
@@ -162,9 +165,5 @@ public abstract partial class PlayerBody : CharacterBody3D
     }
 
     protected abstract void SetHudsVisibility(bool value);
-
-    protected virtual void UpdatePlayerProperties(Types.Player player)
-    {
-
-    }
+    protected virtual void PlayerPropertiesChanged(Types.Player player) { }
 }
