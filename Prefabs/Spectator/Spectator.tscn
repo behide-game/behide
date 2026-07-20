@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://1t0iy2imhdg4"]
 
 [ext_resource type="Script" uid="uid://cdmg4qsk6n7vj" path="res://Prefabs/Spectator/Spectator.cs" id="1_6po2o"]
+[ext_resource type="Script" uid="uid://csmaw8snfg308" path="res://Prefabs/SettingsAwareCamera3D.cs" id="2_bq1p5"]
 [ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="2_r1tvc"]
 [ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="3_bq1p5"]
 
@@ -20,7 +21,10 @@ collision_mask = 16
 script = ExtResource("1_6po2o")
 
 [node name="Camera" type="Camera3D" parent="." unique_id=441094346]
+keep_aspect = 0
+cull_mask = 1048567
 current = true
+script = ExtResource("2_bq1p5")
 
 [node name="RayCast" type="RayCast3D" parent="Camera" unique_id=1647716969]
 target_position = Vector3(0, 0, -1000)

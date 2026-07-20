@@ -5,10 +5,19 @@
 [ext_resource type="Shader" uid="uid://cpic26ffvr8hs" path="res://Prefabs/Player/mask.gdshader" id="2_dg5hw"]
 [ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="2_ky5tt"]
 [ext_resource type="Script" uid="uid://bnid2w67fk441" path="res://Prefabs/Player/PropBody.cs" id="2_m4go7"]
+[ext_resource type="Script" uid="uid://csmaw8snfg308" path="res://Prefabs/SettingsAwareCamera3D.cs" id="3_8fnhj"]
 [ext_resource type="Shader" uid="uid://cevjxarqmxigr" path="res://Prefabs/Player/outlineHorizontal.gdshader" id="3_dg5hw"]
 [ext_resource type="PackedScene" uid="uid://nkor8n0q2s8j" path="res://Prefabs/Controls/Lifebar/Lifebar.tscn" id="4_7hld8"]
+[ext_resource type="Script" uid="uid://cg2f8nc5ylod2" path="res://Prefabs/SettingsAwareSubViewport.cs" id="4_scsbf"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_x40yu"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_w1hta"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j2ufq"]
+render_priority = 0
+shader = ExtResource("2_dg5hw")
+shader_parameter/colorID = Color(1, 0.8, 0, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rr4v2"]
 
@@ -21,13 +30,6 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-
-[sub_resource type="BoxMesh" id="BoxMesh_w1hta"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_j2ufq"]
-render_priority = 0
-shader = ExtResource("2_dg5hw")
-shader_parameter/colorID = Color(1, 0.8, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_37tqn"]
 shader = ExtResource("3_dg5hw")
@@ -67,6 +69,11 @@ maxKickForce = 17.5
 gi_mode = 2
 mesh = SubResource("BoxMesh_x40yu")
 
+[node name="MeshInstance3DOutline" type="MeshInstance3D" parent="." unique_id=1255137576]
+layers = 8
+mesh = SubResource("BoxMesh_w1hta")
+surface_material_override/0 = SubResource("ShaderMaterial_j2ufq")
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=247171871]
 shape = SubResource("BoxShape3D_rr4v2")
 
@@ -82,6 +89,7 @@ spring_length = 5.0
 keep_aspect = 0
 cull_mask = 1048567
 fov = 90.0
+script = ExtResource("3_8fnhj")
 
 [node name="RayCast" type="RayCast3D" parent="CameraDisk/SpringArm3D/Camera" unique_id=1015855657]
 target_position = Vector3(0, 0, -20)
@@ -94,24 +102,23 @@ remote_path = NodePath("../../../../SubViewport/OutlineCamera")
 [node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=512832509]
 replication_config = SubResource("SceneReplicationConfig_n61o8")
 
-[node name="MeshInstance3DOutline" type="MeshInstance3D" parent="." unique_id=1255137576]
-layers = 8
-mesh = SubResource("BoxMesh_w1hta")
-surface_material_override/0 = SubResource("ShaderMaterial_j2ufq")
-
 [node name="SubViewport" type="SubViewport" parent="." unique_id=1030597066]
 transparent_bg = true
 handle_input_locally = false
 render_target_update_mode = 4
+script = ExtResource("4_scsbf")
 
 [node name="OutlineCamera" type="Camera3D" parent="SubViewport" unique_id=262317903]
 transform = Transform3D(1, 0, 0, 0, 0.99691737, 0.07845913, 0, -0.07845913, 0.99691737, 0, 1, 0)
+keep_aspect = 0
 cull_mask = 8
+script = ExtResource("3_8fnhj")
 
 [node name="HorizontalViewport" type="SubViewport" parent="." unique_id=1074722499]
 transparent_bg = true
 handle_input_locally = false
 size_2d_override_stretch = true
+script = ExtResource("4_scsbf")
 
 [node name="ColorRect" type="ColorRect" parent="HorizontalViewport" unique_id=1206307843]
 material = SubResource("ShaderMaterial_37tqn")
@@ -137,6 +144,7 @@ handle_input_locally = false
 size = Vector2i(1920, 1080)
 size_2d_override_stretch = true
 render_target_update_mode = 4
+script = ExtResource("4_scsbf")
 
 [node name="ColorRect" type="ColorRect" parent="SubViewportContainer/VerticalViewport" unique_id=783961637]
 visible = false

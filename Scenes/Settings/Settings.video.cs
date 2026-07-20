@@ -23,12 +23,10 @@ public partial class Settings
             }
         );
 
-    private void Video_SetUIScaling(double scale)
-    {
+    private void Video_SetUIScaling(double scale) =>
         GetWindow().ContentScaleFactor = (float)scale;
-    }
 
-    private void Video_SetRenderScaleMode(long mode) {
+    private void Video_SetRenderScaleMode(long mode) =>
         GetWindow().Scaling3DMode = mode switch
         {
             0 => Viewport.Scaling3DModeEnum.Nearest,
@@ -36,12 +34,9 @@ public partial class Settings
             2 => Viewport.Scaling3DModeEnum.Fsr2,
             _ => Viewport.Scaling3DModeEnum.Nearest
         };
-    }
 
-    private void Video_SetRenderScale(double scale)
-    {
+    private void Video_SetRenderScale(double scale) =>
         GetWindow().Scaling3DScale = (float)scale / 100;
-    }
 
     private void Video_SetAntiAliasing(long mode)
     {

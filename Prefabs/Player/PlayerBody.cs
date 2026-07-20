@@ -62,7 +62,7 @@ public abstract partial class PlayerBody : CharacterBody3D
     private bool freeze;
     public bool Alive = true;
     private readonly CancellationTokenSource nodeAliveCts = new();
-    protected CancellationToken NodeAliveCt => nodeAliveCts.Token;
+    private CancellationToken NodeAliveCt => nodeAliveCts.Token;
     public override void _ExitTree() => nodeAliveCts.Cancel();
 
     private void Died(PlayerBody killer)
@@ -117,11 +117,6 @@ public abstract partial class PlayerBody : CharacterBody3D
         }
 
         Camera.MakeCurrent();
-        Camera.Fov = (float)GameManager.Settings.Fov;
-        GameManager.Settings.Changed.Subscribe(
-            _ => Camera.Fov = (float)GameManager.Settings.Fov,
-            NodeAliveCt
-        );
 
         // Ignore PlayerBody
         RayCast.AddException(this);

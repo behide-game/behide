@@ -71,45 +71,16 @@ public partial class PropBody : PlayerBody
         }
 
         OutlineCamera.MakeCurrent();
-#if DEBUG
-
-#else
-            currentOutlineNode.Hide();
-#endif
-        if (isOutlineVisible)
-        {
-            ColorRectVertical.Show();
-        }
+        #if !DEBUG
+        currentOutlineNode.Hide();
+        #endif
+        ColorRectVertical.Visible = isOutlineVisible;
 
         HorizontalMaterial.SetShaderParameter("input_texture", SubViewport.GetTexture());
         VerticalMaterial.SetShaderParameter("input_texture", HorizontalViewport.GetTexture());
 
         GetWindow().SizeChanged += ResizeViewports;
-        GameManager.Settings.Changed.Subscribe(
-            _ => UpdateViewportSettings(),
-            NodeAliveCt
-        );
         ResizeViewports();
-        UpdateViewportSettings();
-    }
-
-    public override void _Process(double delta)
-    {
-        base._Process(delta);
-        UpdateViewportSettings();
-        VerticalViewport.Scaling3DScale = 0.5f;
-    }
-
-    private void UpdateViewportSettings()
-    {
-        SubViewport.Scaling3DMode = GetWindow().Scaling3DMode;
-        SubViewport.Scaling3DScale = GetWindow().Scaling3DScale;
-        SubViewport.Msaa3D = GetWindow().Msaa3D;
-        SubViewport.ScreenSpaceAA = GetWindow().ScreenSpaceAA;
-        SubViewport.UseTaa = GetWindow().UseTaa;
-        OutlineCamera.Fov = Camera.Fov;
-        OutlineCamera.Size = Camera.Size;
-        OutlineCamera.KeepAspect = Camera.KeepAspect;
     }
 
     private void ResizeViewports()
