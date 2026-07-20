@@ -7,8 +7,8 @@ public abstract partial class Gun : Node3D
     public abstract Control Hud { get; }
     public abstract Label PlayerUsernameLabel { get; }
     protected abstract Label AmmoLabel { get; }
-    protected abstract TextureRect AmmoPicto { get; }
-    protected abstract TextureRect ReloadPicto { get; }
+    protected abstract TextureRect AmmoIcon { get; }
+    protected abstract TextureRect ReloadIcon { get; }
 
     public abstract int DamagePerAmmo { get; }
     protected abstract int MagazineSize { get; }
@@ -40,11 +40,11 @@ public abstract partial class Gun : Node3D
         if (reloadTimeRemaining <= 0) return;
         if (reloadTimeRemaining - delta <= 0)
         {
-            AmmoPicto.Show();
-            ReloadPicto.Hide();
+            AmmoIcon.Show();
+            ReloadIcon.Hide();
             AmmoCount = MagazineSize;
         }
-        ReloadPicto.OffsetTransformRotation += (float)delta*10;
+        ReloadIcon.OffsetTransformRotation += (float)delta*10;
         reloadTimeRemaining -= delta;
     }
 
@@ -68,9 +68,9 @@ public abstract partial class Gun : Node3D
     public void Reload()
     {
         reloadTimeRemaining = ReloadTime;
-        AmmoPicto.Hide();
-        ReloadPicto.Show();
-        ReloadPicto.OffsetTransformRotation = 0f;
+        AmmoIcon.Hide();
+        ReloadIcon.Show();
+        ReloadIcon.OffsetTransformRotation = 0f;
         AmmoLabel.Text = "Reloading";
         ReloadCore();
     }

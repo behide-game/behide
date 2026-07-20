@@ -125,14 +125,14 @@ layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 
-[node name="ReloadPicto" type="TextureRect" parent="Hud/RBottom" unique_id=1692347698]
+[node name="ReloadIcon" type="TextureRect" parent="Hud/RBottom" unique_id=1692347698]
 visible = false
 layout_mode = 2
 offset_transform_enabled = true
 texture = ExtResource("8_h7rq2")
 expand_mode = 2
 
-[node name="AmmoPicto" type="TextureRect" parent="Hud/RBottom" unique_id=646447357]
+[node name="AmmoIcon" type="TextureRect" parent="Hud/RBottom" unique_id=646447357]
 layout_mode = 2
 texture = ExtResource("8_abca7")
 expand_mode = 2

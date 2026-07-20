@@ -15,8 +15,8 @@ public partial class SubmachineGun : Gun
     public override Control Hud => _.Hud;
     public override Label PlayerUsernameLabel => _.Hud.Center.PlayerUsername;
     protected override Label AmmoLabel => _.Hud.RBottom.Ammo;
-    protected override TextureRect AmmoPicto => _.Hud.RBottom.AmmoPicto;
-    protected override TextureRect ReloadPicto => _.Hud.RBottom.ReloadPicto;
+    protected override TextureRect AmmoIcon => _.Hud.RBottom.AmmoIcon;
+    protected override TextureRect ReloadIcon => _.Hud.RBottom.ReloadIcon;
 
     private Control HitMark => _.Hud.Center.Crosshair.CrosshairHit;
     private RayCast3D Raycast => _.RayCast;
