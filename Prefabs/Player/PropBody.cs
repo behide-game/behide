@@ -11,6 +11,7 @@ public partial class PropBody : PlayerBody
     private CollisionShape3D[] collisionNodes = null!;
 
     [Export] private float maxKickForce = 17f;
+    [Export] private ShaderMaterial maskMaterial = null!;
 
     [ExportGroup("Camera adjust transition")]
     [Export] private double cameraAdjustDuration = 0.4;
@@ -32,8 +33,6 @@ public partial class PropBody : PlayerBody
     private SubViewport VerticalViewport => _.SubViewportContainer.VerticalViewport;
     private ColorRect ColorRectHorizontal => _.HorizontalViewport.ColorRect;
     private ColorRect ColorRectVertical => _.SubViewportContainer.VerticalViewport.ColorRect;
-    private Shader MaskShader => GD.Load<Shader>(GetSceneFilePath().GetBaseDir().PathJoin("mask.gdshader"));
-    private ShaderMaterial maskMaterial = null!;
     private ShaderMaterial HorizontalMaterial => (ShaderMaterial)ColorRectHorizontal.GetMaterial();
     private ShaderMaterial VerticalMaterial => (ShaderMaterial)ColorRectVertical.GetMaterial();
     protected override RayCast3D RayCast => _.CameraDisk.SpringArm3D.Camera.RayCast;
@@ -44,8 +43,6 @@ public partial class PropBody : PlayerBody
 
     public override void _EnterTree()
     {
-        maskMaterial = new ShaderMaterial();
-        maskMaterial.SetShader(MaskShader);
         currentOutlineNode = _.MeshInstance3DOutline;
         ((MeshInstance3D)currentOutlineNode).SetSurfaceOverrideMaterial(0, maskMaterial);
         base._EnterTree();

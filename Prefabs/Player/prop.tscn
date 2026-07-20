@@ -10,6 +10,11 @@
 [ext_resource type="PackedScene" uid="uid://nkor8n0q2s8j" path="res://Prefabs/Controls/Lifebar/Lifebar.tscn" id="4_7hld8"]
 [ext_resource type="Script" uid="uid://cg2f8nc5ylod2" path="res://Prefabs/SettingsAwareSubViewport.cs" id="4_scsbf"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_scsbf"]
+render_priority = 0
+shader = ExtResource("2_dg5hw")
+shader_parameter/colorID = Color(1, 0.8, 0, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_x40yu"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_w1hta"]
@@ -64,6 +69,7 @@ collision_mask = 23
 platform_on_leave = 2
 script = ExtResource("2_m4go7")
 maxKickForce = 17.5
+maskMaterial = SubResource("ShaderMaterial_scsbf")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=817965567]
 gi_mode = 2
