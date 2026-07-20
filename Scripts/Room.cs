@@ -256,13 +256,15 @@ public partial class Room : Node
         var player = Players.GetValueOrDefault(playerId);
         if (player is null)
         {
-            log.Warning("[SetPlayerStateRpc]: Player {PlayerId} not found", playerId);
+            log.Warning("[SetPlayerColorRpc]: Player {PlayerId} not found", playerId);
             return;
         }
 
-        log.Debug("[RPC] Player {PlayerId} is now in Color {Color}", playerId, newColor);
+        log.Debug("[RPC] Player {PlayerId} changed color: {Color}", playerId, newColor);
 
         var newPlayer = player.Value with { Color = newColor };
         player.OnNext(newPlayer);
+        playerStateChanged.OnNext(newPlayer);
+        if (playerId == LocalPlayer.Value.PeerId) LocalPlayer.OnNext(newPlayer);
     }
 }
