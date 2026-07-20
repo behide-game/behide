@@ -33,10 +33,9 @@ custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/side_margin = 0
-current_tab = 1
+current_tab = 0
 
 [node name="General" type="MarginContainer" parent="TabContainer" unique_id=2018857125]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
@@ -81,6 +80,7 @@ size_flags_vertical = 10
 text = "Back"
 
 [node name="Controls" type="MarginContainer" parent="TabContainer" unique_id=712416793]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
