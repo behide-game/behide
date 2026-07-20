@@ -68,16 +68,6 @@ font = ExtResource("6_4hucq")
 font = ExtResource("7_xxjlh")
 font_size = 25
 
-[sub_resource type="LabelSettings" id="LabelSettings_lj1ok"]
-font = ExtResource("7_xxjlh")
-font_size = 25
-font_color = Color(1, 1, 1, 0)
-
-[sub_resource type="LabelSettings" id="LabelSettings_4hucq"]
-font = ExtResource("7_xxjlh")
-font_size = 25
-font_color = Color(1, 1, 1, 0)
-
 [node name="Lobby" type="Node3D" unique_id=1575583449]
 script = ExtResource("1_vmtcs")
 playerCard = ExtResource("7_e46jn")
@@ -553,6 +543,7 @@ BezelSize = 20
 Color = Color(0.019607844, 0.105882354, 0.20784314, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/HBox/Others/Column/Buttons/Role" unique_id=971512279]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 15
@@ -563,14 +554,6 @@ theme_override_constants/margin_bottom = 15
 layout_mode = 2
 text = "Be hunter"
 label_settings = SubResource("LabelSettings_qy7bc")
-horizontal_alignment = 1
-vertical_alignment = 1
-uppercase = true
-
-[node name="ButtonSizeCalibration" type="Label" parent="UI/HBox/Others/Column/Buttons/Role/MarginContainer" unique_id=962449962]
-layout_mode = 2
-text = "Be hunter"
-label_settings = SubResource("LabelSettings_lj1ok")
 horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
@@ -590,6 +573,7 @@ BezelSize = 20
 Color = Color(0.039215688, 0.15686275, 0.32941177, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/HBox/Others/Column/Buttons/Ready" unique_id=1291586526]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 15
@@ -604,14 +588,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="ButtonSizeCalibration" type="Label" parent="UI/HBox/Others/Column/Buttons/Ready/MarginContainer" unique_id=1244224595]
-layout_mode = 2
-text = "Unset ready"
-label_settings = SubResource("LabelSettings_4hucq")
-horizontal_alignment = 1
-vertical_alignment = 1
-uppercase = true
-
 [node name="Button" type="Button" parent="UI/HBox/Others/Column/Buttons/Ready" unique_id=308941770]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -620,8 +596,6 @@ flat = true
 
 [node name="Quit" type="MarginContainer" parent="UI/HBox/Others/Column/Buttons" unique_id=1315296564]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 theme_override_constants/margin_left = 20
 script = ExtResource("5_ew8go")
 BezelSize = 20

@@ -2,11 +2,12 @@
 
 [ext_resource type="Script" uid="uid://cnv83qrck0bgc" path="res://Prefabs/Controls/PlayerListItem/PlayerListItem.cs" id="1_e7184"]
 [ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Prefabs/Controls/BezelContainer.cs" id="2_vtxhq"]
-[ext_resource type="FontVariation" uid="uid://cxmeg2qdqylds" path="res://Assets/Fonts/Space Grotesk/Space Grotesk.tres" id="3_p8wd1"]
+[ext_resource type="FontVariation" uid="uid://bqpb46gqbs0cm" path="res://Assets/Fonts/Space Grotesk/Space Grotesk Medium.tres" id="3_d8dgs"]
 [ext_resource type="Texture2D" uid="uid://q78n2abn6ynq" path="res://Assets/Images/Dead.svg" id="4_d8dgs"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_mt0eq"]
-font = ExtResource("3_p8wd1")
+[sub_resource type="LabelSettings" id="LabelSettings_mxfh4"]
+font = ExtResource("3_d8dgs")
+font_size = 20
 
 [node name="PlayerListItem" type="MarginContainer" unique_id=1963591353]
 offset_right = 132.0
@@ -14,37 +15,39 @@ offset_bottom = 31.0
 size_flags_horizontal = 3
 script = ExtResource("1_e7184")
 
-[node name="Autolayout" type="HBoxContainer" parent="." unique_id=754872024]
+[node name="Margin" type="MarginContainer" parent="." unique_id=1146646143]
+custom_minimum_size = Vector2(0, 60)
+custom_maximum_size = Vector2(-1, 60)
 layout_mode = 2
-theme_override_constants/separation = 5
-
-[node name="Container" type="MarginContainer" parent="Autolayout" unique_id=1263787479]
-layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 8
 script = ExtResource("2_vtxhq")
-BezelSize = 10
+BezelSize = 15
 Color = Color(0.13333334, 0.34117648, 0.47843137, 1)
 
-[node name="MarginUsername" type="MarginContainer" parent="Autolayout/Container" unique_id=1061078266]
+[node name="HBox" type="HBoxContainer" parent="Margin" unique_id=1233091568]
 layout_mode = 2
-size_flags_horizontal = 0
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 5
+theme_override_constants/separation = 10
 
-[node name="Username" type="Label" parent="Autolayout/Container/MarginUsername" unique_id=1100396652]
+[node name="Username" type="Label" parent="Margin/HBox" unique_id=1713017238]
 layout_mode = 2
-mouse_filter = 1
-text = "username"
-label_settings = SubResource("LabelSettings_mt0eq")
+size_flags_horizontal = 3
+text = "Username"
+label_settings = SubResource("LabelSettings_mxfh4")
 
-[node name="MarginContainer" type="MarginContainer" parent="Autolayout" unique_id=860044148]
+[node name="Dead Icon" type="MarginContainer" parent="Margin/HBox" unique_id=860044148]
 layout_mode = 2
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_bottom = 2
+size_flags_horizontal = 8
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 6
 
-[node name="TextureRect" type="TextureRect" parent="Autolayout/MarginContainer" unique_id=332063374]
+[node name="TextureRect" type="TextureRect" parent="Margin/HBox/Dead Icon" unique_id=332063374]
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 texture = ExtResource("4_d8dgs")
-expand_mode = 2
+expand_mode = 3

@@ -328,7 +328,7 @@ theme_override_constants/margin_bottom = 30
 [node name="LeftPanel" type="VBoxContainer" parent="UI/End-game" unique_id=182473767]
 layout_mode = 2
 size_flags_horizontal = 0
-theme_override_constants/separation = -20
+theme_override_constants/separation = 0
 
 [node name="Winner" type="MarginContainer" parent="UI/End-game/LeftPanel" unique_id=2040026077]
 layout_mode = 2
@@ -362,7 +362,13 @@ text = "Hunter wins !"
 label_settings = SubResource("LabelSettings_yncfe")
 uppercase = true
 
-[node name="Hunters" type="MarginContainer" parent="UI/End-game/LeftPanel" unique_id=667904677]
+[node name="Players" type="VBoxContainer" parent="UI/End-game/LeftPanel" unique_id=1283871422]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 10
+theme_override_constants/separation = -20
+
+[node name="Hunters" type="MarginContainer" parent="UI/End-game/LeftPanel/Players" unique_id=667904677]
 z_index = 1
 layout_mode = 2
 size_flags_vertical = 10
@@ -374,20 +380,20 @@ script = ExtResource("9_efs40")
 BezelSize = 20
 Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
 
-[node name="PlayerList" type="VBoxContainer" parent="UI/End-game/LeftPanel/Hunters" unique_id=640442055]
+[node name="PlayerList" type="VBoxContainer" parent="UI/End-game/LeftPanel/Players/Hunters" unique_id=640442055]
 layout_mode = 2
 
-[node name="Title" type="MarginContainer" parent="UI/End-game/LeftPanel/Hunters/PlayerList" unique_id=1608657333]
+[node name="Title" type="MarginContainer" parent="UI/End-game/LeftPanel/Players/Hunters/PlayerList" unique_id=1608657333]
 layout_mode = 2
 theme_override_constants/margin_bottom = 5
 
-[node name="Label" type="Label" parent="UI/End-game/LeftPanel/Hunters/PlayerList/Title" unique_id=864597452]
+[node name="Label" type="Label" parent="UI/End-game/LeftPanel/Players/Hunters/PlayerList/Title" unique_id=864597452]
 layout_mode = 2
 text = "Hunters"
 label_settings = SubResource("LabelSettings_xer8t")
 uppercase = true
 
-[node name="Props" type="MarginContainer" parent="UI/End-game/LeftPanel" unique_id=475210221]
+[node name="Props" type="MarginContainer" parent="UI/End-game/LeftPanel/Players" unique_id=475210221]
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_constants/margin_left = 15
@@ -398,15 +404,15 @@ script = ExtResource("9_efs40")
 BezelSize = 20
 Color = Color(0.7921569, 0.8784314, 0.8980392, 1)
 
-[node name="PlayerList" type="VBoxContainer" parent="UI/End-game/LeftPanel/Props" unique_id=1539544944]
+[node name="PlayerList" type="VBoxContainer" parent="UI/End-game/LeftPanel/Players/Props" unique_id=1539544944]
 layout_mode = 2
 
-[node name="Title" type="MarginContainer" parent="UI/End-game/LeftPanel/Props/PlayerList" unique_id=266902820]
+[node name="Title" type="MarginContainer" parent="UI/End-game/LeftPanel/Players/Props/PlayerList" unique_id=266902820]
 layout_mode = 2
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_bottom = 5
 
-[node name="Label" type="Label" parent="UI/End-game/LeftPanel/Props/PlayerList/Title" unique_id=1730307490]
+[node name="Label" type="Label" parent="UI/End-game/LeftPanel/Players/Props/PlayerList/Title" unique_id=1730307490]
 layout_mode = 2
 text = "Props"
 label_settings = SubResource("LabelSettings_xer8t")

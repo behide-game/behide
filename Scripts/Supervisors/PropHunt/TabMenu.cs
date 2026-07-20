@@ -49,7 +49,7 @@ public partial class TabMenu : Panel
             player.Subscribe(p =>
                 {
                     node.SetPlayerName(player.Value.Username);
-                    node.SetStatus(p.State is PlayerStateInGame(Alive: true));
+                    node.SetAlive(p.State is PlayerStateInGame(Alive: true));
                 },
                 NodeAliveCt
             );
