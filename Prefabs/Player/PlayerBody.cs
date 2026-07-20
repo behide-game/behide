@@ -28,16 +28,24 @@ public abstract partial class PlayerBody : CharacterBody3D
         set
         {
             field = Mathf.Clamp(value, 0, 1);
-            Vector2 position = new Vector2((float)(value-1)*HealthBar.Size.X, 0);
-            HealthBar.Position = position;
-            HealthLabel.Text = ((int)Math.Ceiling(value * MaxHealth)).ToString();
+            HealthBar.OffsetTransformPositionRatio = new Vector2((float)field - 1, 0);
+            HealthLabel.Text = ((int)Math.Ceiling(field * MaxHealth)).ToString();
         }
     }
 
     public void DecreaseHealth(PlayerBody damager, int amount)
     {
         Health -= (double)amount / MaxHealth;
-        if (Health <= 0.1) HealthBar.Color = new Color (1f, 0f, 0f, 1f);;
+
+        const float greenHueAngle = 2f / 3f * float.Pi;
+        const float redHueAngle = 0f;
+
+        HealthBar.Color = Color.FromHsv(
+            Mathf.LerpAngle(redHueAngle, greenHueAngle, (float)Health) / (2f * float.Pi),
+            1f,
+            1f
+        );
+
         if (Health <= 0) Died(damager);
     }
 
@@ -80,7 +88,7 @@ public abstract partial class PlayerBody : CharacterBody3D
         else supervisor = GameManager.Supervisor;
 
         Health = 1;
-        HealthBar.Color = new Color (0f, 1f, 0f, 1f);
+        HealthBar.Color = new Color(0f, 1f, 0f);
 
         // Set authority
         var ownerPeerId = int.Parse(Name);
