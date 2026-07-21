@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://nkor8n0q2s8j"]
+
+[ext_resource type="Texture2D" uid="uid://4ssi7te2psou" path="res://Assets/Images/Icons/health.svg" id="1_0x5gc"]
+[ext_resource type="FontFile" uid="uid://dhsne0nw6w5j" path="res://Assets/Fonts/JetBrains Mono/JetBrainsMono-Medium.ttf" id="1_ah5tn"]
+[ext_resource type="Script" uid="uid://fepjt8qpgbel" path="res://Prefabs/Player/HealthBar/HealthBar.cs" id="1_b5sgl"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_6ah2n"]
+font = ExtResource("1_ah5tn")
+font_size = 18
+outline_size = 5
+outline_color = Color(0.078431375, 0.08627451, 0.12941177, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ceia4"]
+bg_color = Color(0.07842832, 0.084945954, 0.13061652, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jaxhj"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y37n2"]
+bg_color = Color(1, 1, 1, 1)
+
+[node name="HealthBar" type="VBoxContainer" unique_id=2051133214]
+custom_minimum_size = Vector2(200, 0)
+offset_right = 146.0
+offset_bottom = 40.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+script = ExtResource("1_b5sgl")
+healthMaxColor = Color(0.09019608, 1, 0.8352941, 1)
+
+[node name="HBox" type="HBoxContainer" parent="." unique_id=1400750105]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="IconMargin" type="MarginContainer" parent="HBox" unique_id=1068827552]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="Icon" type="TextureRect" parent="HBox/IconMargin" unique_id=522492705]
+modulate = Color(0.09019608, 1, 0.8352941, 1)
+layout_mode = 2
+texture = ExtResource("1_0x5gc")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="HBox" unique_id=1266037613]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "100"
+label_settings = SubResource("LabelSettings_6ah2n")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=46186733]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ceia4")
+
+[node name="Margin" type="MarginContainer" parent="PanelContainer" unique_id=242391594]
+layout_mode = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="Clip" type="PanelContainer" parent="PanelContainer/Margin" unique_id=1916934808]
+clip_children = 1
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jaxhj")
+
+[node name="Panel" type="Panel" parent="PanelContainer/Margin/Clip" unique_id=631687451]
+modulate = Color(0.09019608, 1, 0.8352941, 1)
+custom_minimum_size = Vector2(194, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+offset_transform_enabled = true
+theme_override_styles/panel = SubResource("StyleBoxFlat_y37n2")

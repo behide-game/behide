@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bva1hvwd6n7p8"
-path="res://.godot/imported/Ammo.svg-5fb0d67785db62dfa4067b0538bdeade.ctex"
+uid="uid://c1j4l5yo6ta2g"
+path="res://.godot/imported/Reload.svg-662da23fd9bd4c35d88c2d69600a8a7f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Images/Ammo.svg"
-dest_files=["res://.godot/imported/Ammo.svg-5fb0d67785db62dfa4067b0538bdeade.ctex"]
+source_file="res://Assets/Images/Icons/Reload.svg"
+dest_files=["res://.godot/imported/Reload.svg-662da23fd9bd4c35d88c2d69600a8a7f.ctex"]
 
 [params]
 

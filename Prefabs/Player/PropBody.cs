@@ -1,4 +1,3 @@
-using Behide.UI.Controls;
 using Godot;
 
 namespace Behide.Game.Player;
@@ -36,8 +35,7 @@ public partial class PropBody : PlayerBody
     private ShaderMaterial HorizontalMaterial => (ShaderMaterial)ColorRectHorizontal.GetMaterial();
     private ShaderMaterial VerticalMaterial => (ShaderMaterial)ColorRectVertical.GetMaterial();
     protected override RayCast3D RayCast => _.CameraDisk.SpringArm3D.Camera.RayCast;
-    protected override BezelContainer HealthBar => _.HUD.BottomLeft.Health.Border.Mask.HealthBar;
-    protected override Label HealthLabel => _.HUD.BottomLeft.Health.Border.HealthLabel;
+    protected override HealthBar HealthBar => _.HUD.BottomLeft.Health.HealthBar;
     protected override Label PlayerUsername => _.HUD.Center.PlayerUsername;
     public override MultiplayerSynchronizer PositionSynchronizer => _.PositionSynchronizer;
 

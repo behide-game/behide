@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://luuofj7aqswe" path="res://Prefabs/Player/HunterBody.cs" id="1_w58js"]
 [ext_resource type="PackedScene" uid="uid://duc1guf2tc711" path="res://Prefabs/Player/SubmachineGun.tscn" id="2_1qbrv"]
 [ext_resource type="Script" uid="uid://csmaw8snfg308" path="res://Prefabs/SettingsAwareCamera3D.cs" id="2_w58js"]
-[ext_resource type="PackedScene" uid="uid://nkor8n0q2s8j" path="res://Prefabs/Controls/Lifebar/Lifebar.tscn" id="3_svrpp"]
+[ext_resource type="PackedScene" uid="uid://nkor8n0q2s8j" path="res://Prefabs/Player/HealthBar/HealthBar.tscn" id="3_svrpp"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_svrpp"]
 
@@ -88,7 +88,6 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="Lifebar" parent="HUD" unique_id=1371579750 instance=ExtResource("3_svrpp")]
+[node name="HealthBar" parent="HUD" unique_id=1371579750 instance=ExtResource("3_svrpp")]
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 8

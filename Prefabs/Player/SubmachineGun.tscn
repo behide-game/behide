@@ -7,8 +7,8 @@
 [ext_resource type="AudioStream" uid="uid://bw0bgab4c1prs" path="res://Assets/Sounds/gunshot.wav" id="2_abca7"]
 [ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="3_lrncf"]
 [ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crosshair.svg" id="4_1ol2f"]
-[ext_resource type="Texture2D" uid="uid://bva1hvwd6n7p8" path="res://Assets/Images/Ammo.svg" id="8_abca7"]
-[ext_resource type="Texture2D" uid="uid://c1j4l5yo6ta2g" path="res://Assets/Images/Reload.svg" id="8_h7rq2"]
+[ext_resource type="Texture2D" uid="uid://bva1hvwd6n7p8" path="res://Assets/Images/Icons/Ammo.svg" id="8_abca7"]
+[ext_resource type="Texture2D" uid="uid://c1j4l5yo6ta2g" path="res://Assets/Images/Icons/Reload.svg" id="8_h7rq2"]
 
 [sub_resource type="AudioStream" id="AudioStream_8uwrk"]
 
