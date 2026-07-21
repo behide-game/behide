@@ -85,7 +85,7 @@ theme = ExtResource("5_sfeev")
 [node name="AdvancedLabelCountdown" type="Node" parent="UI" unique_id=1393435489 node_paths=PackedStringArray("labels")]
 script = ExtResource("5_7hsgi")
 labels = [NodePath("../Pre-game Prop/MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/CountdownLabel"), NodePath("../Pre-game Hunter/BoxContainer/CountdownLabel")]
-runningTextFormats = PackedStringArray("{0:m\\:ss}", "The hunt begins in {0:m\\:ss}")
+runningTextFormats = PackedStringArray("{0:mm\\:ss}", "The hunt begins in {0:mm\\:ss}")
 beforeRunningTexts = PackedStringArray("", "")
 afterRunningTexts = PackedStringArray("", "")
 metadata/_custom_type_script = "uid://sggdi83gahf1"
@@ -307,7 +307,7 @@ horizontal_alignment = 1
 [node name="Countdown" type="Node" parent="UI/In-game" unique_id=1223747700 node_paths=PackedStringArray("label")]
 script = ExtResource("6_w7xx4")
 label = NodePath("../MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/CountdownLabel")
-runningTextFormat = "{0:m\\:ss}"
+runningTextFormat = "{0:mm\\:ss}"
 beforeRunningText = "Spawning players..."
 afterRunningText = "Game finished"
 metadata/_custom_type_script = "uid://djqbwwelecick"
