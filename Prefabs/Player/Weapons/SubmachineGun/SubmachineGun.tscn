@@ -1,44 +1,44 @@
 [gd_scene format=3 uid="uid://duc1guf2tc711"]
 
-[ext_resource type="Script" uid="uid://dbnihpo335kug" path="res://Prefabs/Player/Guns/SubmachineGun.cs" id="1_8uwrk"]
-[ext_resource type="PackedScene" uid="uid://bbuv8m4lpdg1u" path="res://Assets/Models/Prefabs/gun.glb" id="1_i3wdl"]
-[ext_resource type="AudioStream" uid="uid://cbck1i0n0gpe7" path="res://Assets/Sounds/gunreload.mp3" id="2_1ol2f"]
-[ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="2_8uwrk"]
-[ext_resource type="AudioStream" uid="uid://bw0bgab4c1prs" path="res://Assets/Sounds/gunshot.wav" id="2_abca7"]
-[ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="3_lrncf"]
-[ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crosshair.svg" id="4_1ol2f"]
-[ext_resource type="Texture2D" uid="uid://bva1hvwd6n7p8" path="res://Assets/Images/Icons/Ammo.svg" id="8_abca7"]
-[ext_resource type="Texture2D" uid="uid://c1j4l5yo6ta2g" path="res://Assets/Images/Icons/Reload.svg" id="8_h7rq2"]
+[ext_resource type="Script" uid="uid://dbnihpo335kug" path="res://Prefabs/Player/Weapons/SubmachineGun/SubmachineGun.cs" id="1_hrm0v"]
+[ext_resource type="AudioStream" uid="uid://bw0bgab4c1prs" path="res://Assets/Sounds/gunshot.wav" id="2_b54e3"]
+[ext_resource type="AudioStream" uid="uid://cbck1i0n0gpe7" path="res://Assets/Sounds/gunreload.mp3" id="3_qx1xa"]
+[ext_resource type="PackedScene" uid="uid://bbuv8m4lpdg1u" path="res://Assets/Models/Prefabs/gun.glb" id="4_qqwtr"]
+[ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="5_1y405"]
+[ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="6_pf0dq"]
+[ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crosshair.svg" id="7_mees3"]
+[ext_resource type="Texture2D" uid="uid://c1j4l5yo6ta2g" path="res://Assets/Images/Icons/Reload.svg" id="8_v4u2s"]
+[ext_resource type="Texture2D" uid="uid://bva1hvwd6n7p8" path="res://Assets/Images/Icons/Ammo.svg" id="9_awhkk"]
 
 [sub_resource type="AudioStream" id="AudioStream_8uwrk"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_abca7"]
-font = ExtResource("2_8uwrk")
+font = ExtResource("5_1y405")
 font_size = 18
 outline_size = 1
 outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h7rq2"]
-shader = ExtResource("3_lrncf")
+shader = ExtResource("6_pf0dq")
 
 [sub_resource type="LabelSettings" id="LabelSettings_c4dw2"]
-font = ExtResource("2_8uwrk")
+font = ExtResource("5_1y405")
 font_size = 18
 outline_size = 1
 outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_8uwrk"]
-font = ExtResource("2_8uwrk")
+font = ExtResource("5_1y405")
 font_size = 20
 outline_size = 2
 outline_color = Color(0, 0, 0, 1)
 
 [node name="SubmachineGun" type="Node3D" unique_id=411671082]
-script = ExtResource("1_8uwrk")
-shootSound = ExtResource("2_abca7")
-reloadSound = ExtResource("2_1ol2f")
+script = ExtResource("1_hrm0v")
+shootSound = ExtResource("2_b54e3")
+reloadSound = ExtResource("3_qx1xa")
 
-[node name="Model" parent="." unique_id=1920550007 instance=ExtResource("1_i3wdl")]
+[node name="Model" parent="." unique_id=1920550007 instance=ExtResource("4_qqwtr")]
 transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0.491, -0.384, -0.949)
 
 [node name="RayCast" type="RayCast3D" parent="." unique_id=314245295]
@@ -49,6 +49,9 @@ debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=1276327619]
 stream = SubResource("AudioStream_8uwrk")
 unit_size = 6.5
+
+[node name="GrenadeSpawn" type="Marker3D" parent="." unique_id=606843388]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.49133408, -0.38403273, -1.4941763)
 
 [node name="Hud" type="MarginContainer" parent="." unique_id=1922832746]
 anchors_preset = 15
@@ -94,7 +97,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture = ExtResource("4_1ol2f")
+texture = ExtResource("7_mees3")
 expand_mode = 3
 
 [node name="CrosshairHit" type="TextureRect" parent="Hud/Center/Crosshair" unique_id=1225148083]
@@ -111,7 +114,7 @@ rotation = 0.7853982
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture = ExtResource("4_1ol2f")
+texture = ExtResource("7_mees3")
 expand_mode = 3
 
 [node name="DummyLabel" type="Label" parent="Hud/Center" unique_id=1542335466]
@@ -130,12 +133,12 @@ size_flags_vertical = 8
 visible = false
 layout_mode = 2
 offset_transform_enabled = true
-texture = ExtResource("8_h7rq2")
+texture = ExtResource("8_v4u2s")
 expand_mode = 2
 
 [node name="AmmoIcon" type="TextureRect" parent="Hud/RBottom" unique_id=646447357]
 layout_mode = 2
-texture = ExtResource("8_abca7")
+texture = ExtResource("9_awhkk")
 expand_mode = 2
 
 [node name="Ammo" type="Label" parent="Hud/RBottom" unique_id=376044258]

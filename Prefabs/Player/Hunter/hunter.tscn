@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://beaeb2uyytjul"]
 
 [ext_resource type="Script" uid="uid://luuofj7aqswe" path="res://Prefabs/Player/Hunter/HunterBody.cs" id="1_w58js"]
-[ext_resource type="PackedScene" uid="uid://duc1guf2tc711" path="res://Prefabs/Player/Guns/SubmachineGun.tscn" id="2_1qbrv"]
+[ext_resource type="PackedScene" uid="uid://duc1guf2tc711" path="res://Prefabs/Player/Weapons/SubmachineGun/SubmachineGun.tscn" id="2_1qbrv"]
 [ext_resource type="Script" uid="uid://csmaw8snfg308" path="res://Prefabs/SettingsAwareCamera3D.cs" id="2_w58js"]
 [ext_resource type="PackedScene" uid="uid://nkor8n0q2s8j" path="res://Prefabs/Player/HealthBar/HealthBar.tscn" id="3_svrpp"]
 
