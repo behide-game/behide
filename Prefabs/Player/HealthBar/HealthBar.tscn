@@ -1,14 +1,8 @@
 [gd_scene format=3 uid="uid://nkor8n0q2s8j"]
 
 [ext_resource type="Texture2D" uid="uid://4ssi7te2psou" path="res://Assets/Images/Icons/health.svg" id="1_0x5gc"]
-[ext_resource type="FontFile" uid="uid://dhsne0nw6w5j" path="res://Assets/Fonts/JetBrains Mono/JetBrainsMono-Medium.ttf" id="1_ah5tn"]
 [ext_resource type="Script" uid="uid://fepjt8qpgbel" path="res://Prefabs/Player/HealthBar/HealthBar.cs" id="1_b5sgl"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_6ah2n"]
-font = ExtResource("1_ah5tn")
-font_size = 18
-outline_size = 5
-outline_color = Color(0.078431375, 0.08627451, 0.12941177, 1)
+[ext_resource type="LabelSettings" uid="uid://dvlx486vdob4h" path="res://Assets/Fonts/JetBrains_Mono_outline.tres" id="3_b5sgl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ceia4"]
 bg_color = Color(0.07842832, 0.084945954, 0.13061652, 1)
@@ -51,7 +45,7 @@ expand_mode = 3
 layout_mode = 2
 size_flags_horizontal = 0
 text = "100"
-label_settings = SubResource("LabelSettings_6ah2n")
+label_settings = ExtResource("3_b5sgl")
 horizontal_alignment = 1
 vertical_alignment = 1
 

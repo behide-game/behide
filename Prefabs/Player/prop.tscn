@@ -9,7 +9,7 @@
 [ext_resource type="Shader" uid="uid://cevjxarqmxigr" path="res://Prefabs/Player/outlineHorizontal.gdshader" id="3_dg5hw"]
 [ext_resource type="PackedScene" uid="uid://nkor8n0q2s8j" path="res://Prefabs/Player/HealthBar/HealthBar.tscn" id="4_7hld8"]
 [ext_resource type="Script" uid="uid://cg2f8nc5ylod2" path="res://Prefabs/SettingsAwareSubViewport.cs" id="4_scsbf"]
-[ext_resource type="FontFile" uid="uid://dhsne0nw6w5j" path="res://Assets/Fonts/JetBrains Mono/JetBrainsMono-Medium.ttf" id="10_q65ab"]
+[ext_resource type="LabelSettings" uid="uid://dvlx486vdob4h" path="res://Assets/Fonts/JetBrains_Mono_outline.tres" id="10_q65ab"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_scsbf"]
 render_priority = 0
@@ -58,11 +58,6 @@ shader = ExtResource("2_ky5tt")
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_52r4e"]
 load_path = "res://.godot/imported/cross-visor.svg-00ba57c13ac8beaa6b3e0195f079b92d.ctex"
-
-[sub_resource type="LabelSettings" id="LabelSettings_pey03"]
-font = ExtResource("10_q65ab")
-outline_size = 5
-outline_color = Color(0.078431375, 0.08627451, 0.12941177, 1)
 
 [node name="Prop" type="CharacterBody3D" unique_id=486043969]
 collision_layer = 2
@@ -230,4 +225,4 @@ size_flags_horizontal = 4
 size_flags_vertical = 8
 mouse_filter = 1
 text = "Rot. Lock"
-label_settings = SubResource("LabelSettings_pey03")
+label_settings = ExtResource("10_q65ab")
