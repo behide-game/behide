@@ -65,6 +65,8 @@ public partial class PropBody : PlayerBody
             return;
         }
 
+        MoveSpeed = speed;
+
         OutlineCamera.MakeCurrent();
         #if !DEBUG
         currentOutlineNode.Hide();
@@ -94,12 +96,32 @@ public partial class PropBody : PlayerBody
         if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
         // Morph
-        if (Input.IsActionJustPressed(InputActions.Morph) && FocusedObject is BehideObject focusedBehideObject)
-            Rpc(nameof(Morph), focusedBehideObject.GetPath());
+        if (rawEvent.IsActionPressed(InputActions.Morph) && FocusedObject is BehideObject focusedBehideObject)
+        {
+            GetWindow().SetInputAsHandled();
+            MorphRpc(focusedBehideObject.GetPath());
+        }
+    }
+
+    public override void _UnhandledKeyInput(InputEvent rawEvent)
+    {
+        if (!IsMultiplayerAuthority()) return;
+        if (!Alive) return;
+        if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
+
+        // Rotation locking
+        if (rawEvent.IsActionPressed(InputActions.Lock))
+        {
+            RotationLocked = !RotationLocked;
+            ShowLockedLogo(RotationLocked);
+            GetWindow().SetInputAsHandled();
+        }
 
         // Kick
-        if (Input.IsActionJustPressed(InputActions.Kick) && FocusedObject is BehideObject objectToKick)
+        if (rawEvent.IsActionPressed(InputActions.Kick) && FocusedObject is BehideObject objectToKick)
         {
+            GetWindow().SetInputAsHandled();
+
             var kickForce =
                 Input.IsActionPressed(InputActions.Slow)
                     ? maxKickForce / 5
@@ -120,14 +142,18 @@ public partial class PropBody : PlayerBody
         }
 
         // Toggle outline
-        if (Input.IsActionPressed(InputActions.ToggleOutline)) ColorRectVertical.Show();
-        else ColorRectVertical.Hide();
+        if (rawEvent.IsAction(InputActions.ToggleOutline))
+        {
+            ColorRectVertical.Visible = rawEvent.IsPressed();
+            GetWindow().SetInputAsHandled();
+        }
 
         // Adjust speed
-        MoveSpeed =
-            Input.IsActionPressed(InputActions.Slow)
-                ? slowSpeed
-                : speed;
+        if (rawEvent.IsAction(InputActions.Slow))
+        {
+            MoveSpeed = rawEvent.IsPressed() ? slowSpeed : speed;
+            GetWindow().SetInputAsHandled();
+        }
     }
 
     [Rpc(CallLocal = true)]
@@ -245,7 +271,7 @@ public partial class PropBody : PlayerBody
         cameraAdjustTween.Parallel().TweenProperty(CameraDisk, "scale", newScaleVector, cameraAdjustDuration);
     }
 
-    public void ShowLockedLogo(bool show) => _.HUD.BottomLeft.RotationLockedLabel.SetVisible(show);
+    private void ShowLockedLogo(bool show) => _.HUD.BottomLeft.RotationLockedLabel.SetVisible(show);
 
     protected override void PlayerPropertiesChanged(Types.Player player)
     {

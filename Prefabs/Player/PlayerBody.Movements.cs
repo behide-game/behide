@@ -24,7 +24,7 @@ public abstract partial class PlayerBody
     private float rotationY;
     private float preLockRotationY;
 
-    private bool isLocked;
+    protected bool RotationLocked;
 
     // --- Movements ---
     private void ProcessPhysics(double delta)
@@ -79,7 +79,7 @@ public abstract partial class PlayerBody
 
     private void ProcessRotation()
     {
-        if (isLocked)
+        if (RotationLocked)
         {
             CameraDisk.SetRotation(new Vector3(rotationX, rotationY - preLockRotationY, 0)); // Not the visible body
             return;
@@ -101,14 +101,6 @@ public abstract partial class PlayerBody
             rotationY -= mouseMotion.Relative.X * HorizontalSensitivity;
             rotationX -= mouseMotion.Relative.Y * VerticalSensitivity;
             rotationX = Math.Clamp(rotationX, -maxRotation, maxRotation);
-        }
-
-        // Locking
-        if (this is not PropBody prop) return;
-        if (rawEvent.IsActionPressed(InputActions.Lock) && !rawEvent.IsEcho())
-        {
-            isLocked = !isLocked;
-            prop.ShowLockedLogo(isLocked);
         }
     }
 }

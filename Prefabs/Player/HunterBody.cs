@@ -61,16 +61,14 @@ public partial class HunterBody : PlayerBody
         // Listen reload
         if (Input.IsActionJustPressed(InputActions.Reload)) Gun.Reload();
 
+        // Listen crouch
         var crouchMode = GameManager.Settings.CrouchMode;
-        if(crouchMode == 0)
+        if (crouchMode == CrouchMode.Push)
         {
             var canStandUp = !_.Area3D.Get().HasOverlappingBodies();
             if (Input.IsActionPressed(InputActions.Crouch))
             {
-                if (!isCrouching)
-                {
-                    ToggleCrouch(true);
-                }
+                if (!isCrouching) ToggleCrouch(true);
             }
             else
             {
@@ -80,9 +78,8 @@ public partial class HunterBody : PlayerBody
                 }
             }
         }
-        else if(crouchMode == 1)
+        else if (crouchMode == CrouchMode.Toggle)
         {
-            // Listen crouch
             if (Input.IsActionJustPressed(InputActions.Crouch))
             {
                 var canStandUp = !_.Area3D.Get().HasOverlappingBodies();

@@ -3,6 +3,8 @@ using System.Reactive;
 
 namespace Behide.Game;
 
+public enum CrouchMode { Push, Toggle }
+
 public partial class Settings
 {
     private _SceneTree.__0_TabContainer.__1_Controls.__2_VBox Controls => nodes.TabContainer.Controls.VBox;
@@ -10,7 +12,12 @@ public partial class Settings
     public double HorizontalSensitivity => Controls.HorizontalSensitivity.Value;
     public double VerticalSensitivity => Controls.VerticalSensitivity.Value;
     public double Fov => Controls.FOV.Value;
-    public long CrouchMode => Controls.Crouch.OptionButton.Selected;
+    public CrouchMode CrouchMode => Controls.Crouch.OptionButton.Selected switch
+    {
+        0 => CrouchMode.Push,
+        1 => CrouchMode.Toggle,
+        _ => 0
+    };
 
     private void ControlsListenSettingsForSaving()
     {
@@ -44,9 +51,9 @@ public partial class Settings
         config.SetValue("Controls", "fov", Fov);
         config.SetValue("Controls", "crouch-mode", Controls.Crouch.OptionButton.Selected switch
         {
-           0 => "push",
-           1 => "toggle",
-           _ => "push"
+            0 => "push",
+            1 => "toggle",
+            _ => "push"
         });
     }
 }
