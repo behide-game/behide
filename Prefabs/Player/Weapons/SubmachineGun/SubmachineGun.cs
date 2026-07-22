@@ -102,6 +102,7 @@ public partial class SubmachineGun : Gun
         // Apply impulse
         var targetPoint = Raycast.GlobalTransform * (Raycast.TargetPosition / 60);
         var dir = targetPoint - grenade.GlobalPosition;
+        grenade.LookAtFromPosition(grenade.GlobalPosition, targetPoint);
         grenade.ApplyCentralImpulse(dir.Normalized() * grenadeThrowForce);
     }
 }

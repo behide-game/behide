@@ -17,11 +17,10 @@ public partial class Grenade : RigidBody3D
     public override void _EnterTree()
     {
         if (!IsMultiplayerAuthority()) return;
-        BodyEntered += b =>
-        {
-            GD.Print($"Body entered {b.GetPath()}");
-            Explode();
-        };
+        BodyEntered += _ => Explode();
+
+        // If spawning the grenade in a wall BodyEntered is not triggered
+        if (GetContactCount() > 0) Explode();
     }
 
     private void Explode()
