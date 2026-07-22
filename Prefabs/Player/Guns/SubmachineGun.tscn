@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://duc1guf2tc711"]
 
-[ext_resource type="Script" uid="uid://dbnihpo335kug" path="res://Prefabs/Player/SubmachineGun.cs" id="1_8uwrk"]
+[ext_resource type="Script" uid="uid://dbnihpo335kug" path="res://Prefabs/Player/Guns/SubmachineGun.cs" id="1_8uwrk"]
 [ext_resource type="PackedScene" uid="uid://bbuv8m4lpdg1u" path="res://Assets/Models/Prefabs/gun.glb" id="1_i3wdl"]
 [ext_resource type="AudioStream" uid="uid://cbck1i0n0gpe7" path="res://Assets/Sounds/gunreload.mp3" id="2_1ol2f"]
 [ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="2_8uwrk"]
