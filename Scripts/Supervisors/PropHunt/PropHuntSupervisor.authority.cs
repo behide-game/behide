@@ -53,11 +53,12 @@ public partial class PropHuntSupervisor
             Spawner.SpawnPlayer(hunterPeerId, true);
     }
 
-    private void CheckGameEnd(PlayerBody dead)
+    private void CheckGameEnd(int deadPlayerId)
     {
         if (!IsMultiplayerAuthority()) return;
+        var isHunter = Room.Configuration.IsHunter(deadPlayerId);
 
-        if (dead is HunterBody)
+        if (isHunter)
         {
             var allHuntersDead = PlayerBodies.TrueForAll(playerBody =>
                 playerBody is PropBody || !playerBody.Alive

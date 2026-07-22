@@ -51,23 +51,29 @@ public partial class PropHuntSupervisor
     }
 
 
-    public override void PlayerDied(PlayerBody killerBody, PlayerBody deadBody)
+    public override void PlayerDied(int killerPlayerId, int deadPlayerId)
     {
-        log.Information("{PlayerName} died", deadBody.Name);
+        // Retrieve players info
+        if (!Room.Players.TryGetValue(killerPlayerId, out var killerObs))
+        { log.Error("Failed to determine killer: id = {PlayerId}", killerPlayerId); return; }
+        if (!Room.Players.TryGetValue(deadPlayerId, out var victimObs))
+        { log.Error("Failed to determine victim: id = {PlayerId}", deadPlayerId); return; }
 
+        var killer = killerObs.Value;
+        var victim = victimObs.Value;
+        log.Information("{KillerName} killed {VictimName}", killer.Username, victim.Username);
+
+        // Add kill field entry
         var killFieldElement = killFieldItem.Instantiate<KillFieldItem>();
-        var killer = GetBodyPlayer(killerBody);
-        var killed = GetBodyPlayer(deadBody);
-        if (killer is null) { log.Error("Failed determine killer"); return; }
-        if (killed is null) { log.Error("Failed determine killed"); return; }
-
-        if (killer.PeerId == killed.PeerId)
-            killFieldElement.SetKilledThemself(killed);
+        if (killer.PeerId == victim.PeerId)
+            killFieldElement.SetKilledThemself(victim);
         else
-            killFieldElement.SetKillerAndKilled(killer, killed);
+            killFieldElement.SetKillerAndKilled(killer, victim);
 
         nodes.UI.KillField.Elements.AddChild(killFieldElement);
-        CheckGameEnd(deadBody);
+
+        // Update game state
+        CheckGameEnd(victim.PeerId);
     }
 
     public override void LocalPlayerDied(PlayerBody playerBody)

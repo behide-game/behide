@@ -22,7 +22,7 @@ public abstract partial class PlayerBody
         }
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
+    [Rpc(CallLocal = true)]
     protected void SetObjectAuthority(NodePath nodePath)
     {
         var remoteId = Multiplayer.GetRemoteSenderId();

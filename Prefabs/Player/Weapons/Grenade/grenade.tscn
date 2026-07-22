@@ -16,7 +16,11 @@ height = 0.19335938
 radius = 0.048
 height = 0.193
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_ceia4"]
+radius = 5.5
+
 [node name="Grenade" type="RigidBody3D" unique_id=1984255824]
+collision_mask = 7
 contact_monitor = true
 max_contacts_reported = 1
 script = ExtResource("1_4ymph")
@@ -28,3 +32,10 @@ mesh = SubResource("CapsuleMesh_8dbug")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=757606339]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_ceia4")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=638566861]
+collision_mask = 7
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=2042029002]
+shape = SubResource("SphereShape3D_ceia4")

@@ -42,10 +42,10 @@ public abstract partial class PlayerBody : CharacterBody3D
         }
     }
 
-    public void DecreaseHealth(PlayerBody damager, int amount)
+    public void DecreaseHealth(int damagerPlayerId, int amount)
     {
         Health -= (double)amount / MaxHealth;
-        if (Health <= 0) Died(damager);
+        if (Health <= 0) Died(damagerPlayerId);
     }
 
 
@@ -55,13 +55,13 @@ public abstract partial class PlayerBody : CharacterBody3D
     private CancellationToken NodeAliveCt => nodeAliveCts.Token;
     public override void _ExitTree() => nodeAliveCts.Cancel();
 
-    private void Died(PlayerBody killer)
+    private void Died(int damagerPlayerId)
     {
         Alive = false;
         SetVisible(false);
         SetHudsVisibility(false);
         SetProcessMode(ProcessModeEnum.Disabled); // Disable collisions
-        supervisor.PlayerDied(killer, this);
+        supervisor.PlayerDied(damagerPlayerId, GetMultiplayerAuthority());
         if (IsMultiplayerAuthority()) supervisor.LocalPlayerDied(this);
     }
 

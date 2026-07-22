@@ -91,10 +91,13 @@ public partial class SubmachineGun : Gun
     [Rpc(CallLocal = true)]
     private void ThrowGrenade()
     {
+        var sender = Multiplayer.GetRemoteSenderId();
+
         // Spawn grenade
         var grenade = grenadeScene.Instantiate<Grenade>();
-        grenade.Position = _.GrenadeSpawn.Position;
-        AddChild(grenade);
+        grenade.SetMultiplayerAuthority(sender);
+        grenade.Position = _.GrenadeSpawn.GlobalPosition;
+        GetTree().Root.AddChild(grenade);
 
         // Apply impulse
         var targetPoint = Raycast.GlobalTransform * (Raycast.TargetPosition / 60);

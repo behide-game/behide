@@ -115,9 +115,12 @@ public partial class HunterBody : PlayerBody
     {
         var node = GetNode(playerPath);
         if (node is not PropBody player) return;
-        player.DecreaseHealth(this, damageAmount);
+        player.DecreaseHealth(
+            Multiplayer.GetRemoteSenderId(),
+            damageAmount
+        );
     }
 
     [Rpc(CallLocal = true)]
-    public void HunterMissedRpc() => DecreaseHealth(this, 2);
+    public void HunterMissedRpc() => DecreaseHealth(Multiplayer.GetRemoteSenderId(), 2);
 }
