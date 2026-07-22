@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://ulbbmbkt416y"]
+
+[ext_resource type="Script" uid="uid://2bcf1rk3l2kh" path="res://Prefabs/Player/Weapons/Grenade/Grenade.cs" id="1_4ymph"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rprdp"]
+albedo_color = Color(0.87311083, 0.39892215, 0, 1)
+metallic = 0.95
+roughness = 0.33
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_8dbug"]
+material = SubResource("StandardMaterial3D_rprdp")
+radius = 0.048339844
+height = 0.19335938
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ceia4"]
+radius = 0.048
+height = 0.193
+
+[node name="Grenade" type="RigidBody3D" unique_id=1984255824]
+contact_monitor = true
+max_contacts_reported = 1
+script = ExtResource("1_4ymph")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=84452935]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_8dbug")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=757606339]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_ceia4")

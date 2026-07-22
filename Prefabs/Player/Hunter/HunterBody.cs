@@ -1,4 +1,4 @@
-using Behide.Prefabs.Player;
+using Behide.Prefabs.Weapons;
 using Godot;
 
 namespace Behide.Game.Player;
@@ -57,6 +57,10 @@ public partial class HunterBody : PlayerBody
                     break;
             }
         }
+
+        // Listen secondary shoot
+        if (Input.IsActionJustPressed(InputActions.SecondaryShoot))
+            Gun.SecondaryShoot();
 
         // Listen reload
         if (Input.IsActionJustPressed(InputActions.Reload)) Gun.Reload();

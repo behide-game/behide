@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Behide.Prefabs.Player;
+namespace Behide.Prefabs.Weapons;
 
 public abstract partial class Gun : Node3D
 {
@@ -69,6 +69,8 @@ public abstract partial class Gun : Node3D
         if (CanReload) Reload();
         return null;
     }
+
+    public virtual void SecondaryShoot() {}
 
     public void Reload()
     {

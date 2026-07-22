@@ -2,7 +2,7 @@ using Behide.Game;
 using Behide.Game.Player;
 using Godot;
 
-namespace Behide.Prefabs.Player;
+namespace Behide.Prefabs.Weapons;
 
 [SceneTree]
 public partial class SubmachineGun : Gun
@@ -24,6 +24,8 @@ public partial class SubmachineGun : Gun
 
     [Export] private AudioStream shootSound = null!;
     [Export] private AudioStream reloadSound = null!;
+    [Export] private PackedScene grenadeScene = null!;
+    [Export] private float grenadeThrowForce = 40f;
 
     private double crosshairHitDuration = 0.3;
     private Tween? crosshairHitTween;
@@ -75,6 +77,8 @@ public partial class SubmachineGun : Gun
         }
     }
 
+    public override void SecondaryShoot() => ThrowGrenadeRpc();
+
     protected override void ReloadCore() => PlaySoundRpc(false);
 
     [Rpc(CallLocal =  true)]
@@ -82,5 +86,19 @@ public partial class SubmachineGun : Gun
     {
         _.AudioStreamPlayer3D.Stream = isShootSound ? shootSound : reloadSound;
         _.AudioStreamPlayer3D.Play();
+    }
+
+    [Rpc(CallLocal = true)]
+    private void ThrowGrenade()
+    {
+        // Spawn grenade
+        var grenade = grenadeScene.Instantiate<Grenade>();
+        grenade.Position = _.GrenadeSpawn.Position;
+        AddChild(grenade);
+
+        // Apply impulse
+        var targetPoint = Raycast.GlobalTransform * (Raycast.TargetPosition / 60);
+        var dir = targetPoint - grenade.GlobalPosition;
+        grenade.ApplyCentralImpulse(dir.Normalized() * grenadeThrowForce);
     }
 }
