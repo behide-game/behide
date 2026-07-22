@@ -33,17 +33,20 @@
 [ext_resource type="PackedScene" uid="uid://dn8y487aan6cm" path="res://Prefabs/BehideObjects/Dungeon/Coins/coin_stack_large.tscn" id="31_xn2sx"]
 [ext_resource type="PackedScene" uid="uid://damtas0dagou5" path="res://Prefabs/BehideObjects/Sphere/mirror_sphere.tscn" id="32_qhhyx"]
 [ext_resource type="LightmapGIData" uid="uid://gqnv4xv132l6" path="res://Scenes/Lobby/Dungeon_presentation.lmbake" id="33_a6dvx"]
+[ext_resource type="Texture2D" uid="uid://cnxqalanr2n42" path="res://Assets/Skyboxes/skybox-day.png" id="34_a6dvx"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ceia4"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cclfe"]
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_byl8j"]
+panorama = ExtResource("34_a6dvx")
 
 [sub_resource type="Sky" id="Sky_a6dvx"]
-sky_material = SubResource("ProceduralSkyMaterial_cclfe")
+sky_material = SubResource("PanoramaSkyMaterial_byl8j")
 
 [sub_resource type="Environment" id="Environment_ceia4"]
 background_mode = 2
 sky = SubResource("Sky_a6dvx")
+sky_rotation = Vector3(0, -1.6283922, 0)
 reflected_light_source = 1
 tonemap_mode = 2
 

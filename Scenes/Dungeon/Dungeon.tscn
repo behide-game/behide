@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://bh3nk67jxv7k"]
 
+[ext_resource type="Texture2D" uid="uid://cnxqalanr2n42" path="res://Assets/Skyboxes/skybox-day.png" id="2_v8h4g"]
 [ext_resource type="LightmapGIData" uid="uid://03h2onju4cki" path="res://Scenes/Dungeon/Dungeon.lmbake" id="3_isktu"]
 [ext_resource type="PackedScene" uid="uid://ccb28bbg0acxt" path="res://Assets/Models/Dungeon/Batiments/Floor/Tile/floor_tile_large.gltf" id="4_n6ef1"]
 [ext_resource type="MeshLibrary" uid="uid://crhacb1q0qlf4" path="res://Assets/Models/Dungeon/mesh_library.meshlib" id="4_v8h4g"]
@@ -80,14 +81,16 @@
 [ext_resource type="PackedScene" uid="uid://oq3cxwfc3rjk" path="res://Prefabs/BehideObjects/Dungeon/Coins/coin_stack_small.tscn" id="87_w45ka"]
 [ext_resource type="PackedScene" uid="uid://baf01o6jv5x1f" path="res://Prefabs/BehideObjects/SpaceBase/Lander/lander_A.tscn" id="88_ve83j"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_isktu"]
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_pyojt"]
+panorama = ExtResource("2_v8h4g")
 
 [sub_resource type="Sky" id="Sky_a6dvx"]
-sky_material = SubResource("ProceduralSkyMaterial_isktu")
+sky_material = SubResource("PanoramaSkyMaterial_pyojt")
 
 [sub_resource type="Environment" id="Environment_n6ef1"]
 background_mode = 2
 sky = SubResource("Sky_a6dvx")
+sky_rotation = Vector3(0, -2.5586526, 0)
 reflected_light_source = 1
 tonemap_mode = 2
 
@@ -1803,7 +1806,6 @@ shape = SubResource("BoxShape3D_f8atq")
 transform = Transform3D(-1, 0, 1.509958e-07, 0, 1, 0, -1.509958e-07, 0, -1, -5.9999995, 6, 15.5)
 
 [node name="OmniLight3D" parent="World/StaticProps/torch_mounted_with_light" index="1" unique_id=878820410]
-layers = 7
 light_bake_mode = 1
 light_cull_mask = 4294967279
 distance_fade_enabled = true
@@ -1815,7 +1817,6 @@ omni_range = 10.0
 transform = Transform3D(-1, 0, 1.509958e-07, 0, 1, 0, -1.509958e-07, 0, -1, -5.999998, 6, 23.8)
 
 [node name="OmniLight3D" parent="World/StaticProps/torch_mounted_with_light2" index="1" unique_id=878820410]
-layers = 7
 light_indirect_energy = 2.0
 light_bake_mode = 1
 light_cull_mask = 4294967279
@@ -1829,7 +1830,6 @@ omni_attenuation = 0.5
 transform = Transform3D(-4.3711392e-08, 0, -1, 0, 1, 0, 1, 0, -4.3711392e-08, -6.5499997, 2, 16)
 
 [node name="OmniLight3D" parent="World/StaticProps/torch_mounted_with_light3" index="1" unique_id=878820410]
-layers = 7
 light_bake_mode = 1
 light_cull_mask = 4294967279
 distance_fade_enabled = true
@@ -1841,7 +1841,6 @@ omni_range = 9.5
 transform = Transform3D(4.5695568e-08, 0, 1, 0, 1, 0, -1, 0, 4.5695568e-08, -5.449998, 2, 16)
 
 [node name="OmniLight3D" parent="World/StaticProps/torch_mounted_with_light4" index="1" unique_id=878820410]
-layers = 7
 light_bake_mode = 1
 light_cull_mask = 4294967279
 distance_fade_enabled = true
@@ -1853,7 +1852,6 @@ omni_range = 9.5
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -38, 4, 23.500002)
 
 [node name="OmniLight3D" parent="World/StaticProps/torch_mounted_with_light5" index="1" unique_id=878820410]
-layers = 7
 light_indirect_energy = 2.0
 light_bake_mode = 1
 light_cull_mask = 4294967279
@@ -1866,7 +1864,6 @@ omni_range = 13.938019
 transform = Transform3D(1, 0, 2.0762417e-07, 0, 1, 0, -2.0762417e-07, 0, 1, -38, 4, 0.5000019)
 
 [node name="OmniLight3D" parent="World/StaticProps/torch_mounted_with_light6" index="1" unique_id=878820410]
-layers = 7
 light_indirect_energy = 2.0
 light_bake_mode = 1
 light_cull_mask = 4294967279
