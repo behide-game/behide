@@ -2,7 +2,10 @@
 
 [ext_resource type="Script" uid="uid://luuofj7aqswe" path="res://Prefabs/Player/HunterBody.cs" id="1_w58js"]
 [ext_resource type="PackedScene" uid="uid://duc1guf2tc711" path="res://Prefabs/Player/SubmachineGun.tscn" id="2_1qbrv"]
+[ext_resource type="Script" uid="uid://cjdprc5vf8wni" path="res://Prefabs/Player/WeaponManager.cs" id="2_w58js"]
 [ext_resource type="PackedScene" uid="uid://nkor8n0q2s8j" path="res://Prefabs/Controls/Lifebar/Lifebar.tscn" id="3_svrpp"]
+[ext_resource type="PackedScene" uid="uid://18bqr00srtkg" path="res://Prefabs/Player/Sword.tscn" id="4_1qbrv"]
+[ext_resource type="Script" uid="uid://ctx25qgx7dxge" path="res://Prefabs/Player/Sword.cs" id="5_n8xxh"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_svrpp"]
 
@@ -66,12 +69,21 @@ keep_aspect = 0
 cull_mask = 1048563
 fov = 90.0
 
-[node name="SubmachineGun" parent="Camera" unique_id=411671082 instance=ExtResource("2_1qbrv")]
-
 [node name="RayCast" type="RayCast3D" parent="Camera" unique_id=121293897]
 target_position = Vector3(0, 0, -1000)
 collision_mask = 7
 debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
+
+[node name="WeaponManager" type="Node3D" parent="Camera" unique_id=1619980722]
+script = ExtResource("2_w58js")
+
+[node name="SubmachineGun" parent="Camera/WeaponManager" unique_id=411671082 instance=ExtResource("2_1qbrv")]
+visible = false
+
+[node name="Sword" parent="Camera/WeaponManager" unique_id=1432809585 instance=ExtResource("4_1qbrv")]
+transform = Transform3D(0.07, 0, 0, 0, 0.07, 0, 0, 0, 0.07, 0.5780591, -0.42589402, -0.91015863)
+visible = false
+script = ExtResource("5_n8xxh")
 
 [node name="HUD" type="MarginContainer" parent="." unique_id=1893787552]
 anchors_preset = 15

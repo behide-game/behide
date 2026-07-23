@@ -7,7 +7,8 @@ namespace Behide.Game.Player;
 [SceneTree("hunter.tscn", traverseInstancedScenes:true)]
 public partial class HunterBody : PlayerBody
 {
-    private SubmachineGun Gun => _.Camera.SubmachineGun;
+    private Prefabs.Player.WeaponManager WeaponManager => _.Camera.WeaponManager;
+    private Weapon Weapon => WeaponManager.ActiveWeapon;
     private CollisionShape3D StandingShape => _.CollisionShapeStanding;
     private MeshInstance3D StandingMesh => _.MeshInstanceStanding;
     private CollisionShape3D CrouchingShape => _.CollisionShapeCrouching;
@@ -18,7 +19,7 @@ public partial class HunterBody : PlayerBody
     protected override Node3D CameraDisk => _.Camera;
     protected override Camera3D Camera => _.Camera;
     protected override RayCast3D RayCast => _.Camera.RayCast;
-    protected override Label PlayerUsername => Gun.PlayerUsernameLabel;
+    protected override Label PlayerUsername => Weapon.PlayerUsernameLabel;
     protected override BezelContainer HealthBar => _.HUD.Lifebar.Mask.HealthBar;
     protected override Label HealthLabel => _.HUD.Lifebar.HealthLabel;
     public override MultiplayerSynchronizer PositionSynchronizer => _.PositionSynchronizer;
@@ -33,7 +34,7 @@ public partial class HunterBody : PlayerBody
     protected override void SetHudsVisibility(bool value)
     {
         _.HUD.Get().SetVisible(value);
-        Gun.Hud.SetVisible(value);
+        Weapon.Hud.SetVisible(value);
     }
 
     public override void _Process(double delta)
@@ -45,24 +46,22 @@ public partial class HunterBody : PlayerBody
 
         if (Input.MouseMode != Input.MouseModeEnum.Captured) return;
 
-        // Listen shoot
-        if (Input.IsActionPressed(InputActions.Shoot))
+        // Listen primary action
+        if (Input.IsActionPressed(InputActions.Primary))
         {
-            var shootObject = Gun.TryShoot();
-            switch (shootObject)
-            {
-                case BehideObject:
-                    Rpc(nameof(HunterMissedRpc));
-                    break;
-                case PropBody player:
-                    Rpc(nameof(PlayerHitRpc), player.GetPath(), Gun.DamagePerAmmo);
-                    break;
-            }
+            TryDealDamage(Weapon.PerformPrimaryAction());
+        }
+
+        // Listen secondary action
+        if (Input.IsActionPressed(InputActions.Secondary))
+        {
+            TryDealDamage(Weapon.PerformSecondaryAction());
         }
 
         // Listen reload
-        if (Input.IsActionJustPressed(InputActions.Reload)) Gun.Reload();
+        if (Input.IsActionJustPressed(InputActions.Reload)) Weapon.PerformReloadAction();
 
+        // Listen crouch
         var crouchMode = GameManager.Settings.CrouchMode;
         if(crouchMode == 0)
         {
@@ -84,11 +83,34 @@ public partial class HunterBody : PlayerBody
         }
         else if(crouchMode == 1)
         {
-            // Listen crouch
             if (Input.IsActionJustPressed(InputActions.Crouch))
             {
                 var canStandUp = !_.Area3D.Get().HasOverlappingBodies();
                 if (!isCrouching || canStandUp && isCrouching) ToggleCrouch(!isCrouching);
+            }
+        }
+
+        // Listen change weapon
+        if (Input.IsActionJustPressed(InputActions.ChangeWeapon))
+        {
+            WeaponManager.Change();
+        }
+
+    }
+
+    private void TryDealDamage(Node3D[]? shootObjects)
+    {
+        if (shootObjects is null) return;
+        foreach (var shootObject in shootObjects)
+        {
+            switch (shootObject)
+            {
+                case BehideObject:
+                    Rpc(nameof(HunterMissedRpc));
+                    break;
+                case PropBody player:
+                    Rpc(nameof(PlayerHitRpc), player.GetPath(), Weapon.Damage);
+                    break;
             }
         }
     }

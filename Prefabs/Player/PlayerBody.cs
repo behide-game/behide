@@ -97,9 +97,7 @@ public abstract partial class PlayerBody : CharacterBody3D
         // Subscribe to change color
         if(GameManager.Room.Room is null) log.Error("Not in a room");
         else if (GameManager.Room.Room.Players.TryGetValue(GetMultiplayerAuthority(), out var behaviorSubject))
-            {
-                behaviorSubject.Subscribe(_ => UpdatePlayerProperties(behaviorSubject.Value));
-            }
+            behaviorSubject.Subscribe(_ => UpdatePlayerProperties(behaviorSubject.Value));
 
         // Set spawn position
         var transform = Transform;

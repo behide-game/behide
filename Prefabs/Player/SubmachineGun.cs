@@ -7,7 +7,7 @@ namespace Behide.Prefabs.Player;
 [SceneTree]
 public partial class SubmachineGun : Gun
 {
-    public override int DamagePerAmmo => 2;
+    protected override int DamagePerAmmo => 2;
     protected override int MagazineSize => 45;
     protected override float ReloadTime => 2.5f;
     protected override float FireRate => 10f;
@@ -52,7 +52,7 @@ public partial class SubmachineGun : Gun
         }
     }
 
-    protected override Node3D? ShootCore()
+    protected override Node3D[]? ShootCore()
     {
         // Play sounds
         PlaySoundRpc(true);
@@ -66,13 +66,15 @@ public partial class SubmachineGun : Gun
                 crosshairHitTween.SetEase(Tween.EaseType.In);
                 crosshairHitTween.TweenProperty(HitMark, "modulate", new Color(0xFFFFFF00), crosshairHitDuration);
                 HitMark.Modulate = new Color(0xFFFFFFFF);
-                return player;
+                return [player];
             case BehideObject behideObject:
-                return behideObject;
+                return [behideObject];
             default:
                 return null;
         }
     }
+
+    public override Node3D[]? PerformSecondaryAction() => null;
 
     protected override void ReloadCore() => PlaySoundRpc(false);
 

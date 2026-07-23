@@ -1,16 +1,16 @@
+using Behide.Game;
 using Godot;
 
 namespace Behide.Prefabs.Player;
 
-public abstract partial class Gun : Node3D
+public abstract partial class Gun : Weapon
 {
-    public abstract Control Hud { get; }
-    public abstract Label PlayerUsernameLabel { get; }
     protected abstract Label AmmoLabel { get; }
     protected abstract TextureRect AmmoPicto { get; }
     protected abstract TextureRect ReloadPicto { get; }
 
-    public abstract int DamagePerAmmo { get; }
+    public override float Damage => DamagePerAmmo;
+    protected abstract int DamagePerAmmo { get; }
     protected abstract int MagazineSize { get; }
     protected abstract float ReloadTime { get; }
     protected abstract float FireRate { get; }
@@ -48,10 +48,11 @@ public abstract partial class Gun : Node3D
         reloadTimeRemaining -= delta;
     }
 
-    protected abstract Node3D? ShootCore();
+    protected abstract Node3D[]? ShootCore();
     protected abstract void ReloadCore();
 
-    public Node3D? TryShoot()
+    public override Node3D[]? PerformPrimaryAction() => TryShoot();
+    private Node3D[]? TryShoot()
     {
         if (CanShoot)
         {
@@ -65,7 +66,9 @@ public abstract partial class Gun : Node3D
         return null;
     }
 
-    public void Reload()
+    public override void PerformReloadAction() => Reload();
+
+    private void Reload()
     {
         reloadTimeRemaining = ReloadTime;
         AmmoPicto.Hide();

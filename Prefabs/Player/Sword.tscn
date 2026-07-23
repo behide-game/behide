@@ -1,0 +1,126 @@
+[gd_scene format=3 uid="uid://18bqr00srtkg"]
+
+[ext_resource type="PackedScene" uid="uid://cf10nrnptxiga" path="res://Prefabs/Player/Sword.glb" id="1_sex6i"]
+[ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="2_1lrxq"]
+[ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="3_438ef"]
+[ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crosshair.svg" id="4_36j7p"]
+[ext_resource type="Texture2D" uid="uid://c1j4l5yo6ta2g" path="res://Assets/Images/Reload.svg" id="5_pq5wk"]
+[ext_resource type="Texture2D" uid="uid://bva1hvwd6n7p8" path="res://Assets/Images/Ammo.svg" id="6_a5pq5"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_x0sip"]
+font = ExtResource("2_1lrxq")
+font_size = 18
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sjcef"]
+shader = ExtResource("3_438ef")
+
+[sub_resource type="LabelSettings" id="LabelSettings_nob6u"]
+font = ExtResource("2_1lrxq")
+font_size = 18
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_3gvq0"]
+font = ExtResource("2_1lrxq")
+font_size = 20
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Sword" type="Node3D" unique_id=1432809585]
+
+[node name="Sword" parent="." unique_id=1769442579 instance=ExtResource("1_sex6i")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="Hud" type="MarginContainer" parent="." unique_id=950347877]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Center" type="VBoxContainer" parent="Hud" unique_id=2011510552]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+
+[node name="PlayerUsername" type="Label" parent="Hud/Center" unique_id=425175442]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 1
+label_settings = SubResource("LabelSettings_x0sip")
+horizontal_alignment = 1
+vertical_alignment = 1
+max_lines_visible = 1
+
+[node name="Crosshair" type="Control" parent="Hud/Center" unique_id=174863389]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 1
+
+[node name="Crosshair" type="TextureRect" parent="Hud/Center/Crosshair" unique_id=1591370175]
+material = SubResource("ShaderMaterial_sjcef")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_36j7p")
+expand_mode = 3
+
+[node name="CrosshairHit" type="TextureRect" parent="Hud/Center/Crosshair" unique_id=1432235430]
+modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 0, 0, 1)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_36j7p")
+expand_mode = 3
+
+[node name="DummyLabel" type="Label" parent="Hud/Center" unique_id=556554698]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 1
+label_settings = SubResource("LabelSettings_nob6u")
+
+[node name="RBottom" type="HBoxContainer" parent="Hud" unique_id=33749690]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="ReloadPicto" type="TextureRect" parent="Hud/RBottom" unique_id=1733831650]
+visible = false
+layout_mode = 2
+offset_transform_enabled = true
+texture = ExtResource("5_pq5wk")
+expand_mode = 2
+
+[node name="AmmoPicto" type="TextureRect" parent="Hud/RBottom" unique_id=828988060]
+layout_mode = 2
+texture = ExtResource("6_a5pq5")
+expand_mode = 2
+
+[node name="Ammo" type="Label" parent="Hud/RBottom" unique_id=1317934210]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_3gvq0")
