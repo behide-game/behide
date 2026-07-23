@@ -1,3 +1,4 @@
+using Behide.Game;
 using Behide.Game.Player;
 using Godot;
 using Serilog;
@@ -14,24 +15,53 @@ public partial class Grenade : RigidBody3D
     [Export] private float blowForce = 10f;
     [Export] private int damage = 50;
 
+    private VFXExplosionBB explosion = null!;
+    private bool exploded;
+
     public override void _EnterTree()
     {
+        // Configure explosion
+        var vfx = nodes.VFX;
+        if (vfx is not VFXExplosionBB vfxExplosion)
+        {
+            log.Error("VFX are not of type VFXExplosionBB");
+            return;
+        }
+
+        explosion = vfxExplosion;
+        explosion.OneShot = true;
+        explosion.Finished += QueueFree;
+
+        // Authority trigger explosion
         if (!IsMultiplayerAuthority()) return;
-        BodyEntered += _ => Explode();
+        BodyEntered += _ =>
+        {
+            if (exploded) return;
+            exploded = true;
+            ExplodeRpc();
+        };
 
         // If spawning the grenade in a wall BodyEntered is not triggered
-        if (GetContactCount() > 0) Explode();
+        if (GetContactCount() > 0) ExplodeRpc();
     }
 
+    [Rpc(CallLocal = true)]
     private void Explode()
     {
+        Freeze = true;
+        nodes.MeshInstance3D.Visible = false;
+
+        // Start animation
+        explosion.Play();
+
+        // Treat bodies
+        if (!IsMultiplayerAuthority()) return;
         var bodies = Area.GetOverlappingBodies();
         foreach (var body in bodies)
         {
             if (body is RigidBody3D rigidBody) PushBody(rigidBody);
             if (body is PlayerBody player) HitPlayerRpc(player.GetPath());
         }
-        QueueFree();
     }
 
     private void PushBody(RigidBody3D body)
@@ -61,7 +91,10 @@ public partial class Grenade : RigidBody3D
     private void SetObjectAuthority(NodePath nodePath)
     {
         var remoteId = Multiplayer.GetRemoteSenderId();
-        GetNode<RigidBody3D>(nodePath).SetMultiplayerAuthority(remoteId);
+        var obj = GetNodeOrNull<BehideObject>(nodePath);
+        if (obj is null) return;
+
+        obj.SetMultiplayerAuthority(remoteId);
         log.Debug("Set authority of {NodePath} to {RemoteId}", nodePath, remoteId);
     }
 }

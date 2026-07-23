@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ulbbmbkt416y"]
 
 [ext_resource type="Script" uid="uid://2bcf1rk3l2kh" path="res://Prefabs/Player/Weapons/Grenade/Grenade.cs" id="1_4ymph"]
+[ext_resource type="PackedScene" uid="uid://chqijevfxuhpd" path="res://addons/ExplosionVFX/ExplosionFX/effects/ground/vfx_ground_explosion_01.tscn" id="2_g25ka"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rprdp"]
 albedo_color = Color(0.87311083, 0.39892215, 0, 1)
@@ -39,3 +40,5 @@ monitorable = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=2042029002]
 shape = SubResource("SphereShape3D_ceia4")
+
+[node name="VFX" parent="." unique_id=1912371438 instance=ExtResource("2_g25ka")]

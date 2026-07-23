@@ -26,7 +26,10 @@ public abstract partial class PlayerBody
     protected void SetObjectAuthority(NodePath nodePath)
     {
         var remoteId = Multiplayer.GetRemoteSenderId();
-        GetNode<RigidBody3D>(nodePath).SetMultiplayerAuthority(remoteId);
+        var obj = GetNodeOrNull<BehideObject>(nodePath);
+        if (obj is null) return;
+
+        obj.SetMultiplayerAuthority(remoteId);
         log.Debug("Set authority of {NodePath} to {RemoteId}", nodePath, remoteId);
     }
 }
