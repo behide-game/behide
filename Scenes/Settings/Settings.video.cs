@@ -74,12 +74,20 @@ public partial class Settings
         settingsOverride.SetValue(
             "rendering",
             "renderer/rendering_method",
-            driver == 2 ? "gl_compatibility" : "forward_plus"
+            driver switch
+            {
+                0 => "forward_plus",
+                1 => "forward_plus",
+                2 => "mobile",
+                3 => "mobile",
+                4 => "gl_compatibility",
+                _ => "forward_plus"
+            }
         );
 
-        if (driver == 0)
+        if (driver is 0 or 2)
             settingsOverride.SetValue("rendering", "rendering_device/driver", "vulkan");
-        else if (driver == 1)
+        else if (driver is 1 or 3)
             settingsOverride.SetValue("rendering", "rendering_device/driver.windows", "d3d12");
 
         string overridePath;
@@ -111,6 +119,9 @@ public partial class Settings
 
     private void VideoListenSettings()
     {
+        // Driver
+        Video.Driver.OptionButton.ItemSelected += Video_SetDriver;
+
         // Display mode
         Video.DisplayMode.OptionButton.ItemSelected += Video_SetDisplayMode;
 
@@ -131,9 +142,6 @@ public partial class Settings
         // FPS
         Video.FPS.Enabled.Toggled += GameManager.VisualEffectsLayer.EnableFpsDisplay;
         Video.MaxFPS.SliderSetting.Changed.Subscribe(maxFps => Engine.SetMaxFps((int)maxFps));
-
-        // Driver
-        Video.Driver.OptionButton.ItemSelected += Video_SetDriver;
     }
 
     /// <summary>
@@ -168,13 +176,20 @@ public partial class Settings
 
         Video.Driver.OptionButton.Select(renderingMethod switch
         {
-            "gl_compatibility" => 2,
-            _ => renderingDriver switch
+            "forward_plus" => renderingDriver switch
             {
                 "vulkan" => 0,
                 "d3d12" => 1,
                 _ => 0
-            }
+            },
+            "mobile" => renderingDriver switch
+            {
+                "vulkan" => 2,
+                "d3d12" => 3,
+                _ => 2
+            },
+            "gl_compatibility" => 4,
+            _ => 0
         });
 
         Video.DisplayMode.OptionButton.Select(displayMode switch

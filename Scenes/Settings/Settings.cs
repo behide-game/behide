@@ -85,14 +85,22 @@ public partial class Settings : Control
 
     private void RefreshRestartNeeded()
     {
-        var restartNeeded =
+        var (expectedRenderingMethod, expectedRenderingDriver) =
             Video.Driver.OptionButton.Selected switch
             {
-                0 => renderingDriver != "vulkan",
-                1 => renderingDriver != "d3d12",
-                2 => renderingDriver != "opengl3",
-                _ => true
+                0 => ("forward_plus", "vulkan"),
+                1 => ("forward_plus", "d3d12"),
+                2 => ("mobile", "vulkan"),
+                3 => ("mobile", "d3d12"),
+                4 => ("gl_compatibility", "opengl3"),
+                _ => ("forward_plus", "vulkan")
             };
+
+
+        var restartNeeded =
+            expectedRenderingMethod != renderingMethod
+            || expectedRenderingDriver != renderingDriver;
+
         nodes.TabContainer.Video.VBox.RestartNeeded.Get().Modulate =
             restartNeeded
                 ? Colors.White
