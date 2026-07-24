@@ -5,21 +5,21 @@ using Godot;
 public partial class OutlineEffect : CompositorEffect
 {
     [Export] public int outlineWidth = 3;
-    public RenderingDevice rd;
-    public Rid shader_horizontal;
-    public Rid shader_vertical;
-    public Rid pipeline_horizontal;
-    public Rid pipeline_vertical;
-    public bool texturesInitialized = false;
-    public Vector2I textureSize;
-    public Rid textureA;
-    public Rid textureB;
-    public Rid sampler;
-    public Texture2Drd textureArd;
-    public Texture2Drd textureBrd;
+    private RenderingDevice rd;
+    private Rid shader_horizontal;
+    private Rid shader_vertical;
+    private Rid pipeline_horizontal;
+    private Rid pipeline_vertical;
+    private bool texturesInitialized = false;
+    private Vector2I textureSize;
+    private Rid textureA;
+    private Rid textureB;
+    private Rid sampler;
+    private Texture2Drd textureArd;
+    private Texture2Drd textureBrd;
     public Texture2Drd OutputTexture2D => textureBrd;
-    public int width;
-    public int height;
+    private int width;
+    private int height;
 
     public OutlineEffect()
     {
