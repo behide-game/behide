@@ -35,12 +35,12 @@ void main() {
             float n_d_h = currentPixel.a;
             if(n_d_h > 0.01) {
                 int weight = outline_width - abs(x) + 1;
-                mean_color += currentPixel.rgb*float(weight);
+                mean_color += currentPixel.rgb/currentPixel.a*float(weight);
                 weight_count += weight;
                 is_outline = true;
             }
 		}
 	}
-    vec4 color = mix(vec4(temp_color.rgb, 0.5), mix(vec4(mean_color/float(weight_count), 1.), vec4(0.), is_outline?0:1), is_inner?0:1);
+    vec4 color = mix(vec4(temp_color.rgb/temp_color.a, 0.5), mix(vec4(mean_color/float(weight_count), 1.), vec4(0.), is_outline?0:1), is_inner?0:1);
 	imageStore(output_image, uv, color);
 }
