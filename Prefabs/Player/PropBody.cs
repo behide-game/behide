@@ -67,7 +67,7 @@ public partial class PropBody : PlayerBody
     public override void _Process(double delta)
     {
         base._Process(delta);
-        if (effect.outputTexture2D != null)
+        if (effect.OutputTexture2D != null)
         {
             DisplayTextureRect.Texture = effect.OutputTexture2D;
         }
