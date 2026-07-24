@@ -1,14 +1,13 @@
 [gd_scene format=3 uid="uid://iwqa8xgo1ip3"]
 
 [ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="2_7hld8"]
-[ext_resource type="Shader" uid="uid://buxh8r3j3w4yh" path="res://Prefabs/Player/outlineVertical.gdshader" id="2_7odvv"]
 [ext_resource type="Shader" uid="uid://cpic26ffvr8hs" path="res://Prefabs/Player/mask.gdshader" id="2_dg5hw"]
 [ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="2_ky5tt"]
 [ext_resource type="Script" uid="uid://bnid2w67fk441" path="res://Prefabs/Player/PropBody.cs" id="2_m4go7"]
 [ext_resource type="Script" uid="uid://csmaw8snfg308" path="res://Prefabs/SettingsAwareCamera3D.cs" id="3_8fnhj"]
-[ext_resource type="Shader" uid="uid://cevjxarqmxigr" path="res://Prefabs/Player/outlineHorizontal.gdshader" id="3_dg5hw"]
 [ext_resource type="PackedScene" uid="uid://nkor8n0q2s8j" path="res://Prefabs/Player/HealthBar/HealthBar.tscn" id="4_7hld8"]
 [ext_resource type="Script" uid="uid://cg2f8nc5ylod2" path="res://Prefabs/SettingsAwareSubViewport.cs" id="4_scsbf"]
+[ext_resource type="Script" uid="uid://crhya31mukanb" path="res://Assets/Shaders/OutlineEffect.cs" id="5_scsbf"]
 [ext_resource type="LabelSettings" uid="uid://dvlx486vdob4h" path="res://Assets/Fonts/JetBrains_Mono_outline.tres" id="10_q65ab"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_scsbf"]
@@ -37,15 +36,18 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_37tqn"]
-shader = ExtResource("3_dg5hw")
-shader_parameter/outline_width = 5
+[sub_resource type="CompositorEffect" id="CompositorEffect_scsbf"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("5_scsbf")
+metadata/_custom_type_script = "uid://crhya31mukanb"
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8fnhj"]
-shader = ExtResource("2_7odvv")
-shader_parameter/outline_width = 5
-shader_parameter/inner_opacity = 0.5
-shader_parameter/outline_opacity = 1.0
+[sub_resource type="Compositor" id="Compositor_8p83u"]
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_scsbf")])
 
 [sub_resource type="LabelSettings" id="LabelSettings_j2ufq"]
 font = ExtResource("2_7hld8")
@@ -105,7 +107,6 @@ remote_path = NodePath("../../../../SubViewport/OutlineCamera")
 replication_config = SubResource("SceneReplicationConfig_n61o8")
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=1030597066]
-transparent_bg = true
 handle_input_locally = false
 render_target_update_mode = 4
 script = ExtResource("4_scsbf")
@@ -114,22 +115,8 @@ script = ExtResource("4_scsbf")
 transform = Transform3D(1, 0, 0, 0, 0.99691737, 0.07845913, 0, -0.07845913, 0.99691737, 0, 1, 0)
 keep_aspect = 0
 cull_mask = 8
+compositor = SubResource("Compositor_8p83u")
 script = ExtResource("3_8fnhj")
-
-[node name="HorizontalViewport" type="SubViewport" parent="." unique_id=1074722499]
-transparent_bg = true
-handle_input_locally = false
-size_2d_override_stretch = true
-script = ExtResource("4_scsbf")
-
-[node name="ColorRect" type="ColorRect" parent="HorizontalViewport" unique_id=1206307843]
-material = SubResource("ShaderMaterial_37tqn")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1724181968]
 anchors_preset = 15
@@ -140,7 +127,7 @@ grow_vertical = 2
 mouse_filter = 2
 stretch = true
 
-[node name="VerticalViewport" type="SubViewport" parent="SubViewportContainer" unique_id=450090553]
+[node name="DisplayViewport" type="SubViewport" parent="SubViewportContainer" unique_id=450090553]
 transparent_bg = true
 handle_input_locally = false
 size = Vector2i(1920, 1080)
@@ -148,16 +135,13 @@ size_2d_override_stretch = true
 render_target_update_mode = 4
 script = ExtResource("4_scsbf")
 
-[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/VerticalViewport" unique_id=783961637]
+[node name="TextureRect" type="TextureRect" parent="SubViewportContainer/DisplayViewport" unique_id=1753192924]
 visible = false
-material = SubResource("ShaderMaterial_8fnhj")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="HUD" type="MarginContainer" parent="." unique_id=858932803]

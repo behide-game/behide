@@ -22,18 +22,14 @@ public partial class PropBody : PlayerBody
 
     private const float speed = 1.55f;
     private const float slowSpeed = 0.3f;
-    private bool isOutlineVisible;
 
     protected override Node3D CameraDisk => _.CameraDisk;
     protected override Camera3D Camera => _.CameraDisk.SpringArm3D.Camera;
     private Camera3D OutlineCamera => _.SubViewport.OutlineCamera;
     private SubViewport SubViewport => _.SubViewport;
-    private SubViewport HorizontalViewport => _.HorizontalViewport;
-    private SubViewport VerticalViewport => _.SubViewportContainer.VerticalViewport;
-    private ColorRect ColorRectHorizontal => _.HorizontalViewport.ColorRect;
-    private ColorRect ColorRectVertical => _.SubViewportContainer.VerticalViewport.ColorRect;
-    private ShaderMaterial HorizontalMaterial => (ShaderMaterial)ColorRectHorizontal.GetMaterial();
-    private ShaderMaterial VerticalMaterial => (ShaderMaterial)ColorRectVertical.GetMaterial();
+    private SubViewport DisplayViewport => _.SubViewportContainer.DisplayViewport;
+    private TextureRect DisplayTextureRect => _.SubViewportContainer.DisplayViewport.TextureRect;
+    private OutlineEffect effect => (OutlineEffect)OutlineCamera.GetCompositor().GetCompositorEffects()[0];
     protected override RayCast3D RayCast => _.CameraDisk.SpringArm3D.Camera.RayCast;
     protected override HealthBar HealthBar => _.HUD.BottomLeft.Health.HealthBar;
     protected override Label PlayerUsername => _.HUD.Center.PlayerUsername;
@@ -45,14 +41,6 @@ public partial class PropBody : PlayerBody
         ((MeshInstance3D)currentOutlineNode).SetSurfaceOverrideMaterial(0, maskMaterial);
         base._EnterTree();
         currentVisualNode = _.MeshInstance3D;
-
-        /*var room = GameManager.Room.Room;
-        var color = new Color(1f, 0.8f, 0f, 1f);
-        if(room?.Players.TryGetValue(GetMultiplayerAuthority(), out var playerObservable) ?? false)
-        {
-            color = playerObservable.Value.Color;
-        }
-        MaskMaterial.SetShaderParameter("colorID", color);*/
 
         collisionNodes = [_.CollisionShape3D];
         initialCameraPosition = CameraDisk.Position;
@@ -71,19 +59,23 @@ public partial class PropBody : PlayerBody
         #if !DEBUG
         currentOutlineNode.Hide();
         #endif
-        ColorRectVertical.Visible = isOutlineVisible;
-
-        HorizontalMaterial.SetShaderParameter("input_texture", SubViewport.GetTexture());
-        VerticalMaterial.SetShaderParameter("input_texture", HorizontalViewport.GetTexture());
 
         GetWindow().SizeChanged += ResizeViewports;
         ResizeViewports();
     }
 
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+        if (effect.outputTexture2D != null)
+        {
+            DisplayTextureRect.Texture = effect.OutputTexture2D;
+        }
+    }
+
     private void ResizeViewports()
     {
         SubViewport.Size = GetWindow().Size;
-        HorizontalViewport.Size = GetWindow().Size;
     }
 
     protected override void SetHudsVisibility(bool value) => _.HUD.Get().SetVisible(value);
@@ -144,7 +136,7 @@ public partial class PropBody : PlayerBody
         // Toggle outline
         if (rawEvent.IsAction(InputActions.ToggleOutline))
         {
-            ColorRectVertical.Visible = rawEvent.IsPressed();
+            DisplayTextureRect.Visible = rawEvent.IsPressed();
             GetWindow().SetInputAsHandled();
         }
 
