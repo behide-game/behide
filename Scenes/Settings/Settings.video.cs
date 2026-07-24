@@ -232,11 +232,12 @@ public partial class Settings
         Video.MaxFPS.SliderSetting.SetValue(maxFps);
 
         Video.Driver.OptionButton.SetItemDisabled(1, !OperatingSystem.IsWindows());
-        Video.RenderScale.OptionButton.SetItemDisabled(1, renderingMethod is not "forward_plus" and not "mobile");
-        Video.RenderScale.OptionButton.SetItemDisabled(2, renderingMethod is not "forward_plus" and not "mobile");
+        Video.RenderScale.OptionButton.SetItemDisabled(1, renderingMethod is not "forward_plus");
+        Video.RenderScale.OptionButton.SetItemDisabled(2, renderingMethod is not "forward_plus");
         Video.Anti_aliasing.OptionButton.SetItemDisabled(4, renderingMethod is "gl_compatibility");
         Video.Anti_aliasing.OptionButton.SetItemDisabled(5, renderingMethod is "gl_compatibility");
-        Video.Anti_aliasing.OptionButton.SetItemDisabled(6, renderingMethod is not "forward_plus" and not "mobile");
+        Video.VSync.OptionButton.SetItemDisabled(3, renderingMethod is not "gl_compatibility");
+        Video.VSync.OptionButton.SetItemDisabled(4, renderingMethod is not "gl_compatibility");
 
         Video_SetDisplayMode(Video.DisplayMode.OptionButton.Selected);
         Video_SetUIScaling(Video.UIScaling.SliderSetting.Value);
