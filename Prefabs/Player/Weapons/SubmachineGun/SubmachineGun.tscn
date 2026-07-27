@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dbnihpo335kug" path="res://Prefabs/Player/Weapons/SubmachineGun/SubmachineGun.cs" id="1_hrm0v"]
 [ext_resource type="AudioStream" uid="uid://bw0bgab4c1prs" path="res://Assets/Sounds/gunshot.wav" id="2_b54e3"]
 [ext_resource type="AudioStream" uid="uid://cbck1i0n0gpe7" path="res://Assets/Sounds/gunreload.mp3" id="3_qx1xa"]
-[ext_resource type="PackedScene" uid="uid://bbuv8m4lpdg1u" path="res://Assets/Models/Prefabs/gun.glb" id="4_qqwtr"]
+[ext_resource type="PackedScene" uid="uid://w0rwxfthswcx" path="res://Assets/Models/Blasters/blaster-d.glb" id="4_a366y"]
 [ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="5_1y405"]
 [ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="6_pf0dq"]
 [ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crosshair.svg" id="7_mees3"]
@@ -38,8 +38,8 @@ script = ExtResource("1_hrm0v")
 shootSound = ExtResource("2_b54e3")
 reloadSound = ExtResource("3_qx1xa")
 
-[node name="Model" parent="." unique_id=1920550007 instance=ExtResource("4_qqwtr")]
-transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0.491, -0.384, -0.949)
+[node name="Model" parent="." unique_id=775142825 instance=ExtResource("4_a366y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.481, -0.374, -0.809)
 
 [node name="RayCast" type="RayCast3D" parent="." unique_id=314245295]
 target_position = Vector3(0, 0, -1000)
@@ -51,7 +51,7 @@ stream = SubResource("AudioStream_8uwrk")
 unit_size = 6.5
 
 [node name="GrenadeSpawn" type="Marker3D" parent="." unique_id=606843388]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.49133408, -0.38403273, -1.4941763)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.481057, -0.31730714, -1.2199068)
 
 [node name="Hud" type="MarginContainer" parent="." unique_id=1922832746]
 anchors_preset = 15

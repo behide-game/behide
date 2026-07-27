@@ -1513,7 +1513,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2633133, -0.6, -23.927341)
 [node name="drill_structure2" parent="BehideObjects" unique_id=414522038 instance=ExtResource("95_yk75b")]
 transform = Transform3D(0.9580929, 0, 0.28645766, 0, 1, 0, -0.28645766, 0, 0.9580929, -7.9505773, -0.6, -18.740839)
 
-[node name="drill_module" parent="BehideObjects/drill_structure2/drill_structure/drill_structure" parent_id_path=PackedInt32Array(414522038, 1065827109, 975956148) index="0" unique_id=1019312915]
+[node name="drill_module" parent="BehideObjects/drill_structure2/drill_structure/drill_structure" parent_id_path=PackedInt32Array(414522038, 1065827109, 1668541799) index="0" unique_id=1133226769]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34523964, 0)
 
 [node name="solarpanel2" parent="BehideObjects" unique_id=1548592808 instance=ExtResource("96_5qqhn")]
