@@ -39,7 +39,7 @@ properties/1/replication_mode = 1
 [sub_resource type="CompositorEffect" id="CompositorEffect_scsbf"]
 resource_local_to_scene = false
 resource_name = ""
-enabled = true
+enabled = false
 effect_callback_type = 4
 needs_motion_vectors = false
 needs_normal_roughness = false
@@ -107,7 +107,9 @@ remote_path = NodePath("../../../../SubViewport/OutlineCamera")
 replication_config = SubResource("SceneReplicationConfig_n61o8")
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=1030597066]
+transparent_bg = true
 handle_input_locally = false
+size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 script = ExtResource("4_scsbf")
 
@@ -118,31 +120,12 @@ cull_mask = 8
 compositor = SubResource("Compositor_8p83u")
 script = ExtResource("3_8fnhj")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1724181968]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=753376496]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
-stretch = true
-
-[node name="DisplayViewport" type="SubViewport" parent="SubViewportContainer" unique_id=450090553]
-transparent_bg = true
-handle_input_locally = false
-size = Vector2i(1920, 1080)
-size_2d_override_stretch = true
-render_target_update_mode = 4
-script = ExtResource("4_scsbf")
-
-[node name="TextureRect" type="TextureRect" parent="SubViewportContainer/DisplayViewport" unique_id=1753192924]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="HUD" type="MarginContainer" parent="." unique_id=858932803]
 anchors_preset = 15

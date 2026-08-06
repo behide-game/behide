@@ -25,10 +25,9 @@ public partial class PropBody : PlayerBody
 
     protected override Node3D CameraDisk => _.CameraDisk;
     protected override Camera3D Camera => _.CameraDisk.SpringArm3D.Camera;
+    private TextureRect TextureRect => _.TextureRect;
     private Camera3D OutlineCamera => _.SubViewport.OutlineCamera;
     private SubViewport SubViewport => _.SubViewport;
-    private SubViewport DisplayViewport => _.SubViewportContainer.DisplayViewport;
-    private TextureRect DisplayTextureRect => _.SubViewportContainer.DisplayViewport.TextureRect;
     private OutlineEffect effect => (OutlineEffect)OutlineCamera.GetCompositor().GetCompositorEffects()[0];
     protected override RayCast3D RayCast => _.CameraDisk.SpringArm3D.Camera.RayCast;
     protected override HealthBar HealthBar => _.HUD.BottomLeft.Health.HealthBar;
@@ -54,14 +53,11 @@ public partial class PropBody : PlayerBody
         }
 
         MoveSpeed = speed;
-
+        effect.Enabled = true;
         OutlineCamera.MakeCurrent();
         #if !DEBUG
         currentOutlineNode.Hide();
         #endif
-
-        GetWindow().SizeChanged += ResizeViewports;
-        ResizeViewports();
     }
 
     public override void _Process(double delta)
@@ -69,13 +65,8 @@ public partial class PropBody : PlayerBody
         base._Process(delta);
         if (effect.OutputTexture2D != null)
         {
-            DisplayTextureRect.Texture = effect.OutputTexture2D;
+            TextureRect.Texture = effect.OutputTexture2D;
         }
-    }
-
-    private void ResizeViewports()
-    {
-        SubViewport.Size = GetWindow().Size;
     }
 
     protected override void SetHudsVisibility(bool value) => _.HUD.Get().SetVisible(value);
@@ -136,7 +127,7 @@ public partial class PropBody : PlayerBody
         // Toggle outline
         if (rawEvent.IsAction(InputActions.ToggleOutline))
         {
-            DisplayTextureRect.Visible = rawEvent.IsPressed();
+            TextureRect.Visible = rawEvent.IsPressed();
             GetWindow().SetInputAsHandled();
         }
 
