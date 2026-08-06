@@ -15,9 +15,9 @@ public partial class OutlineEffect : CompositorEffect
     private Rid textureA;
     private Rid textureB;
     private Rid sampler;
-    private Texture2Drd textureArd;
-    private Texture2Drd textureBrd;
-    public Texture2Drd OutputTexture2D => textureBrd;
+    private Texture2Drd? textureArd;
+    private Texture2Drd? textureBrd;
+    public Texture2Drd? OutputTexture2D => textureBrd;
     private int width;
     private int height;
 
