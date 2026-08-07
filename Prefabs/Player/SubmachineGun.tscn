@@ -7,6 +7,8 @@
 [ext_resource type="AudioStream" uid="uid://bw0bgab4c1prs" path="res://Assets/Sounds/gunshot.wav" id="2_abca7"]
 [ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="3_lrncf"]
 [ext_resource type="Texture2D" uid="uid://bfeh2aof53ta0" path="res://Assets/Images/crosshair.svg" id="4_1ol2f"]
+[ext_resource type="Texture2D" uid="uid://bva1hvwd6n7p8" path="res://Assets/Images/Icons/Ammo.svg" id="8_abca7"]
+[ext_resource type="Texture2D" uid="uid://c1j4l5yo6ta2g" path="res://Assets/Images/Icons/Reload.svg" id="8_h7rq2"]
 
 [sub_resource type="AudioStream" id="AudioStream_8uwrk"]
 
@@ -27,7 +29,8 @@ outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_8uwrk"]
 font = ExtResource("2_8uwrk")
-outline_size = 1
+font_size = 20
+outline_size = 2
 outline_color = Color(0, 0, 0, 1)
 
 [node name="SubmachineGun" type="Node3D" unique_id=411671082]
@@ -122,8 +125,17 @@ layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 
-[node name="TextureRect" type="TextureRect" parent="Hud/RBottom" unique_id=646447357]
+[node name="ReloadIcon" type="TextureRect" parent="Hud/RBottom" unique_id=1692347698]
+visible = false
 layout_mode = 2
+offset_transform_enabled = true
+texture = ExtResource("8_h7rq2")
+expand_mode = 2
+
+[node name="AmmoIcon" type="TextureRect" parent="Hud/RBottom" unique_id=646447357]
+layout_mode = 2
+texture = ExtResource("8_abca7")
+expand_mode = 2
 
 [node name="Ammo" type="Label" parent="Hud/RBottom" unique_id=376044258]
 layout_mode = 2

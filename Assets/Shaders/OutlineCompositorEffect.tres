@@ -1,0 +1,13 @@
+[gd_resource type="CompositorEffect" script_class="OutlineEffect" format=3 uid="uid://bosmfx4q7228i"]
+
+[ext_resource type="Script" uid="uid://crhya31mukanb" path="res://Assets/Shaders/OutlineEffect.cs" id="1_0g5sr"]
+
+[resource]
+resource_local_to_scene = false
+resource_name = ""
+enabled = false
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("1_0g5sr")
+metadata/_custom_type_script = "uid://crhya31mukanb"

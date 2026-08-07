@@ -1,4 +1,5 @@
 using System.Reactive;
+using System.Reactive.Subjects;
 using Godot;
 
 namespace Behide.Game;
@@ -53,6 +54,18 @@ public partial class Settings
             _ => Viewport.ScreenSpaceAAEnum.Disabled
         };
         GetWindow().UseTaa = mode == 6;
+    }
+
+    private void Video_SetVSyncMode(long mode)
+    {
+        DisplayServer.WindowSetVsyncMode(
+        mode switch
+        {
+            1 => DisplayServer.VSyncMode.Enabled,
+            2 => DisplayServer.VSyncMode.Adaptive,
+            3 => DisplayServer.VSyncMode.Mailbox,
+            _ => DisplayServer.VSyncMode.Disabled
+        });
     }
 
     private void Video_SetDriver(long driver)
@@ -112,6 +125,8 @@ public partial class Settings
 
         // Anti-aliasing
         Video.Anti_aliasing.OptionButton.ItemSelected += Video_SetAntiAliasing;
+        // VSync
+        Video.VSync.OptionButton.ItemSelected += Video_SetVSyncMode;
 
         // FPS
         Video.FPS.Enabled.Toggled += GameManager.VisualEffectsLayer.EnableFpsDisplay;
@@ -131,6 +146,7 @@ public partial class Settings
         Video.RenderScale.OptionButton.ItemSelected += _ => Changed.OnNext(Unit.Default);
         Video.RenderScale.SliderSetting.Changed.Subscribe(_ => Changed.OnNext(Unit.Default));
         Video.Anti_aliasing.OptionButton.ItemSelected += _ => Changed.OnNext(Unit.Default);
+        Video.VSync.OptionButton.ItemSelected += _ => Changed.OnNext(Unit.Default);
         Video.FPS.Enabled.Toggled += _ => Changed.OnNext(Unit.Default);
         Video.MaxFPS.SliderSetting.Changed.Subscribe(_ => Changed.OnNext(Unit.Default));
     }
@@ -146,6 +162,7 @@ public partial class Settings
 
         var renderScale = config.GetValue(nameof(Video), "render-scale", 100).AsInt32();
         var antiAliasing = config.GetValue(nameof(Video), "anti-aliasing", "none").AsString();
+        var vSync = config.GetValue(nameof(Video), "vsync", "disabled").AsString();
         var displayFps = config.GetValue(nameof(Video), "display-fps", false).AsBool();
         var maxFps = config.GetValue(nameof(Video), "max-fps", 0).AsInt32();
 
@@ -187,6 +204,16 @@ public partial class Settings
             "taa" => renderingMethod == "forward_plus" ? 6 : 0,
             _ => 0
         });
+
+        Video.VSync.OptionButton.Select(vSync switch
+        {
+            "disabled" => 0,
+            "enabled" => 1,
+            "adaptive" => 2,
+            "mailbox" => 3,
+            _ => 0
+        });
+
         Video.MaxFPS.SliderSetting.SetValue(maxFps);
 
         Video.Driver.OptionButton.SetItemDisabled(1, !OperatingSystem.IsWindows());
@@ -234,6 +261,15 @@ public partial class Settings
             6 => "taa",
             _ => "none"
         });
+        config.SetValue(nameof(Video), "vsync", Video.VSync.OptionButton.Selected switch
+        {
+            0 => "disabled",
+            1 => "enabled",
+            2 => "adaptive",
+            3 => "mailbox",
+            _ => "disabled"
+        });
+
         config.SetValue(nameof(Video), "display-fps", Video.FPS.Enabled.ButtonPressed);
         config.SetValue(nameof(Video), "max-fps", Video.MaxFPS.SliderSetting.Value);
     }

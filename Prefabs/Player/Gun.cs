@@ -7,6 +7,8 @@ public abstract partial class Gun : Node3D
     public abstract Control Hud { get; }
     public abstract Label PlayerUsernameLabel { get; }
     protected abstract Label AmmoLabel { get; }
+    protected abstract TextureRect AmmoIcon { get; }
+    protected abstract TextureRect ReloadIcon { get; }
 
     public abstract int DamagePerAmmo { get; }
     protected abstract int TotalAmmoCount { get; set; }
@@ -20,7 +22,7 @@ public abstract partial class Gun : Node3D
         set
         {
             field = value;
-            AmmoLabel.Text = value + " / " + TotalAmmoCount;
+            AmmoLabel.Text = value + " | " + TotalAmmoCount;
         }
     }
 
@@ -43,7 +45,11 @@ public abstract partial class Gun : Node3D
             var realAmmoAmountAdded = int.Min(ammoDiff, TotalAmmoCount);
             TotalAmmoCount -= realAmmoAmountAdded;
             AmmoCount += realAmmoAmountAdded;
+
+            AmmoIcon.Show();
+            ReloadIcon.Hide();
         }
+        ReloadIcon.OffsetTransformRotation += (float)delta*10;
         reloadTimeRemaining -= delta;
     }
 
@@ -66,7 +72,12 @@ public abstract partial class Gun : Node3D
 
     public void Reload()
     {
+        if (!CanReload) return;
+
         reloadTimeRemaining = ReloadTime;
+        AmmoIcon.Hide();
+        ReloadIcon.Show();
+        ReloadIcon.OffsetTransformRotation = 0f;
         AmmoLabel.Text = "Reloading";
         ReloadCore();
     }

@@ -17,7 +17,7 @@ public partial class PropHuntSupervisor
             if (hunters.Contains(Multiplayer.GetUniqueId()))
             {
                 PreGameHunter.CallDeferred(CanvasItem.MethodName.Show);
-                IsHunterLabel.CallDeferred(CanvasItem.MethodName.Show);
+                IsHunterContainer.CallDeferred(CanvasItem.MethodName.Show);
             }
             else
             {
@@ -25,7 +25,7 @@ public partial class PropHuntSupervisor
                 else Input.MouseMode = Input.MouseModeEnum.Captured;
 
                 PreGameProp.CallDeferred(CanvasItem.MethodName.Show);
-                IsPropLabel.CallDeferred(CanvasItem.MethodName.Show);
+                IsPropContainer.CallDeferred(CanvasItem.MethodName.Show);
             }
         };
 
@@ -116,12 +116,9 @@ public partial class PropHuntSupervisor
 
             node.SetPlayerName(player.Value.Username);
             if (body is null)
-            {
                 log.Error("Failed to find player body: player = {Player}", player.Value);
-                node.SetStatus("Error");
-            }
             else
-                node.SetStatus(body.Alive ? "Survived" : "Died");
+                node.SetAlive(body.Alive);
 
             if (hunterPeerIds.Contains(player.Value.PeerId))
                 HunterList.AddChild(node);

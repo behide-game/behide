@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://bccs3yyeq7del" path="res://Scenes/PauseMenu/PauseMenu.cs" id="1_vd4nb"]
 [ext_resource type="PackedScene" uid="uid://mvi6mhwtencn" path="res://Scenes/Settings/Settings.tscn" id="2_jpxof"]
 [ext_resource type="Shader" uid="uid://baf1p55idhp1q" path="res://Scenes/PauseMenu/blur.gdshader" id="2_qu44q"]
+[ext_resource type="Script" uid="uid://b287r2c48ldja" path="res://Prefabs/Controls/BezelContainer.cs" id="3_82qyg"]
+[ext_resource type="Script" uid="uid://cwnjmwom5p2f4" path="res://Prefabs/Controls/StyleBoxBevel.cs" id="4_ifvnd"]
+[ext_resource type="FontVariation" uid="uid://bqpb46gqbs0cm" path="res://Assets/Fonts/Space Grotesk/Space Grotesk Medium.tres" id="5_456hk"]
 
 [sub_resource type="Shader" id="Shader_4bayv"]
 code = "shader_type canvas_item;
@@ -87,12 +90,20 @@ shader_parameter/u_blur_intensity = 1.2
 shader = ExtResource("2_qu44q")
 shader_parameter/lod = 4.00000019
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_82qyg"]
-bg_color = Color(11.708403, 11.708403, 11.708403, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[sub_resource type="StyleBox" id="StyleBox_lj1ok"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = -1.0
+content_margin_top = -1.0
+content_margin_right = -1.0
+content_margin_bottom = -1.0
+script = ExtResource("4_ifvnd")
+BevelSize = 27
+Color = Color(1, 1, 1, 1)
+metadata/_custom_type_script = "uid://cwnjmwom5p2f4"
+
+[sub_resource type="LabelSettings" id="LabelSettings_wq18j"]
+font = ExtResource("5_456hk")
 
 [node name="Pause Menu" type="Control" unique_id=1490677513]
 z_index = 10
@@ -109,40 +120,79 @@ material = SubResource("ShaderMaterial_ceia4")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.35
-anchor_top = 0.2
-anchor_right = 0.64
-anchor_bottom = 0.2
+anchor_top = 0.33
+anchor_right = 0.65
+anchor_bottom = 0.33
 
 [node name="Background" type="Panel" parent="Pause Menu" unique_id=100627987]
 material = SubResource("ShaderMaterial_4bayv")
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_82qyg")
+theme_override_styles/panel = SubResource("StyleBox_lj1ok")
 
 [node name="MarginContainer" type="MarginContainer" parent="Pause Menu" unique_id=1814557344]
 layout_mode = 2
 size_flags_vertical = 0
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
 
 [node name="Buttons" type="VBoxContainer" parent="Pause Menu/MarginContainer" unique_id=107834565]
 layout_mode = 2
+theme_override_constants/separation = 10
 
-[node name="Settings" type="Button" parent="Pause Menu/MarginContainer/Buttons" unique_id=1823169428]
+[node name="SettingsContainer" type="MarginContainer" parent="Pause Menu/MarginContainer/Buttons" unique_id=2043576730]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("3_82qyg")
+BezelSize = 15
+Color = Color(0.13333334, 0.34117648, 0.47843137, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Pause Menu/MarginContainer/Buttons/SettingsContainer" unique_id=619183107]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Pause Menu/MarginContainer/Buttons/SettingsContainer/MarginContainer" unique_id=1526470535]
 layout_mode = 2
 text = "Settings"
+label_settings = SubResource("LabelSettings_wq18j")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
 
-[node name="Back" type="Button" parent="Pause Menu/MarginContainer/Buttons" unique_id=1526716928]
+[node name="Settings" type="Button" parent="Pause Menu/MarginContainer/Buttons/SettingsContainer" unique_id=1823169428]
+layout_mode = 2
+flat = true
+
+[node name="BackContainer" type="MarginContainer" parent="Pause Menu/MarginContainer/Buttons" unique_id=1101279205]
+layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("3_82qyg")
+BezelSize = 15
+Color = Color(0.039215688, 0.15686275, 0.32941177, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Pause Menu/MarginContainer/Buttons/BackContainer" unique_id=277618591]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Pause Menu/MarginContainer/Buttons/BackContainer/MarginContainer" unique_id=688603231]
 layout_mode = 2
 text = "Back"
+label_settings = SubResource("LabelSettings_wq18j")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="Back" type="Button" parent="Pause Menu/MarginContainer/Buttons/BackContainer" unique_id=1526716928]
+layout_mode = 2
+flat = true
 
 [node name="Settings Menu" parent="." unique_id=1584239507 instance=ExtResource("2_jpxof")]
 visible = false
 layout_mode = 1
 
-[connection signal="pressed" from="Pause Menu/MarginContainer/Buttons/Settings" to="." method="SwitchToSettingsMenu"]
-[connection signal="pressed" from="Pause Menu/MarginContainer/Buttons/Back" to="." method="ToggleMenu"]
+[connection signal="pressed" from="Pause Menu/MarginContainer/Buttons/SettingsContainer/Settings" to="." method="SwitchToSettingsMenu"]
+[connection signal="pressed" from="Pause Menu/MarginContainer/Buttons/BackContainer/Back" to="." method="ToggleMenu"]
 [connection signal="pressed" from="Settings Menu/TabContainer/General/VBox/Back" to="." method="ToggleMenu"]
 [connection signal="pressed" from="Settings Menu/TabContainer/Controls/VBox/Back" to="." method="ToggleMenu"]
 [connection signal="pressed" from="Settings Menu/TabContainer/Video/VBox/Back" to="." method="ToggleMenu"]
@@ -154,3 +204,4 @@ layout_mode = 1
 [editable path="Settings Menu/TabContainer/Controls/VBox/FOV"]
 [editable path="Settings Menu/TabContainer/Video/VBox/UI Scaling/Slider Setting"]
 [editable path="Settings Menu/TabContainer/Video/VBox/Render Scale/Slider Setting"]
+[editable path="Settings Menu/TabContainer/Video/VBox/Max FPS/Slider Setting"]

@@ -1,14 +1,16 @@
 using System.Diagnostics.CodeAnalysis;
 using MemoryPack;
+using Godot;
 
 namespace Behide.Types;
 
 [MemoryPackable]
 [method: SetsRequiredMembers]
-public partial record Player(int PeerId, string Username, PlayerState State)
+public partial record Player(int PeerId, string Username, Color Color, PlayerState State)
 {
     public required int PeerId { get; init; } = PeerId;
     public required string Username { get; init; } = Username;
+    public required Color Color { get; init; } = Color;
     public required PlayerState State { get; init; } = State;
 }
 

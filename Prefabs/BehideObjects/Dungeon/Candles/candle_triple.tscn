@@ -32,11 +32,12 @@ Mass = 1.0
 
 [node name="candle_triple" parent="." unique_id=278025502 instance=ExtResource("2_rkgqh")]
 
-[node name="candle_triple" parent="candle_triple" index="0" unique_id=2058380968]
+[node name="candle_triple" parent="candle_triple" index="0" unique_id=199734979]
 layers = 18
 
 [node name="OmniLight3D" type="OmniLight3D" parent="candle_triple" unique_id=922791052 groups=["ShadowingLights"]]
 transform = Transform3D(0.9999998, 0, 0, 0, 1, 0, 0, 0, 0.9999998, 0.022366501, 0.859392, 0.038353004)
+layers = 7
 light_color = Color(1, 0.741769, 0.563201, 1)
 shadow_enabled = true
 shadow_blur = 2.0

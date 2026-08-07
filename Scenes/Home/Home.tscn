@@ -14,7 +14,7 @@ font_size = 25
 [sub_resource type="LabelSettings" id="LabelSettings_ogb76"]
 font = ExtResource("7_xbfhp")
 font_size = 30
-font_color = Color(0.09803922, 0.10980392, 0.11764706, 1)
+font_color = Color(0.019607844, 0.050980393, 0.09411765, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ogb76"]
 content_margin_left = 4.0
@@ -191,7 +191,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_placeholder_color = Color(0.309385, 0.309385, 0.309385, 1)
+theme_override_colors/font_placeholder_color = Color(0.30980393, 0.30980393, 0.30980393, 1)
 theme_override_colors/caret_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("8_yypu2")
 theme_override_font_sizes/font_size = 25
@@ -252,6 +252,8 @@ transform = Transform3D(0.7592496, 0.1596941, -0.6309024, 0, 0.96942663, 0.24538
 [editable path="Dungeon/World/StaticProps/torch_mounted_with_light2"]
 [editable path="Dungeon/World/StaticProps/torch_mounted_with_light3"]
 [editable path="Dungeon/World/StaticProps/torch_mounted_with_light4"]
+[editable path="Dungeon/World/StaticProps/torch_mounted_with_light5"]
+[editable path="Dungeon/World/StaticProps/torch_mounted_with_light6"]
 [editable path="Dungeon/World/BehideObjects/BehideObjects/BehideObject6"]
 [editable path="Dungeon/World/BehideObjects/Arthur"]
 [editable path="Dungeon/World/BehideObjects/Arthur/candle_triple"]

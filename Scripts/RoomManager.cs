@@ -31,7 +31,8 @@ public partial class RoomManager : Node
         Multiplayer.MultiplayerPeer = multiplayer;
 
         var username = GameManager.Settings.GetUsername() ?? $"Player: {playerId}";
-        var player = new Player(playerId, username, new PlayerStateInLobby(false));
+        var color = GameManager.Settings.GetColor();
+        var player = new Player(playerId, username, color, new PlayerStateInLobby(false));
         Room = new Room(roomId, player);
         AddChild(Room);
 
@@ -66,7 +67,8 @@ public partial class RoomManager : Node
 
         // Create the room management object
         var username = GameManager.Settings.GetUsername() ?? $"Player: {playerId}";
-        var player = new Player(playerId, username, new PlayerStateInLobby(false));
+        var color = GameManager.Settings.GetColor();
+        var player = new Player(playerId, username, color, new PlayerStateInLobby(false));
         Room = new Room(roomId, player);
         AddChild(Room);
 

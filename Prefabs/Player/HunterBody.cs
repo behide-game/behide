@@ -18,8 +18,7 @@ public partial class HunterBody : PlayerBody
     protected override Camera3D Camera => _.Camera;
     protected override RayCast3D RayCast => _.Camera.RayCast;
     protected override Label PlayerUsername => Gun.PlayerUsernameLabel;
-    protected override ProgressBar HealthBar => _.HUD.Health.HealthBar;
-    protected override Label HealthLabel => _.HUD.Health.HealthLabel;
+    protected override HealthBar HealthBar => _.HUD.HealthBar;
     public override MultiplayerSynchronizer PositionSynchronizer => _.PositionSynchronizer;
 
     public override void _EnterTree()
@@ -39,7 +38,6 @@ public partial class HunterBody : PlayerBody
     {
         if (!IsMultiplayerAuthority()) return;
         if (!Alive) return;
-
         // Show players names
         base._Process(delta);
 
@@ -64,10 +62,29 @@ public partial class HunterBody : PlayerBody
         if (Input.IsActionJustPressed(InputActions.Reload)) Gun.Reload();
 
         // Listen crouch
-        if (Input.IsActionJustPressed(InputActions.Crouch))
+        var crouchMode = GameManager.Settings.CrouchMode;
+        if (crouchMode == CrouchMode.Push)
         {
             var canStandUp = !_.Area3D.Get().HasOverlappingBodies();
-            if (!isCrouching || canStandUp && isCrouching) ToggleCrouch(!isCrouching);
+            if (Input.IsActionPressed(InputActions.Crouch))
+            {
+                if (!isCrouching) ToggleCrouch(true);
+            }
+            else
+            {
+                if (canStandUp && isCrouching)
+                {
+                    ToggleCrouch(false);
+                }
+            }
+        }
+        else if (crouchMode == CrouchMode.Toggle)
+        {
+            if (Input.IsActionJustPressed(InputActions.Crouch))
+            {
+                var canStandUp = !_.Area3D.Get().HasOverlappingBodies();
+                if (!isCrouching || canStandUp && isCrouching) ToggleCrouch(!isCrouching);
+            }
         }
     }
 

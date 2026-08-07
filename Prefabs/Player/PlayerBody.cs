@@ -13,13 +13,14 @@ public abstract partial class PlayerBody : CharacterBody3D
     protected abstract Camera3D Camera { get; }
     protected abstract RayCast3D RayCast { get; }
     protected abstract Label PlayerUsername { get; }
-    protected abstract ProgressBar HealthBar { get; }
-    protected abstract Label HealthLabel { get; }
+    protected abstract HealthBar HealthBar { get; }
     public abstract MultiplayerSynchronizer PositionSynchronizer { get; }
     private Supervisor supervisor = null!;
 
     protected GodotObject? FocusedObject;
     protected Vector3 FocusedPoint;
+
+    private Color healthMaxColor;
 
     private double Health
     {
@@ -27,8 +28,17 @@ public abstract partial class PlayerBody : CharacterBody3D
         set
         {
             field = Mathf.Clamp(value, 0, 1);
-            HealthBar.Value = value * 100;
-            HealthLabel.Text = ((int)Math.Ceiling(value * MaxHealth)).ToString();
+            HealthBar.SetHealth(field, MaxHealth);
+        }
+    }
+
+    protected int MaxHealth
+    {
+        get;
+        set
+        {
+            field = value;
+            HealthBar.SetHealth(Health, field);
         }
     }
 
@@ -38,15 +48,6 @@ public abstract partial class PlayerBody : CharacterBody3D
         if (Health <= 0) Died(damager);
     }
 
-    protected int MaxHealth
-    {
-        get;
-        set
-        {
-            field = value;
-            HealthLabel.Text = ((int)Math.Ceiling(Health * field)).ToString();
-        }
-    }
 
     private bool freeze;
     public bool Alive = true;
@@ -77,10 +78,21 @@ public abstract partial class PlayerBody : CharacterBody3D
         else supervisor = GameManager.Supervisor;
 
         Health = 1;
+        healthMaxColor = HealthBar.Modulate;
 
         // Set authority
         var ownerPeerId = int.Parse(Name);
         SetMultiplayerAuthority(ownerPeerId);
+
+        // Subscribe to color changes
+        var players = GameManager.Room.Room?.Players;
+        if (players is null)
+            log.Error("Could not get local player: Not in a room");
+        else if (players.TryGetValue(ownerPeerId, out var player))
+            player.Subscribe(
+                PlayerPropertiesChanged,
+                NodeAliveCt
+            );
 
         // Set spawn position
         var transform = Transform;
@@ -95,11 +107,9 @@ public abstract partial class PlayerBody : CharacterBody3D
         }
 
         Camera.MakeCurrent();
-        Camera.Fov = (float)GameManager.Settings.Fov;
-        GameManager.Settings.Changed.Subscribe(
-            _ => Camera.Fov = (float)GameManager.Settings.Fov,
-            NodeAliveCt
-        );
+
+        // Ignore PlayerBody
+        RayCast.AddException(this);
     }
 
     // Show players names
@@ -140,4 +150,5 @@ public abstract partial class PlayerBody : CharacterBody3D
     }
 
     protected abstract void SetHudsVisibility(bool value);
+    protected virtual void PlayerPropertiesChanged(Types.Player player) { }
 }

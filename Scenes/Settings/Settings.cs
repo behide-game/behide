@@ -14,6 +14,9 @@ public partial class Settings : Control
 
     public override void _Ready()
     {
+        // Select the first tab
+        nodes.TabContainer.Get().CurrentTab = 0;
+
         VideoListenSettings();
         GraphicsListenSettings();
 

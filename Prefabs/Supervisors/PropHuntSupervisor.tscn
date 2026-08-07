@@ -15,6 +15,9 @@
 [ext_resource type="FontFile" uid="uid://xdtqfye7tlou" path="res://Assets/Fonts/Space Grotesk/SpaceGrotesk-VariableFont_wght.ttf" id="11_yncfe"]
 [ext_resource type="PackedScene" uid="uid://bneom7724ud4p" path="res://Prefabs/Supervisors/TabMenu.tscn" id="13_5do5a"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_w1hta"]
+font_color = Color(0.019607844, 0.050980393, 0.09411765, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_6mxck"]
 font_size = 20
 
@@ -81,8 +84,8 @@ theme = ExtResource("5_sfeev")
 
 [node name="AdvancedLabelCountdown" type="Node" parent="UI" unique_id=1393435489 node_paths=PackedStringArray("labels")]
 script = ExtResource("5_7hsgi")
-labels = [NodePath("../Pre-game Prop/HBoxContainer/CountdownLabel"), NodePath("../Pre-game Hunter/BoxContainer/CountdownLabel")]
-runningTextFormats = PackedStringArray("Time to hide: {0:mm\\:ss}", "The hunt begins in {0:mm\\:ss}")
+labels = [NodePath("../Pre-game Prop/MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/CountdownLabel"), NodePath("../Pre-game Hunter/BoxContainer/CountdownLabel")]
+runningTextFormats = PackedStringArray("{0:mm\\:ss}", "The hunt begins in {0:mm\\:ss}")
 beforeRunningTexts = PackedStringArray("", "")
 afterRunningTexts = PackedStringArray("", "")
 metadata/_custom_type_script = "uid://sggdi83gahf1"
@@ -93,27 +96,65 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -1920.0
+offset_bottom = -1080.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="HBoxContainer" type="VBoxContainer" parent="UI/Pre-game Prop" unique_id=550277550]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -102.0
-offset_right = 102.0
+[node name="MarginContainer" type="MarginContainer" parent="UI/Pre-game Prop" unique_id=317886007]
+layout_mode = 0
+offset_left = 858.0
+offset_right = 1062.0
 offset_bottom = 56.0
-grow_horizontal = 2
+theme_override_constants/margin_top = 20
 
-[node name="CountdownLabel" type="Label" parent="UI/Pre-game Prop/HBoxContainer" unique_id=1205335919]
+[node name="HBoxContainer" type="VBoxContainer" parent="UI/Pre-game Prop/MarginContainer" unique_id=550277550]
 layout_mode = 2
-text = "Time to hide: 5:00"
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Pre-game Prop/MarginContainer/HBoxContainer" unique_id=1873961067]
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("9_efs40")
+BezelSize = 10
+Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Pre-game Prop/MarginContainer/HBoxContainer/MarginContainer" unique_id=1824494438]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="UI/Pre-game Prop/MarginContainer/HBoxContainer/MarginContainer/HBoxContainer" unique_id=256956324]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_right = 10
+
+[node name="Label" type="Label" parent="UI/Pre-game Prop/MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/Margin" unique_id=722162276]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Time to hide"
+label_settings = SubResource("LabelSettings_w1hta")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/Pre-game Prop/MarginContainer/HBoxContainer/MarginContainer/HBoxContainer" unique_id=466559119]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 5
+script = ExtResource("9_efs40")
+BezelSize = 10
+Color = Color(0.13333334, 0.34117648, 0.47843137, 1)
+
+[node name="CountdownLabel" type="Label" parent="UI/Pre-game Prop/MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer" unique_id=1205335919]
+layout_mode = 2
+text = "5:00"
 label_settings = SubResource("LabelSettings_6mxck")
 horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="UI/Pre-game Prop/HBoxContainer" unique_id=354903745]
+[node name="Label" type="Label" parent="UI/Pre-game Prop/MarginContainer/HBoxContainer" unique_id=354903745]
+visible = false
 layout_mode = 2
 text = "Hide!"
 label_settings = SubResource("LabelSettings_w7xx4")
@@ -159,35 +200,114 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="IsProp" type="Label" parent="UI/In-game" unique_id=383943983]
+[node name="IsHunter" type="MarginContainer" parent="UI/In-game" unique_id=1508032552]
+visible = false
+layout_mode = 0
+offset_right = 179.0
+offset_bottom = 51.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/In-game/IsHunter" unique_id=1753701527]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 5
+script = ExtResource("9_efs40")
+BezelSize = 10
+Color = Color(0.13333334, 0.34117648, 0.47843137, 1)
+
+[node name="IsHunter" type="Label" parent="UI/In-game/IsHunter/MarginContainer" unique_id=1939703750]
+layout_mode = 2
+text = "You are a hunter"
+
+[node name="IsProp" type="MarginContainer" parent="UI/In-game" unique_id=184896069]
 visible = false
 layout_mode = 0
 offset_right = 114.0
-offset_bottom = 23.0
+offset_bottom = 21.0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/In-game/IsProp" unique_id=402776818]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 5
+script = ExtResource("9_efs40")
+BezelSize = 10
+Color = Color(0.13333334, 0.34117648, 0.47843137, 1)
+
+[node name="IsProp" type="Label" parent="UI/In-game/IsProp/MarginContainer" unique_id=383943983]
+layout_mode = 2
 text = "You are a prop"
 
-[node name="IsHunter" type="Label" parent="UI/In-game" unique_id=1939703750]
-visible = false
+[node name="MarginContainer" type="MarginContainer" parent="UI/In-game" unique_id=1119457365]
 layout_mode = 0
-offset_right = 146.0
-offset_bottom = 23.0
-text = "You are the hunter"
+offset_left = 858.0
+offset_right = 1062.0
+offset_bottom = 56.0
+theme_override_constants/margin_top = 20
 
-[node name="CountdownLabel" type="Label" parent="UI/In-game" unique_id=948842489]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -20.0
-offset_right = 20.0
-offset_bottom = 23.0
-grow_horizontal = 2
-text = "Time remaining: 5:00"
+[node name="HBoxContainer" type="VBoxContainer" parent="UI/In-game/MarginContainer" unique_id=815281295]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/In-game/MarginContainer/HBoxContainer" unique_id=1584583498]
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("9_efs40")
+BezelSize = 10
+Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/In-game/MarginContainer/HBoxContainer/MarginContainer" unique_id=1799210419]
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="UI/In-game/MarginContainer/HBoxContainer/MarginContainer/HBoxContainer" unique_id=1707072852]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_right = 10
+
+[node name="Label" type="Label" parent="UI/In-game/MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/Margin" unique_id=339096710]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Remaining time"
+label_settings = SubResource("LabelSettings_w1hta")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/In-game/MarginContainer/HBoxContainer/MarginContainer/HBoxContainer" unique_id=1467384339]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 5
+script = ExtResource("9_efs40")
+BezelSize = 10
+Color = Color(0.13333334, 0.34117648, 0.47843137, 1)
+
+[node name="CountdownLabel" type="Label" parent="UI/In-game/MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer" unique_id=948842489]
+layout_mode = 2
+text = "5:00"
+
+[node name="Label" type="Label" parent="UI/In-game/MarginContainer/HBoxContainer" unique_id=761731032]
+visible = false
+layout_mode = 2
+text = "Hide!"
+label_settings = SubResource("LabelSettings_w7xx4")
+horizontal_alignment = 1
 
 [node name="Countdown" type="Node" parent="UI/In-game" unique_id=1223747700 node_paths=PackedStringArray("label")]
 script = ExtResource("6_w7xx4")
-label = NodePath("../CountdownLabel")
-runningTextFormat = "Remaining time: {0:mm\\:ss}"
+label = NodePath("../MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/MarginContainer/CountdownLabel")
+runningTextFormat = "{0:mm\\:ss}"
 beforeRunningText = "Spawning players..."
 afterRunningText = "Game finished"
 metadata/_custom_type_script = "uid://djqbwwelecick"
@@ -208,7 +328,7 @@ theme_override_constants/margin_bottom = 30
 [node name="LeftPanel" type="VBoxContainer" parent="UI/End-game" unique_id=182473767]
 layout_mode = 2
 size_flags_horizontal = 0
-theme_override_constants/separation = -20
+theme_override_constants/separation = 0
 
 [node name="Winner" type="MarginContainer" parent="UI/End-game/LeftPanel" unique_id=2040026077]
 layout_mode = 2
@@ -220,7 +340,6 @@ theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 15
 script = ExtResource("9_efs40")
 BezelSize = 20
-BorderRadius = 0
 Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
 
 [node name="PropsWin" type="Label" parent="UI/End-game/LeftPanel/Winner" unique_id=831366820]
@@ -243,7 +362,13 @@ text = "Hunter wins !"
 label_settings = SubResource("LabelSettings_yncfe")
 uppercase = true
 
-[node name="Hunters" type="MarginContainer" parent="UI/End-game/LeftPanel" unique_id=667904677]
+[node name="Players" type="VBoxContainer" parent="UI/End-game/LeftPanel" unique_id=1283871422]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 10
+theme_override_constants/separation = -20
+
+[node name="Hunters" type="MarginContainer" parent="UI/End-game/LeftPanel/Players" unique_id=667904677]
 z_index = 1
 layout_mode = 2
 size_flags_vertical = 10
@@ -253,23 +378,22 @@ theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 script = ExtResource("9_efs40")
 BezelSize = 20
-BorderRadius = 0
 Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
 
-[node name="PlayerList" type="VBoxContainer" parent="UI/End-game/LeftPanel/Hunters" unique_id=640442055]
+[node name="PlayerList" type="VBoxContainer" parent="UI/End-game/LeftPanel/Players/Hunters" unique_id=640442055]
 layout_mode = 2
 
-[node name="Title" type="MarginContainer" parent="UI/End-game/LeftPanel/Hunters/PlayerList" unique_id=1608657333]
+[node name="Title" type="MarginContainer" parent="UI/End-game/LeftPanel/Players/Hunters/PlayerList" unique_id=1608657333]
 layout_mode = 2
 theme_override_constants/margin_bottom = 5
 
-[node name="Label" type="Label" parent="UI/End-game/LeftPanel/Hunters/PlayerList/Title" unique_id=864597452]
+[node name="Label" type="Label" parent="UI/End-game/LeftPanel/Players/Hunters/PlayerList/Title" unique_id=864597452]
 layout_mode = 2
 text = "Hunters"
 label_settings = SubResource("LabelSettings_xer8t")
 uppercase = true
 
-[node name="Props" type="MarginContainer" parent="UI/End-game/LeftPanel" unique_id=475210221]
+[node name="Props" type="MarginContainer" parent="UI/End-game/LeftPanel/Players" unique_id=475210221]
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_constants/margin_left = 15
@@ -278,18 +402,17 @@ theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 script = ExtResource("9_efs40")
 BezelSize = 20
-BorderRadius = 0
 Color = Color(0.7921569, 0.8784314, 0.8980392, 1)
 
-[node name="PlayerList" type="VBoxContainer" parent="UI/End-game/LeftPanel/Props" unique_id=1539544944]
+[node name="PlayerList" type="VBoxContainer" parent="UI/End-game/LeftPanel/Players/Props" unique_id=1539544944]
 layout_mode = 2
 
-[node name="Title" type="MarginContainer" parent="UI/End-game/LeftPanel/Props/PlayerList" unique_id=266902820]
+[node name="Title" type="MarginContainer" parent="UI/End-game/LeftPanel/Players/Props/PlayerList" unique_id=266902820]
 layout_mode = 2
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_bottom = 5
 
-[node name="Label" type="Label" parent="UI/End-game/LeftPanel/Props/PlayerList/Title" unique_id=1730307490]
+[node name="Label" type="Label" parent="UI/End-game/LeftPanel/Players/Props/PlayerList/Title" unique_id=1730307490]
 layout_mode = 2
 text = "Props"
 label_settings = SubResource("LabelSettings_xer8t")
@@ -306,7 +429,6 @@ theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 15
 script = ExtResource("9_efs40")
 BezelSize = 20
-BorderRadius = 0
 Color = Color(0.89411765, 0.94509804, 0.96862745, 1)
 
 [node name="Label" type="Label" parent="UI/End-game/TimedOut" unique_id=1177322988]
@@ -330,7 +452,6 @@ z_index = 1
 layout_mode = 2
 script = ExtResource("9_efs40")
 BezelSize = 20
-BorderRadius = 0
 Color = Color(0.039215688, 0.15686275, 0.32941177, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/End-game/Buttons/Restart" unique_id=1566249671]
@@ -361,7 +482,6 @@ size_flags_vertical = 3
 theme_override_constants/margin_left = 20
 script = ExtResource("9_efs40")
 BezelSize = 20
-BorderRadius = 0
 Color = Color(0.7294118, 0.101960786, 0.101960786, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="UI/End-game/Buttons/Quit" unique_id=94754414]

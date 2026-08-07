@@ -20,10 +20,6 @@ public partial class Spectator : CharacterBody3D
     private static float HorizontalSensitivity => (float)(0.005 * GameManager.Settings.HorizontalSensitivity);
     private static float VerticalSensitivity => (float)(0.005 * GameManager.Settings.VerticalSensitivity);
 
-    private readonly CancellationTokenSource nodeAliveCts = new();
-    private CancellationToken NodeAliveCt => nodeAliveCts.Token;
-    public override void _ExitTree() => nodeAliveCts.Cancel();
-
     public void Enable()
     {
         nodes.Camera.Get().MakeCurrent();
@@ -36,12 +32,6 @@ public partial class Spectator : CharacterBody3D
     {
         if (GameManager.Supervisor is null) log.Error("Supervisor is null");
         else supervisor = GameManager.Supervisor;
-
-        nodes.Camera.Get().Fov = (float)GameManager.Settings.Fov;
-        GameManager.Settings.Changed.Subscribe(
-            _ => nodes.Camera.Get().Fov = (float)GameManager.Settings.Fov,
-            NodeAliveCt
-        );
     }
 
     public override void _UnhandledInput(InputEvent rawEvent)

@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://chfbty5800fqi"
+path="res://.godot/imported/outline_shader_horizontal.glsl-8d7acbf70b05214a31a7d03360f44a7f.res"
+
+[deps]
+
+source_file="res://Assets/Shaders/outline_shader_horizontal.glsl"
+dest_files=["res://.godot/imported/outline_shader_horizontal.glsl-8d7acbf70b05214a31a7d03360f44a7f.res"]
+
+[params]
+

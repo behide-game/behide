@@ -16,6 +16,8 @@ public partial class SubmachineGun : Gun
     public override Control Hud => _.Hud;
     public override Label PlayerUsernameLabel => _.Hud.Center.PlayerUsername;
     protected override Label AmmoLabel => _.Hud.RBottom.Ammo;
+    protected override TextureRect AmmoIcon => _.Hud.RBottom.AmmoIcon;
+    protected override TextureRect ReloadIcon => _.Hud.RBottom.ReloadIcon;
 
     private Control HitMark => _.Hud.Center.Crosshair.CrosshairHit;
     private RayCast3D Raycast => _.RayCast;
@@ -25,6 +27,31 @@ public partial class SubmachineGun : Gun
 
     private double crosshairHitDuration = 0.3;
     private Tween? crosshairHitTween;
+
+    public override void _EnterTree()
+    {
+        base._EnterTree();
+        if (IsMultiplayerAuthority()) SetZClipScale();
+    }
+
+    private void SetZClipScale()
+    {
+        var descendants = _.Model.FindChildren("*", nameof(MeshInstance3D), owned: false);
+        foreach (var descendant in descendants)
+        {
+            if (descendant is not MeshInstance3D mesh) continue;
+            for (var i = 0; i < mesh.GetSurfaceOverrideMaterialCount(); i++)
+            {
+                var material = mesh.GetActiveMaterial(i);
+                if (material is not StandardMaterial3D standardMaterial) continue;
+
+                var newMaterial = (StandardMaterial3D)standardMaterial.Duplicate();
+                newMaterial.UseZClipScale = true;
+                newMaterial.ZClipScale = 0.01f;
+                mesh.SetSurfaceOverrideMaterial(i, newMaterial);
+            }
+        }
+    }
 
     protected override Node3D? ShootCore()
     {

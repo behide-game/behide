@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://luuofj7aqswe" path="res://Prefabs/Player/HunterBody.cs" id="1_w58js"]
 [ext_resource type="PackedScene" uid="uid://duc1guf2tc711" path="res://Prefabs/Player/SubmachineGun.tscn" id="2_1qbrv"]
+[ext_resource type="Script" uid="uid://csmaw8snfg308" path="res://Prefabs/SettingsAwareCamera3D.cs" id="2_w58js"]
+[ext_resource type="PackedScene" uid="uid://nkor8n0q2s8j" path="res://Prefabs/Player/HealthBar/HealthBar.tscn" id="3_svrpp"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_svrpp"]
 
@@ -62,7 +64,9 @@ replication_config = SubResource("SceneReplicationConfig_n61o8")
 [node name="Camera" type="Camera3D" parent="." unique_id=1142722186]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
 keep_aspect = 0
+cull_mask = 1048567
 fov = 90.0
+script = ExtResource("2_w58js")
 
 [node name="SubmachineGun" parent="Camera" unique_id=411671082 instance=ExtResource("2_1qbrv")]
 
@@ -84,21 +88,6 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="Health" type="MarginContainer" parent="HUD" unique_id=366987484]
+[node name="HealthBar" parent="HUD" unique_id=1371579750 instance=ExtResource("3_svrpp")]
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 8
-
-[node name="HealthBar" type="ProgressBar" parent="HUD/Health" unique_id=295005643]
-custom_minimum_size = Vector2(130, 30)
-layout_mode = 2
-mouse_filter = 1
-show_percentage = false
-
-[node name="HealthLabel" type="Label" parent="HUD/Health" unique_id=1444016133]
-layout_mode = 2
-size_flags_vertical = 1
-mouse_filter = 1
-text = "100"
-horizontal_alignment = 1
-vertical_alignment = 1

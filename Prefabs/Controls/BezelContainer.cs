@@ -9,7 +9,7 @@ public partial class BezelContainer : Control
     private int BezelSize { get; set { field = value; QueueRedraw(); } } = 45;
 
     [Export]
-    private Color Color { get; set { field = value; QueueRedraw(); } } = Color.Color8(255, 255, 255);
+    public Color Color { get; set { field = value; QueueRedraw(); } } = Color.Color8(255, 255, 255);
 
     [Export]
     private int BorderWidth { get; set { field = value; QueueRedraw(); } }

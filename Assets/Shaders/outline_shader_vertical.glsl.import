@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://bjb4vs5wyii3i"
+path="res://.godot/imported/outline_shader_vertical.glsl-f8db54501dd5dfe300c645df37c08709.res"
+
+[deps]
+
+source_file="res://Assets/Shaders/outline_shader_vertical.glsl"
+dest_files=["res://.godot/imported/outline_shader_vertical.glsl-f8db54501dd5dfe300c645df37c08709.res"]
+
+[params]
+

@@ -488,6 +488,7 @@ BehideObjects = NodePath("../BehideObjects")
 environment = SubResource("Environment_cclfe")
 
 [node name="LightmapGI" type="LightmapGI" parent="." unique_id=1173480206]
+layers = 7
 quality = 2
 supersampling = true
 interior = true
@@ -1251,7 +1252,13 @@ transform = Transform3D(1, 0, 0, 0, -1, -8.742278e-08, 0, 8.742278e-08, -1, -14.
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0, -0.2)
 
 [node name="fridge_a" parent="BehideObjects" unique_id=2116853705 instance=ExtResource("25_vndp1")]
-transform = Transform3D(-0.999229, 0, 0.039259903, 0, 1, 0, -0.039259903, 0, -0.999229, 8.199999, 0.5, 4.9)
+transform = Transform3D(-0.99922895, 0, 0.039259978, 0, 1, 0, -0.039259978, 0, -0.99922895, 8.199999, 0.5, 4.9)
+
+[node name="fridge_a" parent="BehideObjects/fridge_a" index="0" unique_id=285069724]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 0, 0, 0)
+
+[node name="CollisionShape3D" parent="BehideObjects/fridge_a" index="1" unique_id=2034349733]
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 0, 1.2, 0)
 
 [node name="oven" parent="BehideObjects" unique_id=1012418369 instance=ExtResource("26_5mqmp")]
 transform = Transform3D(-0.99978435, 0, 0.020768011, 0, 1, 0, -0.020768011, 0, -0.99978435, 10.4, 0.5, 4.9)
@@ -1504,12 +1511,9 @@ transform = Transform3D(0.81548154, 0, 0.5787831, 0, 1, 0, -0.5787831, 0, 0.8154
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2633133, -0.6, -23.927341)
 
 [node name="drill_structure2" parent="BehideObjects" unique_id=414522038 instance=ExtResource("95_yk75b")]
-transform = Transform3D(0.9580929, 0, 0.28645766, 0, 1, 0, -0.28645766, 0, 0.9580929, -8.8, -0.6, -18.599998)
+transform = Transform3D(0.9580929, 0, 0.28645766, 0, 1, 0, -0.28645766, 0, 0.9580929, -7.9505773, -0.6, -18.740839)
 
-[node name="drill_structure" parent="BehideObjects/drill_structure2/drill_structure" parent_id_path=PackedInt32Array(414522038, 1065827109) index="0" unique_id=1668541799]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77742577, 0, -0.0020618439)
-
-[node name="drill_module" parent="BehideObjects/drill_structure2/drill_structure/drill_structure" index="0" unique_id=1133226769]
+[node name="drill_module" parent="BehideObjects/drill_structure2/drill_structure/drill_structure" parent_id_path=PackedInt32Array(414522038, 1065827109, 975956148) index="0" unique_id=1019312915]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34523964, 0)
 
 [node name="solarpanel2" parent="BehideObjects" unique_id=1548592808 instance=ExtResource("96_5qqhn")]
@@ -1586,23 +1590,19 @@ CollisionNodes = [NodePath("../candle_triple2/CollisionShape3D")]
 transform = Transform3D(0.9947388, 0, -0.10244353, 0, 1, 0, 0.10244353, 0, 0.9947388, -11.60951, 0.50000215, 4.396705)
 
 [node name="ketchup4" parent="BehideObjects" unique_id=1387326690 instance=ExtResource("55_equyh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.134607, 0.6225014, 4.9124293)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.463157, 0.6225014, 4.9124293)
 
-[node name="jar_d_small3" parent="BehideObjects" unique_id=2058499529 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("44_te0bn")]
+[node name="jar_d_small3" parent="BehideObjects" unique_id=2058499529 instance=ExtResource("44_te0bn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.907074, 0.6225021, 4.7151237)
-CollisionNodes = [null]
 
-[node name="jar_c_medium" parent="BehideObjects" unique_id=1789025501 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("96_dpha8")]
+[node name="jar_c_medium" parent="BehideObjects" unique_id=1789025501 instance=ExtResource("96_dpha8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.964246, 0.622502, 4.115289)
-CollisionNodes = [null]
 
-[node name="jar_b_small" parent="BehideObjects" unique_id=1285458310 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("97_ix7vu")]
+[node name="jar_b_small" parent="BehideObjects" unique_id=1285458310 instance=ExtResource("97_ix7vu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.3027115, 0.62250197, 4.178903)
-CollisionNodes = [null]
 
-[node name="mustard4" parent="BehideObjects" unique_id=1396576624 node_paths=PackedStringArray("CollisionNodes") instance=ExtResource("56_mnk1p")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.141789, 0.6225021, 4.706554)
-CollisionNodes = [null]
+[node name="mustard4" parent="BehideObjects" unique_id=1396576624 instance=ExtResource("56_mnk1p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.285613, 0.6225021, 4.706554)
 
 [node name="table_round_a_small" parent="BehideObjects" unique_id=756488518 instance=ExtResource("68_c7v4a")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 14.259244, 0.49999982, -23.94365)
@@ -2109,6 +2109,8 @@ distance_fade_shadow = 20.0
 omni_range = 9.958
 omni_attenuation = 0.5
 
+[editable path="BehideObjects/fridge_a"]
+[editable path="BehideObjects/fridge_a/fridge_a"]
 [editable path="BehideObjects/drill_structure2"]
 [editable path="BehideObjects/drill_structure2/drill_structure"]
 [editable path="BehideObjects/candle_thin"]

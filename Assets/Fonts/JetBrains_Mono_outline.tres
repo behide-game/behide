@@ -1,0 +1,9 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://dvlx486vdob4h"]
+
+[ext_resource type="FontFile" uid="uid://dhsne0nw6w5j" path="res://Assets/Fonts/JetBrains Mono/JetBrainsMono-Medium.ttf" id="1_1vtnq"]
+
+[resource]
+font = ExtResource("1_1vtnq")
+font_size = 18
+outline_size = 5
+outline_color = Color(0.078431375, 0.08627451, 0.12941177, 1)

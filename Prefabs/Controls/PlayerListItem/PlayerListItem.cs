@@ -1,13 +1,14 @@
+using Behide.Game.UI.Lobby;
 using Godot;
 
 namespace Behide.UI.Controls;
 
-[Tool, SceneTree]
-public partial class PlayerListItem : Control
+[SceneTree]
+public partial class PlayerListItem : PlayerCard
 {
-    private Label UsernameLabel => _.Container.MarginUsername.Username;
-    private Label StatusLabel => _.Container.Ready.Label;
+    private Label UsernameLabel => _.Margin.HBox.Username;
+    private TextureRect Logo => _.Margin.HBox.DeadIcon.TextureRect;
 
     public void SetPlayerName(string playerName) => UsernameLabel.Text = playerName;
-    public void SetStatus(string status) => StatusLabel.Text = status;
+    public void SetAlive(bool alive) => Logo.Modulate = Logo.Modulate with { A = alive ? 0f : 1f };
 }

@@ -1,10 +1,27 @@
 [gd_scene format=3 uid="uid://iwqa8xgo1ip3"]
 
 [ext_resource type="FontFile" uid="uid://84qi1iqqj525" path="res://Assets/Fonts/Space Grotesk/static/SpaceGrotesk-Bold.ttf" id="2_7hld8"]
+[ext_resource type="Shader" uid="uid://cpic26ffvr8hs" path="res://Prefabs/Player/mask.gdshader" id="2_dg5hw"]
 [ext_resource type="Shader" uid="uid://dcub67rxcrt5x" path="res://Prefabs/Player/crosshair.gdshader" id="2_ky5tt"]
 [ext_resource type="Script" uid="uid://bnid2w67fk441" path="res://Prefabs/Player/PropBody.cs" id="2_m4go7"]
+[ext_resource type="Script" uid="uid://csmaw8snfg308" path="res://Prefabs/SettingsAwareCamera3D.cs" id="3_8fnhj"]
+[ext_resource type="PackedScene" uid="uid://nkor8n0q2s8j" path="res://Prefabs/Player/HealthBar/HealthBar.tscn" id="4_7hld8"]
+[ext_resource type="Script" uid="uid://cg2f8nc5ylod2" path="res://Prefabs/SettingsAwareSubViewport.cs" id="4_scsbf"]
+[ext_resource type="LabelSettings" uid="uid://dvlx486vdob4h" path="res://Assets/Fonts/JetBrains_Mono_outline.tres" id="10_q65ab"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_scsbf"]
+render_priority = 0
+shader = ExtResource("2_dg5hw")
+shader_parameter/colorID = Color(1, 0.8, 0, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_x40yu"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_w1hta"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j2ufq"]
+render_priority = 0
+shader = ExtResource("2_dg5hw")
+shader_parameter/colorID = Color(1, 0.8, 0, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rr4v2"]
 
@@ -18,6 +35,8 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
+[sub_resource type="Compositor" id="Compositor_8p83u"]
+
 [sub_resource type="LabelSettings" id="LabelSettings_j2ufq"]
 font = ExtResource("2_7hld8")
 font_size = 18
@@ -30,21 +49,22 @@ shader = ExtResource("2_ky5tt")
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_52r4e"]
 load_path = "res://.godot/imported/cross-visor.svg-00ba57c13ac8beaa6b3e0195f079b92d.ctex"
 
-[sub_resource type="LabelSettings" id="LabelSettings_ky5tt"]
-font = ExtResource("2_7hld8")
-outline_size = 1
-outline_color = Color(0, 0, 0, 1)
-
 [node name="Prop" type="CharacterBody3D" unique_id=486043969]
 collision_layer = 2
 collision_mask = 23
 platform_on_leave = 2
 script = ExtResource("2_m4go7")
 maxKickForce = 17.5
+maskMaterial = SubResource("ShaderMaterial_scsbf")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=817965567]
 gi_mode = 2
 mesh = SubResource("BoxMesh_x40yu")
+
+[node name="MeshInstance3DOutline" type="MeshInstance3D" parent="." unique_id=1255137576]
+layers = 8
+mesh = SubResource("BoxMesh_w1hta")
+surface_material_override/0 = SubResource("ShaderMaterial_j2ufq")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=247171871]
 shape = SubResource("BoxShape3D_rr4v2")
@@ -59,15 +79,46 @@ spring_length = 5.0
 
 [node name="Camera" type="Camera3D" parent="CameraDisk/SpringArm3D" unique_id=484317060]
 keep_aspect = 0
+cull_mask = 1048567
 fov = 90.0
+script = ExtResource("3_8fnhj")
 
 [node name="RayCast" type="RayCast3D" parent="CameraDisk/SpringArm3D/Camera" unique_id=1015855657]
 target_position = Vector3(0, 0, -20)
 collision_mask = 23
 debug_shape_custom_color = Color(0.237397, 0.706651, 1, 1)
 
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="CameraDisk/SpringArm3D/Camera" unique_id=657472308]
+remote_path = NodePath("../../../../SubViewport/OutlineCamera")
+
 [node name="PositionSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=512832509]
 replication_config = SubResource("SceneReplicationConfig_n61o8")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=1030597066]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+script = ExtResource("4_scsbf")
+
+[node name="OutlineCamera" type="Camera3D" parent="SubViewport" unique_id=262317903]
+transform = Transform3D(1, 0, 0, 0, 0.99691737, 0.07845913, 0, -0.07845913, 0.99691737, 0, 1, 0)
+keep_aspect = 0
+cull_mask = 8
+compositor = SubResource("Compositor_8p83u")
+script = ExtResource("3_8fnhj")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=753376496]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+expand_mode = 4
+stretch_mode = 5
 
 [node name="HUD" type="MarginContainer" parent="." unique_id=858932803]
 anchors_preset = 15
@@ -123,25 +174,15 @@ theme_override_constants/separation = 20
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
+theme_override_constants/margin_right = 0
 
-[node name="HealthBar" type="ProgressBar" parent="HUD/BottomLeft/Health" unique_id=1064215690]
-custom_minimum_size = Vector2(130, 30)
+[node name="HealthBar" parent="HUD/BottomLeft/Health" unique_id=73779187 instance=ExtResource("4_7hld8")]
 layout_mode = 2
-mouse_filter = 1
-show_percentage = false
-
-[node name="HealthLabel" type="Label" parent="HUD/BottomLeft/Health" unique_id=1288792058]
-layout_mode = 2
-size_flags_vertical = 1
-mouse_filter = 1
-text = "100"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="RotationLockedLabel" type="Label" parent="HUD/BottomLeft" unique_id=1306155919]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 8
 mouse_filter = 1
 text = "Rot. Lock"
-label_settings = SubResource("LabelSettings_ky5tt")
+label_settings = ExtResource("10_q65ab")
