@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://csmaw8snfg308" path="res://Prefabs/SettingsAwareCamera3D.cs" id="3_8fnhj"]
 [ext_resource type="PackedScene" uid="uid://nkor8n0q2s8j" path="res://Prefabs/Player/HealthBar/HealthBar.tscn" id="4_7hld8"]
 [ext_resource type="Script" uid="uid://cg2f8nc5ylod2" path="res://Prefabs/SettingsAwareSubViewport.cs" id="4_scsbf"]
-[ext_resource type="Script" uid="uid://crhya31mukanb" path="res://Assets/Shaders/OutlineEffect.cs" id="5_scsbf"]
 [ext_resource type="LabelSettings" uid="uid://dvlx486vdob4h" path="res://Assets/Fonts/JetBrains_Mono_outline.tres" id="10_q65ab"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_scsbf"]
@@ -36,18 +35,7 @@ properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[sub_resource type="CompositorEffect" id="CompositorEffect_scsbf"]
-resource_local_to_scene = false
-resource_name = ""
-enabled = false
-effect_callback_type = 4
-needs_motion_vectors = false
-needs_normal_roughness = false
-script = ExtResource("5_scsbf")
-metadata/_custom_type_script = "uid://crhya31mukanb"
-
 [sub_resource type="Compositor" id="Compositor_8p83u"]
-compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_scsbf")])
 
 [sub_resource type="LabelSettings" id="LabelSettings_j2ufq"]
 font = ExtResource("2_7hld8")
@@ -121,6 +109,7 @@ compositor = SubResource("Compositor_8p83u")
 script = ExtResource("3_8fnhj")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=753376496]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

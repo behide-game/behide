@@ -28,7 +28,8 @@ public partial class PropBody : PlayerBody
     private TextureRect TextureRect => _.TextureRect;
     private Camera3D OutlineCamera => _.SubViewport.OutlineCamera;
     private SubViewport SubViewport => _.SubViewport;
-    private OutlineEffect effect => (OutlineEffect)OutlineCamera.GetCompositor().GetCompositorEffects()[0];
+    private OutlineEffect OutlineCompositorEffect => GD.Load<OutlineEffect>("res://Assets/Shaders/OutlineCompositorEffect.tres");
+    private OutlineEffect? effect;
     protected override RayCast3D RayCast => _.CameraDisk.SpringArm3D.Camera.RayCast;
     protected override HealthBar HealthBar => _.HUD.BottomLeft.Health.HealthBar;
     protected override Label PlayerUsername => _.HUD.Center.PlayerUsername;
@@ -53,7 +54,14 @@ public partial class PropBody : PlayerBody
         }
 
         MoveSpeed = speed;
+
+        var effects = OutlineCamera.Compositor.CompositorEffects;
+        effects.Add(OutlineCompositorEffect);
+        OutlineCamera.Compositor.SetCompositorEffects(effects);
+        effect = (OutlineEffect)OutlineCamera.GetCompositor().GetCompositorEffects()[^1];
+
         effect.Enabled = true;
+
         OutlineCamera.MakeCurrent();
         #if !DEBUG
         currentOutlineNode.Hide();
@@ -63,7 +71,7 @@ public partial class PropBody : PlayerBody
     public override void _Process(double delta)
     {
         base._Process(delta);
-        if (effect.OutputTexture2D != null)
+        if (effect != null && effect.OutputTexture2D != null)
         {
             TextureRect.Texture = effect.OutputTexture2D;
         }
